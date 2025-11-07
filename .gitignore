@@ -1,0 +1,16 @@
+.git
+
+.idea
+.vscode
+
+*-lock.json
+node_modules
+build
+dist
+
+coverage
+
+.DS_store
+*.pem
+
+.env

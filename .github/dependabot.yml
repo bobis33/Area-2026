@@ -1,0 +1,71 @@
+version: 2
+updates:
+
+  - package-ecosystem: "github-actions"
+    directory: ".github/workflows"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "Europe/Paris"
+    rebase-strategy: auto
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "github-actions"
+      include: scope
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "docker"
+    directories:
+      - "/server"
+      - "/client/web"
+      - "/client/mobile"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "Europe/Paris"
+    rebase-strategy: auto
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "docker"
+      include: scope
+    groups:
+      docker:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "Europe/Paris"
+    rebase-strategy: auto
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "docker-compose"
+      include: scope
+    groups:
+      docker-compose:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directories:
+      - "/server"
+      - "/client/web"
+      - "/client/mobile"
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "npm"
+      include: scope
+    groups:
+      npm:
+        patterns:
+          - "*"
