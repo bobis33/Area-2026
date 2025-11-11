@@ -1,4 +1,4 @@
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY . .
 RUN npm run build
 RUN npm cache clean --force
 
-FROM nginx:1.28.0-alpine-slim
+FROM nginx:1.29.3-alpine-slim
 
 WORKDIR /app
 
