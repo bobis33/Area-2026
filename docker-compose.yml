@@ -1,0 +1,106 @@
+services:
+
+  area_service_postgresql:
+    image: postgres:18.0-alpine3.22
+    container_name: ${PROJECT_NAME}_postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "PGPASSWORD=${POSTGRES_PASSWORD} pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_CONTAINER_PORT}"]
+      interval: 10s
+      retries: 5
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf -c port=${POSTGRES_CONTAINER_PORT}
+    volumes:
+      - ./postgresql/postgresql.conf:/etc/postgresql/postgresql.conf:ro,Z
+      - ./postgresql/initdb:/docker-entrypoint-initdb.d:ro,Z
+      - ${PROJECT_NAME}_volume_postgresql-data:/var/lib/postgresql:z
+    ports:
+        - "${POSTGRES_CONTAINER_PORT}:${POSTGRES_CONTAINER_PORT}"
+    environment:
+      MODE: ${MODE}
+      CONTAINER_PORT: ${POSTGRES_CONTAINER_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    restart: unless-stopped
+    stop_signal: SIGINT
+    networks:
+      - ${PROJECT_NAME}_network_postgresql
+
+  area_service_server:
+    build:
+      context: server
+      dockerfile: Dockerfile
+      args:
+        DATABASE_URL: ${POSTGRES_URL}
+    image: ${PROJECT_NAME}_server:latest
+    container_name: ${PROJECT_NAME}_server
+    ports:
+      - "${API_CONTAINER_PORT}:${API_CONTAINER_PORT}"
+    environment:
+      DATABASE_URL: ${POSTGRES_URL}
+      MODE: ${MODE}
+      PORT: ${API_CONTAINER_PORT}
+    depends_on:
+      area_service_postgresql:
+        condition: service_healthy
+    networks:
+      - area_network_postgresql
+      - area_network_server
+
+  area_service_client_mobile:
+    build:
+      context: client/mobile
+      dockerfile: Dockerfile
+      args:
+        PORT: ${MOBILE_CONTAINER_PORT}
+    image: ${PROJECT_NAME}_client-mobile:latest
+    container_name: ${PROJECT_NAME}_client-mobile
+    volumes:
+      - area_volume_client-shared:/app/shared:z
+    environment:
+      PORT: ${MOBILE_CONTAINER_PORT}
+    ports:
+      - "${MOBILE_CONTAINER_PORT}:${MOBILE_CONTAINER_PORT}"
+    depends_on:
+      - area_service_server
+    networks:
+      - area_network_client-web
+
+  area_service_client_web:
+    build:
+      context: client/web
+      dockerfile: Dockerfile
+      args:
+        PORT: ${WEB_CONTAINER_PORT}
+    image: ${PROJECT_NAME}_client-web:latest
+    container_name: ${PROJECT_NAME}_client-web
+    volumes:
+      - area_volume_client-shared:/app/shared:z
+    ports:
+      - "${WEB_CONTAINER_PORT}:${WEB_CONTAINER_PORT}"
+    depends_on:
+      - area_service_server
+      - area_service_client_mobile
+    networks:
+      - area_network_client-web
+
+volumes:
+  area_volume_client-shared:
+    name: ${PROJECT_NAME}_volume_client-shared
+    driver: local
+
+  area_volume_postgresql-data:
+    name: ${PROJECT_NAME}_volume_postgresql-data
+    driver: local
+
+networks:
+  area_network_postgresql:
+    name: ${PROJECT_NAME}_network_postgresql
+    driver: bridge
+    internal: true
+  area_network_server:
+    name: ${PROJECT_NAME}_network_server
+    internal: false
+  area_network_client-web:
+    name: ${PROJECT_NAME}_network_client-web
+    internal: false

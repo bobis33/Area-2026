@@ -1,0 +1,44 @@
+{
+  "name": "area",
+  "version": "0.0.1",
+  "description": "Area project",
+  "keywords": [],
+  "homepage": "https://github.com/bobis33/Area-2026",
+  "bugs": {
+    "url": "https://github.com/bobis33/Area-2026/issues"
+  },
+  "license": "MIT",
+  "author": "",
+  "contributors": [],
+  "private": true,
+  "funding": [
+    {
+      "type": "",
+      "url": ""
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobis33/Area-2026.git"
+  },
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">= 11.0.0"
+  },
+  "workspaces": [
+    "client/web",
+    "client/mobile",
+    "server"
+  ],
+  "scripts": {
+    "build:web": "npm --workspace client/web run build",
+    "build:mobile": "",
+    "build:server": "npm --workspace server run build",
+    "lint:web": "npm --workspace client/web run lint",
+    "lint:mobile": "npm --workspace client/mobile run lint",
+    "lint:server": "npm --workspace server run lint",
+    "start:web": "npm --workspace client/web run dev",
+    "start:mobile": "npm --workspace client/mobile run start",
+    "start:server": "npm --workspace server run start"
+  }
+}

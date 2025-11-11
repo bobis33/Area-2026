@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2020",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@prisma/client": ["node_modules/.prisma/client"],
+      "@dto/*": ["dto/*"],
+      "@services/*": ["services/*"],
+      "@controllers/*": ["controllers/*"]
+    },
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "strict": true,
+    "sourceMap": true
+  }
+}

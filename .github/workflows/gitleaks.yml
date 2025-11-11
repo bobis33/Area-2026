@@ -1,0 +1,57 @@
+name: 'CI - Gitleaks'
+run-name: 'Gitleaks - "${{ github.ref_name }}"'
+on:
+  push:
+    branches:
+      - "main"
+
+  pull_request:
+    branches:
+      - "**"
+
+  workflow_dispatch:
+
+jobs:
+  scan:
+    name: ''
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+      - uses: actions/checkout@v5.0.0
+        with:
+          ref: ${{ github.head_ref }}
+          repository: '${{ github.repository }}'
+          fetch-depth: 0
+          submodules: true
+
+      - name: Install Gitleaks
+        run: ./scripts/install-gitleaks.sh
+
+      - name: Run Gitleaks
+        id: gitleaks
+        run: gitleaks detect --redact --report-format=json --report-path=gitleaks-report.json --exit-code=1
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Gitleaks Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ steps.gitleaks.outcome }}" == "success" ]]; then
+            echo "- **Status**: ✅ " >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Status**: ❌ " >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ -f gitleaks-report.json ]]; then
+            echo "### Leaks details:" >> $GITHUB_STEP_SUMMARY
+            jq -r '.[] | "- File: \(.File), Rule: \(.RuleID), Description: \(.Description), Commit: \(.Commit)"' gitleaks-report.json >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No gitleaks report found." >> $GITHUB_STEP_SUMMARY
+          fi
