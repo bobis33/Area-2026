@@ -24,6 +24,7 @@ MODE=development
 API_CONTAINER_PORT=8080
 API_URL="http://${PROJECT_NAME}_service_postgresql-api:${API_CONTAINER_PORT}/api"
 WEB_CONTAINER_PORT=8081
+MOBILE_CONTAINER_PORT=8082
 POSTGRES_DB="${PROJECT_NAME}_database"
 POSTGRES_USER="${PROJECT_NAME}_postgres-user"
 POSTGRES_PASSWORD="${PROJECT_NAME}_postgres-password"
@@ -43,28 +44,46 @@ docker compose up
 
 ### Manually with node
 
-First, install dependencies:
-```bash
-npm i
-```
-
-Then run postgres container:
+Run postgresSQL container:
 ```bash
 docker compose up -d area_service_postgresql ## Run only Postgres DB
 ```
 
-Go to server and fetch db:
+Then install dependencies and generate prisma client:
 ```bash
-cd server/
-npm run prisma:migrate ## Run migrations
-npm run prisma:seed ## Seed DB
+npm i ## Install dependencies
+npm run server:prisma:generate ## Run migrations
 ```
 
-Finally, go back to root and run the project you want:
+Create .env files in each project folder:
+#### Server (.env in /server)
 ```bash
-npm run start:server ## run server
-npm run start:web ## run web frontend
-npm run start:mobile ## run mobile frontend
+PROJECT_NAME=area
+PORT=8080
+POSTGRES_DB="${PROJECT_NAME}_database"
+POSTGRES_USER="${PROJECT_NAME}_postgres-user"
+POSTGRES_PASSWORD="${PROJECT_NAME}_postgres-password"
+POSTGRES_CONTAINER_PORT=8000
+POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_CONTAINER_PORT}/${POSTGRES_DB}"
+```
+#### Web (.env in /client/web)
+```bash
+PORT=8081
+API_PORT=8080
+API_URL="http://localhost:${API_PORT}/api"
+```
+#### Mobile (.env in /client/mobile)
+```bash
+PORT=8082
+API_PORT=8080
+API_URL="http://localhost:${API_PORT}/api"
+```
+
+Finally, run the project you want:
+```bash
+npm run server:start ## run server
+npm run web:start ## run web frontend
+npm run mobile:start ## run mobile frontend
 ```
 
 For more information look the [package.json](https://github.com/bobis33/Area-2026/blob/main/package.json)

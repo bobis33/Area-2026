@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@prisma/client": ["node_modules/.prisma/client"],
+      "@prisma/client": ["./../node_modules/.prisma/client"],
       "@dto/*": ["dto/*"],
       "@services/*": ["services/*"],
       "@controllers/*": ["controllers/*"]
