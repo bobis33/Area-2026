@@ -44,6 +44,15 @@ docker compose up
 
 ### Manually with node
 
+Change postgres network config in `docker-compose.yml` (internal become false):
+```yaml
+networks:
+  area_network_postgresql:
+    name: ${PROJECT_NAME}_network_postgresql
+    driver: bridge
+    internal: false
+```
+
 Run postgresSQL container:
 ```bash
 docker compose up -d area_service_postgresql ## Run only Postgres DB
