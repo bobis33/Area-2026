@@ -31,14 +31,15 @@
     "server"
   ],
   "scripts": {
-    "build:web": "npm --workspace client/web run build",
-    "build:mobile": "",
-    "build:server": "npm --workspace server run build",
-    "lint:web": "npm --workspace client/web run lint",
-    "lint:mobile": "npm --workspace client/mobile run lint",
-    "lint:server": "npm --workspace server run lint",
-    "start:web": "npm --workspace client/web run dev",
-    "start:mobile": "npm --workspace client/mobile run start",
-    "start:server": "npm --workspace server run start"
+    "mobile:lint": "npm --workspace client/mobile run lint",
+    "mobile:build": "",
+    "mobile:start": "npm --workspace client/mobile run start",
+    "server:lint": "npm --workspace server run lint",
+    "server:start": "npm --workspace server run start",
+    "server:prisma:generate": "npm --workspace server run prisma:generate",
+    "server:build": "npm --workspace server run build",
+    "web:build": "npm --workspace client/web run build",
+    "web:lint": "npm --workspace client/web run lint",
+    "web:start": "npm --workspace client/web run dev"
   }
 }

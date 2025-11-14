@@ -31,13 +31,13 @@ services:
       context: server
       dockerfile: Dockerfile
       args:
-        DATABASE_URL: ${POSTGRES_URL}
+        POSTGRES_URL: ${POSTGRES_URL}
     image: ${PROJECT_NAME}_server:latest
     container_name: ${PROJECT_NAME}_server
     ports:
       - "${API_CONTAINER_PORT}:${API_CONTAINER_PORT}"
     environment:
-      DATABASE_URL: ${POSTGRES_URL}
+      POSTGRES_URL: ${POSTGRES_URL}
       MODE: ${MODE}
       PORT: ${API_CONTAINER_PORT}
     depends_on:

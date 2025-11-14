@@ -2,8 +2,8 @@ FROM node:24-alpine3.22 AS build
 
 WORKDIR /app
 
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
+ARG POSTGRES_URL
+ENV POSTGRES_URL=${POSTGRES_URL}
 
 COPY package.json ./
 
@@ -23,6 +23,5 @@ RUN npm install --omit=dev && npm cache clean --force
 
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules/.prisma/client ./node_modules/.prisma/client
-
 
 CMD ["node", "dist/main.js"]
