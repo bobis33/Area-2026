@@ -1,9 +1,12 @@
 import { Controller, Get, Req } from '@nestjs/common';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { Request } from 'express';
 
+@ApiTags('About')
 @Controller('about.json')
 export class AboutController {
   @Get()
+  @ApiResponse({ status: 200, description: 'Returns server information' })
   getAbout(@Req() req: Request) {
     const clientIp =
       req.headers['x-forwarded-for']?.toString().split(',')[0].trim() ||

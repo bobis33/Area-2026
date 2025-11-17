@@ -1,15 +1,22 @@
-import { ConfigModule } from '@nestjs/config';
-
 import { Module } from '@nestjs/common';
-import { UserController } from '@controllers/user.controller';
-import { AboutController } from '@controllers/about.controller';
-import { UsersService } from '@services/user.service';
-import { PrismaService } from '@services/prisma.service';
-import { HealthController } from '@controllers/health.controller';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './common/database/database.module';
+import { UsersModule } from './modules/users/users.module';
+import { HealthModule } from './modules/health/health.module';
+import { AboutModule } from './modules/about/about.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [HealthController, AboutController, UserController],
-  providers: [PrismaService, UsersService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    DatabaseModule,
+    UsersModule,
+    HealthModule,
+    AboutModule,
+    AuthModule,
+  ],
 })
 export class AppModule {}
