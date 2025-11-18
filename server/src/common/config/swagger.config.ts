@@ -21,5 +21,5 @@ export function setupSwagger(app: INestApplication) {
   const outputPath = join(process.cwd(), 'openapi.json');
   writeFileSync(outputPath, JSON.stringify(document, null, 2));
 
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('docs', app, document);
 }

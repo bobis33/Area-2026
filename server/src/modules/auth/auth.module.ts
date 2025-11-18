@@ -3,9 +3,11 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { GitHubStrategy } from './strategies/github.strategy';
-import { DiscordStrategy } from './strategies/discord.strategy';
+import {
+  DiscordOAuthStrategy,
+  GoogleOAuthStrategy,
+  GitHubOAuthStrategy,
+} from './strategies/oauth.strategy';
 import { DatabaseModule } from 'common/database/database.module';
 
 @Module({
@@ -15,7 +17,12 @@ import { DatabaseModule } from 'common/database/database.module';
     DatabaseModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, GitHubStrategy, DiscordStrategy],
+  providers: [
+    AuthService,
+    DiscordOAuthStrategy,
+    GoogleOAuthStrategy,
+    GitHubOAuthStrategy,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

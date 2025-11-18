@@ -1,73 +1,140 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Res,
+  UseGuards,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { OAuthProvider, AuthenticatedUser } from './interfaces/oauth.types';
+import { AuthStatusDto } from './dto/oauth.dto';
+import { getEnabledProviders } from './config/oauth-providers.config';
 
+interface RequestWithUser {
+  user?: AuthenticatedUser;
+  logout: (callback: (err?: any) => void) => void;
+  session: {
+    destroy: (callback: (err?: any) => void) => void;
+  };
+}
+
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly configService: ConfigService) {}
+  private readonly frontendUrl: string;
+  private readonly enabledProviders: OAuthProvider[];
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth() {
-    // Redirige automatiquement vers Google
-  }
-
-  @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  googleAuthCallback(@Req() req: Request, @Res() res: Response) {
-    const user = req.user;
-    // TODO: Générer un JWT token ici
-    const frontendUrl =
+  constructor(private readonly configService: ConfigService) {
+    this.frontendUrl =
       this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
-
-    // Rediriger vers le frontend avec les infos utilisateur
-    return res.redirect(
-      `${frontendUrl}/auth/success?user=${JSON.stringify(user)}`,
-    );
+    this.enabledProviders = getEnabledProviders(this.configService);
   }
 
-  @Get('github')
-  @UseGuards(AuthGuard('github'))
-  async githubAuth() {
-    // Redirige automatiquement vers GitHub
-  }
-
-  @Get('github/callback')
-  @UseGuards(AuthGuard('github'))
-  githubAuthCallback(@Req() req: Request, @Res() res: Response) {
-    const user = req.user;
-    const frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
-
-    return res.redirect(
-      `${frontendUrl}/auth/success?user=${JSON.stringify(user)}`,
-    );
+  @Get('providers')
+  @ApiOperation({ summary: 'Get available OAuth providers' })
+  @ApiResponse({ status: HttpStatus.OK })
+  getProviders(): { providers: string[] } {
+    return { providers: this.enabledProviders };
   }
 
   @Get('discord')
   @UseGuards(AuthGuard('discord'))
-  async discordAuth() {
-    // Redirige automatiquement vers Discord
-  }
+  @ApiOperation({ summary: 'Discord OAuth' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  discordAuth(): void {}
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Google OAuth' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  googleAuth(): void {}
+
+  @Get('github')
+  @UseGuards(AuthGuard('github'))
+  @ApiOperation({ summary: 'GitHub OAuth' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  githubAuth(): void {}
 
   @Get('discord/callback')
   @UseGuards(AuthGuard('discord'))
-  discordAuthCallback(@Req() req: Request, @Res() res: Response) {
-    const user = req.user;
-    const frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+  @ApiOperation({ summary: 'Discord callback' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  discordCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
+    this.handleCallback(req, res);
+  }
 
-    return res.redirect(
-      `${frontendUrl}/auth/success?user=${JSON.stringify(user)}`,
-    );
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Google callback' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  googleCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
+    this.handleCallback(req, res);
+  }
+
+  @Get('github/callback')
+  @UseGuards(AuthGuard('github'))
+  @ApiOperation({ summary: 'GitHub callback' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  githubCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
+    this.handleCallback(req, res);
+  }
+
+  private handleCallback(req: RequestWithUser, res: Response): void {
+    if (!req.user) {
+      return res.redirect(
+        `${this.frontendUrl}/auth/error?message=Authentication failed`,
+      );
+    }
+
+    const userJson = encodeURIComponent(JSON.stringify(req.user));
+    res.redirect(`${this.frontendUrl}/auth/success?user=${userJson}`);
   }
 
   @Get('status')
-  status(@Req() req: Request) {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Check authentication status' })
+  @ApiResponse({ status: HttpStatus.OK, type: AuthStatusDto })
+  status(@Req() req: RequestWithUser): AuthStatusDto {
     return {
       authenticated: !!req.user,
-      user: req.user || null,
+      user: req.user,
     };
+  }
+
+  @Get('logout')
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: HttpStatus.OK })
+  logout(@Req() req: RequestWithUser, @Res() res: Response): void {
+    req.logout((err?: Error) => {
+      if (err) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message: 'Error during logout',
+          error: err.message,
+        });
+      }
+
+      req.session.destroy((destroyErr?: Error) => {
+        if (destroyErr) {
+          return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            message: 'Error destroying session',
+            error: destroyErr.message,
+          });
+        }
+
+        res.clearCookie('connect.sid');
+        return res.status(HttpStatus.OK).json({
+          message: 'Logged out successfully',
+        });
+      });
+    });
   }
 }
