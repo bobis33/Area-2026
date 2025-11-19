@@ -7,7 +7,8 @@ ENV VITE_API_URL=$VITE_API_URL
 
 COPY package.json ./
 RUN npm i
-COPY . .
+COPY ./web .
+COPY ./shared/ui ./src/shared/ui
 
 RUN npm run build
 RUN npm cache clean --force

@@ -63,14 +63,14 @@ services:
 
   area_service_client_mobile:
     build:
-      context: client/mobile
-      dockerfile: Dockerfile
+      context: client
+      dockerfile: mobile/Dockerfile
       args:
         PORT: ${MOBILE_CONTAINER_PORT}
     image: ${PROJECT_NAME}_client-mobile:latest
     container_name: ${PROJECT_NAME}_client-mobile
     volumes:
-      - area_volume_client-shared:/app/shared:z
+      - ./client/shared:/app/shared:rw,Z
     environment:
       PORT: ${MOBILE_CONTAINER_PORT}
     ports:
@@ -82,15 +82,15 @@ services:
 
   area_service_client_web:
     build:
-      context: client/web
-      dockerfile: Dockerfile
+      context: client
+      dockerfile: web/Dockerfile
       args:
         VITE_PORT: ${WEB_CONTAINER_PORT}
         VITE_API_URL: ${API_URL}
     image: ${PROJECT_NAME}_client-web:latest
     container_name: ${PROJECT_NAME}_client-web
     volumes:
-      - area_volume_client-shared:/app/shared:z
+      - ./client/shared:/app/shared:rw,Z
     ports:
       - "${WEB_CONTAINER_PORT}:${WEB_CONTAINER_PORT}"
     depends_on:
@@ -100,22 +100,26 @@ services:
       - area_network_client-web
 
 volumes:
-  area_volume_client-shared:
-    name: ${PROJECT_NAME}_volume_client-shared
-    driver: local
 
   area_volume_postgresql-data:
     name: ${PROJECT_NAME}_volume_postgresql-data
     driver: local
 
+  area_volume_client-shared:
+    name: ${PROJECT_NAME}_volume_client-shared
+    driver: local
+
 networks:
+
   area_network_postgresql:
     name: ${PROJECT_NAME}_network_postgresql
     driver: bridge
     internal: false
+
   area_network_server:
     name: ${PROJECT_NAME}_network_server
     internal: false
+
   area_network_client-web:
     name: ${PROJECT_NAME}_network_client-web
     internal: false

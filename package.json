@@ -28,6 +28,7 @@
   "workspaces": [
     "client/web",
     "client/mobile",
+    "client/shared",
     "server"
   ],
   "scripts": {
