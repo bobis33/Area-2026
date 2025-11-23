@@ -10,13 +10,24 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@prisma/client": ["./../node_modules/.prisma/client"],
-      "@dto/*": ["dto/*"],
-      "@services/*": ["services/*"],
-      "@controllers/*": ["controllers/*"]
+      "@common/*": ["common/*"],
+      "@modules/*": ["modules/*"],
+      "@config/*": ["common/config/*"],
+      "@database/*": ["common/database/*"]
     },
     "outDir": "./dist",
     "baseUrl": "./src",
     "strict": true,
-    "sourceMap": true
-  }
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "incremental": true
+  },
+  "include": ["src/**/*", "prisma.config.ts"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }

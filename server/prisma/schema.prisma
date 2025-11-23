@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  engineType = "binary"
+  provider      = "prisma-client-js"
+  engineType    = "binary"
   binaryTargets = ["native"]
 }
 
@@ -10,11 +10,16 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique @db.VarChar(255)
-  password  String    @db.VarChar(255)
-  name      String?   @db.VarChar(255)
-  role      String    @db.VarChar(255)
+  id         Int      @id @default(autoincrement())
+  email      String   @unique @db.VarChar(255)
+  password   String?  @db.VarChar(255)
+  name       String?  @db.VarChar(255)
+  role       String   @default("user") @db.VarChar(255)
+  provider   String?  @db.VarChar(50)
+  providerId String?  @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+
+  @@unique([provider, providerId])
+  @@index([email])
 }
