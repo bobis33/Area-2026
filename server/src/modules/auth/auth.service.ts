@@ -7,7 +7,7 @@ import {
   OAuthValidationResult,
   AuthenticatedUser,
   OAuthProvider,
-} from './interfaces/oauth.types';
+} from '@auth/interfaces/oauth.types';
 
 type UserSelect = Pick<
   User,

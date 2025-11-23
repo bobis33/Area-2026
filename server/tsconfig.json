@@ -13,7 +13,12 @@
       "@common/*": ["common/*"],
       "@modules/*": ["modules/*"],
       "@config/*": ["common/config/*"],
-      "@database/*": ["common/database/*"]
+      "@database/*": ["common/database/*"],
+      "@auth/*": ["modules/auth/*"],
+      "@users/*": ["modules/users/*"],
+      "@health/*": ["modules/health/*"],
+      "@about/*": ["modules/about/*"],
+      "@/*": ["modules/*"]
     },
     "outDir": "./dist",
     "baseUrl": "./src",

@@ -1,10 +1,13 @@
-import { AuthService } from '../auth.service';
+import { AuthService } from '@auth/auth.service';
 import {
   OAuthProvider,
   OAuthTokens,
   OAuthValidationResult,
-} from '../interfaces/oauth.types';
-import { normalizeOAuthProfile } from '../config/oauth-providers.config';
+  GitHubProfile,
+  GoogleProfile,
+  DiscordProfile,
+} from '@auth/interfaces/oauth.types';
+import { normalizeOAuthProfile } from '@auth/config/oauth-providers.config';
 
 export class GenericOAuthStrategy {
   constructor(
@@ -15,7 +18,7 @@ export class GenericOAuthStrategy {
   async validate(
     accessToken: string,
     refreshToken: string,
-    profile: any,
+    profile: GitHubProfile | GoogleProfile | DiscordProfile,
   ): Promise<OAuthValidationResult> {
     try {
       const normalizedProfile = normalizeOAuthProfile(profile, this.provider);

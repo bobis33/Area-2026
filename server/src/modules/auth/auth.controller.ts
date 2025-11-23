@@ -15,9 +15,9 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { OAuthProvider, AuthenticatedUser } from './interfaces/oauth.types';
-import { AuthStatusDto } from './dto/oauth.dto';
-import { getEnabledProviders } from './config/oauth-providers.config';
+import { OAuthProvider, AuthenticatedUser } from '@auth/interfaces/oauth.types';
+import { AuthStatusDto } from '@auth/dto/oauth.dto';
+import { getEnabledProviders } from '@auth/config/oauth-providers.config';
 
 interface RequestWithUser {
   user?: AuthenticatedUser;

@@ -1,10 +1,10 @@
 import { Injectable, Type } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from '../auth.service';
-import { OAuthProvider } from '../interfaces/oauth.types';
-import { getProviderConfig } from '../config/oauth-providers.config';
-import { GenericOAuthStrategy } from './oauth.strategy';
+import { AuthService } from '@auth/auth.service';
+import { OAuthProvider } from '@auth/interfaces/oauth.types';
+import { getProviderConfig } from '@auth/config/oauth-providers.config';
+import { GenericOAuthStrategy } from '@auth/strategies/oauth.strategy';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as DiscordStrategy } from 'passport-discord';

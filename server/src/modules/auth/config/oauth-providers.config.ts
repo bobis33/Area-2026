@@ -6,7 +6,10 @@ import {
   isDiscordProfile,
   isGoogleProfile,
   isGitHubProfile,
-} from '../interfaces/oauth.types';
+  DiscordProfile,
+  GoogleProfile,
+  GitHubProfile,
+} from '@auth/interfaces/oauth.types';
 
 export function getProviderConfig(
   provider: OAuthProvider,
@@ -43,7 +46,7 @@ export function getProviderConfig(
 }
 
 export function normalizeOAuthProfile(
-  profile: any,
+  profile: DiscordProfile | GoogleProfile | GitHubProfile,
   provider: OAuthProvider,
 ): NormalizedOAuthProfile {
   let normalizedProfile: NormalizedOAuthProfile;
