@@ -1,11 +1,10 @@
-import { ApiError, FetchOptions } from "../types/api";
+import type { ApiError, FetchOptions } from "../types/api";
 
 /**
  * Base API URL from environment variables
  * Falls back to localhost:8080 if not defined
  */
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 /**
  * Generic API request wrapper using fetch
@@ -22,10 +21,12 @@ export async function apiRequest<T>(
 ): Promise<T> {
   const { token, ...fetchOptions } = options;
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...fetchOptions.headers,
   };
+  if (fetchOptions.headers) {
+    Object.assign(headers, fetchOptions.headers);
+  }
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
