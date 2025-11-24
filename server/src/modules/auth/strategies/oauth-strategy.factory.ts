@@ -2,7 +2,12 @@ import { Injectable, Type } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '@auth/auth.service';
-import { OAuthProvider } from '@auth/interfaces/oauth.types';
+import {
+  OAuthProvider,
+  GitHubProfile,
+  DiscordProfile,
+  GoogleProfile,
+} from '@auth/interfaces/oauth.types';
 import { getProviderConfig } from '@auth/config/oauth-providers.config';
 import { GenericOAuthStrategy } from '@auth/strategies/oauth.strategy';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
@@ -26,7 +31,11 @@ export function createOAuthStrategy(
       this.oauthStrategy = new GenericOAuthStrategy(authService, provider);
     }
 
-    async validate(accessToken: string, refreshToken: string, profile: any) {
+    async validate(
+      accessToken: string,
+      refreshToken: string,
+      profile: GitHubProfile | DiscordProfile | GoogleProfile,
+    ) {
       return this.oauthStrategy.validate(accessToken, refreshToken, profile);
     }
   }
