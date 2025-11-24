@@ -12,26 +12,32 @@ async function app() {
 
   setupSwagger(app);
 
-  app.use(helmet());
-
     const allowedOrigins = configService
         .get<string>('FRONTENDS_URL')
         ?.split(',')
         .map(origin => origin.trim()) || [];
 
     app.enableCors({
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        credentials: true,
         origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
             if (!origin) return callback(null, true);
 
             if (allowedOrigins.includes(origin)) {
                 callback(null, true);
             } else {
-                callback(new Error('Not allowed by CORS'), false);
+                console.warn(`CORS blocked from origin: ${origin}`);
+                return callback(null, false);
             }
         },
-        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     });
 
+    app.use(helmet({
+        crossOriginResourcePolicy: {
+            policy: 'cross-origin'
+        }
+    }));
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -41,6 +47,7 @@ async function app() {
     }),
   );
 
+  app.enableShutdownHooks();
   await app.listen(port);
 
   console.log(

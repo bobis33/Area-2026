@@ -1,10 +1,9 @@
-import type { ApiError, FetchOptions } from "../types/api";
+import type { ApiError, FetchOptions } from "@/types/api";
 
 /**
  * Base API URL from environment variables
- * Falls back to localhost:8080 if not defined
  */
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const API_BASE_URL = import.meta.env.VITE_API_URL as string;
 
 /**
  * Generic API request wrapper using fetch

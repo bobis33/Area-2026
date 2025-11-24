@@ -40,7 +40,7 @@ DISCORD_CLIENT_ID=
 DISCORD_CLIENT_SECRET=
 DISCORD_CALLBACK_URL=
 JWT_SECRET="jwt-secret-key"
-
+FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
 ```
 ### With docker
 

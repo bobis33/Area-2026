@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { get } from "../../services/api";
-import type { AboutResponse } from "../../types";
+import { get } from "@/services/api";
+import type { AboutResponse } from "@/types";
 import "./About.css";
 
 export default function About() {
