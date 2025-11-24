@@ -1,10 +1,13 @@
 services:
-
   area_service_postgresql:
     image: postgres:18.0-alpine3.22
     container_name: ${PROJECT_NAME}_postgresql
     healthcheck:
-      test: ["CMD-SHELL", "PGPASSWORD=${POSTGRES_PASSWORD} pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_CONTAINER_PORT}"]
+      test:
+        [
+          "CMD-SHELL",
+          "PGPASSWORD=${POSTGRES_PASSWORD} pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -p ${POSTGRES_CONTAINER_PORT}",
+        ]
       interval: 10s
       retries: 5
     command: postgres -c config_file=/etc/postgresql/postgresql.conf -c port=${POSTGRES_CONTAINER_PORT}
@@ -13,7 +16,7 @@ services:
       - ./postgresql/initdb:/docker-entrypoint-initdb.d:ro,Z
       - ${PROJECT_NAME}_volume_postgresql-data:/var/lib/postgresql:z
     ports:
-        - "${POSTGRES_CONTAINER_PORT}:${POSTGRES_CONTAINER_PORT}"
+      - "${POSTGRES_CONTAINER_PORT}:${POSTGRES_CONTAINER_PORT}"
     environment:
       MODE: ${MODE}
       CONTAINER_PORT: ${POSTGRES_CONTAINER_PORT}
@@ -38,6 +41,15 @@ services:
       - "${API_CONTAINER_PORT}:${API_CONTAINER_PORT}"
     environment:
       POSTGRES_URL: ${POSTGRES_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_CLIENT_CALLBACK_URL: ${GOOGLE_CLIENT_CALLBACK_URL}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET}
+      DISCORD_CLIENT_CALLBACK_URL: ${DISCORD_CLIENT_CALLBACK_URL}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      GITHUB_CLIENT_CALLBACK_URL: ${GITHUB_CLIENT_CALLBACK_URL}
       MODE: ${MODE}
       PORT: ${API_CONTAINER_PORT}
     depends_on:
