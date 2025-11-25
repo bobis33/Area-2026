@@ -9,27 +9,27 @@ import * as Joi from 'joi';
 
 @Module({
   imports: [
-      ConfigModule.forRoot({
-          isGlobal: true,
-          envFilePath: '.env',
-          validationSchema: Joi.object({
-              PORT: Joi.number().default(8080),
-              JWT_SECRET: Joi.string().required(),
-              FRONTEND_URLS: Joi.string().required(),
-              DISCORD_CLIENT_ID: Joi.string(),
-              DISCORD_CLIENT_SECRET: Joi.string(),
-              DISCORD_CALLBACK_URL: Joi.string().uri(),
-              GOOGLE_CLIENT_ID: Joi.string(),
-              GOOGLE_CLIENT_SECRET: Joi.string(),
-              GOOGLE_CALLBACK_URL: Joi.string().uri(),
-              GITHUB_CLIENT_ID: Joi.string(),
-              GITHUB_CLIENT_SECRET: Joi.string(),
-              GITHUB_CALLBACK_URL: Joi.string().uri(),
-          }),
-          validationOptions: {
-              abortEarly: true,
-          },
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+      validationSchema: Joi.object({
+        PORT: Joi.number().default(8080),
+        JWT_SECRET: Joi.string().required(),
+        FRONTEND_URLS: Joi.string().required(),
+        DISCORD_CLIENT_ID: Joi.string(),
+        DISCORD_CLIENT_SECRET: Joi.string(),
+        DISCORD_CALLBACK_URL: Joi.string().uri(),
+        GOOGLE_CLIENT_ID: Joi.string(),
+        GOOGLE_CLIENT_SECRET: Joi.string(),
+        GOOGLE_CALLBACK_URL: Joi.string().uri(),
+        GITHUB_CLIENT_ID: Joi.string(),
+        GITHUB_CLIENT_SECRET: Joi.string(),
+        GITHUB_CALLBACK_URL: Joi.string().uri(),
       }),
+      validationOptions: {
+        abortEarly: true,
+      },
+    }),
     DatabaseModule,
     UsersModule,
     HealthModule,

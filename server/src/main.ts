@@ -12,32 +12,38 @@ async function app() {
 
   setupSwagger(app);
 
-    const allowedOrigins = configService
-        .get<string>('FRONTENDS_URL')
-        ?.split(',')
-        .map(origin => origin.trim()) || [];
+  const allowedOrigins =
+    configService
+      .get<string>('FRONTEND_URLS')
+      ?.split(',')
+      .map((origin) => origin.trim()) || [];
 
-    app.enableCors({
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-        credentials: true,
-        origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-            if (!origin) return callback(null, true);
+  app.enableCors({
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      if (!origin) return callback(null, true);
 
-            if (allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                console.warn(`CORS blocked from origin: ${origin}`);
-                return callback(null, false);
-            }
-        },
-        allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-    });
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn(`CORS blocked from origin: ${origin}`);
+        return callback(null, false);
+      }
+    },
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  });
 
-    app.use(helmet({
-        crossOriginResourcePolicy: {
-            policy: 'cross-origin'
-        }
-    }));
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: {
+        policy: 'cross-origin',
+      },
+    }),
+  );
 
   app.useGlobalPipes(
     new ValidationPipe({
