@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/themed-text';
@@ -18,6 +19,7 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const backgroundColor = useThemeColor({}, 'background');
+  const insets = useSafeAreaInsets();
 
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
@@ -59,7 +61,7 @@ export default function RegisterScreen() {
       style={[styles.container, { backgroundColor }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
         <ThemedView style={styles.content}>
@@ -158,14 +160,14 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    paddingBottom: 40,
   },
   content: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
   title: {
+    paddingTop: 24,
     marginBottom: 8,
     textAlign: 'center',
     fontSize: 36,
