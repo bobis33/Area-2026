@@ -8,28 +8,31 @@ import {
   AuthenticatedUser,
   OAuthProvider,
 } from '@auth/interfaces/oauth.types';
+import { RegisterDto, LoginDto, AuthResponseDto } from '@auth/dto/oauth.dto';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 type UserSelect = Pick<
-  User,
-  'id' | 'email' | 'name' | 'role' | 'provider' | 'providerId' | 'created_at'
+    User,
+    'id' | 'email' | 'name' | 'role' | 'created_at' | 'updated_at'
 >;
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly jwtService: JwtService) {}
 
   async validateOAuthLogin(
     profile: NormalizedOAuthProfile,
     tokens: OAuthTokens,
   ): Promise<OAuthValidationResult> {
     try {
-      const { email, displayName, provider, providerId } = profile;
+      const { email, provider, providerId } = profile;
 
       if (!email) {
         throw new Error('Email not provided by OAuth provider');
       }
 
-      let user = await this.findUserByProvider(provider, providerId);
+      let user = await this.findUserByProviderId(provider, providerId);
 
       if (!user) {
         const existingUser = await this.findByEmail(email);
@@ -39,7 +42,6 @@ export class AuthService {
             existingUser.id,
             provider,
             providerId,
-            displayName,
           );
         }
       }
@@ -57,41 +59,47 @@ export class AuthService {
     }
   }
 
-  private async findUserByProvider(
-    provider: OAuthProvider,
-    providerId: string,
-  ): Promise<UserSelect | null> {
-    return this.prisma.user.findFirst({
-      where: {
-        provider: provider.toString(),
-        providerId,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        provider: true,
-        providerId: true,
-        created_at: true,
-      },
-    });
-  }
+    private async findUserByProviderId(
+        provider: OAuthProvider,
+        providerId: string,
+    ): Promise<UserSelect | null> {
+        const account = await this.prisma.providerAccount.findFirst({
+            where: {
+                provider: provider.toString(),
+                providerId,
+            },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                        role: true,
+                        created_at: true,
+                        updated_at: true,
+                    },
+                },
+            },
+        });
 
-  async findByEmail(email: string): Promise<UserSelect | null> {
-    return this.prisma.user.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        provider: true,
-        providerId: true,
-        created_at: true,
-      },
-    });
-  }
+        return account?.user ?? null;
+    }
+
+
+    async findByEmail(email: string): Promise<UserSelect | null> {
+        return this.prisma.user.findUnique({
+            where: { email },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+            },
+        });
+    }
+
 
   async findById(id: number): Promise<AuthenticatedUser | null> {
     const user = await this.prisma.user.findUnique({
@@ -101,9 +109,8 @@ export class AuthService {
         email: true,
         name: true,
         role: true,
-        provider: true,
-        providerId: true,
         created_at: true,
+        updated_at: true,
       },
     });
 
@@ -114,56 +121,64 @@ export class AuthService {
     return this.mapToAuthenticatedUser(user);
   }
 
-  private async createUserFromOAuth(
-    profile: NormalizedOAuthProfile,
-  ): Promise<UserSelect> {
-    return this.prisma.user.create({
-      data: {
-        email: profile.email,
-        name: profile.displayName || profile.username || null,
-        provider: profile.provider.toString(),
-        providerId: profile.providerId,
-        role: 'user',
-        password: null,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        provider: true,
-        providerId: true,
-        created_at: true,
-      },
-    });
-  }
+    private async createUserFromOAuth(
+        profile: NormalizedOAuthProfile,
+    ): Promise<UserSelect> {
+        const user = await this.prisma.user.create({
+            data: {
+                email: profile.email,
+                name: profile.displayName || null,
+                role: 'user',
+                password: null,
+            },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+            },
+        });
 
-  private async linkOAuthProvider(
-    userId: number,
-    provider: OAuthProvider,
-    providerId: string,
-    displayName?: string,
-  ): Promise<UserSelect> {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        provider: provider.toString(),
-        providerId,
-        name: displayName || undefined,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        provider: true,
-        providerId: true,
-        created_at: true,
-      },
-    });
-  }
+        await this.prisma.providerAccount.create({
+            data: {
+                provider: profile.provider.toString(),
+                providerId: profile.providerId,
+                userId: user.id,
+            },
+        });
 
-  private updateOAuthTokens(userId: number, tokens: OAuthTokens): void {
+        return user;
+    }
+
+    private async linkOAuthProvider(
+        userId: number,
+        provider: OAuthProvider,
+        providerId: string,
+    ): Promise<UserSelect | null> {
+        await this.prisma.providerAccount.create({
+            data: {
+                provider: provider.toString(),
+                providerId,
+                userId,
+            },
+        });
+
+        return this.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+            },
+        });
+    }
+
+    private updateOAuthTokens(userId: number, tokens: OAuthTokens): void {
     try {
       console.log(`[AuthService] Tokens received for user ${userId}`, {
         hasAccess: !!tokens.accessToken,
@@ -174,61 +189,122 @@ export class AuthService {
     }
   }
 
-  private mapToAuthenticatedUser(user: UserSelect): AuthenticatedUser {
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name ?? undefined,
-      avatar: undefined,
-      provider: user.provider ?? 'local',
-      providerId: user.providerId ?? '',
-      role: user.role,
-      createdAt: user.created_at,
-    };
+    private mapToAuthenticatedUser(
+        user: UserSelect,
+        account?: { provider: string; providerId: string } | null,
+    ): AuthenticatedUser {
+        return {
+            id: user.id,
+            email: user.email,
+            name: user.name ?? undefined,
+            avatar: undefined,
+            provider: account?.provider ?? 'local',
+            providerId: account?.providerId ?? '',
+            role: user.role,
+            createdAt: user.created_at,
+        };
+    }
+
+
+    async hasLinkedProvider(userId: number, provider: OAuthProvider): Promise<boolean> {
+        const account = await this.prisma.providerAccount.findFirst({
+            where: {
+                userId,
+                provider: provider.toString(),
+            },
+        });
+        return !!account;
+    }
+
+
+    async unlinkProvider(userId: number): Promise<void> {
+        await this.prisma.providerAccount.deleteMany({
+            where: { userId },
+        });
+    }
+
+
+    async getUsersByProvider(provider: OAuthProvider): Promise<AuthenticatedUser[]> {
+        const accounts = await this.prisma.providerAccount.findMany({
+            where: { provider: provider.toString() },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                        role: true,
+                        created_at: true,
+                        updated_at: true,
+                    },
+                },
+            },
+        });
+
+        return accounts.map((account) =>
+            this.mapToAuthenticatedUser(account.user, {
+                provider: account.provider,
+                providerId: account.providerId,
+            }),
+        );
+    }
+
+    generateToken(user: UserSelect) {
+        return this.jwtService.sign({
+            sub: user.id,
+            email: user.email,
+            role: user.role,
+        });
+    }
+
+    async register(dto: RegisterDto): Promise<AuthResponseDto> {
+        const exists = await this.findByEmail(dto.email);
+        if (exists) {
+            throw new Error('Email already registered');
+        }
+
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+        const user = await this.prisma.user.create({
+            data: {
+                email: dto.email,
+                name: dto.name,
+                password: hashedPassword,
+                role: 'user',
+            },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                created_at: true,
+                updated_at: true,
+            },
+        });
+
+        return {
+            user: this.mapToAuthenticatedUser(user),
+            token: this.generateToken(user),
+        };
   }
 
-  async hasLinkedProvider(
-    userId: number,
-    provider: OAuthProvider,
-  ): Promise<boolean> {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        id: userId,
-        provider: provider.toString(),
-      },
-    });
+    async login(dto: LoginDto): Promise<AuthResponseDto> {
+        const user = await this.prisma.user.findUnique({
+            where: { email: dto.email },
+        });
 
-    return !!user;
-  }
+        if (!user || !user.password) {
+            throw new Error('Invalid credentials');
+        }
 
-  async unlinkProvider(userId: number): Promise<void> {
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        provider: null,
-        providerId: null,
-      },
-    });
-  }
+        const match = await bcrypt.compare(dto.password, user.password);
+        if (!match) {
+            throw new Error('Invalid credentials');
+        }
 
-  async getUsersByProvider(
-    provider: OAuthProvider,
-  ): Promise<AuthenticatedUser[]> {
-    const users = await this.prisma.user.findMany({
-      where: {
-        provider: provider.toString(),
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        provider: true,
-        providerId: true,
-        created_at: true,
-      },
-    });
+        return {
+            user: this.mapToAuthenticatedUser(user),
+            token: this.generateToken(user),
+        };    }
 
-    return users.map((user) => this.mapToAuthenticatedUser(user));
-  }
 }

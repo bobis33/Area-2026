@@ -52,6 +52,7 @@ services:
       GITHUB_CLIENT_CALLBACK_URL: ${GITHUB_CLIENT_CALLBACK_URL}
       MODE: ${MODE}
       PORT: ${API_CONTAINER_PORT}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       area_service_postgresql:
         condition: service_healthy
@@ -109,7 +110,7 @@ networks:
   area_network_postgresql:
     name: ${PROJECT_NAME}_network_postgresql
     driver: bridge
-    internal: true
+    internal: false
   area_network_server:
     name: ${PROJECT_NAME}_network_server
     internal: false

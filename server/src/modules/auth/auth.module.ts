@@ -9,16 +9,27 @@ import {
   GoogleOAuthStrategy,
   GitHubOAuthStrategy,
 } from '@auth/strategies/oauth-strategy.factory';
+import {JwtStrategy} from "@auth/strategies/jwt.strategy";
+import {JwtModule} from "@nestjs/jwt";
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     PassportModule.register({ session: false }),
     ConfigModule,
     DatabaseModule,
+      JwtModule.registerAsync({
+          useFactory: (configService: ConfigService) => ({
+              secret: configService.get<string>('JWT_SECRET'),
+              signOptions: { expiresIn: '1d' },
+          }),
+          inject: [ConfigService],
+      }),
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
+    JwtStrategy,
     DiscordOAuthStrategy,
     GoogleOAuthStrategy,
     GitHubOAuthStrategy,

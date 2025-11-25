@@ -15,11 +15,20 @@ model User {
   password   String?  @db.VarChar(255)
   name       String?  @db.VarChar(255)
   role       String   @default("user") @db.VarChar(255)
-  provider   String?  @db.VarChar(50)
-  providerId String?  @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  accounts   ProviderAccount[]
+}
+
+model ProviderAccount {
+  id         Int      @id @default(autoincrement())
+  provider   String   @db.VarChar(255)
+  providerId String   @db.VarChar(255)
+  userId     Int
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerId])
-  @@index([email])
+  @@index([userId])
 }

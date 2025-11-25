@@ -18,7 +18,7 @@ export function createOAuthStrategy(
   provider: OAuthProvider,
   StrategyClass: any,
   strategyName: string,
-): Type<any> {
+): Type {
   @Injectable()
   class GeneratedOAuthStrategy extends PassportStrategy(
     StrategyClass,
