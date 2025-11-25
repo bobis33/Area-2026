@@ -108,15 +108,17 @@ Vue.js est un framework progressif JavaScript pour construire des interfaces uti
 
 ## 3. Synthèse comparative
 
-| Critère                      | React (Vite)      | React (Next.js) | Vue.js (Vite)  |
-| :--------------------------- | :---------------- | :-------------- | :------------- |
-| **Performance Dev (HMR)**    | ⭐⭐⭐ Excellente | ⭐ Faible       | ⭐⭐⭐ Excellente |
+| Critère                      | React (Vite)      | React (Next.js)   | Vue.js (Vite)     |
+| :--------------------------- | :---------------- | :---------------- | :---------------- |
+| **Performance Dev (HMR)**    | ⭐⭐⭐ Excellente | ⭐ Faible         | ⭐⭐⭐ Excellente |
 | **Sécurité du Typage**       | ⭐⭐⭐ Forte (TS) | ⭐⭐⭐ Forte (TS) | ⭐⭐⭐ Forte (TS) |
-| **Unification (Mobile/Web)** | ⭐⭐⭐ Oui        | ⭐⭐⭐ Oui      | ❌ Non         |
-| **Simplicité (SPA)**         | ⭐⭐⭐ Parfait    | ⭐ Overkill     | ⭐⭐⭐ Parfait |
-| **Bundle Size**              | ⭐⭐⭐ Léger      | ⭐⭐ Moyen      | ⭐⭐⭐ Léger   |
-| **Compatibilité Docker**     | ⭐⭐⭐ Simple     | ⭐⭐⭐ Simple   | ⭐⭐⭐ Simple  |
-| **Adapté au projet AREA**    | ⭐⭐⭐ Excellent  | ⭐ Faible       | ⭐⭐ Correct   |
+| **Unification (Mobile/Web)** | ⭐⭐⭐ Oui        | ⭐⭐⭐ Oui        | ❌ Non            |
+| **Simplicité (SPA)**         | ⭐⭐⭐ Parfait    | ⭐ Overkill       | ⭐⭐⭐ Parfait    |
+| **Bundle Size**              | ⭐⭐⭐ Léger      | ⭐⭐ Moyen        | ⭐⭐⭐ Léger      |
+| **Compatibilité Docker**     | ⭐⭐⭐ Simple     | ⭐⭐⭐ Simple     | ⭐⭐⭐ Simple     |
+| **Adapté au projet AREA**    | ⭐⭐⭐ Excellent  | ⭐ Faible         | ⭐⭐ Correct      |
+
+![Frontend Web Comparison](./graph/frontend_web_comparison.png)
 
 ---
 

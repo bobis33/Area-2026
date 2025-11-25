@@ -125,19 +125,21 @@ Développement mobile directement avec les outils officiels Android (Kotlin, And
 
 ## 3. Synthèse comparative
 
-| Critère | React Native + Expo | Flutter | Kotlin (Android Natif) |
-|---------|---------------------|---------|------------------------|
-| **Courbe d'apprentissage** | Faible | Moyenne | Élevée |
-| **Rapidité de développement** | Très élevée | Moyenne | Faible |
-| **Intégration API REST** | Simple | Simple | Simple |
-| **Intégration OAuth2** | Simple | Moyenne | Moyenne |
-| **Outils / Debug** | Très bon | Bon | Très bon |
-| **Build APK dans Docker** | Simple | Moyennement complexe | Complexe |
-| **Performances** | Bonnes | Excellentes | Excellentes |
-| **Maintenabilité** | Élevée | Moyenne | Moyenne |
-| **Communauté / Documentation** | Excellente | Très bonne | Excellente |
-| **Portabilité (Android/iOS)** |  Oui |  Oui |  Android uniquement |
-| **Adapté au projet AREA** | ⭐⭐⭐ Excellent | ⭐⭐ Correct | ⭐ Faible |
+| Critère                        | React Native + Expo | Flutter              | Kotlin (Android Natif) |
+| ------------------------------ | ------------------- | -------------------- | ---------------------- |
+| **Courbe d'apprentissage**     | Faible              | Moyenne              | Élevée                 |
+| **Rapidité de développement**  | Très élevée         | Moyenne              | Faible                 |
+| **Intégration API REST**       | Simple              | Simple               | Simple                 |
+| **Intégration OAuth2**         | Simple              | Moyenne              | Moyenne                |
+| **Outils / Debug**             | Très bon            | Bon                  | Très bon               |
+| **Build APK dans Docker**      | Simple              | Moyennement complexe | Complexe               |
+| **Performances**               | Bonnes              | Excellentes          | Excellentes            |
+| **Maintenabilité**             | Élevée              | Moyenne              | Moyenne                |
+| **Communauté / Documentation** | Excellente          | Très bonne           | Excellente             |
+| **Portabilité (Android/iOS)**  | Oui                 | Oui                  | Android uniquement     |
+| **Adapté au projet AREA**      | ⭐⭐⭐ Excellent    | ⭐⭐ Correct         | ⭐ Faible              |
+
+![Frontend Mobile Comparison](./graph/frontend_mobile_comparison.png)
 
 ---
 

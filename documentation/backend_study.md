@@ -116,6 +116,8 @@ PHP est conçu pour le web, fonctionnant traditionnellement sur un modèle synch
 | **Compatibilité Docker**      | ⭐⭐⭐ Simple     | ⭐⭐⭐ Simple   | ⭐⭐⭐ Simple |
 | **Adapté au projet AREA**     | ⭐⭐⭐ Excellent  | ⭐⭐ Correct    | ⭐ Faible     |
 
+![Backend Comparison](./graph/backend_comparison.png)
+
 ---
 
 ## 4. Conclusion et choix technologique
