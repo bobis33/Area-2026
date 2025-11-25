@@ -153,4 +153,3 @@ module.exports = {
 ## 🎭 Cohérence avec le mobile
 
 Ce thème est identique à celui utilisé dans `client/mobile/constants/theme.ts` pour garantir une expérience utilisateur cohérente entre mobile et web.
-
