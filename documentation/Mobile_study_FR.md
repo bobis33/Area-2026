@@ -198,3 +198,25 @@ Cette solution garantit :
 - **Livraison dans les temps** : Développement efficace pour respecter les délais du projet
 - **Base de code maintenable** : Standards JS/TS partagés avec le reste du projet
 - **Évolutivité** : Possibilité d'étendre vers iOS sans réécriture majeure
+
+---
+
+## 📚 Sources
+
+### Documentation officielle
+
+- React Native – https://reactnative.dev/docs/getting-started
+- Expo – https://docs.expo.dev
+- Flutter – https://docs.flutter.dev
+- Kotlin Android – https://developer.android.com/kotlin
+
+### Benchmarks et études
+
+- Analyse de performance React Native vs Flutter :
+  https://inveritasoft.com/blog/flutter-vs-react-native-performance
+- Comparaison cross-platform par Google Developers :
+  https://firebase.blog/posts/2021/05/flutter-react-native-firebase
+- Référence OAuth Expo AuthSession :
+  https://docs.expo.dev/guides/authentication/
+
+---
