@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsDate,
   IsNotEmpty,
-  MinLength
+  MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -92,38 +92,37 @@ export class AuthStatusDto {
 }
 
 export class RegisterDto {
-    @ApiProperty({ example: 'john@example.com' })
-    @IsEmail()
-    email!: string;
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  email!: string;
 
-    @ApiProperty({ example: 'John Doe' })
-    @IsNotEmpty()
-    name!: string;
+  @ApiProperty({ example: 'John Doe' })
+  @IsNotEmpty()
+  name!: string;
 
-    @ApiProperty({ example: 'password123' })
-    @IsNotEmpty()
-    @MinLength(6)
-    password!: string;
+  @ApiProperty({ example: 'password123' })
+  @IsNotEmpty()
+  @MinLength(6)
+  password!: string;
 }
 
 export class LoginDto {
-    @ApiProperty({ example: 'john@example.com' })
-    @IsEmail()
-    email!: string;
+  @ApiProperty({ example: 'john@example.com' })
+  @IsEmail()
+  email!: string;
 
-    @ApiProperty({ example: 'password123' })
-    @IsNotEmpty()
-    password!: string;
+  @ApiProperty({ example: 'password123' })
+  @IsNotEmpty()
+  password!: string;
 }
 
 export class AuthResponseDto {
-    @ApiProperty({ type: AuthenticatedUserDto })
-    user!: AuthenticatedUserDto;
+  @ApiProperty({ type: AuthenticatedUserDto })
+  user!: AuthenticatedUserDto;
 
-    @ApiProperty({
-        description: 'JWT access token',
-        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-    })
-    token!: string;
+  @ApiProperty({
+    description: 'JWT access token',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+  })
+  token!: string;
 }
-

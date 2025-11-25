@@ -1,5 +1,168 @@
 # State of the Art – Backend Architecture
 
+## 1. Context
+
+Within the AREA project, the application server plays a central role as the "orchestrator." It is the only component allowed to contain the project's business logic.
+
+Its main responsibilities are:
+
+- **Expose a REST API** for Web and Mobile clients.
+- **Manage user authentication** and OAuth2 integration with third-party services.
+- **Orchestrate automations** by connecting _Actions_ and _REActions_ via a _Hooks_ system.
+- **Act as a "glue"** between the different software components and selected external APIs.
+
+The architecture must be container-based and deployable via Docker Compose.
+
+### Evaluation Criteria
+
+The criteria used to evaluate backend technologies are:
+
+- **I/O Performance**: Ability to handle multiple simultaneous external API calls without blocking the server (essential for the "glue" role).
+- **Type Safety**: Code robustness to facilitate teamwork and maintenance.
+- **Ecosystem**: Availability of libraries to easily integrate required third-party services.
+- **Unification**: Possibility to share language or concepts with the frontend.
+- **Data Integrity**: Ability to reliably manage complex relationships (Users <-> Services <-> AREA).
+
+### Technologies Studied
+
+The technologies studied for the application server are:
+
+- **Node.js (NestJS)**: Asynchronous JavaScript runtime with a structured TypeScript framework.
+- **Python (Django/Flask)**: Popular language for scripting and web development.
+- **PHP (Laravel/Symfony)**: Historic web language, working on a synchronous request/response model.
+
+---
+
+## 2. Technology Analysis
+
+### 2.1 Node.js (NestJS + TypeScript)
+
+#### Description
+
+Node.js is a JavaScript runtime built on the V8 engine, using a non-blocking I/O model. NestJS is a framework enforcing modular architecture and TypeScript usage.
+
+#### Advantages
+
+- **Non-Blocking Architecture**: Ideal for the "glue" role, allowing multiple external API calls (Google, Outlook, etc.) to be awaited simultaneously without slowing down the server.
+- **Strong Typing (TypeScript)**: Secures complex data structures (Actions, Reactions) and reduces bugs.
+- **Full-Stack Unification**: Same language (JS/TS) as Web and Mobile clients, facilitating team mobility.
+- **NPM Ecosystem**: Immediate access to thousands of packages for OAuth2 and required third-party APIs.
+
+#### Disadvantages
+
+- **NestJS Learning Curve**: Requires understanding dependency injection (DI) and decorators.
+
+#### Relevance for AREA
+
+**Highly suitable**: Native asynchronous handling is perfect for the Hook mechanism that periodically checks for events.
+
+---
+
+### 2.2 Python (Django / Flask)
+
+#### Description
+
+Python is an interpreted language valued for its readability. Django is a full-featured framework ("batteries included"), while Flask is lighter.
+
+#### Advantages
+
+- **Simplicity**: Clear and concise syntax, quick to learn.
+- **Prototyping**: Allows rapid POC (_Proof of Concept_) development.
+- **Libraries**: Excellent support for scripting and automation.
+
+#### Disadvantages
+
+- **Synchronous Model (GIL)**: Less performant for handling massive concurrent I/O (multiple API calls) without complex AsyncIO configuration.
+- **Dynamic Typing**: Risk of type errors at runtime, especially on a long-term project with many data structures.
+- **Fragmentation**: Requires mastering two different languages (Python for backend, JS for frontend).
+
+#### Relevance for AREA
+
+**Moderately suitable**: Capable, but complicates the team’s tech stack (two languages) for questionable performance gains on this type of API integration project.
+
+---
+
+### 2.3 PHP (Laravel / Symfony)
+
+#### Description
+
+PHP is designed for the web, traditionally operating in a synchronous, "share-nothing" request model.
+
+#### Advantages
+
+- **Maturity**: Very stable frameworks with exhaustive documentation.
+- **Deployment**: Easy to containerize with Docker.
+
+#### Disadvantages
+
+- **Blocking Architecture**: The synchronous model makes permanent Hooks or efficient polling difficult without heavy external tools.
+- **Philosophy**: Designed to serve HTML pages, less suitable as a pure JSON API aggregator in real-time.
+- **Typing**: Less strict than TypeScript, which can be a limitation for the rigor expected in a group project.
+
+#### Relevance for AREA
+
+**Poorly suited**: Managing asynchronous events (Hooks) conflicts with PHP's traditional architecture.
+
+---
+
+## 3. Comparative Summary
+
+| Criterion                    | Node.js (NestJS) | Python (Django) | PHP (Laravel) |
+|:-----------------------------|:-----------------|:----------------|:--------------|
+| **I/O Performance (Async)**  | ⭐⭐⭐ Excellent    | ⭐⭐ Medium       | ⭐ Poor        |
+| **Type Safety**              | ⭐⭐⭐ Strong (TS)  | ⭐ Poor          | ⭐⭐ Medium     |
+| **Front/Back Unification**   | ⭐⭐⭐ Yes          | ❌ No            | ❌ No          |
+| **Hooks/Polling Management** | ⭐⭐⭐ Native       | ⭐⭐ Medium       | ⭐ Complex     |
+| **Docker Compatibility**     | ⭐⭐⭐ Simple       | ⭐⭐⭐ Simple      | ⭐⭐⭐ Simple    |
+| **Suitability for AREA**     | ⭐⭐⭐ Excellent    | ⭐⭐ Fair         | ⭐ Poor        |
+
+![Backend Comparison](./graph/backend_comparison.png)
+
+---
+
+## 4. Conclusion and Technology Choice
+
+### 4.1 Selected Stack: Node.js / PostgreSQL / Prisma
+
+Based on the comparative analysis and project requirements, the following stack was chosen:
+
+- **Server:** Node.js with NestJS
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+
+### 4.2 Justification
+
+#### Backend: Node.js vs PHP/Python
+
+**Node.js** was chosen for its asynchronous nature, ideal for the "glue" role between services. Unlike PHP (synchronous) or Python (often blocking by default), Node.js can efficiently handle Hook polling without blocking user requests. Additionally, using **TypeScript** across the project unifies the team’s skills.
+
+#### Database: PostgreSQL
+
+The project requires a rigorous structure to manage users and AREA relationships. **PostgreSQL** ensures data integrity (ACID), guaranteeing that each _Action_ is correctly linked to a _Reaction_, which would be riskier with a NoSQL solution.
+
+#### ORM: Prisma
+
+**Prisma** was chosen for end-to-end type safety. It generates a TypeScript client synchronized with the database, simplifying schema evolution when adding new services and drastically reducing bugs.
+
+### 4.3 Expected Benefits
+
+This solution ensures:
+
+- **Robustness**: Strict typing and SQL relational integrity.
+- **Responsiveness**: Optimal I/O management for interactions with third-party APIs.
+- **Maintainability**: Structured and unified code, allowing any team member to take over the project.
+- **Compliance**: Deployable architecture via Docker Compose with clearly separated business logic.
+
+
+---
+
+# Version Française
+
+---
+
+
+# State of the Art – Backend Architecture
+
 ## 1. Contexte
 
 Dans le cadre du projet AREA, le serveur d'application joue un rôle central de "chef d'orchestre". Il est le seul composant autorisé à embarquer la logique métier (_business logic_) du projet.
@@ -107,14 +270,16 @@ PHP est conçu pour le web, fonctionnant traditionnellement sur un modèle synch
 
 ## 3. Synthèse comparative
 
-| Critère                       | Node.js (NestJS)  | Python (Django) | PHP (Laravel) |
-| :---------------------------- | :---------------- | :-------------- | :------------ |
-| **Performance I/O (Async)**   | ⭐⭐⭐ Excellente | ⭐⭐ Moyenne    | ⭐ Faible     |
-| **Sécurité du Typage**        | ⭐⭐⭐ Forte (TS) | ⭐ Faible       | ⭐⭐ Moyenne  |
-| **Unification (Front/Back)**  | ⭐⭐⭐ Oui        | ❌ Non          | ❌ Non        |
-| **Gestion des Hooks/Polling** | ⭐⭐⭐ Native     | ⭐⭐ Moyenne    | ⭐ Complexe   |
-| **Compatibilité Docker**      | ⭐⭐⭐ Simple     | ⭐⭐⭐ Simple   | ⭐⭐⭐ Simple |
-| **Adapté au projet AREA**     | ⭐⭐⭐ Excellent  | ⭐⭐ Correct    | ⭐ Faible     |
+| Critère                       | Node.js (NestJS) | Python (Django) | PHP (Laravel) |
+|:------------------------------|:-----------------|:----------------|:--------------|
+| **Performance I/O (Async)**   | ⭐⭐⭐ Excellente   | ⭐⭐ Moyenne      | ⭐ Faible      |
+| **Sécurité du Typage**        | ⭐⭐⭐ Forte (TS)   | ⭐ Faible        | ⭐⭐ Moyenne    |
+| **Unification (Front/Back)**  | ⭐⭐⭐ Oui          | ❌ Non           | ❌ Non         |
+| **Gestion des Hooks/Polling** | ⭐⭐⭐ Native       | ⭐⭐ Moyenne      | ⭐ Complexe    |
+| **Compatibilité Docker**      | ⭐⭐⭐ Simple       | ⭐⭐⭐ Simple      | ⭐⭐⭐ Simple    |
+| **Adapté au projet AREA**     | ⭐⭐⭐ Excellent    | ⭐⭐ Correct      | ⭐ Faible      |
+
+![Backend Comparison](./graph/backend_comparison.png)
 
 ---
 

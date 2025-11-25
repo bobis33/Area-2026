@@ -6,7 +6,9 @@ The **AREA** project is a project that aims to create a platform that allows use
 - A **mobile frontend** that allows users to create and manage their automation scenarios.
 
 ## Project architecture
+
 [![](https://mermaid.ink/img/pako:eNqdVG1vmzAQ_iuW-2WTSASkBLDWSl0jbZX6kjaRJo1MkwOX4BUwsk3bLMl_n4E0L4NMXS1bPt89fu58PnuJQx4BJniW8OcwpkKh64dJhnSTxXQuaB6jCda91h3oLxMGmdoZDow3fMoSCOrpxyGobAJoqH5mVLFZ8FDK6FbLT9BEjhc5jELBcvUXDWTREeffYBro0eK2ctX9JYNX4b3-qkVLUkYgnkAcietieBXo0RLXLcgqrM3cBOSCyZS2Ryv_LzuDz02aIZdqLmB0fx182Mkf38xZHpuFIINXoeWMAyZDLqKm4QtTCZ226uOiTc_5PGmplKtMKqrjSd9-b3V9ok9nZ-err-PxcLQqL2ln11V03KgXqNM5X-lMofsCBAO52stkE3h3Uah4tU1WDdiLSKqFDmbHgGYsSchJr9d3fcuQSvBHICemaW7kzjOLVEzs_GV_f_0u0QYSUamftaALghzkbEkcx_knSV3H7yDBBp4LFmEyo4kEA6cgUlqu8bLkn2AVQwoTTLQYUfFYfi1rvSmn2XfOU0yUKPQ2wYt5vCUp8ogqGLDqdrdaoVMH4pIXmcLE8voVCSZL_IKJbfW7tm07fc-xbM9yfQMvNMi3up5n2a7nu-ap5_ju2sC_K7dmt--6ruedWo7lmr7t9AwMEVNc3NQ_ZPVRrv8ApN901g?type=png)](https://mermaid.live/edit#pako:eNqdVG1vmzAQ_iuW-2WTSASkBLDWSl0jbZX6kjaRJo1MkwOX4BUwsk3bLMl_n4E0L4NMXS1bPt89fu58PnuJQx4BJniW8OcwpkKh64dJhnSTxXQuaB6jCda91h3oLxMGmdoZDow3fMoSCOrpxyGobAJoqH5mVLFZ8FDK6FbLT9BEjhc5jELBcvUXDWTREeffYBro0eK2ctX9JYNX4b3-qkVLUkYgnkAcietieBXo0RLXLcgqrM3cBOSCyZS2Ryv_LzuDz02aIZdqLmB0fx182Mkf38xZHpuFIINXoeWMAyZDLqKm4QtTCZ226uOiTc_5PGmplKtMKqrjSd9-b3V9ok9nZ-err-PxcLQqL2ln11V03KgXqNM5X-lMofsCBAO52stkE3h3Uah4tU1WDdiLSKqFDmbHgGYsSchJr9d3fcuQSvBHICemaW7kzjOLVEzs_GV_f_0u0QYSUamftaALghzkbEkcx_knSV3H7yDBBp4LFmEyo4kEA6cgUlqu8bLkn2AVQwoTTLQYUfFYfi1rvSmn2XfOU0yUKPQ2wYt5vCUp8ogqGLDqdrdaoVMH4pIXmcLE8voVCSZL_IKJbfW7tm07fc-xbM9yfQMvNMi3up5n2a7nu-ap5_ju2sC_K7dmt--6ruedWo7lmr7t9AwMEVNc3NQ_ZPVRrv8ApN901g)
+
 ## Prerequisites
 
 Make sure you have the following dependencies installed on your system:
@@ -40,7 +42,7 @@ DISCORD_CLIENT_ID=
 DISCORD_CLIENT_SECRET=
 DISCORD_CALLBACK_URL=
 JWT_SECRET="jwt-secret-key"
-
+FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
 ```
 ### With docker
 
@@ -94,6 +96,8 @@ GITHUB_CALLBACK_URL=
 DISCORD_CLIENT_ID=
 DISCORD_CLIENT_SECRET=
 DISCORD_CALLBACK_URL=
+JWT_SECRET="jwt-secret-key"
+FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
 ```
 #### Web (.env in /client/web)
 ```bash
