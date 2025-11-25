@@ -40,6 +40,8 @@ services:
     ports:
       - "${API_CONTAINER_PORT}:${API_CONTAINER_PORT}"
     environment:
+      MODE: ${MODE}
+      PORT: ${API_CONTAINER_PORT}
       POSTGRES_URL: ${POSTGRES_URL}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -50,9 +52,8 @@ services:
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
       GITHUB_CLIENT_CALLBACK_URL: ${GITHUB_CLIENT_CALLBACK_URL}
-      MODE: ${MODE}
-      PORT: ${API_CONTAINER_PORT}
       JWT_SECRET: ${JWT_SECRET}
+      FRONTEND_URLS: ${FRONTEND_URLS}
     depends_on:
       area_service_postgresql:
         condition: service_healthy

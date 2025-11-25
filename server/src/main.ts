@@ -14,10 +14,24 @@ async function app() {
 
   app.use(helmet());
 
-  app.enableCors({
-    origin: ['*'],
-    credentials: true,
-  });
+    const allowedOrigins = configService
+        .get<string>('FRONTENDS_URL')
+        ?.split(',')
+        .map(origin => origin.trim()) || [];
+
+    app.enableCors({
+        origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+            if (!origin) return callback(null, true);
+
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'), false);
+            }
+        },
+        credentials: true,
+    });
+
 
   app.useGlobalPipes(
     new ValidationPipe({

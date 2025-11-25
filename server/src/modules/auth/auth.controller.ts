@@ -1,29 +1,14 @@
-import {
-  Controller,
-  Get,
-  Req,
-  Res,
-  UseGuards,
-  HttpStatus,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
-import { OAuthProvider, AuthenticatedUser } from '@auth/interfaces/oauth.types';
-import {AuthStatusDto} from '@auth/dto/oauth.dto';
-import { getEnabledProviders } from '@auth/config/oauth-providers.config';
-
-import { Post, Body, HttpException } from '@nestjs/common';
-import { RegisterDto, LoginDto, AuthResponseDto } from '@auth/dto/oauth.dto';
+import {Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards,} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
+import {Response} from 'express';
+import {ConfigService} from '@nestjs/config';
+import {ApiBearerAuth, ApiOperation, ApiResponse, ApiTags,} from '@nestjs/swagger';
+import {AuthenticatedUser, OAuthProvider} from '@auth/interfaces/oauth.types';
+import {AuthResponseDto, AuthStatusDto, LoginDto, RegisterDto} from '@auth/dto/oauth.dto';
+import {getEnabledProviders} from '@auth/config/oauth-providers.config';
 import {AuthService} from "@auth/auth.service";
 
-interface RequestWithUser {
+interface RequestWithUser extends Request {
   user?: AuthenticatedUser;
   logout: (callback: (err?: any) => void) => void;
   session: {
@@ -34,12 +19,9 @@ interface RequestWithUser {
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  private readonly frontendUrl: string;
   private readonly enabledProviders: OAuthProvider[];
 
   constructor(private readonly configService: ConfigService, private readonly authService: AuthService) {
-    this.frontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
     this.enabledProviders = getEnabledProviders(this.configService);
   }
 
@@ -92,16 +74,23 @@ export class AuthController {
     this.handleCallback(req, res);
   }
 
-  private handleCallback(req: RequestWithUser, res: Response): void {
-    if (!req.user) {
-      return res.redirect(
-        `${this.frontendUrl}/auth/error?message=Authentication failed`,
-      );
+    private handleCallback(req: RequestWithUser, res: Response): void {
+        const allowedOrigins = this.configService
+            .get<string>('FRONTEND_URLS')
+            ?.split(',')
+            .map(o => o.trim()) || [];
+
+        // @ts-ignore
+        const frontendUrl = req.headers['origin'];
+
+        if (!req.user) {
+            return res.redirect(`${frontendUrl}/auth/error?message=Authentication failed`);
+        }
+
+        const userJson = encodeURIComponent(JSON.stringify(req.user));
+        res.redirect(`${frontendUrl}/auth/success?user=${userJson}`);
     }
 
-    const userJson = encodeURIComponent(JSON.stringify(req.user));
-    res.redirect(`${this.frontendUrl}/auth/success?user=${userJson}`);
-  }
 
   @Get('status')
   @ApiBearerAuth()

@@ -23,6 +23,7 @@ Branches and Pull Requests must follow this naming convention:
 ```
 - **Type** → `Feature` | `Fix` | `Refactor` | `Docs` | `Test` | `CI`
 - **Scope** → `Client` | `Server`
+- **Sub-scope** → `Mobile` | `Web`
 
 This ensures consistency across branches and PRs, making it easy to identify the purpose of each contribution at a glance.
 

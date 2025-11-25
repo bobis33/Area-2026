@@ -1,0 +1,35 @@
+name: Feature User Story template
+description: User story
+title: "[FR]: Please title this issue"
+body:
+  - type: textarea
+    id: as-a
+    attributes:
+      label: As a
+      description: As which person do you want to consider this case
+    validations:
+      required: true
+
+  - type: textarea
+    id: i_want
+    attributes:
+      label: I want
+      description: What your person want to do
+    validations:
+      required: true
+
+  - type: textarea
+    id: so-that
+    attributes:
+      label: So that
+      description:
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: criteria that are important to validate this feature
+    validations:
+      required: true
