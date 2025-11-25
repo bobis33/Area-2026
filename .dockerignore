@@ -1,0 +1,14 @@
+.idea
+.vscode
+
+documentation
+scripts
+node_modules
+build
+dist
+.github
+
+gitleaks.toml
+*-lock.json
+.gitignore
+.env

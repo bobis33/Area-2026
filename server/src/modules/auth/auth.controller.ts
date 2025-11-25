@@ -98,14 +98,8 @@ export class AuthController {
   }
 
   private handleCallback(req: RequestWithUser, res: Response): void {
-    const allowedOrigins =
-      this.configService
-        .get<string>('FRONTEND_URLS')
-        ?.split(',')
-        .map((o) => o.trim()) || [];
-
     // @ts-ignore
-    const frontendUrl = req.headers['origin'];
+    const frontendUrl = req.headers['origin'] as string;
 
     if (!req.user) {
       return res.redirect(

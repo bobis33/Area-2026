@@ -1,3 +1,98 @@
+# OAuth 2.0 Actions & Reactions Catalog
+
+This document lists automation capabilities for 5 major services.
+
+- Trigger (Action): The event that starts the scenario.
+- Reaction: What the service executes in response.
+
+---
+
+## 1. Discord
+
+Community communication platform.
+
+### Triggers (Actions)
+
+1. **New message in a channel**: Triggered when a message is posted in a specific channel (useful for moderation or logging).
+2. **New user joins the server**: Triggered as soon as a member accepts the invitation (useful for welcoming new users).
+
+### Reactions
+
+1. **Send a message**: The bot posts a text message or a rich "Embed" in a defined channel.
+2. **Assign a role**: The bot automatically assigns a specific role (e.g., "Verified Member") to a user.
+
+---
+
+## 2. GitHub
+
+Code hosting and version control platform.
+
+### Triggers (Actions)
+
+1. **New "Issue" opened**: Triggered when a bug or task is created in a repository.
+2. **New "Star" on the repository**: Triggered when someone stars your project (useful for popularity tracking).
+
+### Reactions
+
+1. **Create an "Issue"**: Automatically create a ticket from an external source (e.g., a bug report form).
+2. **Comment on a "Pull Request"**: The bot automatically adds a comment on a pull request (e.g., "Thank you for your contribution!").
+
+---
+
+## 3. Google (Workspace)
+
+Productivity suite (Gmail, Calendar, Drive).
+
+### Triggers (Actions)
+
+1. **New email received (Gmail)**: Triggered when an email matching certain criteria is received (e.g., contains "Invoice").
+2. **New event starts (Calendar)**: Triggered X minutes before a meeting starts.
+
+### Reactions
+
+1. **Create a document (Docs/Drive)**: Generate a new Google Doc from a pre-filled template.
+2. **Send an email (Gmail)**: Automatically send an email from your Google account.
+
+---
+
+## 4. Microsoft (365)
+
+Office and collaboration suite (Excel, Outlook, Teams).
+
+### Triggers (Actions)
+
+1. **New row in a table (Excel Online)**: Triggered when data is added to an Excel file hosted on OneDrive/SharePoint.
+2. **New message (Teams)**: Triggered when you are mentioned or a message arrives in a specific channel.
+
+### Reactions
+
+1. **Create an event (Outlook Calendar)**: Block a time slot in your work calendar.
+2. **Add a task (To Do / Planner)**: Create a task with a due date in your task manager.
+
+---
+
+## 5. Spotify
+
+Music and audio streaming platform.
+
+### Triggers (Actions)
+
+1. **New "Liked" track**: Triggered when the user adds a track to their "Liked Songs" library.
+2. **New playlist created**: Triggered when the user creates a new public or private playlist.
+
+### Reactions
+
+1. **Add a track to a playlist**: Insert a specific song (via its ID) into an existing playlist.
+2. **Pause playback**: Send a command to the player to stop the music (useful if a call comes in, for example).
+
+
+---
+
+# Version Française
+
+---
+
+
 # Catalogue d'Actions & Reactions OAuth 2.0
 
 Ce document liste les capacités d'automatisation pour 5 services majeurs.
