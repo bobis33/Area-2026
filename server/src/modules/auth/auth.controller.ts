@@ -1,12 +1,32 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards,} from '@nestjs/common';
-import {AuthGuard} from '@nestjs/passport';
-import {Response} from 'express';
-import {ConfigService} from '@nestjs/config';
-import {ApiBearerAuth, ApiOperation, ApiResponse, ApiTags,} from '@nestjs/swagger';
-import {AuthenticatedUser, OAuthProvider} from '@auth/interfaces/oauth.types';
-import {AuthResponseDto, AuthStatusDto, LoginDto, RegisterDto} from '@auth/dto/oauth.dto';
-import {getEnabledProviders} from '@auth/config/oauth-providers.config';
-import {AuthService} from "@auth/auth.service";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { AuthenticatedUser, OAuthProvider } from '@auth/interfaces/oauth.types';
+import {
+  AuthResponseDto,
+  AuthStatusDto,
+  LoginDto,
+  RegisterDto,
+} from '@auth/dto/oauth.dto';
+import { getEnabledProviders } from '@auth/config/oauth-providers.config';
+import { AuthService } from '@auth/auth.service';
 
 interface RequestWithUser extends Request {
   user?: AuthenticatedUser;
@@ -21,7 +41,10 @@ interface RequestWithUser extends Request {
 export class AuthController {
   private readonly enabledProviders: OAuthProvider[];
 
-  constructor(private readonly configService: ConfigService, private readonly authService: AuthService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+  ) {
     this.enabledProviders = getEnabledProviders(this.configService);
   }
 
@@ -74,23 +97,25 @@ export class AuthController {
     this.handleCallback(req, res);
   }
 
-    private handleCallback(req: RequestWithUser, res: Response): void {
-        const allowedOrigins = this.configService
-            .get<string>('FRONTEND_URLS')
-            ?.split(',')
-            .map(o => o.trim()) || [];
+  private handleCallback(req: RequestWithUser, res: Response): void {
+    const allowedOrigins =
+      this.configService
+        .get<string>('FRONTEND_URLS')
+        ?.split(',')
+        .map((o) => o.trim()) || [];
 
-        // @ts-ignore
-        const frontendUrl = req.headers['origin'];
+    // @ts-ignore
+    const frontendUrl = req.headers['origin'];
 
-        if (!req.user) {
-            return res.redirect(`${frontendUrl}/auth/error?message=Authentication failed`);
-        }
-
-        const userJson = encodeURIComponent(JSON.stringify(req.user));
-        res.redirect(`${frontendUrl}/auth/success?user=${userJson}`);
+    if (!req.user) {
+      return res.redirect(
+        `${frontendUrl}/auth/error?message=Authentication failed`,
+      );
     }
 
+    const userJson = encodeURIComponent(JSON.stringify(req.user));
+    res.redirect(`${frontendUrl}/auth/success?user=${userJson}`);
+  }
 
   @Get('status')
   @ApiBearerAuth()
@@ -103,59 +128,62 @@ export class AuthController {
     };
   }
 
-    @Post('register')
-    @ApiOperation({ summary: 'Register with email/password' })
-    @ApiResponse({ status: HttpStatus.CREATED, type: AuthResponseDto })
-    async register(@Body() dto: RegisterDto) {
-        try {
-            return await this.authService.register(dto);
-        } catch (error) {
-            if (error instanceof Error) {
-                throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-            }
-            throw new HttpException('Unknown error occurred', HttpStatus.BAD_REQUEST);
-        }
+  @Post('register')
+  @ApiOperation({ summary: 'Register with email/password' })
+  @ApiResponse({ status: HttpStatus.CREATED, type: AuthResponseDto })
+  async register(@Body() dto: RegisterDto) {
+    try {
+      return await this.authService.register(dto);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+      throw new HttpException('Unknown error occurred', HttpStatus.BAD_REQUEST);
     }
+  }
 
-    @Post('login')
-    @ApiOperation({ summary: 'Login with email/password' })
-    @ApiResponse({ status: HttpStatus.OK, type: AuthResponseDto })
-    async login(@Body() dto: LoginDto) {
-        try {
-            return await this.authService.login(dto);
-        } catch (error) {
-            if (error instanceof Error) {
-                throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-            }
-            throw new HttpException('Unknown error occurred', HttpStatus.UNAUTHORIZED);
-        }
+  @Post('login')
+  @ApiOperation({ summary: 'Login with email/password' })
+  @ApiResponse({ status: HttpStatus.OK, type: AuthResponseDto })
+  async login(@Body() dto: LoginDto) {
+    try {
+      return await this.authService.login(dto);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+      }
+      throw new HttpException(
+        'Unknown error occurred',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
+  }
 
-    @Get('logout')
-    @ApiOperation({ summary: 'Logout user' })
-    @ApiResponse({ status: HttpStatus.OK })
-    logout(@Req() req: RequestWithUser, @Res() res: Response): void {
-        req.logout((err?: Error) => {
-            if (err) {
-                return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                    message: 'Error during logout',
-                    error: err.message,
-                });
-            }
-
-            req.session.destroy((destroyErr?: Error) => {
-                if (destroyErr) {
-                    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                        message: 'Error destroying session',
-                        error: destroyErr.message,
-                    });
-                }
-
-                res.clearCookie('connect.sid');
-                return res.status(HttpStatus.OK).json({
-                    message: 'Logged out successfully',
-                });
-            });
+  @Get('logout')
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: HttpStatus.OK })
+  logout(@Req() req: RequestWithUser, @Res() res: Response): void {
+    req.logout((err?: Error) => {
+      if (err) {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message: 'Error during logout',
+          error: err.message,
         });
-    }
+      }
+
+      req.session.destroy((destroyErr?: Error) => {
+        if (destroyErr) {
+          return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            message: 'Error destroying session',
+            error: destroyErr.message,
+          });
+        }
+
+        res.clearCookie('connect.sid');
+        return res.status(HttpStatus.OK).json({
+          message: 'Logged out successfully',
+        });
+      });
+    });
+  }
 }
