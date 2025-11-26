@@ -2,6 +2,9 @@ FROM node:24-alpine3.22 AS builder
 
 WORKDIR /app
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY package.json ./
 RUN npm i
 COPY . .
@@ -15,13 +18,15 @@ WORKDIR /app
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-ARG PORT
-ENV PORT=${PORT}
+ARG VITE_PORT
+ARG VITE_API_URL
+ENV VITE_PORT=${VITE_PORT}
+ENV VITE_API_URL=${VITE_API_URL}
 
-EXPOSE ${PORT}
+EXPOSE ${VITE_PORT}
 
 RUN printf "server {\n\
-    listen ${PORT};\n\
+    listen ${VITE_PORT};\n\
     server_name localhost;\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\

@@ -85,7 +85,8 @@ services:
       context: client/web
       dockerfile: Dockerfile
       args:
-        PORT: ${WEB_CONTAINER_PORT}
+        VITE_PORT: ${WEB_CONTAINER_PORT}
+        VITE_API_URL: ${API_URL}
     image: ${PROJECT_NAME}_client-web:latest
     container_name: ${PROJECT_NAME}_client-web
     volumes:

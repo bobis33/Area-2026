@@ -3,7 +3,7 @@ import type { ApiError, FetchOptions } from "@/types/api";
 /**
  * Base API URL from environment variables
  */
-const API_BASE_URL = import.meta.env.VITE_API_URL as string;
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 /**
  * Generic API request wrapper using fetch
