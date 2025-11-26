@@ -18,7 +18,7 @@ export interface NormalizedOAuthProfile {
   displayName: string;
   avatar?: string;
   provider: OAuthProvider;
-  providerId: string;
+  provider_id: string;
   raw: any;
 }
 
@@ -34,9 +34,10 @@ export interface AuthenticatedUser {
   name?: string;
   avatar?: string;
   provider: string;
-  providerId: string;
+  provider_id: string;
   role: string;
-  createdAt: Date;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export type OAuthValidationResult = AuthenticatedUser | null;

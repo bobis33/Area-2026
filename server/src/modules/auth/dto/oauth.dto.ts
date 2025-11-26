@@ -55,7 +55,7 @@ export class AuthenticatedUserDto {
     example: '123456789',
   })
   @IsString()
-  providerId!: string;
+  provider_id!: string;
 
   @ApiProperty({
     description: 'User role',
@@ -70,7 +70,7 @@ export class AuthenticatedUserDto {
   })
   @IsDate()
   @Type(() => Date)
-  createdAt!: Date;
+  created_at!: Date;
 }
 
 export class AuthStatusDto {

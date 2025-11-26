@@ -24,11 +24,11 @@ model User {
 model ProviderAccount {
   id         Int      @id @default(autoincrement())
   provider   String   @db.VarChar(255)
-  providerId String   @db.VarChar(255)
-  userId     Int
+  provider_id String   @db.VarChar(255)
+  user_id     Int
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerId])
-  @@index([userId])
+  @@unique([provider, provider_id])
+  @@index([user_id])
 }

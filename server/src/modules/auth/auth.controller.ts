@@ -99,7 +99,7 @@ export class AuthController {
 
   private handleCallback(req: RequestWithUser, res: Response): void {
     // @ts-ignore
-    const frontendUrl = req.headers['origin'] as string;
+    const frontendUrl = 'http://localhost:8081';
 
     if (!req.user) {
       return res.redirect(

@@ -29,13 +29,13 @@ export class AuthService {
     tokens: OAuthTokens,
   ): Promise<OAuthValidationResult> {
     try {
-      const { email, provider, providerId } = profile;
+      const { email, provider, provider_id } = profile;
 
       if (!email) {
         throw new Error('Email not provided by OAuth provider');
       }
 
-      let user = await this.findUserByProviderId(provider, providerId);
+      let user = await this.findUserByProviderId(provider, provider_id);
 
       if (!user) {
         const existingUser = await this.findByEmail(email);
@@ -44,7 +44,7 @@ export class AuthService {
           user = await this.linkOAuthProvider(
             existingUser.id,
             provider,
-            providerId,
+            provider_id,
           );
         }
       }
@@ -64,12 +64,12 @@ export class AuthService {
 
   private async findUserByProviderId(
     provider: OAuthProvider,
-    providerId: string,
+    provider_id: string,
   ): Promise<UserSelect | null> {
     const account = await this.prisma.providerAccount.findFirst({
       where: {
         provider: provider.toString(),
-        providerId,
+          provider_id,
       },
       include: {
         user: {
@@ -145,8 +145,8 @@ export class AuthService {
     await this.prisma.providerAccount.create({
       data: {
         provider: profile.provider.toString(),
-        providerId: profile.providerId,
-        userId: user.id,
+          provider_id: profile.provider_id,
+        user_id: user.id,
       },
     });
 
@@ -154,20 +154,20 @@ export class AuthService {
   }
 
   private async linkOAuthProvider(
-    userId: number,
+    user_id: number,
     provider: OAuthProvider,
-    providerId: string,
+    provider_id: string,
   ): Promise<UserSelect | null> {
     await this.prisma.providerAccount.create({
       data: {
         provider: provider.toString(),
-        providerId,
-        userId,
+          provider_id,
+        user_id,
       },
     });
 
     return this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: user_id },
       select: {
         id: true,
         email: true,
@@ -192,7 +192,7 @@ export class AuthService {
 
   private mapToAuthenticatedUser(
     user: UserSelect,
-    account?: { provider: string; providerId: string } | null,
+    account?: { provider: string; provider_id: string } | null,
   ): AuthenticatedUser {
     return {
       id: user.id,
@@ -200,28 +200,29 @@ export class AuthService {
       name: user.name ?? undefined,
       avatar: undefined,
       provider: account?.provider ?? 'local',
-      providerId: account?.providerId ?? '',
+      provider_id: account?.provider_id ?? '',
       role: user.role,
-      createdAt: user.created_at,
+      created_at: user.created_at,
+      updated_at: user.updated_at
     };
   }
 
   async hasLinkedProvider(
-    userId: number,
+    user_id: number,
     provider: OAuthProvider,
   ): Promise<boolean> {
     const account = await this.prisma.providerAccount.findFirst({
       where: {
-        userId,
+        user_id,
         provider: provider.toString(),
       },
     });
     return !!account;
   }
 
-  async unlinkProvider(userId: number): Promise<void> {
+  async unlinkProvider(user_id: number): Promise<void> {
     await this.prisma.providerAccount.deleteMany({
-      where: { userId },
+      where: { user_id },
     });
   }
 
@@ -247,7 +248,7 @@ export class AuthService {
     return accounts.map((account) =>
       this.mapToAuthenticatedUser(account.user, {
         provider: account.provider,
-        providerId: account.providerId,
+        provider_id: account.provider_id,
       }),
     );
   }

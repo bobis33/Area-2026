@@ -13,10 +13,10 @@ CREATE TABLE IF NOT EXISTS "User" (
 CREATE TABLE IF NOT EXISTS "ProviderAccount" (
     id SERIAL PRIMARY KEY,
     provider VARCHAR(255) NOT NULL,
-    providerId VARCHAR(255) NOT NULL,
-    userId INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+    provider_id VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
 
-    CONSTRAINT unique_provider UNIQUE (provider, providerId)
+    CONSTRAINT unique_provider UNIQUE (provider, provider_id)
     );
 
-CREATE INDEX idx_provideraccount_userId ON "ProviderAccount"(userId);
+CREATE INDEX idx_provideraccount_userId ON "ProviderAccount"(user_id);

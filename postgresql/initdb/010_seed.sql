@@ -6,7 +6,7 @@ VALUES
     ('David', 'david@example.com', '$2b$10$1HR4vKXvBXlXwA5DmRIFg.lkppvyw6yOxMcay15t7.N84ePXgjUE2', 'USER'),
     ('Eve', 'eve@example.com', '$2b$10$1HR4vKXvBXlXwA5DmRIFg.lkppvyw6yOxMcay15t7.N84ePXgjUE2', 'USER');
 
-INSERT INTO "ProviderAccount" (provider, providerId, userId)
+INSERT INTO "ProviderAccount" (provider, provider_id, user_id)
 VALUES
     ('google', 'google-alice-123', 1),
     ('discord', 'discord-alice-123', 1),

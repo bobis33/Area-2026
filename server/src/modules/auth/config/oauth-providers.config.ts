@@ -65,7 +65,7 @@ export function normalizeOAuthProfile(
           ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
           : undefined,
         provider: OAuthProvider.DISCORD,
-        providerId: profile.id,
+        provider_id: profile.id,
         raw: profile,
       };
       break;
@@ -81,7 +81,7 @@ export function normalizeOAuthProfile(
         displayName: profile.displayName || profile.name?.givenName || 'User',
         avatar: profile.photos?.[0]?.value,
         provider: OAuthProvider.GOOGLE,
-        providerId: profile.id,
+        provider_id: profile.id,
         raw: profile,
       };
       break;
@@ -98,7 +98,7 @@ export function normalizeOAuthProfile(
           profile.displayName || profile.name || profile.login || 'User',
         avatar: profile.avatar_url || profile.photos?.[0]?.value,
         provider: OAuthProvider.GITHUB,
-        providerId: profile.id,
+        provider_id: profile.id,
         raw: profile,
       };
       break;
