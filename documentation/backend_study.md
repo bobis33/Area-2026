@@ -107,22 +107,83 @@ PHP is designed for the web, traditionally operating in a synchronous, "share-no
 
 ## 3. Comparative Summary
 
-| Criterion                    | Node.js (NestJS) | Python (Django) | PHP (Laravel) |
-|:-----------------------------|:-----------------|:----------------|:--------------|
-| **I/O Performance (Async)**  | ⭐⭐⭐ Excellent    | ⭐⭐ Medium       | ⭐ Poor        |
-| **Type Safety**              | ⭐⭐⭐ Strong (TS)  | ⭐ Poor          | ⭐⭐ Medium     |
-| **Front/Back Unification**   | ⭐⭐⭐ Yes          | ❌ No            | ❌ No          |
-| **Hooks/Polling Management** | ⭐⭐⭐ Native       | ⭐⭐ Medium       | ⭐ Complex     |
-| **Docker Compatibility**     | ⭐⭐⭐ Simple       | ⭐⭐⭐ Simple      | ⭐⭐⭐ Simple    |
-| **Suitability for AREA**     | ⭐⭐⭐ Excellent    | ⭐⭐ Fair         | ⭐ Poor        |
+| Criterion                    | Node.js (NestJS)   | Python (Django) | PHP (Laravel) |
+| :--------------------------- | :----------------- | :-------------- | :------------ |
+| **I/O Performance (Async)**  | ⭐⭐⭐ Excellent   | ⭐⭐ Medium     | ⭐ Poor       |
+| **Type Safety**              | ⭐⭐⭐ Strong (TS) | ⭐ Poor         | ⭐⭐ Medium   |
+| **Front/Back Unification**   | ⭐⭐⭐ Yes         | ❌ No           | ❌ No         |
+| **Hooks/Polling Management** | ⭐⭐⭐ Native      | ⭐⭐ Medium     | ⭐ Complex    |
+| **Docker Compatibility**     | ⭐⭐⭐ Simple      | ⭐⭐⭐ Simple   | ⭐⭐⭐ Simple |
+| **Suitability for AREA**     | ⭐⭐⭐ Excellent   | ⭐⭐ Fair       | ⭐ Poor       |
 
 ![Backend Comparison](./graph/backend_comparison.png)
 
 ---
 
-## 4. Conclusion and Technology Choice
+## 4. Security Considerations
 
-### 4.1 Selected Stack: Node.js / PostgreSQL / Prisma
+Security is paramount in the AREA project, as it handles user credentials, OAuth tokens, and integrates with multiple third-party services. The chosen stack (Node.js/NestJS + PostgreSQL + Prisma) provides robust built-in security features.
+
+### 4.1 Authentication & Authorization
+
+- **JWT Tokens**: Stateless authentication using JSON Web Tokens with configurable expiration
+- **OAuth2 Integration**: Secure third-party authentication via Discord, Google, and GitHub
+- **Password Hashing**: bcrypt algorithm with salt rounds for storing user passwords
+- **Role-Based Access Control (RBAC)**: User roles (admin, user) to restrict access to sensitive endpoints
+
+### 4.2 Input Validation & Sanitization
+
+- **NestJS Pipes**: Automatic validation using `class-validator` decorators
+- **DTO Validation**: Strict type checking on all API inputs to prevent malformed data
+- **Prisma Type Safety**: ORM-level validation ensuring data integrity before database queries
+
+### 4.3 API Protection
+
+- **Rate Limiting**: Throttling mechanisms to prevent DDoS and brute-force attacks
+- **CORS Configuration**: Whitelist of allowed frontend origins (Web + Mobile URLs)
+- **Request Size Limits**: Body parser limits to prevent memory exhaustion attacks
+- **Helmet.js**: Automatically sets secure HTTP headers (CSP, HSTS, X-Frame-Options)
+
+### 4.4 Data Security
+
+- **SQL Injection Protection**: Prisma's parameterized queries eliminate SQL injection risks
+- **XSS Prevention**: Automatic escaping of user-generated content
+- **CSRF Protection**: Token-based verification for state-changing operations
+- **Environment Variables**: Sensitive data (API keys, secrets) stored outside codebase using `.env` files
+
+### 4.5 Third-Party API Security
+
+- **Token Storage**: OAuth refresh tokens securely stored in database (encrypted at rest)
+- **Minimal Permissions**: Request only necessary scopes from OAuth providers
+- **Token Rotation**: Automatic refresh token renewal to limit exposure window
+- **API Key Management**: Centralized configuration with validation on startup
+
+### 4.6 Database Security
+
+- **ACID Transactions**: PostgreSQL ensures data consistency and integrity
+- **Encrypted Connections**: TLS/SSL for database communications
+- **Least Privilege Principle**: Database user with minimal required permissions
+- **Regular Backups**: Automated backup strategy to prevent data loss
+
+### 4.7 Docker & Deployment Security
+
+- **Non-Root Containers**: Services run with limited user privileges
+- **Network Isolation**: Internal Docker network for service-to-service communication
+- **Secret Management**: Docker secrets for sensitive configuration in production
+- **Image Scanning**: Vulnerability scanning of Docker images before deployment
+
+### 4.8 Security Best Practices
+
+- **Dependency Scanning**: Regular `npm audit` to detect vulnerable packages
+- **Security Headers**: Implementation of OWASP recommended HTTP headers
+- **Logging & Monitoring**: Audit logs for authentication attempts and sensitive operations
+- **Error Handling**: Generic error messages to avoid information leakage
+
+---
+
+## 5. Conclusion and Technology Choice
+
+### 5.1 Selected Stack: Node.js / PostgreSQL / Prisma
 
 Based on the comparative analysis and project requirements, the following stack was chosen:
 
@@ -130,7 +191,7 @@ Based on the comparative analysis and project requirements, the following stack 
 - **Database:** PostgreSQL
 - **ORM:** Prisma
 
-### 4.2 Justification
+### 5.2 Justification
 
 #### Backend: Node.js vs PHP/Python
 
@@ -144,7 +205,7 @@ The project requires a rigorous structure to manage users and AREA relationships
 
 **Prisma** was chosen for end-to-end type safety. It generates a TypeScript client synchronized with the database, simplifying schema evolution when adding new services and drastically reducing bugs.
 
-### 4.3 Expected Benefits
+### 5.3 Expected Benefits
 
 This solution ensures:
 
@@ -152,14 +213,13 @@ This solution ensures:
 - **Responsiveness**: Optimal I/O management for interactions with third-party APIs.
 - **Maintainability**: Structured and unified code, allowing any team member to take over the project.
 - **Compliance**: Deployable architecture via Docker Compose with clearly separated business logic.
-
+- **Security**: Multi-layered security approach protecting user data and API integrations.
 
 ---
 
 # Version Française
 
 ---
-
 
 # State of the Art – Backend Architecture
 
@@ -270,22 +330,83 @@ PHP est conçu pour le web, fonctionnant traditionnellement sur un modèle synch
 
 ## 3. Synthèse comparative
 
-| Critère                       | Node.js (NestJS) | Python (Django) | PHP (Laravel) |
-|:------------------------------|:-----------------|:----------------|:--------------|
-| **Performance I/O (Async)**   | ⭐⭐⭐ Excellente   | ⭐⭐ Moyenne      | ⭐ Faible      |
-| **Sécurité du Typage**        | ⭐⭐⭐ Forte (TS)   | ⭐ Faible        | ⭐⭐ Moyenne    |
-| **Unification (Front/Back)**  | ⭐⭐⭐ Oui          | ❌ Non           | ❌ Non         |
-| **Gestion des Hooks/Polling** | ⭐⭐⭐ Native       | ⭐⭐ Moyenne      | ⭐ Complexe    |
-| **Compatibilité Docker**      | ⭐⭐⭐ Simple       | ⭐⭐⭐ Simple      | ⭐⭐⭐ Simple    |
-| **Adapté au projet AREA**     | ⭐⭐⭐ Excellent    | ⭐⭐ Correct      | ⭐ Faible      |
+| Critère                       | Node.js (NestJS)  | Python (Django) | PHP (Laravel) |
+| :---------------------------- | :---------------- | :-------------- | :------------ |
+| **Performance I/O (Async)**   | ⭐⭐⭐ Excellente | ⭐⭐ Moyenne    | ⭐ Faible     |
+| **Sécurité du Typage**        | ⭐⭐⭐ Forte (TS) | ⭐ Faible       | ⭐⭐ Moyenne  |
+| **Unification (Front/Back)**  | ⭐⭐⭐ Oui        | ❌ Non          | ❌ Non        |
+| **Gestion des Hooks/Polling** | ⭐⭐⭐ Native     | ⭐⭐ Moyenne    | ⭐ Complexe   |
+| **Compatibilité Docker**      | ⭐⭐⭐ Simple     | ⭐⭐⭐ Simple   | ⭐⭐⭐ Simple |
+| **Adapté au projet AREA**     | ⭐⭐⭐ Excellent  | ⭐⭐ Correct    | ⭐ Faible     |
 
 ![Backend Comparison](./graph/backend_comparison.png)
 
 ---
 
-## 4. Conclusion et choix technologique
+## 4. Considérations de Sécurité
 
-### 4.1 Choix retenu : Stack Node.js / PostgreSQL / Prisma
+La sécurité est primordiale dans le projet AREA, car il gère des identifiants utilisateurs, des tokens OAuth et s'intègre avec plusieurs services tiers. La stack choisie (Node.js/NestJS + PostgreSQL + Prisma) offre des fonctionnalités de sécurité robustes intégrées.
+
+### 4.1 Authentification & Autorisation
+
+- **Tokens JWT** : Authentification sans état utilisant JSON Web Tokens avec expiration configurable
+- **Intégration OAuth2** : Authentification sécurisée via Discord, Google et GitHub
+- **Hachage de Mots de Passe** : Algorithme bcrypt avec salage pour stocker les mots de passe utilisateurs
+- **Contrôle d'Accès Basé sur les Rôles (RBAC)** : Rôles utilisateurs (admin, user) pour restreindre l'accès aux endpoints sensibles
+
+### 4.2 Validation & Assainissement des Entrées
+
+- **NestJS Pipes** : Validation automatique utilisant les décorateurs `class-validator`
+- **Validation DTO** : Vérification stricte des types sur toutes les entrées API pour prévenir les données malformées
+- **Sécurité de Type Prisma** : Validation au niveau de l'ORM garantissant l'intégrité des données avant les requêtes
+
+### 4.3 Protection de l'API
+
+- **Rate Limiting** : Mécanismes de limitation pour prévenir les attaques DDoS et force brute
+- **Configuration CORS** : Liste blanche des origines frontend autorisées (URLs Web + Mobile)
+- **Limites de Taille de Requête** : Limites du body parser pour éviter les attaques d'épuisement mémoire
+- **Helmet.js** : Définit automatiquement les en-têtes HTTP sécurisés (CSP, HSTS, X-Frame-Options)
+
+### 4.4 Sécurité des Données
+
+- **Protection contre l'Injection SQL** : Les requêtes paramétrées de Prisma éliminent les risques d'injection SQL
+- **Prévention XSS** : Échappement automatique du contenu généré par les utilisateurs
+- **Protection CSRF** : Vérification basée sur des tokens pour les opérations modifiant l'état
+- **Variables d'Environnement** : Données sensibles (clés API, secrets) stockées hors du code via fichiers `.env`
+
+### 4.5 Sécurité des API Tierces
+
+- **Stockage des Tokens** : Tokens de rafraîchissement OAuth stockés de manière sécurisée en base (chiffrés au repos)
+- **Permissions Minimales** : Demande uniquement des scopes nécessaires aux fournisseurs OAuth
+- **Rotation des Tokens** : Renouvellement automatique des refresh tokens pour limiter la fenêtre d'exposition
+- **Gestion des Clés API** : Configuration centralisée avec validation au démarrage
+
+### 4.6 Sécurité de la Base de Données
+
+- **Transactions ACID** : PostgreSQL garantit la cohérence et l'intégrité des données
+- **Connexions Chiffrées** : TLS/SSL pour les communications avec la base de données
+- **Principe du Moindre Privilège** : Utilisateur de base de données avec permissions minimales requises
+- **Sauvegardes Régulières** : Stratégie de sauvegarde automatisée pour prévenir la perte de données
+
+### 4.7 Sécurité Docker & Déploiement
+
+- **Conteneurs Non-Root** : Services exécutés avec privilèges utilisateur limités
+- **Isolation Réseau** : Réseau Docker interne pour la communication service-à-service
+- **Gestion des Secrets** : Docker secrets pour la configuration sensible en production
+- **Analyse d'Images** : Scan de vulnérabilités des images Docker avant déploiement
+
+### 4.8 Bonnes Pratiques de Sécurité
+
+- **Scan des Dépendances** : `npm audit` régulier pour détecter les paquets vulnérables
+- **En-têtes de Sécurité** : Implémentation des en-têtes HTTP recommandés par l'OWASP
+- **Journalisation & Surveillance** : Logs d'audit pour les tentatives d'authentification et opérations sensibles
+- **Gestion des Erreurs** : Messages d'erreur génériques pour éviter les fuites d'information
+
+---
+
+## 5. Conclusion et choix technologique
+
+### 5.1 Choix retenu : Stack Node.js / PostgreSQL / Prisma
 
 Au regard de l'analyse comparative et des besoins du projet, la stack suivante est retenue :
 
@@ -293,7 +414,7 @@ Au regard de l'analyse comparative et des besoins du projet, la stack suivante e
 - **Base de données :** PostgreSQL
 - **ORM :** Prisma
 
-### 4.2 Justification du choix
+### 5.2 Justification du choix
 
 #### Backend : Node.js vs PHP/Python
 
@@ -307,7 +428,7 @@ Le projet nécessite une structure rigoureuse pour gérer les utilisateurs et le
 
 **Prisma** est retenu pour son typage de bout en bout (_Type Safety_). Il permet de générer un client TypeScript synchronisé avec la base de données, facilitant l'évolution du schéma lors de l'ajout de nouveaux services et réduisant drastiquement les bugs.
 
-### 4.3 Bénéfices attendus
+### 5.3 Bénéfices attendus
 
 Cette solution garantit :
 
@@ -315,3 +436,4 @@ Cette solution garantit :
 - **Réactivité** : Gestion optimale des I/O pour les interactions avec les API tierces.
 - **Maintenance** : Code structuré et unifié, facilitant la reprise du projet par n'importe quel membre du groupe.
 - **Respect des consignes** : Architecture déployable via Docker Compose et séparant clairement la logique métier.
+- **Sécurité** : Approche de sécurité multicouche protégeant les données utilisateurs et les intégrations API.
