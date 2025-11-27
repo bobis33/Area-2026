@@ -136,5 +136,4 @@ For more information look the [package.json](https://github.com/bobis33/Area-202
 - [Front web](https://github.com/bobis33/Area-2026/blob/main/client/web/README.md)
 
 ## Contributing
-
-➡️ Want to contribute? See [CONTRIBUTING.md](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
+➡️ Want to contribute? See [contributing guidelines](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
