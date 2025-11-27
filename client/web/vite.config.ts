@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: Number(process.env.VITE_PORT),
+    strictPort: true,
     host: true,
   },
   resolve: {
