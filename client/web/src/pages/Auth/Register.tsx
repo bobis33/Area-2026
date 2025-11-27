@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { post } from "@/services/api";
 import type { AuthResponse, RegisterData } from "@/types";
 import "./Register.css";
@@ -136,9 +136,9 @@ export default function Register() {
         <div className="register-footer">
           <p>
             Already have an account?{" "}
-            <a href="/" className="link">
+            <Link to="/login" className="link">
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
       </div>
