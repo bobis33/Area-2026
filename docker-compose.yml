@@ -1,6 +1,6 @@
 services:
   area_service_postgresql:
-    image: postgres:18.0-alpine3.22
+    image: postgres:18.1-alpine3.22
     container_name: ${PROJECT_NAME}_postgresql
     healthcheck:
       test:
