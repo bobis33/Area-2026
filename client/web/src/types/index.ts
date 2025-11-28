@@ -2,9 +2,11 @@ export interface User {
   id: number;
   email: string;
   name?: string;
+  avatar?: string;
+  provider: string;
+  providerId: string;
   role: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: Date | string;
 }
 
 export interface LoginCredentials {
@@ -15,8 +17,7 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
-  name?: string;
-  role: string;
+  name: string;
 }
 
 export interface AuthResponse {
