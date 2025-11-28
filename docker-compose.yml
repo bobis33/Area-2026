@@ -63,59 +63,62 @@ services:
 
   area_service_client_mobile:
     build:
-      context: client/mobile
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: client/mobile/Dockerfile
       args:
         PORT: ${MOBILE_CONTAINER_PORT}
     image: ${PROJECT_NAME}_client-mobile:latest
     container_name: ${PROJECT_NAME}_client-mobile
     volumes:
-      - area_volume_client-shared:/app/shared:z
+      - ./client/shared:/app/shared:rw,Z
     environment:
       PORT: ${MOBILE_CONTAINER_PORT}
     ports:
       - "${MOBILE_CONTAINER_PORT}:${MOBILE_CONTAINER_PORT}"
     depends_on:
-      - area_service_server
+      - ${PROJECT_NAME}_service_server
     networks:
-      - area_network_client-web
+      - ${PROJECT_NAME}_network_server
 
   area_service_client_web:
     build:
-      context: client/web
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: client/web/Dockerfile
       args:
         VITE_PORT: ${WEB_CONTAINER_PORT}
         VITE_API_URL: ${API_URL}
     image: ${PROJECT_NAME}_client-web:latest
     container_name: ${PROJECT_NAME}_client-web
     volumes:
-      - area_volume_client-shared:/app/shared:z
+      - ./client/shared:/app/shared:rw,Z
     ports:
       - "${WEB_CONTAINER_PORT}:${WEB_CONTAINER_PORT}"
     depends_on:
-      - area_service_server
-      - area_service_client_mobile
+      - ${PROJECT_NAME}_service_server
     networks:
-      - area_network_client-web
+      - ${PROJECT_NAME}_network_server
 
 volumes:
-  area_volume_client-shared:
-    name: ${PROJECT_NAME}_volume_client-shared
-    driver: local
 
   area_volume_postgresql-data:
     name: ${PROJECT_NAME}_volume_postgresql-data
     driver: local
 
+  area_volume_client-shared:
+    name: ${PROJECT_NAME}_volume_client-shared
+    driver: local
+
 networks:
+
   area_network_postgresql:
     name: ${PROJECT_NAME}_network_postgresql
     driver: bridge
     internal: false
+
   area_network_server:
     name: ${PROJECT_NAME}_network_server
     internal: false
+
   area_network_client-web:
     name: ${PROJECT_NAME}_network_client-web
     internal: false
