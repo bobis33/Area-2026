@@ -63,8 +63,8 @@ services:
 
   area_service_client_mobile:
     build:
-      context: client
-      dockerfile: mobile/Dockerfile
+      context: .
+      dockerfile: client/mobile/Dockerfile
       args:
         PORT: ${MOBILE_CONTAINER_PORT}
     image: ${PROJECT_NAME}_client-mobile:latest
@@ -76,14 +76,14 @@ services:
     ports:
       - "${MOBILE_CONTAINER_PORT}:${MOBILE_CONTAINER_PORT}"
     depends_on:
-      - area_service_server
+      - ${PROJECT_NAME}_service_server
     networks:
-      - area_network_client-web
+      - ${PROJECT_NAME}_network_server
 
   area_service_client_web:
     build:
-      context: client
-      dockerfile: web/Dockerfile
+      context: .
+      dockerfile: client/web/Dockerfile
       args:
         VITE_PORT: ${WEB_CONTAINER_PORT}
         VITE_API_URL: ${API_URL}
@@ -94,10 +94,9 @@ services:
     ports:
       - "${WEB_CONTAINER_PORT}:${WEB_CONTAINER_PORT}"
     depends_on:
-      - area_service_server
-      - area_service_client_mobile
+      - ${PROJECT_NAME}_service_server
     networks:
-      - area_network_client-web
+      - ${PROJECT_NAME}_network_server
 
 volumes:
 

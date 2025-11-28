@@ -28,7 +28,7 @@
   "workspaces": [
     "client/web",
     "client/mobile",
-    "client/shared",
+    "packages/ui",
     "server"
   ],
   "scripts": {
@@ -41,6 +41,7 @@
     "server:build": "npm --workspace server run build",
     "web:build": "npm --workspace client/web run build",
     "web:lint": "npm --workspace client/web run lint",
-    "web:start": "npm --workspace client/web run dev"
+    "web:start": "npm --workspace client/web run dev",
+    "packages:ui:build": "npm --workspace packages/ui run build"
   }
 }

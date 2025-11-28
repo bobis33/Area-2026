@@ -5,19 +5,22 @@ WORKDIR /app
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-COPY package.json ./
-RUN npm i
-COPY ./web .
-COPY ./shared/ui ./src/shared/ui
+COPY package.json tsconfig.json ./
+COPY ./client/web ./client/web/
+COPY ./packages/ui ./packages/ui
 
-RUN npm run build
-RUN npm cache clean --force
+RUN npm i --workspace client/web
+RUN npm i --workspace packages/ui && npm --workspace packages/ui run build  && npm cache clean --force
+
+WORKDIR /app/client/web
+
+RUN npm run build && npm cache clean --force
 
 FROM nginx:1.29.3-alpine-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/client/web/dist /usr/share/nginx/html
 
 ARG VITE_PORT
 ARG VITE_API_URL

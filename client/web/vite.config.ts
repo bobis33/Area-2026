@@ -15,4 +15,7 @@ export default defineConfig({
       "react-native": "react-native-web"
     },
   },
+    optimizeDeps: {
+        include: ["@area/ui"]
+    },
 });

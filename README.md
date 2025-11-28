@@ -23,26 +23,33 @@ First create a `.env` fil at the root of the repository:
 VERSION=0.0.0
 PROJECT_NAME=area
 MODE=development
+
 API_CONTAINER_PORT=8080
-API_URL="http://${PROJECT_NAME}_service_postgresql-api:${API_CONTAINER_PORT}/api"
 WEB_CONTAINER_PORT=8081
 MOBILE_CONTAINER_PORT=8082
+
+API_URL="http://localhost:${API_CONTAINER_PORT}"
+FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
+
 POSTGRES_DB="${PROJECT_NAME}_database"
 POSTGRES_USER="${PROJECT_NAME}_postgres-user"
 POSTGRES_PASSWORD="${PROJECT_NAME}_postgres-password"
 POSTGRES_CONTAINER_PORT=8000
 POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${PROJECT_NAME}_postgresql:${POSTGRES_CONTAINER_PORT}/${POSTGRES_DB}"
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_CALLBACK_URL=
-GITHUB_CLIENT_ID=
-GITHUB_CLIENT_SECRET=
-GITHUB_CALLBACK_URL=
-DISCORD_CLIENT_ID=
-DISCORD_CLIENT_SECRET=
-DISCORD_CALLBACK_URL=
+
+GOOGLE_CLIENT_ID=""
+GOOGLE_CLIENT_SECRET=""
+GOOGLE_CLIENT_CALLBACK_URL=""
+
+GITHUB_CLIENT_ID=""
+GITHUB_CLIENT_SECRET=""
+GITHUB_CLIENT_CALLBACK_URL=""
+
+DISCORD_CLIENT_ID=""
+DISCORD_CLIENT_SECRET=""
+DISCORD_CLIENT_CALLBACK_URL=""
+
 JWT_SECRET="jwt-secret-key"
-FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
 ```
 ### With docker
 
@@ -75,6 +82,7 @@ Then install dependencies and generate prisma client:
 ```bash
 npm i ## Install dependencies
 npm run server:prisma:generate ## Run migrations
+npm run packages:ui:build ## Build UI package
 ```
 
 Create .env files in each project folder:
@@ -128,4 +136,5 @@ For more information look the [package.json](https://github.com/bobis33/Area-202
 - [Front web](https://github.com/bobis33/Area-2026/blob/main/client/web/README.md)
 
 ## Contributing
+
 ➡️ Want to contribute? See [CONTRIBUTING.md](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
