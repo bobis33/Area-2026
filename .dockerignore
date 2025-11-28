@@ -8,7 +8,10 @@ build
 dist
 .github
 
+CONTRIBUTING.md
 gitleaks.toml
+LICENSE.md
+README.md
 *-lock.json
 .gitignore
 .env

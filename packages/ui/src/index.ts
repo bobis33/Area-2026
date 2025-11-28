@@ -19,5 +19,12 @@ export { ScreenLayout } from './components/ScreenLayout';
 export type { ScreenLayoutProps } from './components/ScreenLayout';
 
 // Design tokens (for advanced usage)
-export { colors, spacing, borderRadius, fontSizes, fontWeights, lineHeights, shadows } from './tokens';
-
+export {
+  colors,
+  spacing,
+  borderRadius,
+  fontSizes,
+  fontWeights,
+  lineHeights,
+  shadows,
+} from './tokens';

@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  SafeAreaView,
   View,
   ScrollView,
   Text,
   StyleSheet,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import type { ScreenLayoutProps } from './ScreenLayout.types';
 import { colors, spacing, fontSizes, fontWeights } from '../../tokens';
 
