@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { post } from "@/services/api";
-import type { AuthResponse, RegisterData } from "@/types";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import type { RegisterData } from "@/types";
 import "./Register.css";
 
 interface RegisterFormData {
@@ -12,47 +12,41 @@ interface RegisterFormData {
 }
 
 export default function Register() {
-  const navigate = useNavigate();
+  const { register, loading, error } = useAuth();
   const [formData, setFormData] = useState<RegisterFormData>({
     email: "",
     password: "",
     confirmPassword: "",
     name: "",
   });
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const [validationError, setValidationError] = useState<string>("");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setValidationError("");
 
     if (!formData.email || !formData.password || !formData.name) {
-      setError("Email, name and password are required");
+      setValidationError("Email, name and password are required");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setValidationError("Passwords do not match");
       return;
     }
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      setValidationError("Password must be at least 6 characters long");
       return;
     }
-    setLoading(true);
+
     try {
       const requestData: RegisterData = {
         email: formData.email,
         password: formData.password,
         name: formData.name,
       };
-      const response = await post<AuthResponse>("/auth/register", requestData);
-      localStorage.setItem("token", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
-      navigate("/");
-    } catch (err: any) {
-      setError(err.message || "Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
+      await register(requestData);
+    } catch (err) {
+      //Handled by useAuth hook
     }
   };
   return (
@@ -63,9 +57,9 @@ export default function Register() {
           <p>Join AREA and start automating your digital life</p>
         </div>
 
-        {error && (
+        {(error || validationError) && (
           <div className="error-message" role="alert">
-            {error}
+            {error || validationError}
           </div>
         )}
         <form onSubmit={handleSubmit} className="register-form">
@@ -136,9 +130,9 @@ export default function Register() {
         <div className="register-footer">
           <p>
             Already have an account?{" "}
-            <a href="/" className="link">
+            <Link to="/" className="link">
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
       </div>
