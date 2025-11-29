@@ -4,14 +4,15 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthService } from '@auth/auth.service';
 import { AuthController } from '@auth/auth.controller';
 import { DatabaseModule } from '@common/database/database.module';
-import {
-  DiscordOAuthStrategy,
-  GoogleOAuthStrategy,
-  GitHubOAuthStrategy,
-} from '@auth/strategies/oauth-strategy.factory';
+import { DiscordOAuthStrategy } from '@auth/strategies/discord.strategy';
+import { GoogleOAuthStrategy } from '@auth/strategies/google.strategy';
+import { GithubOAuthStrategy } from '@auth/strategies/github.strategy';
 import { JwtStrategy } from '@auth/strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
+import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
+import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
 
 @Module({
   imports: [
@@ -32,7 +33,10 @@ import { ConfigService } from '@nestjs/config';
     JwtStrategy,
     DiscordOAuthStrategy,
     GoogleOAuthStrategy,
-    GitHubOAuthStrategy,
+    GithubOAuthStrategy,
+    GoogleAuthGuard,
+    GithubAuthGuard,
+    DiscordAuthGuard,
   ],
   exports: [AuthService],
 })

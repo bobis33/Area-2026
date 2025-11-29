@@ -20,7 +20,7 @@ export function getProviderConfig(
       clientID: configService.get<string>('DISCORD_CLIENT_ID') || '',
       clientSecret: configService.get<string>('DISCORD_CLIENT_SECRET') || '',
       callbackURL:
-        configService.get<string>('DISCORD_CALLBACK_URL') ||
+        configService.get<string>('DISCORD_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/discord/callback',
       scope: ['identify', 'email'],
     },
@@ -28,7 +28,7 @@ export function getProviderConfig(
       clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || '',
       callbackURL:
-        configService.get<string>('GOOGLE_CALLBACK_URL') ||
+        configService.get<string>('GOOGLE_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/google/callback',
       scope: ['profile', 'email'],
     },
@@ -36,7 +36,7 @@ export function getProviderConfig(
       clientID: configService.get<string>('GITHUB_CLIENT_ID') || '',
       clientSecret: configService.get<string>('GITHUB_CLIENT_SECRET') || '',
       callbackURL:
-        configService.get<string>('GITHUB_CALLBACK_URL') ||
+        configService.get<string>('GITHUB_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/github/callback',
       scope: ['user:email'],
     },
@@ -86,29 +86,47 @@ export function normalizeOAuthProfile(
       };
       break;
 
-    case OAuthProvider.GITHUB:
-      if (!isGitHubProfile(profile)) {
-        throw new Error('Invalid GitHub profile structure');
-      }
+    case OAuthProvider.GITHUB: {
+      const gh: any = profile;
+
+      const primaryEmail =
+        gh.emails?.[0]?.value ||
+        gh._json?.email ||
+        '';
+
+      const profileId = gh.id?.toString?.() ?? gh.id ?? gh.node_id ?? '';
+
       normalizedProfile = {
-        id: profile.id,
-        email: profile.emails?.[0]?.value || '',
-        username: profile.username || profile.login,
+        id: profileId,
+        email: primaryEmail,
+        username: gh.username || gh.login || gh._json?.login || '',
         displayName:
-          profile.displayName || profile.name || profile.login || 'User',
-        avatar: profile.avatar_url || profile.photos?.[0]?.value,
+          gh.displayName || gh.name || gh.login || gh._json?.name || 'User',
+        avatar: gh.avatar_url || gh.photos?.[0]?.value || gh._json?.avatar_url,
         provider: OAuthProvider.GITHUB,
-        provider_id: profile.id,
-        raw: profile,
+        provider_id: profileId,
+        raw: gh,
       };
+
       break;
+    }
 
     default:
       throw new Error('Unsupported OAuth provider');
   }
 
   if (!normalizedProfile.email) {
-    throw new Error('Email not provided by OAuth provider');
+    if (provider === OAuthProvider.GITHUB) {
+      const fallbackLocalPart =
+        normalizedProfile.username ||
+        normalizedProfile.displayName ||
+        normalizedProfile.id ||
+        'github-user';
+
+      normalizedProfile.email = `${fallbackLocalPart}@github.local`;
+    } else {
+      throw new Error('Email not provided by OAuth provider');
+    }
   }
 
   return normalizedProfile;

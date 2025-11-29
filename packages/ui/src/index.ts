@@ -18,6 +18,9 @@ export type { CardProps } from './components/Card';
 export { ScreenLayout } from './components/ScreenLayout';
 export type { ScreenLayoutProps } from './components/ScreenLayout';
 
+export { OAuthButton } from './components/OAuthButton';
+export type { OAuthButtonProps } from './components/OAuthButton';
+
 // Design tokens (for advanced usage)
 export {
   colors,
