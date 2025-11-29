@@ -4,9 +4,10 @@ export interface User {
   name?: string;
   avatar?: string;
   provider: string;
-  providerId: string;
+  provider_id: string;
   role: string;
-  createdAt: Date | string;
+  created_at: Date | string;
+  updated_at: Date | string;
 }
 
 export interface LoginCredentials {
