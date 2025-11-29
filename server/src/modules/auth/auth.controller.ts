@@ -27,9 +27,6 @@ import {
 } from '@auth/dto/oauth.dto';
 import { getEnabledProviders } from '@auth/config/oauth-providers.config';
 import { AuthService } from '@auth/auth.service';
-import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
-import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
-import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
 
 type RequestWithUser = Request & {
   user?: AuthenticatedUser;
@@ -59,19 +56,19 @@ export class AuthController {
   }
 
   @Get('discord')
-  @UseGuards(DiscordAuthGuard)
+  @UseGuards(AuthGuard('discord'))
   @ApiOperation({ summary: 'Discord OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   discordAuth(): void {}
 
   @Get('google')
-  @UseGuards(GoogleAuthGuard)
+  @UseGuards(AuthGuard('google'))
   @ApiOperation({ summary: 'Google OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   googleAuth(): void {}
 
   @Get('github')
-  @UseGuards(GithubAuthGuard)
+  @UseGuards(AuthGuard('github'))
   @ApiOperation({ summary: 'GitHub OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   githubAuth(): void {}
