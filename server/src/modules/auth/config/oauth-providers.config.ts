@@ -87,25 +87,30 @@ export function normalizeOAuthProfile(
       break;
 
     case OAuthProvider.GITHUB: {
-      const gh: any = profile;
+      if (!isGitHubProfile(profile)) {
+        throw new Error('Invalid GitHub profile structure');
+      }
 
       const primaryEmail =
-        gh.emails?.[0]?.value ||
-        gh._json?.email ||
-        '';
+        profile.emails?.[0]?.value || profile._json?.email || '';
 
-      const profileId = gh.id?.toString?.() ?? gh.id ?? gh.node_id ?? '';
+      const profileId =
+        profile.id?.toString?.() ?? profile.id ?? profile.node_id ?? '';
 
       normalizedProfile = {
         id: profileId,
         email: primaryEmail,
-        username: gh.username || gh.login || gh._json?.login || '',
+        username:
+          profile.username || profile.login || profile._json?.login || '',
         displayName:
-          gh.displayName || gh.name || gh.login || gh._json?.name || 'User',
-        avatar: gh.avatar_url || gh.photos?.[0]?.value || gh._json?.avatar_url,
+          profile.displayName ||
+          profile._json?.name ||
+          profile.username ||
+          'User',
+        avatar: profile.photos?.[0]?.value || profile._json?.avatar_url,
         provider: OAuthProvider.GITHUB,
         provider_id: profileId,
-        raw: gh,
+        raw: profile,
       };
 
       break;

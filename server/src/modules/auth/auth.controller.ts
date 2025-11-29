@@ -100,9 +100,7 @@ export class AuthController {
   private handleCallback(req: RequestWithUser, res: Response): void {
     const defaultFrontendUrl = 'http://localhost:8081';
 
-    // @ts-ignore
     const redirectFromQuery = req.query?.redirect as string | undefined;
-    // @ts-ignore
     const redirectFromState = req.query?.state as string | undefined;
 
     const redirectParam = redirectFromState || redirectFromQuery || '';

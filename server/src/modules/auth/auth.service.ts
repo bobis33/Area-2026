@@ -69,7 +69,7 @@ export class AuthService {
     const account = await this.prisma.providerAccount.findFirst({
       where: {
         provider: provider.toString(),
-          provider_id,
+        provider_id,
       },
       include: {
         user: {
@@ -145,7 +145,7 @@ export class AuthService {
     await this.prisma.providerAccount.create({
       data: {
         provider: profile.provider.toString(),
-          provider_id: profile.provider_id,
+        provider_id: profile.provider_id,
         user_id: user.id,
       },
     });
@@ -161,7 +161,7 @@ export class AuthService {
     await this.prisma.providerAccount.create({
       data: {
         provider: provider.toString(),
-          provider_id,
+        provider_id,
         user_id,
       },
     });
@@ -203,7 +203,7 @@ export class AuthService {
       provider_id: account?.provider_id ?? '',
       role: user.role,
       created_at: user.created_at,
-      updated_at: user.updated_at
+      updated_at: user.updated_at,
     };
   }
 
