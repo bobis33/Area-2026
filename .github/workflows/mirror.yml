@@ -1,0 +1,47 @@
+name: 'CD - Mirror'
+run-name: 'Mirror - "${{ github.ref_name }}"'
+
+on:
+  push:
+    branches:
+      - "main"
+
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    name: ''
+    if: github.actor != 'dependabot[bot]'
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+      - uses: actions/checkout@v5.0.0
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "actions@github.com"
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PRIVATE_REPO_PAT }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Mirror push
+        env:
+          INPUT_TARGET_REPO_URL: "git@github.com:EpitechPGE3-2025/G-DEV-500-BDX-5-2-area-4.git"
+          INPUT_SSH_USERNAME: git
+        run: |
+          set -eu
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
+          git remote add mirror "$INPUT_TARGET_REPO_URL"
+          git push --tags --force --prune mirror "origin/main:main"
