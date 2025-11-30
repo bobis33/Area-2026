@@ -53,7 +53,7 @@ export function useAuth(): UseAuthReturn {
       try {
         const response: AuthResponse = await authService.login(credentials);
         setUser(response.user);
-        navigate("/home");
+        navigate("/");
       } catch (err: any) {
         const errorMessage =
           err.message || "Login failed. Please check your credentials.";
@@ -77,7 +77,7 @@ export function useAuth(): UseAuthReturn {
       try {
         const response: AuthResponse = await authService.register(data);
         setUser(response.user);
-        navigate("/home");
+        navigate("/");
       } catch (err: any) {
         const errorMessage =
           err.message || "Registration failed. Please try again.";

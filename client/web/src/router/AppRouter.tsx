@@ -14,10 +14,10 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<About />} />
         <Route path="/auth/success" element={<OAuthCallback />} />
         <Route path="/auth/error" element={<OAuthError />} />
         <Route path="*" element={<Navigate to="/" replace />} />
