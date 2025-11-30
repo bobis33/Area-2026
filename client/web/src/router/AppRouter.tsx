@@ -1,6 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "@/pages/Home/Home";
 import About from "@/pages/About/About";
+import Login from "@/pages/Auth/Login";
+import Register from "@/pages/Auth/Register";
+import OAuthCallback from "@/pages/Auth/OAuthCallback";
+import OAuthError from "@/pages/Auth/OAuthError";
 
 /**
  * Main application router
@@ -11,7 +15,11 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/about" element={<About />} />
+        <Route path="/auth/success" element={<OAuthCallback />} />
+        <Route path="/auth/error" element={<OAuthError />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
