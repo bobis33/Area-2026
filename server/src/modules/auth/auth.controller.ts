@@ -9,7 +9,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -27,6 +26,9 @@ import {
 } from '@auth/dto/oauth.dto';
 import { getEnabledProviders } from '@auth/config/oauth-providers.config';
 import { AuthService } from '@auth/auth.service';
+import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
+import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
+import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
 
 type RequestWithUser = Request & {
   user?: AuthenticatedUser;
@@ -56,25 +58,25 @@ export class AuthController {
   }
 
   @Get('discord')
-  @UseGuards(AuthGuard('discord'))
+  @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   discordAuth(): void {}
 
   @Get('google')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Google OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   googleAuth(): void {}
 
   @Get('github')
-  @UseGuards(AuthGuard('github'))
+  @UseGuards(GithubAuthGuard)
   @ApiOperation({ summary: 'GitHub OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   githubAuth(): void {}
 
   @Get('discord/callback')
-  @UseGuards(AuthGuard('discord'))
+  @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   discordCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
@@ -82,7 +84,7 @@ export class AuthController {
   }
 
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Google callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   googleCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
@@ -90,7 +92,7 @@ export class AuthController {
   }
 
   @Get('github/callback')
-  @UseGuards(AuthGuard('github'))
+  @UseGuards(GithubAuthGuard)
   @ApiOperation({ summary: 'GitHub callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   githubCallback(@Req() req: RequestWithUser, @Res() res: Response): void {

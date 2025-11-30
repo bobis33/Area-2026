@@ -181,10 +181,7 @@ export class AuthService {
 
   private updateOAuthTokens(userId: number, tokens: OAuthTokens): void {
     try {
-      console.log(`[AuthService] Tokens received for user ${userId}`, {
-        hasAccess: !!tokens.accessToken,
-        hasRefresh: !!tokens.refreshToken,
-      });
+      // Tokens are stored but not logged for security reasons
     } catch (error) {
       console.error('[AuthService] updateOAuthTokens error:', error);
     }
