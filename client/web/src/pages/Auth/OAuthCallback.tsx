@@ -22,7 +22,7 @@ export default function OAuthCallback() {
       handleOAuthCallback(userParam);
       setStatus("success");
       setTimeout(() => {
-        navigate("/home");
+        navigate("/");
       }, 1000);
     } catch (error) {
       console.error("Failed to process OAuth callback:", error);
