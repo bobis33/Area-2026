@@ -63,13 +63,24 @@ export interface GoogleProfile {
 
 export interface GitHubProfile {
   id: string;
-  login: string;
-  username?: string;
+  node_id?: string;
   displayName?: string;
-  name?: string;
+  username?: string;
+  login?: string;
+
   emails?: Array<{ value: string; primary?: boolean; verified?: boolean }>;
-  avatar_url?: string;
   photos?: Array<{ value: string }>;
+  avatar_url?: string;
+
+  _json?: {
+    id?: number;
+    node_id?: string;
+    login?: string;
+    email?: string;
+    name?: string;
+    avatar_url?: string;
+    [key: string]: any;
+  };
 }
 
 export function isDiscordProfile(profile: any): profile is DiscordProfile {

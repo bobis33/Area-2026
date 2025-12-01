@@ -28,10 +28,7 @@ export class GenericOAuthStrategy {
         tokens,
       );
     } catch (error) {
-      console.error(
-        `[${this.provider.toUpperCase()} OAuth] Validation error:`,
-        error,
-      );
+      console.error(`OAuth validation error (${this.provider}):`, error);
       return null;
     }
   }

@@ -20,7 +20,7 @@ export function getProviderConfig(
       clientID: configService.get<string>('DISCORD_CLIENT_ID') || '',
       clientSecret: configService.get<string>('DISCORD_CLIENT_SECRET') || '',
       callbackURL:
-        configService.get<string>('DISCORD_CALLBACK_URL') ||
+        configService.get<string>('DISCORD_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/discord/callback',
       scope: ['identify', 'email'],
     },
@@ -28,7 +28,7 @@ export function getProviderConfig(
       clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || '',
       callbackURL:
-        configService.get<string>('GOOGLE_CALLBACK_URL') ||
+        configService.get<string>('GOOGLE_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/google/callback',
       scope: ['profile', 'email'],
     },
@@ -36,7 +36,7 @@ export function getProviderConfig(
       clientID: configService.get<string>('GITHUB_CLIENT_ID') || '',
       clientSecret: configService.get<string>('GITHUB_CLIENT_SECRET') || '',
       callbackURL:
-        configService.get<string>('GITHUB_CALLBACK_URL') ||
+        configService.get<string>('GITHUB_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/github/callback',
       scope: ['user:email'],
     },
@@ -86,29 +86,67 @@ export function normalizeOAuthProfile(
       };
       break;
 
-    case OAuthProvider.GITHUB:
-      if (!isGitHubProfile(profile)) {
-        throw new Error('Invalid GitHub profile structure');
-      }
+    case OAuthProvider.GITHUB: {
+      // Be tolerant: treat profile as "any" to support the real passport-github2 shape
+      const gh: any = profile;
+
+      // Try to get a primary email from multiple possible locations
+      const primaryEmail =
+        gh.emails?.[0]?.value ||
+        gh._json?.email ||
+        '';
+      // Try to get a stable profile ID
+      // We use the id, node_id, and id.toString() to get a stable profile ID
+      // This is to avoid issues with the profile ID being different on the client and server
+      // If the profile ID is not found, we use an empty string
+      // This is to avoid issues with the profile ID being different on the client and server
+      // j'ai mis sa car c'est la seule manière que j'ai trouvée pour que le profile ID soit stable
+      // j'ai essayé de faire un getStableProfileId() mais ça ne fonctionnait pas
+      // et momo ton ancienne methode etais trop strict.
+      const profileId =
+        gh.id?.toString?.() ??
+        gh.id ??
+        gh.node_id ??
+        '';
+
       normalizedProfile = {
-        id: profile.id,
-        email: profile.emails?.[0]?.value || '',
-        username: profile.username || profile.login,
+        id: profileId,
+        email: primaryEmail,
+        username: gh.username || gh.login || gh._json?.login || '',
         displayName:
-          profile.displayName || profile.name || profile.login || 'User',
-        avatar: profile.avatar_url || profile.photos?.[0]?.value,
+          gh.displayName ||
+          gh.name ||
+          gh.login ||
+          gh._json?.name ||
+          'GitHub user',
+        avatar:
+          gh.avatar_url ||
+          gh.photos?.[0]?.value ||
+          gh._json?.avatar_url,
         provider: OAuthProvider.GITHUB,
-        provider_id: profile.id,
-        raw: profile,
+        provider_id: profileId,
+        raw: gh,
       };
+
       break;
+    }
 
     default:
       throw new Error('Unsupported OAuth provider');
   }
 
   if (!normalizedProfile.email) {
-    throw new Error('Email not provided by OAuth provider');
+    if (provider === OAuthProvider.GITHUB) {
+      const fallbackLocalPart =
+        normalizedProfile.username ||
+        normalizedProfile.displayName ||
+        normalizedProfile.id ||
+        'github-user';
+
+      normalizedProfile.email = `${fallbackLocalPart}@github.local`;
+    } else {
+      throw new Error('Email not provided by OAuth provider');
+    }
   }
 
   return normalizedProfile;

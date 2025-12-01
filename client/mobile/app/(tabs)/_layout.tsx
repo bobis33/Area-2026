@@ -1,40 +1,90 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { currentTheme } = useAppTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: currentTheme.colors.tabIconActive,
+        tabBarInactiveTintColor: currentTheme.colors.tabIconInactive,
         headerShown: false,
         tabBarButton: HapticTab,
+        tabBarStyle: {
+          height: Platform.OS === 'ios' ? 88 : 64,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
+          paddingTop: 8,
+          backgroundColor: currentTheme.colors.tabBarBackground,
+          borderTopWidth: 1,
+          borderTopColor: currentTheme.colors.tabBarBorder,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '600',
+          marginTop: 4,
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              size={focused ? 26 : 24}
+              name="house.fill"
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="area"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Area',
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              size={focused ? 26 : 24}
+              name="square.grid.2x2.fill"
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
-        name="users"
+        name="profile"
         options={{
-          title: 'Users',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.2.fill" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              size={focused ? 26 : 24}
+              name="person.fill"
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="admin"
+        options={{
+          title: 'Admin',
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              size={focused ? 26 : 24}
+              name="shield.fill"
+              color={color}
+            />
+          ),
         }}
       />
     </Tabs>

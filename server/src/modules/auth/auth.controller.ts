@@ -9,8 +9,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import {
   ApiBearerAuth,
@@ -27,14 +26,17 @@ import {
 } from '@auth/dto/oauth.dto';
 import { getEnabledProviders } from '@auth/config/oauth-providers.config';
 import { AuthService } from '@auth/auth.service';
+import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
+import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
+import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
 
-interface RequestWithUser extends Request {
+type RequestWithUser = Request & {
   user?: AuthenticatedUser;
   logout: (callback: (err?: any) => void) => void;
   session: {
     destroy: (callback: (err?: any) => void) => void;
   };
-}
+};
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -56,25 +58,25 @@ export class AuthController {
   }
 
   @Get('discord')
-  @UseGuards(AuthGuard('discord'))
+  @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   discordAuth(): void {}
 
   @Get('google')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Google OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   googleAuth(): void {}
 
   @Get('github')
-  @UseGuards(AuthGuard('github'))
+  @UseGuards(GithubAuthGuard)
   @ApiOperation({ summary: 'GitHub OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   githubAuth(): void {}
 
   @Get('discord/callback')
-  @UseGuards(AuthGuard('discord'))
+  @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   discordCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
@@ -82,7 +84,7 @@ export class AuthController {
   }
 
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Google callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   googleCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
@@ -90,7 +92,7 @@ export class AuthController {
   }
 
   @Get('github/callback')
-  @UseGuards(AuthGuard('github'))
+  @UseGuards(GithubAuthGuard)
   @ApiOperation({ summary: 'GitHub callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   githubCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
@@ -98,17 +100,42 @@ export class AuthController {
   }
 
   private handleCallback(req: RequestWithUser, res: Response): void {
-    // @ts-ignore
-    const frontendUrl = 'http://localhost:8081';
+    const defaultFrontendUrl = 'http://localhost:8081';
+
+    const redirectFromQuery = req.query?.redirect as string | undefined;
+    const redirectFromState = req.query?.state as string | undefined;
+
+    const redirectParam = redirectFromState || redirectFromQuery || '';
+
+    const baseUrl = redirectParam
+      ? decodeURIComponent(redirectParam)
+      : defaultFrontendUrl;
 
     if (!req.user) {
-      return res.redirect(
-        `${frontendUrl}/auth/error?message=Authentication failed`,
-      );
+      const message = encodeURIComponent('Authentication failed');
+      const errorUrl = baseUrl.startsWith('area://')
+        ? `${baseUrl}?message=${message}`
+        : `${baseUrl}/auth/error?message=${message}`;
+      return res.redirect(errorUrl);
     }
 
+    const token = this.authService.generateToken({
+      id: req.user.id,
+      email: req.user.email,
+      name: req.user.name || null,
+      role: req.user.role,
+      created_at: req.user.created_at,
+      updated_at: req.user.updated_at,
+    });
+
     const userJson = encodeURIComponent(JSON.stringify(req.user));
-    res.redirect(`${frontendUrl}/auth/success?user=${userJson}`);
+    const tokenParam = encodeURIComponent(token);
+
+    const redirectUrl = baseUrl.startsWith('area://')
+      ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}user=${userJson}&token=${tokenParam}`
+      : `${baseUrl}/auth/success?user=${userJson}&token=${tokenParam}`;
+
+    return res.redirect(redirectUrl);
   }
 
   @Get('status')

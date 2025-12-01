@@ -126,13 +126,74 @@ class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data: User[] = await response.json();
       return data;
     } catch (error) {
       console.error('Error fetching users:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update a user
+   * @param id - User ID
+   * @param data - User data to update (e.g., { role: 'admin' })
+   * @param token - JWT authentication token
+   * @returns Promise with updated user
+   */
+  async updateUser(id: number, data: Partial<{ name?: string; email?: string; role?: string }>, token: string): Promise<User> {
+    try {
+      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const updatedUser: User = await response.json();
+      return updatedUser;
+    } catch (error) {
+      console.error('Error updating user:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a user
+   * @param id - User ID
+   * @param token - JWT authentication token
+   * @returns Promise with deleted user
+   */
+  async deleteUser(id: number, token: string): Promise<User> {
+    try {
+      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const deletedUser: User = await response.json();
+      return deletedUser;
+    } catch (error) {
+      console.error('Error deleting user:', error);
       throw error;
     }
   }
