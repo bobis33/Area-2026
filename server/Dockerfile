@@ -14,6 +14,7 @@ ARG GITHUB_CLIENT_ID
 ARG GITHUB_CLIENT_SECRET
 ARG JWT_SECRET
 ARG FRONTEND_URLS
+ARG PORT
 ENV POSTGRES_URL=${POSTGRES_URL}
 ENV DISCORD_CLIENT_CALLBACK_URL=${DISCORD_CLIENT_CALLBACK_URL}
 ENV GITHUB_CLIENT_CALLBACK_URL=${GITHUB_CLIENT_CALLBACK_URL}
@@ -27,8 +28,9 @@ ENV GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
 ENV POSTGRES_URL=${POSTGRES_URL}
 ENV JWT_SECRET=${JWT_SECRET}
 ENV FRONTEND_URLS=${FRONTEND_URLS}
+ENV PORT=${PORT}
 
-COPY package.json ./
+COPY ./package.json ./
 
 RUN npm i
 
@@ -40,11 +42,13 @@ FROM node:24-alpine3.22
 
 WORKDIR /app
 
-COPY package.json ./
+COPY ./package.json ./
+
+EXPOSE ${PORT}
 
 RUN npm install --omit=dev && npm cache clean --force
 
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules/.prisma/client ./node_modules/.prisma/client
+COPY --from=build ./app/dist ./dist
+COPY --from=build ./app/node_modules/.prisma/client ./node_modules/.prisma/client
 
 CMD ["node", "dist/main.js"]

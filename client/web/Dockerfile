@@ -5,8 +5,8 @@ WORKDIR /app
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-COPY package.json tsconfig.json ./
-COPY ./client/web ./client/web/
+COPY ./package.json ./tsconfig.json ./
+COPY ./client/web ./client/web
 COPY ./packages/ui ./packages/ui
 
 RUN npm i --workspace client/web
@@ -20,7 +20,7 @@ FROM nginx:1.29.3-alpine-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/client/web/dist /usr/share/nginx/html
+COPY --from=builder ./app/client/web/dist /usr/share/nginx/html
 
 ARG VITE_PORT
 ARG VITE_API_URL

@@ -5,12 +5,16 @@ WORKDIR /app
 ARG PORT
 ENV PORT=${PORT}
 
-COPY package.json tsconfig.json ./
-COPY packages/ui ./packages/ui
-COPY ./client/mobile ./client/mobile
+COPY ./package.json ./tsconfig.json ./
+COPY ./client/mobile/package.json ./client/mobile/package.json
+COPY ./packages/ui/package.json ./packages/ui/package.json
 
-RUN npm i --workspace client/mobile
-RUN npm i --workspace packages/ui && npm --workspace packages/ui run build  && npm cache clean --force
+RUN npm i --workspace client/mobile && npm i --workspace packages/ui
+
+COPY ./client/mobile ./client/mobile
+COPY ./packages/ui ./packages/ui
+
+EXPOSE ${PORT}
 
 WORKDIR /app/client/mobile
 
