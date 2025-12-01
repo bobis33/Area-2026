@@ -1,7 +1,7 @@
 import {
   DarkTheme,
   DefaultTheme,
-  ThemeProvider,
+  ThemeProvider as NavigationThemeProvider,
 } from "@react-navigation/native";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -10,6 +10,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -17,6 +18,7 @@ export const unstable_settings = {
 
 function RootLayoutNav() {
   const { isDark } = useAppTheme();
+  const colorScheme = useColorScheme();
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
   const router = useRouter();
@@ -46,7 +48,9 @@ function RootLayoutNav() {
   }, [isAuthenticated, segments, isMounted]);
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <NavigationThemeProvider
+      value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+    >
       <Stack>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -55,7 +59,7 @@ function RootLayoutNav() {
           options={{ presentation: "modal", title: "Modal" }}
         />
       </Stack>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <StatusBar style={isDark ? "light" : "dark"} />
     </NavigationThemeProvider>
   );
 }
