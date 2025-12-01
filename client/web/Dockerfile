@@ -22,6 +22,8 @@ WORKDIR /app
 
 COPY --from=builder ./app/client/web/dist /usr/share/nginx/html
 
+RUN mkdir -p /usr/share/nginx/html/downloads
+
 ARG VITE_PORT
 ARG VITE_API_URL
 ENV VITE_PORT=${VITE_PORT}
@@ -34,10 +36,17 @@ RUN printf "server {\n\
     server_name localhost;\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\
+    \n\
     location / {\n\
         try_files \$uri /index.html;\n\
     }\n\
+    \n\
+    location /client.apk {\n\
+        alias /usr/share/nginx/html/downloads/app-release.apk;\n\
+        add_header Content-Type application/vnd.android.package-archive;\n\
+    }\n\
 }" > /etc/nginx/conf.d/default.conf
 
+VOLUME ["/app/shared"]
 
 CMD ["nginx", "-g", "daemon off;"]
