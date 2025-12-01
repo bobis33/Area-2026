@@ -117,10 +117,10 @@ export function normalizeOAuthProfile(
       break;
 
     case OAuthProvider.GITHUB: {
-      if (!isGitHubProfile(profile)) {
-        throw new Error('Invalid GitHub profile structure');
-      }
+      // Be tolerant: treat profile as "any" to support the real passport-github2 shape
+      const gh: any = profile;
 
+      // Try to get a primary email from multiple possible locations
       const primaryEmail =
         profile.emails?.[0]?.value || profile._json?.email || '';
 
@@ -140,8 +140,7 @@ export function normalizeOAuthProfile(
       normalizedProfile = {
         id: profileId,
         email: primaryEmail,
-        username:
-          profile.username || profile.login || profile._json?.login || '',
+        username: gh.username || gh.login || gh._json?.login || '',
         displayName:
           profile.displayName ||
           profile._json?.name ||
@@ -155,7 +154,7 @@ export function normalizeOAuthProfile(
           profile.avatar_url,
         provider: OAuthProvider.GITHUB,
         provider_id: profileId,
-        raw: profile,
+        raw: gh,
       };
 
       break;

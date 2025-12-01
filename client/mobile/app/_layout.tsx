@@ -16,7 +16,7 @@ export const unstable_settings = {
 };
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  const { isDark } = useAppTheme();
   const { isAuthenticated } = useAuth();
   const segments = useSegments();
   const router = useRouter();
@@ -55,15 +55,17 @@ function RootLayoutNav() {
           options={{ presentation: "modal", title: "Modal" }}
         />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+    </NavigationThemeProvider>
   );
 }
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <RootLayoutNav />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <RootLayoutNav />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
