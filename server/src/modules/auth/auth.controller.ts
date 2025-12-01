@@ -111,10 +111,15 @@ export class AuthController {
       ? decodeURIComponent(redirectParam)
       : defaultFrontendUrl;
 
+    const isMobile =
+      baseUrl.startsWith('area://') ||
+      baseUrl.includes('auth.expo.io') ||
+      baseUrl.startsWith('exp://');
+
     if (!req.user) {
       const message = encodeURIComponent('Authentication failed');
-      const errorUrl = baseUrl.startsWith('area://')
-        ? `${baseUrl}?message=${message}`
+      const errorUrl = isMobile
+        ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}message=${message}`
         : `${baseUrl}/auth/error?message=${message}`;
       return res.redirect(errorUrl);
     }
@@ -131,7 +136,7 @@ export class AuthController {
     const userJson = encodeURIComponent(JSON.stringify(req.user));
     const tokenParam = encodeURIComponent(token);
 
-    const redirectUrl = baseUrl.startsWith('area://')
+    const redirectUrl = isMobile
       ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}user=${userJson}&token=${tokenParam}`
       : `${baseUrl}/auth/success?user=${userJson}&token=${tokenParam}`;
 

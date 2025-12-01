@@ -62,7 +62,7 @@ export interface GoogleProfile {
 }
 
 export interface GitHubProfile {
-  id: string;
+  id?: string | number;
   node_id?: string;
   displayName?: string;
   username?: string;
@@ -73,7 +73,7 @@ export interface GitHubProfile {
   avatar_url?: string;
 
   _json?: {
-    id?: number;
+    id?: number | string;
     node_id?: string;
     login?: string;
     email?: string;
@@ -81,11 +81,13 @@ export interface GitHubProfile {
     avatar_url?: string;
     [key: string]: any;
   };
+  [key: string]: any;
 }
 
 export function isDiscordProfile(profile: any): profile is DiscordProfile {
   return (
     typeof profile === 'object' &&
+    profile !== null &&
     'username' in profile &&
     'discriminator' in profile
   );
@@ -101,9 +103,38 @@ export function isGoogleProfile(profile: any): profile is GoogleProfile {
 }
 
 export function isGitHubProfile(profile: any): profile is GitHubProfile {
-  return (
-    typeof profile === 'object' &&
-    ('login' in profile || 'username' in profile) &&
-    'avatar_url' in profile
-  );
+  if (typeof profile !== 'object' || profile === null) {
+    return false;
+  }
+
+  // Vérifier si l'ID existe (dans profile ou dans _json)
+  const hasIdInRoot = 'id' in profile;
+  const hasJsonObject =
+    '_json' in profile &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    typeof profile._json === 'object' &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    profile._json !== null;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const hasIdInJson = hasJsonObject && 'id' in profile._json;
+
+  const hasId = hasIdInRoot || hasIdInJson;
+
+  if (!hasId) {
+    return false;
+  }
+
+  // Vérifier si login/username existe (dans profile ou dans _json)
+  const hasLoginInRoot = 'login' in profile;
+  const hasUsernameInRoot = 'username' in profile;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const hasLoginInJson = hasJsonObject && 'login' in profile._json;
+
+  const hasLogin = hasLoginInRoot || hasUsernameInRoot || hasLoginInJson;
+
+  if (!hasLogin) {
+    return false;
+  }
+
+  return true;
 }
