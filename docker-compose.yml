@@ -65,12 +65,15 @@ services:
     build:
       context: .
       dockerfile: client/mobile/Dockerfile
-      args:
-        PORT: ${MOBILE_CONTAINER_PORT}
     image: ${PROJECT_NAME}_client-mobile:latest
     container_name: ${PROJECT_NAME}_client-mobile
     volumes:
       - ./client/shared:/app/shared:rw,Z
+    command: >
+      sh -c "
+        cd /app/client/mobile/android &&
+        cp ./app/build/outputs/apk/release/app-release.apk /app/shared/
+      "
     environment:
       PORT: ${MOBILE_CONTAINER_PORT}
     ports:
@@ -90,7 +93,7 @@ services:
     image: ${PROJECT_NAME}_client-web:latest
     container_name: ${PROJECT_NAME}_client-web
     volumes:
-      - ./client/shared:/app/shared:rw,Z
+      - ./client/shared:/usr/share/nginx/html/downloads:ro,Z
     ports:
       - "${WEB_CONTAINER_PORT}:${WEB_CONTAINER_PORT}"
     depends_on:
