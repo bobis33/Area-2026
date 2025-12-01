@@ -1,8 +1,14 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import * as Linking from 'expo-linking';
-import { router } from 'expo-router';
-import { apiService } from '@/services/api.service';
-import { AuthenticatedUser, AuthCredentials } from '@/types/api';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import * as Linking from "expo-linking";
+import { router } from "expo-router";
+import { apiService } from "@/services/api.service";
+import { AuthenticatedUser, AuthCredentials } from "@/types/api";
 
 interface AuthContextType {
   token: string | null;
@@ -33,7 +39,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     handleInitialUrl();
 
-    const subscription = Linking.addEventListener('url', (event) => {
+    const subscription = Linking.addEventListener("url", (event) => {
       handleDeepLink(event.url);
     });
 
@@ -47,25 +53,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       const parsed = Linking.parse(url);
-      const path = parsed.path || '';
-      const normalizedPath = path.replace(/^\/+|\/+$/g, '');
-      const isAuthSuccessPath = normalizedPath === 'auth/success';
-      const isAreaAuthSuccess = url.startsWith('area://auth/success');
+      const path = parsed.path || "";
+      const normalizedPath = path.replace(/^\/+|\/+$/g, "");
+      const query = parsed.queryParams ?? {};
 
-      if (!isAuthSuccessPath && !isAreaAuthSuccess) {
-        if (normalizedPath === 'auth/error') {
-          const message = parsed.queryParams?.message as string | undefined;
-          console.error('OAuth error:', message || 'Authentication failed');
-        }
+      const userParam = query.user as string | undefined;
+      const tokenParam = query.token as string | undefined;
+      const hasAuthParams = userParam && tokenParam;
+
+      // Check if this is an error path
+      if (
+        normalizedPath === "auth/error" ||
+        normalizedPath.includes("auth/error")
+      ) {
         return;
       }
 
-      const query = parsed.queryParams ?? {};
-      const userParam = query.user as string | undefined;
-      const tokenParam = query.token as string | undefined;
-
-      if (!userParam || !tokenParam) {
-        console.error('Missing user or token in callback URL');
+      // Only process if we have both user and token parameters
+      if (!hasAuthParams) {
         return;
       }
 
@@ -75,9 +80,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setToken(tokenValue);
       setUser(userData);
-      router.replace('/(tabs)');
+      // Navigation will be handled by the useEffect in _layout.tsx
     } catch (error) {
-      console.error('Error handling deep link:', error);
+      console.error("Error handling deep link:", error);
     }
   };
 
@@ -87,8 +92,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await apiService.login(credentials);
       setToken(response.token);
       setUser(response.user);
+      // Navigation will be handled by the useEffect in _layout.tsx
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       throw error;
     }
   };
@@ -117,8 +123,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }
-

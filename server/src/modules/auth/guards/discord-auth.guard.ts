@@ -20,4 +20,3 @@ export class DiscordAuthGuard extends AuthGuard('discord') {
     return options;
   }
 }
-

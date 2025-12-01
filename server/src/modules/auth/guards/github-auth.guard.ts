@@ -20,4 +20,3 @@ export class GithubAuthGuard extends AuthGuard('github') {
     return options;
   }
 }
-

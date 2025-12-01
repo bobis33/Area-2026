@@ -2,6 +2,7 @@
   "expo": {
     "name": "area-client-mobile",
     "slug": "area-client-mobile",
+    "owner": "area-epitech-2026",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

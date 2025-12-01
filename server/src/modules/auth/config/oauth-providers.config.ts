@@ -14,30 +14,60 @@ import {
 export function getProviderConfig(
   provider: OAuthProvider,
   configService: ConfigService,
+  isMobile: boolean = false,
 ): OAuthProviderConfig {
+  if (provider === OAuthProvider.GITHUB && isMobile) {
+    const mobileClientId = configService.get<string>('GITHUB_CLIENT_MOBILE_ID');
+    const mobileClientSecret = configService.get<string>(
+      'GITHUB_CLIENT_MOBILE_SECRET',
+    );
+    const mobileCallbackUrl = configService.get<string>(
+      'GITHUB_CLIENT_MOBILE_CALLBACK_URL',
+    );
+
+    if (mobileClientId && mobileClientSecret) {
+      return {
+        clientID: mobileClientId,
+        clientSecret: mobileClientSecret,
+        callbackURL:
+          mobileCallbackUrl || 'http://localhost:8080/auth/github/callback',
+        scope: ['user:email'],
+      };
+    }
+  }
+
   const configs: Record<OAuthProvider, OAuthProviderConfig> = {
     [OAuthProvider.DISCORD]: {
       clientID: configService.get<string>('DISCORD_CLIENT_ID') || '',
       clientSecret: configService.get<string>('DISCORD_CLIENT_SECRET') || '',
-      callbackURL:
-        configService.get<string>('DISCORD_CLIENT_CALLBACK_URL') ||
-        'http://localhost:8080/auth/discord/callback',
+      callbackURL: isMobile
+        ? configService.get<string>('DISCORD_CLIENT_MOBILE_CALLBACK_URL') ||
+          configService.get<string>('DISCORD_CLIENT_CALLBACK_URL') ||
+          'http://localhost:8080/auth/discord/callback'
+        : configService.get<string>('DISCORD_CLIENT_CALLBACK_URL') ||
+          'http://localhost:8080/auth/discord/callback',
       scope: ['identify', 'email'],
     },
     [OAuthProvider.GOOGLE]: {
       clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || '',
-      callbackURL:
-        configService.get<string>('GOOGLE_CLIENT_CALLBACK_URL') ||
-        'http://localhost:8080/auth/google/callback',
+      callbackURL: isMobile
+        ? configService.get<string>('GOOGLE_CLIENT_MOBILE_CALLBACK_URL') ||
+          configService.get<string>('GOOGLE_CLIENT_CALLBACK_URL') ||
+          'http://localhost:8080/auth/google/callback'
+        : configService.get<string>('GOOGLE_CLIENT_CALLBACK_URL') ||
+          'http://localhost:8080/auth/google/callback',
       scope: ['profile', 'email'],
     },
     [OAuthProvider.GITHUB]: {
       clientID: configService.get<string>('GITHUB_CLIENT_ID') || '',
       clientSecret: configService.get<string>('GITHUB_CLIENT_SECRET') || '',
-      callbackURL:
-        configService.get<string>('GITHUB_CLIENT_CALLBACK_URL') ||
-        'http://localhost:8080/auth/github/callback',
+      callbackURL: isMobile
+        ? configService.get<string>('GITHUB_CLIENT_MOBILE_CALLBACK_URL') ||
+          configService.get<string>('GITHUB_CLIENT_CALLBACK_URL') ||
+          'http://localhost:8080/auth/github/callback'
+        : configService.get<string>('GITHUB_CLIENT_CALLBACK_URL') ||
+          'http://localhost:8080/auth/github/callback',
       scope: ['user:email'],
     },
   };
@@ -87,45 +117,44 @@ export function normalizeOAuthProfile(
       break;
 
     case OAuthProvider.GITHUB: {
-      // Be tolerant: treat profile as "any" to support the real passport-github2 shape
-      const gh: any = profile;
+      if (!isGitHubProfile(profile)) {
+        throw new Error('Invalid GitHub profile structure');
+      }
 
-      // Try to get a primary email from multiple possible locations
       const primaryEmail =
-        gh.emails?.[0]?.value ||
-        gh._json?.email ||
-        '';
-      // Try to get a stable profile ID
-      // We use the id, node_id, and id.toString() to get a stable profile ID
-      // This is to avoid issues with the profile ID being different on the client and server
-      // If the profile ID is not found, we use an empty string
-      // This is to avoid issues with the profile ID being different on the client and server
-      // j'ai mis sa car c'est la seule manière que j'ai trouvée pour que le profile ID soit stable
-      // j'ai essayé de faire un getStableProfileId() mais ça ne fonctionnait pas
-      // et momo ton ancienne methode etais trop strict.
-      const profileId =
-        gh.id?.toString?.() ??
-        gh.id ??
-        gh.node_id ??
-        '';
+        profile.emails?.[0]?.value || profile._json?.email || '';
+
+      const profileId = String(
+        profile.id ||
+          profile._json?.id ||
+          profile.node_id ||
+          profile._json?.node_id ||
+          '',
+      );
+
+      if (!profileId) {
+        throw new Error('GitHub profile missing ID');
+      }
 
       normalizedProfile = {
         id: profileId,
         email: primaryEmail,
-        username: gh.username || gh.login || gh._json?.login || '',
+        username:
+          profile.username || profile.login || profile._json?.login || '',
         displayName:
-          gh.displayName ||
-          gh.name ||
-          gh.login ||
-          gh._json?.name ||
-          'GitHub user',
+          profile.displayName ||
+          profile._json?.name ||
+          profile.username ||
+          profile.login ||
+          profile._json?.login ||
+          'User',
         avatar:
-          gh.avatar_url ||
-          gh.photos?.[0]?.value ||
-          gh._json?.avatar_url,
+          profile.photos?.[0]?.value ||
+          profile._json?.avatar_url ||
+          profile.avatar_url,
         provider: OAuthProvider.GITHUB,
         provider_id: profileId,
-        raw: gh,
+        raw: profile,
       };
 
       break;
