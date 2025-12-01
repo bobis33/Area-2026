@@ -6,12 +6,14 @@ scripts
 node_modules
 build
 dist
+.git
 .github
 
 CONTRIBUTING.md
 gitleaks.toml
 LICENSE.md
 README.md
+SECURITY.md
 *-lock.json
 .gitignore
 .env

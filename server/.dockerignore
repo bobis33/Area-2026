@@ -1,10 +1,10 @@
+.git
 dist
 node_modules
+test
 .env
 .prettierrc
-.git
 *-lock.json
 README.md
 eslint.config.mjs
 openapi.json
-test
