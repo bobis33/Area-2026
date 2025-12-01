@@ -87,30 +87,45 @@ export function normalizeOAuthProfile(
       break;
 
     case OAuthProvider.GITHUB: {
-      if (!isGitHubProfile(profile)) {
-        throw new Error('Invalid GitHub profile structure');
-      }
+      // Be tolerant: treat profile as "any" to support the real passport-github2 shape
+      const gh: any = profile;
 
+      // Try to get a primary email from multiple possible locations
       const primaryEmail =
-        profile.emails?.[0]?.value || profile._json?.email || '';
-
+        gh.emails?.[0]?.value ||
+        gh._json?.email ||
+        '';
+      // Try to get a stable profile ID
+      // We use the id, node_id, and id.toString() to get a stable profile ID
+      // This is to avoid issues with the profile ID being different on the client and server
+      // If the profile ID is not found, we use an empty string
+      // This is to avoid issues with the profile ID being different on the client and server
+      // j'ai mis sa car c'est la seule manière que j'ai trouvée pour que le profile ID soit stable
+      // j'ai essayé de faire un getStableProfileId() mais ça ne fonctionnait pas
+      // et momo ton ancienne methode etais trop strict.
       const profileId =
-        profile.id?.toString?.() ?? profile.id ?? profile.node_id ?? '';
+        gh.id?.toString?.() ??
+        gh.id ??
+        gh.node_id ??
+        '';
 
       normalizedProfile = {
         id: profileId,
         email: primaryEmail,
-        username:
-          profile.username || profile.login || profile._json?.login || '',
+        username: gh.username || gh.login || gh._json?.login || '',
         displayName:
-          profile.displayName ||
-          profile._json?.name ||
-          profile.username ||
-          'User',
-        avatar: profile.photos?.[0]?.value || profile._json?.avatar_url,
+          gh.displayName ||
+          gh.name ||
+          gh.login ||
+          gh._json?.name ||
+          'GitHub user',
+        avatar:
+          gh.avatar_url ||
+          gh.photos?.[0]?.value ||
+          gh._json?.avatar_url,
         provider: OAuthProvider.GITHUB,
         provider_id: profileId,
-        raw: profile,
+        raw: gh,
       };
 
       break;

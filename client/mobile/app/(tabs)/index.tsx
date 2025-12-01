@@ -1,98 +1,169 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
+import { Text } from '@area/ui';
+import { MobileScreen, MobileButton } from '@/components/ui-mobile';
+import { SectionCard } from '@/components/layout/SectionCard';
+import { IconSymbol } from '@/components/ui/icon-symbol';
+import { FadeInView } from '@/components/animations';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 export default function HomeScreen() {
-  return (
-      <ParallaxScrollView
-          headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-          headerImage={
-            <Image
-                source={require('@/assets/images/partial-react-logo.png')}
-                style={styles.reactLogo}
-            />
-          }>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">Welcome!</ThemedText>
-          <HelloWave />
-        </ThemedView>
-        <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-          <ThemedText>
-            Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-            Press{' '}
-            <ThemedText type="defaultSemiBold">
-              {Platform.select({
-                ios: 'cmd + d',
-                android: 'cmd + m',
-                web: 'F12',
-              })}
-            </ThemedText>{' '}
-            to open developer tools.
-          </ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.stepContainer}>
-          <Link href="/modal">
-            <Link.Trigger>
-              <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-            </Link.Trigger>
-            <Link.Preview />
-            <Link.Menu>
-              <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-              <Link.MenuAction
-                  title="Share"
-                  icon="square.and.arrow.up"
-                  onPress={() => alert('Share pressed')}
-              />
-              <Link.Menu title="More" icon="ellipsis">
-                <Link.MenuAction
-                    title="Delete"
-                    icon="trash"
-                    destructive
-                    onPress={() => alert('Delete pressed')}
-                />
-              </Link.Menu>
-            </Link.Menu>
-          </Link>
+  const { currentTheme } = useAppTheme();
 
-          <ThemedText>
-            {`Tap the Explore tab to learn more about what's included in this starter app.`}
-          </ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.stepContainer}>
-          <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-          <ThemedText>
-            {`When you're ready, run `}
-            <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-            <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-            <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-            <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-          </ThemedText>
-        </ThemedView>
-      </ParallaxScrollView>
+  return (
+    <MobileScreen scroll safeArea keyboardAware={false}>
+      {/* Hero Section */}
+      <FadeInView delay={0} spring>
+        <View style={styles.heroSection}>
+          <Text variant="caption" color="muted" style={styles.label}>
+            AREA • Automation
+          </Text>
+          <Text variant="title" style={styles.mainTitle}>
+            Automatise ta vie digitale.
+          </Text>
+          <Text variant="body" color="muted" style={styles.description}>
+            Connecte tes services préférés et crée des automatisations puissantes. 
+            Quand une Action se produit, une Réaction se déclenche automatiquement.
+          </Text>
+        </View>
+      </FadeInView>
+
+      {/* What is AREA Section */}
+      <FadeInView delay={100} spring>
+        <View style={styles.section}>
+          <Text variant="subtitle" style={styles.sectionTitle}>
+            What is AREA ?
+          </Text>
+          <Text variant="body" color="muted" style={styles.sectionText}>
+            AREA est une plateforme d'automatisation qui te permet de connecter 
+            différents services (Discord, GitHub, Google, etc.) et de créer des 
+            scénarios personnalisés. Quand une Action se produit sur un service, 
+            une Réaction se déclenche automatiquement sur un autre.
+          </Text>
+        </View>
+      </FadeInView>
+
+      {/* Feature Cards - Full Width */}
+      <View style={styles.cardsContainer}>
+        <FadeInView delay={200} spring>
+          <SectionCard>
+            <View style={styles.cardContent}>
+              <View style={[styles.cardIcon, { backgroundColor: currentTheme.colors.primarySoft }]}>
+                <IconSymbol
+                  size={28}
+                  name="link"
+                  color={currentTheme.colors.primary}
+                />
+              </View>
+              <View style={styles.cardTextContent}>
+                <Text variant="subtitle" style={styles.cardTitle}>
+                  Connect services
+                </Text>
+                <Text variant="body" color="muted" style={styles.cardText}>
+                  Lie tes comptes Discord, GitHub, Google et bien d'autres services 
+                  pour créer des automatisations puissantes.
+                </Text>
+              </View>
+            </View>
+          </SectionCard>
+        </FadeInView>
+
+        <FadeInView delay={300} spring>
+          <SectionCard>
+            <View style={styles.cardContent}>
+              <View style={[styles.cardIcon, { backgroundColor: currentTheme.colors.primarySoft }]}>
+                <IconSymbol
+                  size={28}
+                  name="bolt.fill"
+                  color={currentTheme.colors.primary}
+                />
+              </View>
+              <View style={styles.cardTextContent}>
+                <Text variant="subtitle" style={styles.cardTitle}>
+                  Create automations
+                </Text>
+                <Text variant="body" color="muted" style={styles.cardText}>
+                  Construis des flux Action → Réaction pour automatiser tes tâches 
+                  quotidiennes et gagner du temps.
+                </Text>
+              </View>
+            </View>
+          </SectionCard>
+        </FadeInView>
+      </View>
+
+      {/* CTA Button */}
+      <FadeInView delay={400} spring>
+        <View style={styles.ctaSection}>
+          <MobileButton
+            label="Go to AREA"
+            onPress={() => router.push('/(tabs)/area')}
+            variant="primary"
+            fullWidth
+          />
+        </View>
+      </FadeInView>
+    </MobileScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  heroSection: {
+    marginBottom: 24,
+    gap: 12,
   },
-  stepContainer: {
-    gap: 8,
+  label: {
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 4,
+  },
+  mainTitle: {
+    fontSize: 32,
+    lineHeight: 38,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  description: {
+    lineHeight: 24,
+    marginTop: 8,
+  },
+  section: {
+    marginBottom: 24,
+    gap: 8,
+  },
+  sectionTitle: {
+    marginBottom: 8,
+  },
+  sectionText: {
+    lineHeight: 22,
+  },
+  cardsContainer: {
+    gap: 12,
+    marginBottom: 24,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'flex-start',
+  },
+  cardIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardTextContent: {
+    flex: 1,
+    gap: 4,
+  },
+  cardTitle: {
+    marginBottom: 4,
+  },
+  cardText: {
+    lineHeight: 20,
+  },
+  ctaSection: {
+    marginTop: 16,
   },
 });

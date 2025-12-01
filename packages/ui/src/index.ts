@@ -31,3 +31,7 @@ export {
   lineHeights,
   shadows,
 } from './tokens';
+
+// Theme system
+export { theme, lightColors, darkColors } from './theme';
+export type { Theme, ThemeMode } from './theme';
