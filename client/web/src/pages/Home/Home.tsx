@@ -85,6 +85,22 @@ export default function Home() {
   return (
     <div className="home-container">
       <section className="hero-section">
+        <nav className="hero-nav">
+          <Link to="/" className="nav-logo">
+            AREA
+          </Link>
+          <div className="nav-links">
+            <Link to="/about" className="nav-link">
+              About
+            </Link>
+            <Link to="/login" className="nav-link">
+              Login
+            </Link>
+            <Link to="/register" className="nav-link nav-link-primary">
+              Sign Up
+            </Link>
+          </div>
+        </nav>
         <h1 className="hero-title">AREA</h1>
         <p className="hero-subtitle">Automate Your Digital Life</p>
         <p className="hero-description">
@@ -94,11 +110,8 @@ export default function Home() {
         </p>
 
         <div className="cta-buttons">
-          <Link to="/login" className="btn btn-secondary">
-            Sign In
-          </Link>
-          <Link to="/about" className="btn btn-tertiary">
-            About
+          <Link to="/register" className="btn btn-primary">
+            Get Started
           </Link>
         </div>
       </section>

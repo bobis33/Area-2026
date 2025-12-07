@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import type { LoginCredentials } from "@/types";
-import { FaGoogle, FaDiscord, FaGithub } from "react-icons/fa";
+import { FaGoogle, FaDiscord, FaGithub, FaArrowLeft } from "react-icons/fa";
 import "./Login.css";
 
 export default function Login() {
@@ -32,6 +32,9 @@ export default function Login() {
 
   return (
     <div className="login-container">
+      <Link to="/" className="back-to-home">
+        <FaArrowLeft /> Back to Home
+      </Link>
       <div className="login-card">
         <div className="login-header">
           <h1>Welcome Back</h1>

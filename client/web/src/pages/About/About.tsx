@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { get } from "@/services/api";
 import type { AboutResponse } from "@/types";
+import { FaArrowLeft } from "react-icons/fa";
 import "./About.css";
 
 export default function About() {
@@ -77,6 +79,9 @@ export default function About() {
 
   return (
     <div className="about-container">
+      <Link to="/" className="back-to-home">
+        <FaArrowLeft /> Back to Home
+      </Link>
       <h1>About AREA Server</h1>
 
       <section className="about-section">

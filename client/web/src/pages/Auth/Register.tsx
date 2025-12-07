@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import type { RegisterData } from "@/types";
+import { FaArrowLeft } from "react-icons/fa";
 import "./Register.css";
 
 interface RegisterFormData {
@@ -51,6 +52,9 @@ export default function Register() {
   };
   return (
     <div className="register-container">
+      <Link to="/" className="back-to-home">
+        <FaArrowLeft /> Back to Home
+      </Link>
       <div className="register-card">
         <div className="register-header">
           <h1>Create Account</h1>

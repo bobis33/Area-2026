@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -5,21 +7,44 @@
 }
 
 :root {
+  --color-primary: #1e40af;
+  --color-primary-dark: #1e3a8a;
+  --color-primary-light: #3b82f6;
+  --color-accent: #6366f1;
+
+  --color-white: #ffffff;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+
   font-family:
-    system-ui,
+    "Poppins",
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    "Open Sans",
-    "Helvetica Neue",
     sans-serif;
   line-height: 1.6;
   font-weight: 400;
-
   color-scheme: light dark;
 
   font-synthesis: none;
@@ -31,8 +56,6 @@
 html {
   width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 body {
@@ -41,8 +64,9 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #ffffff;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: var(--color-white);
+  color: var(--color-gray-900);
+  font-family: "Poppins", sans-serif;
 }
 
 #root {
@@ -50,17 +74,6 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-}
-
-a {
-  font-weight: 500;
-  color: #667eea;
-  text-decoration: inherit;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: #764ba2;
 }
 
 h1,
@@ -72,69 +85,102 @@ h6 {
   line-height: 1.2;
   font-weight: 700;
   margin: 0;
+  color: var(--color-gray-900);
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.5rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.5rem;
+}
+h4 {
+  font-size: 1.25rem;
+}
+h5 {
+  font-size: 1.125rem;
+}
+h6 {
+  font-size: 1rem;
 }
 
-/* Buttons */
+p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+a {
+  font-weight: 500;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-normal);
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  border: none;
+  padding: 0.75em 1.5em;
   font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-normal);
 }
 
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 button:focus:not(:focus-visible) {
   outline: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #0f172a;
-    color: rgba(255, 255, 255, 0.87);
-  }
-}
-
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--color-gray-100);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #667eea;
-  border-radius: 6px;
+  background: var(--color-primary);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #764ba2;
+  background: var(--color-primary-dark);
 }
 
 @media (prefers-color-scheme: dark) {
+  :root {
+    --color-white: #0f172a;
+    --color-gray-50: #1e293b;
+    --color-gray-100: #334155;
+    --color-gray-900: #f8fafc;
+  }
+
+  body {
+    background-color: var(--color-gray-900);
+    color: var(--color-white);
+  }
+
   ::-webkit-scrollbar-track {
     background: #1e293b;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #475569;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #667eea;
+    background: var(--color-primary-light);
   }
 }
 
@@ -147,4 +193,41 @@ button:focus:not(:focus-visible) {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-1 {
+  margin-top: 0.5rem;
+}
+.mt-2 {
+  margin-top: 1rem;
+}
+.mt-3 {
+  margin-top: 1.5rem;
+}
+.mt-4 {
+  margin-top: 2rem;
+}
+
+.mb-1 {
+  margin-bottom: 0.5rem;
+}
+.mb-2 {
+  margin-bottom: 1rem;
+}
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+.mb-4 {
+  margin-bottom: 2rem;
 }
