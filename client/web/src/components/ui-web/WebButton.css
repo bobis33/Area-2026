@@ -1,0 +1,96 @@
+.web-button {
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.web-button-primary {
+  background: #1e40af;
+  color: white;
+  border: 2px solid #1e40af;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+}
+
+.web-button-primary:hover:not(:disabled) {
+  background: #1e3a8a;
+  border-color: #1e3a8a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4);
+}
+
+.web-button-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.web-button-secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.web-button-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.web-button-ghost {
+  background: transparent;
+  color: #1e40af;
+  border: 2px solid transparent;
+}
+
+.web-button-ghost:hover:not(:disabled) {
+  background: rgba(30, 64, 175, 0.05);
+  border-color: #1e40af;
+}
+
+.web-button-full {
+  width: 100%;
+}
+
+.web-button-disabled,
+.web-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .web-button-primary {
+    background: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  .web-button-primary:hover:not(:disabled) {
+    background: #2563eb;
+    border-color: #2563eb;
+  }
+
+  .web-button-ghost {
+    color: #3b82f6;
+  }
+
+  .web-button-ghost:hover:not(:disabled) {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+  }
+}
+
+@media (max-width: 640px) {
+  .web-button {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}

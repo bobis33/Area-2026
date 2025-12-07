@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import type { RegisterData } from "@/types";
 import { FaArrowLeft } from "react-icons/fa";
+import { WebInput, WebButton } from "@/components/ui-web";
 import "./Register.css";
 
 interface RegisterFormData {
@@ -67,68 +68,63 @@ export default function Register() {
           </div>
         )}
         <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-group">
-            <label htmlFor="name">Name *</label>
-            <input
-              type="text"
-              id="name"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              placeholder="Enter your name"
-              required
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email *</label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              placeholder="Enter your email"
-              required
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password *</label>
-            <input
-              type="password"
-              id="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              placeholder="Enter your password"
-              required
-              disabled={loading}
-              minLength={6}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password *</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmPassword: e.target.value })
-              }
-              placeholder="Confirm your password"
-              required
-              disabled={loading}
-              minLength={6}
-            />
-          </div>
+          <WebInput
+            label="Name"
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={(value) => setFormData({ ...formData, name: value })}
+            placeholder="Enter your name"
+            required
+            disabled={loading}
+          />
 
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? "Creating Account..." : "Sign Up"}
-          </button>
+          <WebInput
+            label="Email"
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={(value) => setFormData({ ...formData, email: value })}
+            placeholder="Enter your email"
+            required
+            disabled={loading}
+          />
+
+          <WebInput
+            label="Password"
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={(value) => setFormData({ ...formData, password: value })}
+            placeholder="Enter your password"
+            required
+            disabled={loading}
+          />
+
+          <WebInput
+            label="Confirm Password"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={(value) =>
+              setFormData({ ...formData, confirmPassword: value })
+            }
+            placeholder="Confirm your password"
+            required
+            disabled={loading}
+          />
+
+          <WebButton
+            type="submit"
+            label={loading ? "Creating Account..." : "Sign Up"}
+            variant="primary"
+            disabled={loading}
+            fullWidth
+          />
         </form>
 
         <div className="register-footer">

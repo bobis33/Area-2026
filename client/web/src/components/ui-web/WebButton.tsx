@@ -1,32 +1,50 @@
-import React from 'react';
-import { Button, type ButtonProps } from '@area/ui';
+import React from "react";
+import "./WebButton.css";
 
 /**
- * WebButton - Web wrapper for the shared Button component
- *
- * This wraps the Button from @area/ui and adds web-specific features
- * while maintaining visual consistency with the mobile app.
+ * WebButton - Custom Web wrapper for Button with current design style
+ * Uses the shared Button logic but applies custom CSS styling
  */
-export interface WebButtonProps extends ButtonProps {
-  /**
-   * Optional tooltip text to show on hover (web-specific)
-   */
-  tooltip?: string;
+export interface WebButtonProps {
+  label: string;
+  onClick?: () => void;
+  variant?: "primary" | "secondary" | "ghost";
+  disabled?: boolean;
+  fullWidth?: boolean;
+  className?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 export const WebButton: React.FC<WebButtonProps> = ({
-  tooltip,
-  ...buttonProps
+  label,
+  onClick,
+  variant = "primary",
+  disabled = false,
+  fullWidth = false,
+  className = "",
+  type = "button",
 }) => {
+  const getButtonClass = () => {
+    const classes = ["web-button"];
+
+    if (variant === "primary") classes.push("web-button-primary");
+    if (variant === "secondary") classes.push("web-button-secondary");
+    if (variant === "ghost") classes.push("web-button-ghost");
+    if (fullWidth) classes.push("web-button-full");
+    if (disabled) classes.push("web-button-disabled");
+    if (className) classes.push(className);
+
+    return classes.join(" ");
+  };
+
   return (
-    <div
-      title={tooltip}
-      style={{
-        display: 'inline-block',
-        width: buttonProps.fullWidth ? '100%' : 'auto',
-      }}
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={getButtonClass()}
     >
-      <Button {...buttonProps} />
-    </div>
+      {label}
+    </button>
   );
 };
