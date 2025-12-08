@@ -101,43 +101,44 @@ export class AuthController {
   }
 
   private isValidRedirectUrl(url: string): boolean {
-    // Define allowed redirect URLs
-    const allowedHosts = [
-      'localhost',
-      '127.0.0.1',
-      this.configService
-        .get<string>('FRONTEND_URL')
-        ?.replace(/^https?:\/\//, ''),
-    ].filter(Boolean);
+    // Strict allowlist of exact allowed URLs
+    const allowedUrls = [
+      'http://localhost:8081',
+      'http://localhost:3000',
+      'http://127.0.0.1:8081',
+      'http://127.0.0.1:3000',
+      this.configService.get<string>('FRONTEND_URL'),
+    ].filter(Boolean) as string[];
 
-    const allowedSchemes = ['http:', 'https:', 'area:', 'exp:'];
+    // Allow custom mobile app schemes (exact match for scheme only)
+    if (url.startsWith('area://')) {
+      return true;
+    }
+
+    if (url.startsWith('exp://')) {
+      return true;
+    }
 
     try {
-      // Handle custom mobile schemes
-      if (url.startsWith('area://') || url.startsWith('exp://')) {
-        return true;
-      }
-
       const parsedUrl = new URL(url);
 
-      // Check if scheme is allowed
-      if (!allowedSchemes.includes(parsedUrl.protocol)) {
-        return false;
-      }
-
-      // For http/https, check if hostname is in allowlist
+      // For http/https URLs, check against exact allowlist
       if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
-        const hostname = parsedUrl.hostname;
-        return allowedHosts.some(
-          (allowed) =>
-            hostname === allowed ||
-            hostname.endsWith(`.${allowed}`) ||
-            // Allow expo development URLs
-            hostname.includes('auth.expo.io'),
-        );
+        const urlOrigin = parsedUrl.origin;
+
+        // Exact match of origin only
+        return allowedUrls.some((allowed) => {
+          if (!allowed) return false;
+          try {
+            const allowedUrl = new URL(allowed);
+            return urlOrigin === allowedUrl.origin;
+          } catch {
+            return false;
+          }
+        });
       }
 
-      return true;
+      return false;
     } catch {
       return false;
     }
@@ -168,16 +169,13 @@ export class AuthController {
     }
 
     const isMobile =
-      baseUrl.startsWith('area://') ||
-      baseUrl.includes('auth.expo.io') ||
-      baseUrl.startsWith('exp://');
+      baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
 
     if (!req.user) {
-      const message = encodeURIComponent('Authentication failed');
-      const errorUrl = isMobile
-        ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}message=${message}`
-        : `${baseUrl}/auth/error?message=${message}`;
-      return res.redirect(errorUrl);
+      // Always redirect to default URL on auth failure for security
+      return res.redirect(
+        `${defaultFrontendUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
+      );
     }
 
     const token = this.authService.generateToken({
@@ -192,9 +190,14 @@ export class AuthController {
     const userJson = encodeURIComponent(JSON.stringify(req.user));
     const tokenParam = encodeURIComponent(token);
 
-    const redirectUrl = isMobile
-      ? `${baseUrl}${baseUrl.includes('?') ? '&' : '?'}user=${userJson}&token=${tokenParam}`
-      : `${baseUrl}/auth/success?user=${userJson}&token=${tokenParam}`;
+    let redirectUrl: string;
+    if (isMobile) {
+      // For mobile, construct URL carefully
+      redirectUrl = `${baseUrl}?user=${userJson}&token=${tokenParam}`;
+    } else {
+      // For web, only use validated baseUrl
+      redirectUrl = `${baseUrl}/auth/success?user=${userJson}&token=${tokenParam}`;
+    }
 
     return res.redirect(redirectUrl);
   }

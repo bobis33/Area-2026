@@ -27,11 +27,8 @@ export class GenericOAuthStrategy {
         normalizedProfile,
         tokens,
       );
-    } catch (error) {
-      // Don't log sensitive token data
-      console.error(
-        `OAuth validation error (${this.provider}): ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+    } catch {
+      // Don't log errors as they may contain sensitive token data
       return null;
     }
   }
