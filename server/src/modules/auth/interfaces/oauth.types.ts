@@ -2,6 +2,8 @@ export enum OAuthProvider {
   DISCORD = 'discord',
   GOOGLE = 'google',
   GITHUB = 'github',
+  SPOTIFY = 'spotify',
+  GITLAB = 'gitlab',
 }
 
 export interface OAuthProviderConfig {
@@ -84,6 +86,21 @@ export interface GitHubProfile {
   [key: string]: any;
 }
 
+export interface SpotifyProfile {
+  id: string;
+  display_name: string;
+  email?: string;
+  images?: Array<{ url: string }>;
+}
+
+export interface GitLabProfile {
+  id: string;
+  username: string;
+  email?: string;
+  name?: string;
+  avatar_url?: string;
+}
+
 export function isDiscordProfile(profile: any): profile is DiscordProfile {
   return (
     typeof profile === 'object' &&
@@ -137,4 +154,16 @@ export function isGitHubProfile(profile: any): profile is GitHubProfile {
   }
 
   return true;
+}
+
+export function isSpotifyProfile(profile: any): profile is SpotifyProfile {
+  return (
+    typeof profile === 'object' && 'id' in profile && 'display_name' in profile
+  );
+}
+
+export function isGitLabProfile(profile: any): profile is GitLabProfile {
+  return (
+    typeof profile === 'object' && 'id' in profile && 'username' in profile
+  );
 }

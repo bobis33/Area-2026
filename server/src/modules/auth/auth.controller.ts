@@ -76,6 +76,18 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.FOUND })
   githubAuth(): void {}
 
+  @Get('gitlab')
+  @UseGuards(AuthGuard('gitlab'))
+  @ApiOperation({ summary: 'GitLab OAuth' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  gitlabAuth(): void {}
+
+  @Get('spotify')
+  @UseGuards(AuthGuard('spotify'))
+  @ApiOperation({ summary: 'Spotify OAuth' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  spotifyAuth(): void {}
+
   @Get('discord/callback')
   @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })

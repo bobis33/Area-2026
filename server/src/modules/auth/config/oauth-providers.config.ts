@@ -6,6 +6,10 @@ import {
   isDiscordProfile,
   isGoogleProfile,
   isGitHubProfile,
+  isSpotifyProfile,
+  isGitLabProfile,
+  SpotifyProfile,
+  GitLabProfile,
   DiscordProfile,
   GoogleProfile,
   GitHubProfile,
@@ -70,13 +74,34 @@ export function getProviderConfig(
           'http://localhost:8080/auth/github/callback',
       scope: ['user:email'],
     },
+    [OAuthProvider.SPOTIFY]: {
+      clientID: configService.get<string>('SPOTIFY_CLIENT_ID') || '',
+      clientSecret: configService.get<string>('SPOTIFY_CLIENT_SECRET') || '',
+      callbackURL:
+        configService.get<string>('SPOTIFY_CALLBACK_URL') ||
+        'http://127.0.0.1:8080/auth/spotify/callback',
+      scope: ['user-read-email', 'user-read-private'],
+    },
+    [OAuthProvider.GITLAB]: {
+      clientID: configService.get<string>('GITLAB_CLIENT_ID') || '',
+      clientSecret: configService.get<string>('GITLAB_CLIENT_SECRET') || '',
+      callbackURL:
+        configService.get<string>('GITLAB_CALLBACK_URL') ||
+        'http://localhost:8080/auth/gitlab/callback',
+      scope: ['read_user'],
+    },
   };
 
   return configs[provider];
 }
 
 export function normalizeOAuthProfile(
-  profile: DiscordProfile | GoogleProfile | GitHubProfile,
+  profile:
+    | DiscordProfile
+    | GoogleProfile
+    | GitHubProfile
+    | SpotifyProfile
+    | GitLabProfile,
   provider: OAuthProvider,
 ): NormalizedOAuthProfile {
   let normalizedProfile: NormalizedOAuthProfile;
@@ -159,6 +184,38 @@ export function normalizeOAuthProfile(
 
       break;
     }
+
+    case OAuthProvider.SPOTIFY:
+      if (!isSpotifyProfile(profile)) {
+        throw new Error('Invalid Spotify profile structure');
+      }
+      normalizedProfile = {
+        id: profile.id,
+        email: profile.email || '',
+        username: profile.display_name,
+        displayName: profile.display_name || 'User',
+        avatar: profile.images?.[0]?.url,
+        provider: OAuthProvider.SPOTIFY,
+        provider_id: profile.id,
+        raw: profile,
+      };
+      break;
+
+    case OAuthProvider.GITLAB:
+      if (!isGitLabProfile(profile)) {
+        throw new Error('Invalid GitLab profile structure');
+      }
+      normalizedProfile = {
+        id: profile.id,
+        email: profile.email || '',
+        username: profile.username,
+        displayName: profile.name || profile.username || 'User',
+        avatar: profile.avatar_url,
+        provider: OAuthProvider.GITLAB,
+        provider_id: profile.id,
+        raw: profile,
+      };
+      break;
 
     default:
       throw new Error('Unsupported OAuth provider');
