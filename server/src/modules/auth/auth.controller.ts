@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { URL } from 'url';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -99,17 +100,72 @@ export class AuthController {
     this.handleCallback(req, res);
   }
 
+  private isValidRedirectUrl(url: string): boolean {
+    // Define allowed redirect URLs
+    const allowedHosts = [
+      'localhost',
+      '127.0.0.1',
+      this.configService
+        .get<string>('FRONTEND_URL')
+        ?.replace(/^https?:\/\//, ''),
+    ].filter(Boolean);
+
+    const allowedSchemes = ['http:', 'https:', 'area:', 'exp:'];
+
+    try {
+      // Handle custom mobile schemes
+      if (url.startsWith('area://') || url.startsWith('exp://')) {
+        return true;
+      }
+
+      const parsedUrl = new URL(url);
+
+      // Check if scheme is allowed
+      if (!allowedSchemes.includes(parsedUrl.protocol)) {
+        return false;
+      }
+
+      // For http/https, check if hostname is in allowlist
+      if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+        const hostname = parsedUrl.hostname;
+        return allowedHosts.some(
+          (allowed) =>
+            hostname === allowed ||
+            hostname.endsWith(`.${allowed}`) ||
+            // Allow expo development URLs
+            hostname.includes('auth.expo.io'),
+        );
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   private handleCallback(req: RequestWithUser, res: Response): void {
-    const defaultFrontendUrl = 'http://localhost:8081';
+    const defaultFrontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:8081';
 
     const redirectFromQuery = req.query?.redirect as string | undefined;
     const redirectFromState = req.query?.state as string | undefined;
 
     const redirectParam = redirectFromState || redirectFromQuery || '';
 
-    const baseUrl = redirectParam
-      ? decodeURIComponent(redirectParam)
-      : defaultFrontendUrl;
+    let baseUrl = defaultFrontendUrl;
+
+    if (redirectParam) {
+      try {
+        const decodedUrl = decodeURIComponent(redirectParam);
+        if (this.isValidRedirectUrl(decodedUrl)) {
+          baseUrl = decodedUrl;
+        } else {
+          console.warn(`Invalid redirect URL attempted: ${decodedUrl}`);
+        }
+      } catch {
+        console.warn(`Failed to decode redirect URL: ${redirectParam}`);
+      }
+    }
 
     const isMobile =
       baseUrl.startsWith('area://') ||

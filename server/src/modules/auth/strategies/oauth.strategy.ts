@@ -28,7 +28,10 @@ export class GenericOAuthStrategy {
         tokens,
       );
     } catch (error) {
-      console.error(`OAuth validation error (${this.provider}):`, error);
+      // Don't log sensitive token data
+      console.error(
+        `OAuth validation error (${this.provider}): ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
       return null;
     }
   }
