@@ -9,9 +9,9 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { URL } from 'url';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -27,14 +27,17 @@ import {
 } from '@auth/dto/oauth.dto';
 import { getEnabledProviders } from '@auth/config/oauth-providers.config';
 import { AuthService } from '@auth/auth.service';
+import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
+import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
+import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
 
-interface RequestWithUser extends Request {
+type RequestWithUser = Request & {
   user?: AuthenticatedUser;
   logout: (callback: (err?: any) => void) => void;
   session: {
     destroy: (callback: (err?: any) => void) => void;
   };
-}
+};
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -56,25 +59,25 @@ export class AuthController {
   }
 
   @Get('discord')
-  @UseGuards(AuthGuard('discord'))
+  @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   discordAuth(): void {}
 
   @Get('google')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Google OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   googleAuth(): void {}
 
   @Get('github')
-  @UseGuards(AuthGuard('github'))
+  @UseGuards(GithubAuthGuard)
   @ApiOperation({ summary: 'GitHub OAuth' })
   @ApiResponse({ status: HttpStatus.FOUND })
   githubAuth(): void {}
 
   @Get('discord/callback')
-  @UseGuards(AuthGuard('discord'))
+  @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   discordCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
@@ -82,7 +85,7 @@ export class AuthController {
   }
 
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Google callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   googleCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
@@ -90,25 +93,113 @@ export class AuthController {
   }
 
   @Get('github/callback')
-  @UseGuards(AuthGuard('github'))
+  @UseGuards(GithubAuthGuard)
   @ApiOperation({ summary: 'GitHub callback' })
   @ApiResponse({ status: HttpStatus.FOUND })
   githubCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
     this.handleCallback(req, res);
   }
 
+  private isValidRedirectUrl(url: string): boolean {
+    // Strict allowlist of exact allowed URLs
+    const allowedUrls = [
+      'http://localhost:8081',
+      'http://localhost:3000',
+      'http://127.0.0.1:8081',
+      'http://127.0.0.1:3000',
+      this.configService.get<string>('FRONTEND_URL'),
+    ].filter(Boolean) as string[];
+
+    // Allow custom mobile app schemes (exact match for scheme only)
+    if (url.startsWith('area://')) {
+      return true;
+    }
+
+    if (url.startsWith('exp://')) {
+      return true;
+    }
+
+    try {
+      const parsedUrl = new URL(url);
+
+      // For http/https URLs, check against exact allowlist
+      if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+        const urlOrigin = parsedUrl.origin;
+
+        // Exact match of origin only
+        return allowedUrls.some((allowed) => {
+          if (!allowed) return false;
+          try {
+            const allowedUrl = new URL(allowed);
+            return urlOrigin === allowedUrl.origin;
+          } catch {
+            return false;
+          }
+        });
+      }
+
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
   private handleCallback(req: RequestWithUser, res: Response): void {
-    // @ts-ignore
-    const frontendUrl = 'http://localhost:8081';
+    const defaultFrontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:8081';
+
+    const redirectFromQuery = req.query?.redirect as string | undefined;
+    const redirectFromState = req.query?.state as string | undefined;
+
+    const redirectParam = redirectFromState || redirectFromQuery || '';
+
+    let baseUrl = defaultFrontendUrl;
+
+    if (redirectParam) {
+      try {
+        const decodedUrl = decodeURIComponent(redirectParam);
+        if (this.isValidRedirectUrl(decodedUrl)) {
+          baseUrl = decodedUrl;
+        } else {
+          console.warn(`Invalid redirect URL attempted: ${decodedUrl}`);
+        }
+      } catch {
+        console.warn(`Failed to decode redirect URL: ${redirectParam}`);
+      }
+    }
+
+    const isMobile =
+      baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
 
     if (!req.user) {
+      // Always redirect to default URL on auth failure for security
       return res.redirect(
-        `${frontendUrl}/auth/error?message=Authentication failed`,
+        `${defaultFrontendUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
       );
     }
 
+    const token = this.authService.generateToken({
+      id: req.user.id,
+      email: req.user.email,
+      name: req.user.name || null,
+      role: req.user.role,
+      created_at: req.user.created_at,
+      updated_at: req.user.updated_at,
+    });
+
     const userJson = encodeURIComponent(JSON.stringify(req.user));
-    res.redirect(`${frontendUrl}/auth/success?user=${userJson}`);
+    const tokenParam = encodeURIComponent(token);
+
+    let redirectUrl: string;
+    if (isMobile) {
+      // For mobile, construct URL carefully
+      redirectUrl = `${baseUrl}?user=${userJson}&token=${tokenParam}`;
+    } else {
+      // For web, only use validated baseUrl
+      redirectUrl = `${baseUrl}/auth/success?user=${userJson}&token=${tokenParam}`;
+    }
+
+    return res.redirect(redirectUrl);
   }
 
   @Get('status')

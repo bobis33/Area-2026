@@ -27,7 +27,8 @@ export function createOAuthStrategy(
     private readonly oauthStrategy: GenericOAuthStrategy;
 
     constructor(authService: AuthService, configService: ConfigService) {
-      super(getProviderConfig(provider, configService));
+      const providerConfig = getProviderConfig(provider, configService);
+      super(providerConfig);
       this.oauthStrategy = new GenericOAuthStrategy(authService, provider);
     }
 

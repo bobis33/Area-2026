@@ -27,11 +27,8 @@ export class GenericOAuthStrategy {
         normalizedProfile,
         tokens,
       );
-    } catch (error) {
-      console.error(
-        `[${this.provider.toUpperCase()} OAuth] Validation error:`,
-        error,
-      );
+    } catch {
+      // Don't log errors as they may contain sensitive token data
       return null;
     }
   }
