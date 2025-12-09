@@ -10,6 +10,8 @@ on:
 
 jobs:
   mirror:
+    permissions:
+      contents: write
     name: ''
     if: github.actor != 'dependabot[bot]'
     timeout-minutes: 15
