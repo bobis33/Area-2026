@@ -182,8 +182,6 @@ export class AuthController {
 
     const redirectParam = redirectFromState || redirectFromQuery || '';
 
-    );
-
     let baseUrl = defaultFrontendUrl;
 
     if (redirectParam) {
