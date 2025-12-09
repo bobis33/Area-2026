@@ -107,7 +107,6 @@ export function normalizeOAuthProfile(
       break;
     }
 
-    // --- CORRECTION SPOTIFY ---
     case OAuthProvider.SPOTIFY:
       normalizedProfile = {
         id: p.id,
@@ -140,9 +139,7 @@ export function normalizeOAuthProfile(
   }
 
   if (!normalizedProfile.email) {
-    console.warn(
-      `[${provider}] Email manquant ! Génération d'un email placeholder.`,
-    );
+    console.warn(`Email manquant ! Génération d'un email placeholder.`);
 
     normalizedProfile.email = `${provider.toLowerCase()}_${normalizedProfile.provider_id}@no-email.area.local`;
   }
