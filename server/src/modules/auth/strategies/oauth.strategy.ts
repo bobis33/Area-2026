@@ -31,7 +31,7 @@ export class GenericOAuthStrategy {
 
       return user;
     } catch (error) {
-      console.error(`💥 [${this.provider}] ERREUR DANS STRATEGY:`, error);
+      console.error('Error');
     }
   }
 }

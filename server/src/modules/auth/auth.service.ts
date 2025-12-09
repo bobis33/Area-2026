@@ -57,7 +57,7 @@ export class AuthService {
 
       return this.mapToAuthenticatedUser(user);
     } catch (error) {
-      console.error('[AuthService] validateOAuthLogin error:', error);
+      console.error('[AuthService] validateOAuthLogin error');
       throw error;
     }
   }
@@ -183,7 +183,7 @@ export class AuthService {
     try {
       // Tokens are stored but not logged for security reasons
     } catch (error) {
-      console.error('[AuthService] updateOAuthTokens error:', error);
+      console.error('[AuthService] updateOAuthTokens error');
     }
   }
 
