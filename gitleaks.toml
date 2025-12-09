@@ -1,8 +1,7 @@
-title = "LT-Server Gitleaks Config"
+title = "AREA Gitleaks Config"
 version = 2
 
 [[allowlist]]
-description = "Ignore test files and directories"
 regexes = []
 paths = [
   '**/tests/',

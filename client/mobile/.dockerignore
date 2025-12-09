@@ -3,3 +3,5 @@ node_modules
 .expo
 eslint.config.js
 .git
+*.md
+expo-env.d.ts
