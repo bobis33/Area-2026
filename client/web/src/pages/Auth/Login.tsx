@@ -2,7 +2,8 @@ import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import type { LoginCredentials } from "@/types";
-import { FaGoogle, FaDiscord, FaGithub } from "react-icons/fa";
+import { FaGoogle, FaDiscord, FaGithub, FaArrowLeft } from "react-icons/fa";
+import { WebInput, WebButton } from "@/components/ui-web";
 import "./Login.css";
 
 export default function Login() {
@@ -32,6 +33,9 @@ export default function Login() {
 
   return (
     <div className="login-container">
+      <Link to="/" className="back-to-home">
+        <FaArrowLeft /> Back to Home
+      </Link>
       <div className="login-card">
         <div className="login-header">
           <h1>Welcome Back</h1>
@@ -45,39 +49,37 @@ export default function Login() {
         )}
 
         <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              placeholder="Enter your email"
-              required
-              disabled={loading}
-            />
-          </div>
+          <WebInput
+            label="Email"
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={(value) => setFormData({ ...formData, email: value })}
+            placeholder="Enter your email"
+            required
+            disabled={loading}
+          />
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
-              placeholder="Enter your password"
-              required
-              disabled={loading}
-            />
-          </div>
+          <WebInput
+            label="Password"
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={(value) => setFormData({ ...formData, password: value })}
+            placeholder="Enter your password"
+            required
+            disabled={loading}
+          />
 
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? "Signing In..." : "Sign In"}
-          </button>
+          <WebButton
+            type="submit"
+            label={loading ? "Signing In..." : "Sign In"}
+            variant="primary"
+            disabled={loading}
+            fullWidth
+          />
         </form>
 
         <div className="divider">

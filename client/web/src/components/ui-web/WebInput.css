@@ -1,0 +1,120 @@
+.web-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.web-input-label {
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.875rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.web-input-required {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+.web-input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  background-color: white;
+  color: #1e293b;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  width: 100%;
+  outline: none;
+}
+
+.web-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.web-input:focus {
+  border-color: #1e40af;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+.web-input:disabled,
+.web-input-disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.web-input-error {
+  border-color: #ef4444;
+}
+
+.web-input-error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.web-input-error-message {
+  font-size: 0.875rem;
+  color: #ef4444;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  .web-input-label {
+    color: #f1f5f9;
+  }
+
+  .web-input {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+
+  .web-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+
+  .web-input:disabled,
+  .web-input-disabled {
+    background-color: #1e293b;
+    opacity: 0.5;
+  }
+
+  .web-input::placeholder {
+    color: #64748b;
+  }
+
+  .web-input-error {
+    border-color: #f87171;
+  }
+
+  .web-input-error:focus {
+    border-color: #f87171;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.2);
+  }
+
+  .web-input-error-message {
+    color: #fca5a5;
+  }
+}
+
+@media (max-width: 640px) {
+  .web-input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .web-input-label {
+    font-size: 0.8125rem;
+  }
+
+  .web-input-error-message {
+    font-size: 0.8125rem;
+  }
+}
