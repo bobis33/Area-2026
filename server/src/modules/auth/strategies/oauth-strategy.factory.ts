@@ -7,6 +7,8 @@ import {
   GitHubProfile,
   DiscordProfile,
   GoogleProfile,
+  SpotifyProfile,
+  GitLabProfile,
 } from '@auth/interfaces/oauth.types';
 import { getProviderConfig } from '@auth/config/oauth-providers.config';
 import { GenericOAuthStrategy } from '@auth/strategies/oauth.strategy';
@@ -37,7 +39,12 @@ export function createOAuthStrategy(
     async validate(
       accessToken: string,
       refreshToken: string,
-      profile: GitHubProfile | DiscordProfile | GoogleProfile,
+      profile:
+        | GitHubProfile
+        | DiscordProfile
+        | GoogleProfile
+        | SpotifyProfile
+        | GitLabProfile,
     ) {
       return this.oauthStrategy.validate(accessToken, refreshToken, profile);
     }
