@@ -14,7 +14,7 @@ model User {
   email      String   @unique @db.VarChar(255)
   password   String?  @db.VarChar(255)
   name       String?  @db.VarChar(255)
-  role       String   @default("user") @db.VarChar(255)
+  role       String   @default("USER") @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -22,10 +22,12 @@ model User {
 }
 
 model ProviderAccount {
-  id         Int      @id @default(autoincrement())
-  provider   String   @db.VarChar(255)
-  provider_id String   @db.VarChar(255)
-  user_id     Int
+  id            Int      @id @default(autoincrement())
+  provider      String   @db.VarChar(255)
+  provider_id   String   @db.VarChar(255)
+  access_token  String   @db.VarChar(255)
+  refresh_token String?  @db.VarChar(255)
+  user_id       Int
 
   user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 

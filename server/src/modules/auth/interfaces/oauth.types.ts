@@ -26,7 +26,7 @@ export interface NormalizedOAuthProfile {
 
 export interface OAuthTokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
   expiresIn?: number;
 }
 

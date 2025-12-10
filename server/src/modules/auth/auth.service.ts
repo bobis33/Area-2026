@@ -11,6 +11,7 @@ import {
 import { RegisterDto, LoginDto, AuthResponseDto } from '@auth/dto/oauth.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import {Roles} from "@auth/interfaces/roles";
 
 type UserSelect = Pick<
   User,
@@ -45,12 +46,13 @@ export class AuthService {
             existingUser.id,
             provider,
             provider_id,
+            tokens
           );
         }
       }
 
       if (!user) {
-        user = await this.createUserFromOAuth(profile);
+        user = await this.createUserFromOAuth(profile, tokens);
       }
 
       this.updateOAuthTokens(user.id, tokens);
@@ -124,12 +126,13 @@ export class AuthService {
 
   private async createUserFromOAuth(
     profile: NormalizedOAuthProfile,
+    tokens: OAuthTokens
   ): Promise<UserSelect> {
     const user = await this.prisma.user.create({
       data: {
         email: profile.email,
         name: profile.displayName || null,
-        role: 'user',
+        role: Roles.USER,
         password: null,
       },
       select: {
@@ -147,6 +150,8 @@ export class AuthService {
         provider: profile.provider.toString(),
         provider_id: profile.provider_id,
         user_id: user.id,
+        access_token: tokens.accessToken,
+        refresh_token: tokens.refreshToken ?? null,
       },
     });
 
@@ -157,12 +162,15 @@ export class AuthService {
     user_id: number,
     provider: OAuthProvider,
     provider_id: string,
+    tokens: OAuthTokens,
   ): Promise<UserSelect | null> {
     await this.prisma.providerAccount.create({
       data: {
         provider: provider.toString(),
         provider_id,
         user_id,
+        access_token: tokens.accessToken,
+        refresh_token: tokens.refreshToken ?? null,
       },
     });
 
@@ -181,7 +189,6 @@ export class AuthService {
 
   private updateOAuthTokens(userId: number, tokens: OAuthTokens): void {
     try {
-      // Tokens are stored but not logged for security reasons
     } catch (error) {
       console.error('[AuthService] updateOAuthTokens error');
     }

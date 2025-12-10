@@ -18,6 +18,7 @@
       "@users/*": ["modules/users/*"],
       "@health/*": ["modules/health/*"],
       "@about/*": ["modules/about/*"],
+      "@actions/*": ["modules/actions/*"],
       "@/*": ["modules/*"]
     },
     "outDir": "./dist",

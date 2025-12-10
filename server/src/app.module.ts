@@ -5,6 +5,7 @@ import { UsersModule } from '@/users/users.module';
 import { HealthModule } from '@/health/health.module';
 import { AboutModule } from '@/about/about.module';
 import { AuthModule } from '@/auth/auth.module';
+import { TimeModule } from '@/actions/time/time.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -41,6 +42,7 @@ import * as Joi from 'joi';
     HealthModule,
     AboutModule,
     AuthModule,
+    TimeModule,
   ],
 })
 export class AppModule {}
