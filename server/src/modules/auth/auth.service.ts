@@ -59,7 +59,7 @@ export class AuthService {
 
       return this.mapToAuthenticatedUser(user);
     } catch (error) {
-      console.error('[AuthService] validateOAuthLogin error');
+      console.error('[AuthService] validateOAuthLogin error:', error);
       throw error;
     }
   }
@@ -190,7 +190,7 @@ export class AuthService {
   private updateOAuthTokens(userId: number, tokens: OAuthTokens): void {
     try {
     } catch (error) {
-      console.error('[AuthService] updateOAuthTokens error');
+      console.error('[AuthService] updateOAuthTokens error:', error);
     }
   }
 

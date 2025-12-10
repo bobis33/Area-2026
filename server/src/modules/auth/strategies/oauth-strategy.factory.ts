@@ -7,16 +7,12 @@ import {
   GitHubProfile,
   DiscordProfile,
   GoogleProfile,
-  SpotifyProfile,
-  GitLabProfile,
 } from '@auth/interfaces/oauth.types';
 import { getProviderConfig } from '@auth/config/oauth-providers.config';
 import { GenericOAuthStrategy } from '@auth/strategies/oauth.strategy';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { Strategy as DiscordStrategy } from 'passport-discord';
-import { Strategy as SpotifyStrategy } from 'passport-spotify';
-import { Strategy as GitLabStrategy } from 'passport-gitlab2';
 
 export function createOAuthStrategy(
   provider: OAuthProvider,
@@ -39,12 +35,7 @@ export function createOAuthStrategy(
     async validate(
       accessToken: string,
       refreshToken: string,
-      profile:
-        | GitHubProfile
-        | DiscordProfile
-        | GoogleProfile
-        | SpotifyProfile
-        | GitLabProfile,
+      profile: GitHubProfile | DiscordProfile | GoogleProfile,
     ) {
       return this.oauthStrategy.validate(accessToken, refreshToken, profile);
     }
@@ -73,16 +64,4 @@ export const GitHubOAuthStrategy = createOAuthStrategy(
   OAuthProvider.GITHUB,
   GitHubStrategy,
   'github',
-);
-
-export const SpotifyOAuthStrategy = createOAuthStrategy(
-  OAuthProvider.SPOTIFY,
-  SpotifyStrategy,
-  'spotify',
-);
-
-export const GitLabOAuthStrategy = createOAuthStrategy(
-  OAuthProvider.GITLAB,
-  GitLabStrategy,
-  'gitlab',
 );

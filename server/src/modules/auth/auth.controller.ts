@@ -30,8 +30,6 @@ import { AuthService } from '@auth/auth.service';
 import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
 import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
 import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
-import { GitlabAuthGuard } from './guards/gitlab-auth.guard';
-import { SpotifyAuthGuard } from './guards/spotify-auth.guard';
 
 type RequestWithUser = Request & {
   user?: AuthenticatedUser;
@@ -78,18 +76,6 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.FOUND })
   githubAuth(): void {}
 
-  @Get('gitlab')
-  @UseGuards(GitlabAuthGuard)
-  @ApiOperation({ summary: 'GitLab OAuth' })
-  @ApiResponse({ status: HttpStatus.FOUND })
-  gitlabAuth(): void {}
-
-  @Get('spotify')
-  @UseGuards(SpotifyAuthGuard)
-  @ApiOperation({ summary: 'Spotify OAuth' })
-  @ApiResponse({ status: HttpStatus.FOUND })
-  spotifyAuth(): void {}
-
   @Get('discord/callback')
   @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })
@@ -114,23 +100,8 @@ export class AuthController {
     this.handleCallback(req, res);
   }
 
-  @Get('spotify/callback')
-  @UseGuards(SpotifyAuthGuard)
-  @ApiOperation({ summary: 'Spotify callback' })
-  @ApiResponse({ status: HttpStatus.FOUND })
-  spotifyCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
-    this.handleCallback(req, res);
-  }
-
-  @Get('gitlab/callback')
-  @UseGuards(GitlabAuthGuard)
-  @ApiOperation({ summary: 'GitLab callback' })
-  @ApiResponse({ status: HttpStatus.FOUND })
-  gitlabCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
-    this.handleCallback(req, res);
-  }
-
   private isValidRedirectUrl(url: string): boolean {
+    // Strict allowlist of exact allowed URLs
     const allowedUrls = [
       this.configService.get<string>('FRONTEND_URLS'),
     ].filter(Boolean) as string[];

@@ -2,8 +2,6 @@ export enum OAuthProvider {
   DISCORD = 'discord',
   GOOGLE = 'google',
   GITHUB = 'github',
-  SPOTIFY = 'spotify',
-  GITLAB = 'gitlab',
 }
 
 export interface OAuthProviderConfig {
@@ -86,17 +84,57 @@ export interface GitHubProfile {
   [key: string]: any;
 }
 
-export interface SpotifyProfile {
-  id: string;
-  display_name: string;
-  email?: string;
-  images?: Array<{ url: string }>;
+export function isDiscordProfile(profile: any): profile is DiscordProfile {
+  return (
+    typeof profile === 'object' &&
+    profile !== null &&
+    'username' in profile &&
+    'discriminator' in profile
+  );
 }
 
-export interface GitLabProfile {
-  id: string;
-  username: string;
-  email?: string;
-  name?: string;
-  avatar_url?: string;
+export function isGoogleProfile(profile: any): profile is GoogleProfile {
+  return (
+    typeof profile === 'object' &&
+    profile !== null &&
+    'displayName' in profile &&
+    'emails' in profile
+  );
+}
+
+export function isGitHubProfile(profile: any): profile is GitHubProfile {
+  if (typeof profile !== 'object' || profile === null) {
+    return false;
+  }
+
+  // Vérifier si l'ID existe (dans profile ou dans _json)
+  const hasIdInRoot = 'id' in profile;
+  const hasJsonObject =
+    '_json' in profile &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    typeof profile._json === 'object' &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    profile._json !== null;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const hasIdInJson = hasJsonObject && 'id' in profile._json;
+
+  const hasId = hasIdInRoot || hasIdInJson;
+
+  if (!hasId) {
+    return false;
+  }
+
+  // Vérifier si login/username existe (dans profile ou dans _json)
+  const hasLoginInRoot = 'login' in profile;
+  const hasUsernameInRoot = 'username' in profile;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const hasLoginInJson = hasJsonObject && 'login' in profile._json;
+
+  const hasLogin = hasLoginInRoot || hasUsernameInRoot || hasLoginInJson;
+
+  if (!hasLogin) {
+    return false;
+  }
+
+  return true;
 }
