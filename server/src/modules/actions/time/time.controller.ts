@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
-import { TimeService } from './time.service';
+import { TimeService } from '@modules/actions/time/time.service';
 
 @ApiTags('Time')
 @Controller('time')

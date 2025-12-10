@@ -18,18 +18,18 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthenticatedUser, OAuthProvider } from '@auth/interfaces/oauth.types';
+import { AuthenticatedUser, OAuthProvider } from '@interfaces/oauth.types';
 import {
   AuthResponseDto,
   AuthStatusDto,
   LoginDto,
   RegisterDto,
-} from '@auth/dto/oauth.dto';
-import { getEnabledProviders } from '@auth/config/oauth-providers.config';
-import { AuthService } from '@auth/auth.service';
-import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
-import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
-import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
+} from '@dto/oauth.dto';
+import { getEnabledProviders } from '@modules/auth/config/oauth-providers.config';
+import { AuthService } from '@modules/auth/auth.service';
+import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
+import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
+import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
 
 type RequestWithUser = Request & {
   user?: AuthenticatedUser;
@@ -101,27 +101,19 @@ export class AuthController {
   }
 
   private isValidRedirectUrl(url: string): boolean {
-    // Strict allowlist of exact allowed URLs
     const allowedUrls = [
       this.configService.get<string>('FRONTEND_URLS'),
     ].filter(Boolean) as string[];
 
-    if (url.startsWith('area://')) {
-      return true;
-    }
-
-    if (url.startsWith('exp://')) {
+    if (url.startsWith('area://') || url.startsWith('exp://')) {
       return true;
     }
 
     try {
       const parsedUrl = new URL(url);
 
-      // For http/https URLs, check against exact allowlist
-      if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
         const urlOrigin = parsedUrl.origin;
 
-        // Exact match of origin only
         return allowedUrls.some((allowed) => {
           if (!allowed) return false;
           try {
@@ -131,24 +123,18 @@ export class AuthController {
             return false;
           }
         });
-      }
-
-      return false;
     } catch {
       return false;
     }
   }
 
   private handleCallback(req: RequestWithUser, res: Response): void {
-    const defaultFrontendUrl =
-      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:8081';
-
     const redirectFromQuery = req.query?.redirect as string | undefined;
     const redirectFromState = req.query?.state as string | undefined;
 
     const redirectParam = redirectFromState || redirectFromQuery || '';
 
-    let baseUrl = defaultFrontendUrl;
+    let baseUrl = 'http://localhost:8081';
 
     if (redirectParam) {
       try {
@@ -167,9 +153,8 @@ export class AuthController {
       baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
 
     if (!req.user) {
-      // Always redirect to default URL on auth failure for security
       return res.redirect(
-        `${defaultFrontendUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
+        `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
       );
     }
 
@@ -187,10 +172,8 @@ export class AuthController {
 
     let redirectUrl: string;
     if (isMobile) {
-      // For mobile, construct URL carefully
       redirectUrl = `${baseUrl}?user=${userJson}&token=${tokenParam}`;
     } else {
-      // For web, only use validated baseUrl
       redirectUrl = `${baseUrl}/auth/success?user=${userJson}&token=${tokenParam}`;
     }
 

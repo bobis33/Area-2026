@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
-import { AppModule } from 'app.module';
-import { setupSwagger } from '@config/swagger.config';
+import { AppModule } from '@/app.module';
+import { setupSwagger } from '@common/config/swagger.config';
 
 async function app() {
   const app = await NestFactory.create(AppModule);

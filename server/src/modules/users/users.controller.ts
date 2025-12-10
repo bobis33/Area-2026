@@ -8,10 +8,10 @@ import {
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
-import { UsersService } from '@users/users.service';
+import { UsersService } from '@modules/users/users.service';
 import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
-import { CreateUserDto } from '@users/dto/create-user.dto';
-import { UserResponseDto } from '@users/dto/user-response.dto';
+import { CreateUserDto } from '@dto/create-user.dto';
+import { UserResponseDto } from '@dto/user-response.dto';
 
 @ApiTags('Users')
 @Controller('users')

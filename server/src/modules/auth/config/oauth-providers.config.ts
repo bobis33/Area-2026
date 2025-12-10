@@ -9,7 +9,7 @@ import {
   DiscordProfile,
   GoogleProfile,
   GitHubProfile,
-} from '@auth/interfaces/oauth.types';
+} from '@interfaces/oauth.types';
 
 export function getProviderConfig(
   provider: OAuthProvider,

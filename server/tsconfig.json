@@ -11,15 +11,10 @@
     "paths": {
       "@prisma/client": ["./../node_modules/.prisma/client"],
       "@common/*": ["common/*"],
+      "@dto/*": ["dto/*"],
+      "@interfaces/*": ["interfaces/*"],
       "@modules/*": ["modules/*"],
-      "@config/*": ["common/config/*"],
-      "@database/*": ["common/database/*"],
-      "@auth/*": ["modules/auth/*"],
-      "@users/*": ["modules/users/*"],
-      "@health/*": ["modules/health/*"],
-      "@about/*": ["modules/about/*"],
-      "@actions/*": ["modules/actions/*"],
-      "@/*": ["modules/*"]
+      "@/*": ["*"]
     },
     "outDir": "./dist",
     "baseUrl": "./src",

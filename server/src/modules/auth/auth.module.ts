@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
-import { AuthService } from '@auth/auth.service';
-import { AuthController } from '@auth/auth.controller';
+import { AuthService } from '@modules/auth/auth.service';
+import { AuthController } from '@modules/auth/auth.controller';
 import { DatabaseModule } from '@common/database/database.module';
 import {
   DiscordOAuthStrategy,
   GoogleOAuthStrategy,
   GitHubOAuthStrategy,
-} from '@auth/strategies/oauth-strategy.factory';
-import { JwtStrategy } from '@auth/strategies/jwt.strategy';
+} from '@modules/auth/strategies/oauth-strategy.factory';
+import { JwtStrategy } from '@modules/auth/strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { DiscordAuthGuard } from '@auth/guards/discord-auth.guard';
-import { GithubAuthGuard } from '@auth/guards/github-auth.guard';
-import { GoogleAuthGuard } from '@auth/guards/google-auth.guard';
+import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
+import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
+import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
 
 @Module({
   imports: [

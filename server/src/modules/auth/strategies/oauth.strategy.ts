@@ -1,4 +1,4 @@
-import { AuthService } from '@auth/auth.service';
+import { AuthService } from '@modules/auth/auth.service';
 import {
   OAuthProvider,
   OAuthTokens,
@@ -6,8 +6,8 @@ import {
   GitHubProfile,
   GoogleProfile,
   DiscordProfile,
-} from '@auth/interfaces/oauth.types';
-import { normalizeOAuthProfile } from '@auth/config/oauth-providers.config';
+} from '@interfaces/oauth.types';
+import { normalizeOAuthProfile } from '@modules/auth/config/oauth-providers.config';
 
 export class GenericOAuthStrategy {
   constructor(
@@ -28,7 +28,6 @@ export class GenericOAuthStrategy {
         tokens,
       );
     } catch {
-      // Don't log errors as they may contain sensitive token data
       return null;
     }
   }

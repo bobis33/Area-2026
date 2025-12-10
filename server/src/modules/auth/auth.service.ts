@@ -7,11 +7,11 @@ import {
   OAuthValidationResult,
   AuthenticatedUser,
   OAuthProvider,
-} from '@auth/interfaces/oauth.types';
-import { RegisterDto, LoginDto, AuthResponseDto } from '@auth/dto/oauth.dto';
+} from '@interfaces/oauth.types';
+import { RegisterDto, LoginDto, AuthResponseDto } from '@dto/oauth.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import {Roles} from "@auth/interfaces/roles";
+import {Roles} from "@interfaces/roles";
 
 type UserSelect = Pick<
   User,
@@ -54,8 +54,6 @@ export class AuthService {
       if (!user) {
         user = await this.createUserFromOAuth(profile, tokens);
       }
-
-      this.updateOAuthTokens(user.id, tokens);
 
       return this.mapToAuthenticatedUser(user);
     } catch (error) {
@@ -187,13 +185,6 @@ export class AuthService {
     });
   }
 
-  private updateOAuthTokens(userId: number, tokens: OAuthTokens): void {
-    try {
-    } catch (error) {
-      console.error('[AuthService] updateOAuthTokens error:', error);
-    }
-  }
-
   private mapToAuthenticatedUser(
     user: UserSelect,
     account?: { provider: string; provider_id: string } | null,
@@ -278,7 +269,7 @@ export class AuthService {
         email: dto.email,
         name: dto.name,
         password: hashedPassword,
-        role: 'user',
+        role: Roles.USER,
       },
       select: {
         id: true,

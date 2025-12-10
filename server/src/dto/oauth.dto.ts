@@ -59,7 +59,7 @@ export class AuthenticatedUserDto {
 
   @ApiProperty({
     description: 'User role',
-    example: 'user',
+    example: 'USER',
   })
   @IsString()
   role!: string;
