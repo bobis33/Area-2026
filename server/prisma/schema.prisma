@@ -19,7 +19,7 @@ model User {
   updated_at DateTime @updatedAt
 
   accounts   ProviderAccount[]
-  areas            Area[]
+  areas      Area[]
 }
 
 model ProviderAccount {
@@ -39,15 +39,15 @@ model ProviderAccount {
 model Area {
  id          Int      @id @default(autoincrement())
  name        String   @db.VarChar(255)
- isActive    Boolean  @default(true)
- userId      Int
+ is_active    Boolean  @default(true)
+ user_id      Int
 
- user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
  action      Action?
  reaction    Reaction?
 
- createdAt   DateTime @default(now())
- updatedAt   DateTime @updatedAt
+ created_at   DateTime @default(now())
+ updated_at   DateTime @updatedAt
 }
 
 model Action {
@@ -56,11 +56,10 @@ model Action {
  type        String   @db.VarChar(255)
 
  parameters  Json?
+ current_state Json?
 
- currentState Json?
-
- areaId      Int      @unique
- area        Area     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+ area_id      Int      @unique
+ area        Area     @relation(fields: [area_id], references: [id], onDelete: Cascade)
 }
 
 model Reaction {
@@ -70,6 +69,6 @@ model Reaction {
 
  parameters  Json?
 
- areaId      Int      @unique
- area        Area     @relation(fields: [areaId], references: [id], onDelete: Cascade)
+ area_id      Int      @unique
+ area        Area     @relation(fields: [area_id], references: [id], onDelete: Cascade)
 }
