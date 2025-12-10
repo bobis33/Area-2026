@@ -132,14 +132,9 @@ export class AuthController {
 
   private isValidRedirectUrl(url: string): boolean {
     const allowedUrls = [
-      'http://localhost:8081',
-      'http://localhost:3000',
-      'http://127.0.0.1:8081',
-      'http://127.0.0.1:3000',
-      this.configService.get<string>('FRONTEND_URL'),
+      this.configService.get<string>('FRONTEND_URLS'),
     ].filter(Boolean) as string[];
 
-    // Allow custom mobile app schemes (exact match for scheme only)
     if (url.startsWith('area://')) {
       return true;
     }

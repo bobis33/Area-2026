@@ -8,15 +8,17 @@ CREATE TABLE IF NOT EXISTS "User" (
     role VARCHAR(255) NOT NULL DEFAULT 'user',
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
-    );
+);
 
 CREATE TABLE IF NOT EXISTS "ProviderAccount" (
     id SERIAL PRIMARY KEY,
     provider VARCHAR(255) NOT NULL,
     provider_id VARCHAR(255) NOT NULL,
+    access_token VARCHAR(255) NOT NULL,
+    refresh_token VARCHAR(255),
     user_id INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
 
     CONSTRAINT unique_provider UNIQUE (provider, provider_id)
-    );
+);
 
 CREATE INDEX idx_provideraccount_userId ON "ProviderAccount"(user_id);
