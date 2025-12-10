@@ -5,13 +5,16 @@ documentation
 scripts
 node_modules
 build
+client/shared
 dist
+.git
 .github
 
 CONTRIBUTING.md
 gitleaks.toml
 LICENSE.md
 README.md
+SECURITY.md
 *-lock.json
 .gitignore
 .env

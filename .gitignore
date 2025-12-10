@@ -3,13 +3,13 @@
 .idea
 .vscode
 
-*-lock.json
 node_modules
 build
 dist
-
 coverage
+client/shared
 
+*-lock.json
 .DS_store
 *.pem
 

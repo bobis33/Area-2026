@@ -1,7 +1,9 @@
 dist
 node_modules
 .expo
-eslint.config.js
 .git
-*.md
+
+eslint.config.js
 expo-env.d.ts
+.gitignore
+README.md
