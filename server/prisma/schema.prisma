@@ -26,8 +26,8 @@ model ProviderAccount {
   id            Int      @id @default(autoincrement())
   provider      String   @db.VarChar(255)
   provider_id   String   @db.VarChar(255)
-  access_token  String   @db.VarChar(255)
-  refresh_token String?  @db.VarChar(255)
+  access_token  String   @db.VarChar(4096)
+  refresh_token String?  @db.VarChar(4096)
   user_id       Int
 
   user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)

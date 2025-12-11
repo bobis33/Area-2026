@@ -1,34 +1,37 @@
 import { AuthService } from '@modules/auth/auth.service';
-import {
-  OAuthProvider,
-  OAuthTokens,
-  OAuthValidationResult,
-  GitHubProfile,
-  GoogleProfile,
-  DiscordProfile,
-} from '@interfaces/oauth.types';
+import { OAuthProvider } from '@interfaces/oauth.types';
 import { normalizeOAuthProfile } from '@modules/auth/config/oauth-providers.config';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
+@Injectable()
 export class GenericOAuthStrategy {
   constructor(
-    protected readonly authService: AuthService,
-    protected readonly provider: OAuthProvider,
+    private readonly authService: AuthService,
+    private readonly provider: OAuthProvider,
   ) {}
 
   async validate(
     accessToken: string,
     refreshToken: string,
-    profile: GitHubProfile | GoogleProfile | DiscordProfile,
-  ): Promise<OAuthValidationResult> {
+    profile: any,
+  ): Promise<any> {
     try {
-      const normalizedProfile = normalizeOAuthProfile(profile, this.provider);
-      const tokens: OAuthTokens = { accessToken, refreshToken };
-      return await this.authService.validateOAuthLogin(
-        normalizedProfile,
-        tokens,
-      );
-    } catch {
-      return null;
+      const normalizedUser = normalizeOAuthProfile(profile, this.provider);
+
+      const user = await this.authService.validateOAuthLogin(normalizedUser, {
+        accessToken,
+        refreshToken,
+      });
+
+      if (!user) {
+        throw new UnauthorizedException(
+          'Authentication failed: No user returned',
+        );
+      }
+
+      return user;
+    } catch (error) {
+      console.error('Error');
     }
   }
 }
