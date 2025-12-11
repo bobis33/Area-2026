@@ -19,6 +19,7 @@ model User {
   updated_at DateTime @updatedAt
 
   accounts   ProviderAccount[]
+  areas      Area[]
 }
 
 model ProviderAccount {
@@ -33,4 +34,41 @@ model ProviderAccount {
 
   @@unique([provider, provider_id])
   @@index([user_id])
+}
+
+model Area {
+ id          Int      @id @default(autoincrement())
+ name        String   @db.VarChar(255)
+ is_active    Boolean  @default(true)
+ user_id      Int
+
+ user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+ action      Action?
+ reaction    Reaction?
+
+ created_at   DateTime @default(now())
+ updated_at   DateTime @updatedAt
+}
+
+model Action {
+ id          Int      @id @default(autoincrement())
+ service     String   @db.VarChar(255)
+ type        String   @db.VarChar(255)
+
+ parameters  Json?
+ current_state Json?
+
+ area_id      Int      @unique
+ area        Area     @relation(fields: [area_id], references: [id], onDelete: Cascade)
+}
+
+model Reaction {
+ id          Int      @id @default(autoincrement())
+ service     String   @db.VarChar(255)
+ type        String   @db.VarChar(255)
+
+ parameters  Json?
+
+ area_id      Int      @unique
+ area        Area     @relation(fields: [area_id], references: [id], onDelete: Cascade)
 }

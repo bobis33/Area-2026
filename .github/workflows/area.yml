@@ -70,10 +70,10 @@ jobs:
           echo "JWT_SECRET=jwt-secret-key" >> .env
 
       - name: Build
-        run: docker compose build --progress plain --no-cache
+        run: docker compose build --progress plain --no-cache area_service_postgresql area_service_server area_service_client_web
 
       - name: Run
-        run: docker compose up -d
+        run: docker compose up -d area_service_postgresql area_service_server area_service_client_web
 
       - name: Check containers status
         run: |
