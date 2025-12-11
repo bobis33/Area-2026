@@ -30,6 +30,8 @@ import { AuthService } from '@modules/auth/auth.service';
 import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
 import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
 import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
+import { SpotifyAuthGuard } from '@modules/auth/guards/spotify-auth.guard';
+import { GitlabAuthGuard } from '@modules/auth/guards/gitlab-auth.guard';
 
 type RequestWithUser = Request & {
   user?: AuthenticatedUser;
@@ -76,6 +78,18 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.FOUND })
   githubAuth(): void {}
 
+  @Get('gitlab')
+  @UseGuards(GitlabAuthGuard)
+  @ApiOperation({ summary: 'GitLab OAuth' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  gitlabAuth(): void {}
+
+  @Get('spotify')
+  @UseGuards(SpotifyAuthGuard)
+  @ApiOperation({ summary: 'Spotify OAuth' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  spotifyAuth(): void {}
+
   @Get('discord/callback')
   @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })
@@ -100,6 +114,22 @@ export class AuthController {
     this.handleCallback(req, res);
   }
 
+  @Get('spotify/callback')
+  @UseGuards(SpotifyAuthGuard)
+  @ApiOperation({ summary: 'Spotify callback' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  spotifyCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
+    this.handleCallback(req, res);
+  }
+
+  @Get('gitlab/callback')
+  @UseGuards(GitlabAuthGuard)
+  @ApiOperation({ summary: 'GitLab callback' })
+  @ApiResponse({ status: HttpStatus.FOUND })
+  gitlabCallback(@Req() req: RequestWithUser, @Res() res: Response): void {
+    this.handleCallback(req, res);
+  }
+
   private isValidRedirectUrl(url: string): boolean {
     const allowedUrls = [
       this.configService.get<string>('FRONTEND_URLS'),
@@ -112,17 +142,17 @@ export class AuthController {
     try {
       const parsedUrl = new URL(url);
 
-        const urlOrigin = parsedUrl.origin;
+      const urlOrigin = parsedUrl.origin;
 
-        return allowedUrls.some((allowed) => {
-          if (!allowed) return false;
-          try {
-            const allowedUrl = new URL(allowed);
-            return urlOrigin === allowedUrl.origin;
-          } catch {
-            return false;
-          }
-        });
+      return allowedUrls.some((allowed) => {
+        if (!allowed) return false;
+        try {
+          const allowedUrl = new URL(allowed);
+          return urlOrigin === allowedUrl.origin;
+        } catch {
+          return false;
+        }
+      });
     } catch {
       return false;
     }

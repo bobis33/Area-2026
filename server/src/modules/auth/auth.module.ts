@@ -8,12 +8,16 @@ import {
   DiscordOAuthStrategy,
   GoogleOAuthStrategy,
   GitHubOAuthStrategy,
+  SpotifyOAuthStrategy,
+  GitLabOAuthStrategy,
 } from '@modules/auth/strategies/oauth-strategy.factory';
 import { JwtStrategy } from '@modules/auth/strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
 import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
+import { SpotifyAuthGuard } from '@modules/auth/guards/spotify-auth.guard';
+import { GitlabAuthGuard } from '@modules/auth/guards/gitlab-auth.guard';
+import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
 import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
 
 @Module({
@@ -36,9 +40,13 @@ import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
     DiscordOAuthStrategy,
     GoogleOAuthStrategy,
     GitHubOAuthStrategy,
+    SpotifyOAuthStrategy,
+    GitLabOAuthStrategy,
     DiscordAuthGuard,
     GithubAuthGuard,
     GoogleAuthGuard,
+    SpotifyAuthGuard,
+    GitlabAuthGuard,
   ],
   exports: [AuthService],
 })

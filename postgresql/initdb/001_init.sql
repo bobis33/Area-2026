@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS "ProviderAccount" (
     id SERIAL PRIMARY KEY,
     provider VARCHAR(255) NOT NULL,
     provider_id VARCHAR(255) NOT NULL,
-    access_token VARCHAR(255) NOT NULL,
-    refresh_token VARCHAR(255),
+    access_token VARCHAR(4096) NOT NULL,
+    refresh_token VARCHAR(4096),
     user_id INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
 
     CONSTRAINT unique_provider UNIQUE (provider, provider_id)

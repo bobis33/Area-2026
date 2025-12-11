@@ -11,7 +11,7 @@ import {
 import { RegisterDto, LoginDto, AuthResponseDto } from '@dto/oauth.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import {Roles} from "@interfaces/roles";
+import { Roles } from '@interfaces/roles';
 
 type UserSelect = Pick<
   User,
@@ -46,7 +46,7 @@ export class AuthService {
             existingUser.id,
             provider,
             provider_id,
-            tokens
+            tokens,
           );
         }
       }
@@ -124,7 +124,7 @@ export class AuthService {
 
   private async createUserFromOAuth(
     profile: NormalizedOAuthProfile,
-    tokens: OAuthTokens
+    tokens: OAuthTokens,
   ): Promise<UserSelect> {
     const user = await this.prisma.user.create({
       data: {
