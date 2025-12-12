@@ -18,13 +18,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthenticatedUser, OAuthProvider } from '@interfaces/oauth.types';
+import { OAuthProvider } from '@interfaces/oauth';
 import {
   AuthResponseDto,
   AuthStatusDto,
   LoginDto,
   RegisterDto,
-} from '@dto/oauth.dto';
+} from '@dto/auth.dto';
 import { getEnabledProviders } from '@modules/auth/config/oauth-providers.config';
 import { AuthService } from '@modules/auth/auth.service';
 import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
@@ -32,6 +32,7 @@ import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
 import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
 import { SpotifyAuthGuard } from '@modules/auth/guards/spotify-auth.guard';
 import { GitlabAuthGuard } from '@modules/auth/guards/gitlab-auth.guard';
+import { AuthenticatedUser } from '@interfaces/user';
 
 type RequestWithUser = Request & {
   user?: AuthenticatedUser;

@@ -1,9 +1,11 @@
 export interface ActionHandler {
-    check(parameters: any, currentState: any): Promise<{
-        name: string;
-        description: string;
-        triggered: boolean;
-        newState?: any;
-    }>;
+  name: string;
+  description: string;
+  check(
+    parameters: any,
+    currentState: any,
+  ): Promise<{
+    triggered: boolean;
+    newState?: any;
+  }>;
 }
-

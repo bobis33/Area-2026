@@ -4,20 +4,19 @@ import { Client, GatewayIntentBits } from 'discord.js';
 
 @Injectable()
 export class DiscordService implements OnModuleInit {
-    private readonly logger = new Logger(DiscordService.name);
-    public client: Client;
+  private readonly logger = new Logger(DiscordService.name);
+  public client: Client;
 
+  constructor(private configService: ConfigService) {
+    this.client = new Client({
+      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+    });
+  }
 
-    constructor(private configService: ConfigService) {
-        this.client = new Client({
-            intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
-        });
-    }
+  async onModuleInit() {
+    const token = this.configService.get<string>('DISCORD_BOT_TOKEN');
 
-    async onModuleInit() {
-        const token = this.configService.get<string>('DISCORD_BOT_TOKEN');
-
-        await this.client.login(token);
-        this.logger.log('Discord bot logged in successfully');
-    }
+    await this.client.login(token);
+    this.logger.log('Discord bot logged in successfully');
+  }
 }

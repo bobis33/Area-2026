@@ -7,7 +7,7 @@ import { AboutModule } from '@modules/about/about.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as Joi from 'joi';
-import {EngineModule} from "@modules/area/engine.module";
+import { EngineModule } from '@modules/area/engine.module';
 
 @Module({
   imports: [
