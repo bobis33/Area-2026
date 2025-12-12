@@ -14,3 +14,13 @@ VALUES
     ('discord', 'discord-bob-456', 2, 'empty', 'empty'),
     ('github', 'gh-charlie-789', 3, 'empty', 'empty'),
     ('discord', 'discord-charlie-456', 3, 'empty', 'empty');
+
+
+INSERT INTO "Area" (name, is_active, user_id)
+VALUES ('Test Discord AREA', true, 1);
+
+INSERT INTO "Action" (service, type, parameters, area_id)
+VALUES ('time', 'cron', '{  "every": "seconds", "interval": 10 }', 1);
+
+INSERT INTO "Reaction" (service, type, parameters, area_id)
+VALUES ('discord', 'send_message', '{"channelId":"1439986928211722324","message":"Hello, AREA triggered!"}', 1);
