@@ -3,7 +3,7 @@ import {
   OAuthProvider,
   OAuthProviderConfig,
   NormalizedOAuthProfile,
-} from '@interfaces/oauth.types';
+} from '@interfaces/oauth';
 
 export function getProviderConfig(
   provider: OAuthProvider,

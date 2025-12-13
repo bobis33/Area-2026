@@ -9,11 +9,12 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@prisma/client": ["./../node_modules/.prisma/client"],
       "@common/*": ["common/*"],
+      "@decorators/*": ["decorators/*"],
       "@dto/*": ["dto/*"],
       "@interfaces/*": ["interfaces/*"],
       "@modules/*": ["modules/*"],
+      "@prisma/client": ["./../node_modules/.prisma/client"],
       "@/*": ["*"]
     },
     "outDir": "./dist",

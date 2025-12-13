@@ -16,7 +16,7 @@ WORKDIR /app/client/web
 
 RUN npm run build && npm cache clean --force
 
-FROM nginx:1.29.3-alpine-slim
+FROM nginx:1.29.4-alpine-slim
 
 WORKDIR /app
 

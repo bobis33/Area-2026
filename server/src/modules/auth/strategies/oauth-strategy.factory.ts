@@ -9,7 +9,7 @@ import {
   GoogleProfile,
   SpotifyProfile,
   GitLabProfile,
-} from '@/interfaces/oauth.types';
+} from '@/interfaces/oauth';
 import { getProviderConfig } from '@modules/auth/config/oauth-providers.config';
 import { GenericOAuthStrategy } from '@modules/auth/strategies/oauth.strategy';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
@@ -45,7 +45,7 @@ export function createOAuthStrategy(
         | GoogleProfile
         | SpotifyProfile
         | GitLabProfile,
-    ) {
+    ): Promise<any> {
       return this.oauthStrategy.validate(accessToken, refreshToken, profile);
     }
   }
