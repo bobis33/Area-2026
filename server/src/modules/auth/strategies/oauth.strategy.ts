@@ -1,5 +1,5 @@
 import { AuthService } from '@modules/auth/auth.service';
-import { OAuthProvider } from '@interfaces/oauth.types';
+import { OAuthProvider } from '@interfaces/oauth';
 import { normalizeOAuthProfile } from '@modules/auth/config/oauth-providers.config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
@@ -31,7 +31,8 @@ export class GenericOAuthStrategy {
 
       return user;
     } catch (error) {
-      console.error('Error');
+      console.error(`[OAuth Strategy] validate error occurred.`);
+      throw error;
     }
   }
 }

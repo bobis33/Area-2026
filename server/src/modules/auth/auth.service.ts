@@ -5,13 +5,13 @@ import {
   NormalizedOAuthProfile,
   OAuthTokens,
   OAuthValidationResult,
-  AuthenticatedUser,
   OAuthProvider,
-} from '@interfaces/oauth.types';
-import { RegisterDto, LoginDto, AuthResponseDto } from '@dto/oauth.dto';
+} from '@interfaces/oauth';
+import { RegisterDto, LoginDto, AuthResponseDto } from '@dto/auth.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { Roles } from '@interfaces/roles';
+import { AuthenticatedUser } from '@interfaces/user';
 
 type UserSelect = Pick<
   User,

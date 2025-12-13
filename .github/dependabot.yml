@@ -57,6 +57,7 @@ updates:
       - "/server"
       - "/client/web"
       - "/client/mobile"
+      - "/packages/ui"
     schedule:
       interval: "daily"
       time: "05:00"

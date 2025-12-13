@@ -1,3 +1,5 @@
+import { AuthenticatedUser } from '@interfaces/user';
+
 export enum OAuthProvider {
   DISCORD = 'discord',
   GOOGLE = 'google',
@@ -28,18 +30,6 @@ export interface OAuthTokens {
   accessToken: string;
   refreshToken: string;
   expiresIn?: number;
-}
-
-export interface AuthenticatedUser {
-  id: number;
-  email: string;
-  name?: string;
-  avatar?: string;
-  provider: string;
-  provider_id: string;
-  role: string;
-  created_at: Date;
-  updated_at: Date;
 }
 
 export type OAuthValidationResult = AuthenticatedUser | null;

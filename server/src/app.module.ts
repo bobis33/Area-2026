@@ -5,11 +5,13 @@ import { UsersModule } from '@modules/users/users.module';
 import { HealthModule } from '@modules/health/health.module';
 import { AboutModule } from '@modules/about/about.module';
 import { AuthModule } from '@modules/auth/auth.module';
-import { TimeModule } from '@modules/actions/time/time.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import * as Joi from 'joi';
+import { EngineModule } from '@modules/area/engine.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -20,6 +22,7 @@ import * as Joi from 'joi';
         DISCORD_CLIENT_ID: Joi.string(),
         DISCORD_CLIENT_SECRET: Joi.string(),
         DISCORD_CLIENT_CALLBACK_URL: Joi.string().uri().optional(),
+        DISCORD_BOT_TOKEN: Joi.string(),
         GOOGLE_CLIENT_ID: Joi.string(),
         GOOGLE_CLIENT_SECRET: Joi.string(),
         GOOGLE_CLIENT_CALLBACK_URL: Joi.string().uri().optional(),
@@ -42,7 +45,7 @@ import * as Joi from 'joi';
     HealthModule,
     AboutModule,
     AuthModule,
-    TimeModule,
+    EngineModule,
   ],
 })
 export class AppModule {}
