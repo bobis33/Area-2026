@@ -28,7 +28,12 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children }) => {
+export const Modal: React.FC<ModalProps> = ({
+  visible,
+  onClose,
+  title,
+  children,
+}) => {
   const { currentTheme } = useAppTheme();
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
@@ -63,18 +68,36 @@ export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children 
       visible={visible}
       transparent
       animationType="none"
-      onRequestClose={onClose}>
+      onRequestClose={onClose}
+    >
       <TouchableWithoutFeedback onPress={onClose}>
-        <Animated.View style={[styles.overlay, overlayStyle, { backgroundColor: currentTheme.colors.background + '80' }]}>
+        <Animated.View
+          style={[
+            styles.overlay,
+            overlayStyle,
+            { backgroundColor: currentTheme.colors.background + '80' },
+          ]}
+        >
           <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
-            <AnimatedCard padding="lg" elevated style={[styles.modalContent, animatedCardStyle]}>
+            <AnimatedCard
+              padding="lg"
+              elevated
+              style={[styles.modalContent, animatedCardStyle]}
+            >
               {title && (
                 <View style={styles.header}>
                   <Text variant="subtitle" style={styles.title}>
                     {title}
                   </Text>
-                  <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                    <IconSymbol size={24} name="xmark" color={currentTheme.colors.textMuted} />
+                  <TouchableOpacity
+                    onPress={onClose}
+                    style={styles.closeButton}
+                  >
+                    <IconSymbol
+                      size={24}
+                      name="xmark"
+                      color={currentTheme.colors.textMuted}
+                    />
                   </TouchableOpacity>
                 </View>
               )}
@@ -82,7 +105,8 @@ export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children 
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled">
+                keyboardShouldPersistTaps="handled"
+              >
                 {children}
               </ScrollView>
             </AnimatedCard>

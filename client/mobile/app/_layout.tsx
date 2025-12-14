@@ -2,18 +2,18 @@ import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider as NavigationThemeProvider,
-} from "@react-navigation/native";
-import { Stack, useRouter, useSegments } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import "react-native-reanimated";
+} from '@react-navigation/native';
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
+import 'react-native-reanimated';
 
-import { useColorScheme } from "@/hooks/use-color-scheme";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import { ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
+import { ThemeProvider, useAppTheme } from '@/contexts/ThemeContext';
 
 export const unstable_settings = {
-  anchor: "(tabs)",
+  anchor: '(tabs)',
 };
 
 function RootLayoutNav() {
@@ -35,31 +35,31 @@ function RootLayoutNav() {
       return;
     }
 
-    const inAuthGroup = segments[0] === "(auth)";
+    const inAuthGroup = segments[0] === '(auth)';
 
     // Redirect to login if not authenticated and not already in auth group
     if (!isAuthenticated && !inAuthGroup) {
-      router.replace("/(auth)/login");
+      router.replace('/(auth)/login');
     }
     // Redirect to tabs if authenticated and still in auth group
     else if (isAuthenticated && inAuthGroup) {
-      router.replace("/(tabs)");
+      router.replace('/(tabs)');
     }
   }, [isAuthenticated, segments, isMounted]);
 
   return (
     <NavigationThemeProvider
-      value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
     >
       <Stack>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
+          options={{ presentation: 'modal', title: 'Modal' }}
         />
       </Stack>
-      <StatusBar style={isDark ? "light" : "dark"} />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
     </NavigationThemeProvider>
   );
 }

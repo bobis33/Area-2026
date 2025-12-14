@@ -56,7 +56,8 @@ const mockAutomations: Automation[] = [
 
 export default function AreaScreen() {
   const { currentTheme } = useAppTheme();
-  const [selectedAutomation, setSelectedAutomation] = useState<Automation | null>(null);
+  const [selectedAutomation, setSelectedAutomation] =
+    useState<Automation | null>(null);
 
   return (
     <MobileScreen scroll safeArea keyboardAware={false}>
@@ -83,13 +84,27 @@ export default function AreaScreen() {
               <FadeInView key={service.id} delay={150 + index * 50} spring>
                 <AnimatedCard haptic>
                   <SectionCard>
-                    <TouchableOpacity style={styles.serviceRow} activeOpacity={0.7}>
+                    <TouchableOpacity
+                      style={styles.serviceRow}
+                      activeOpacity={0.7}
+                    >
                       <View style={styles.serviceLeft}>
-                        <View style={[styles.serviceIconContainer, { backgroundColor: currentTheme.colors.surfaceMuted }]}>
+                        <View
+                          style={[
+                            styles.serviceIconContainer,
+                            {
+                              backgroundColor: currentTheme.colors.surfaceMuted,
+                            },
+                          ]}
+                        >
                           <ServiceIcon
                             service={service.serviceKey}
                             size={24}
-                            color={service.connected ? currentTheme.colors.primary : currentTheme.colors.textMuted}
+                            color={
+                              service.connected
+                                ? currentTheme.colors.primary
+                                : currentTheme.colors.textMuted
+                            }
                           />
                         </View>
                         <Text variant="body" style={styles.serviceName}>
@@ -100,15 +115,25 @@ export default function AreaScreen() {
                         style={[
                           styles.statusBadge,
                           service.connected
-                            ? { backgroundColor: currentTheme.colors.successSoft }
-                            : { backgroundColor: currentTheme.colors.surfaceMuted },
-                        ]}>
+                            ? {
+                                backgroundColor:
+                                  currentTheme.colors.successSoft,
+                              }
+                            : {
+                                backgroundColor:
+                                  currentTheme.colors.surfaceMuted,
+                              },
+                        ]}
+                      >
                         <View
                           style={[
                             styles.statusDot,
                             service.connected
                               ? { backgroundColor: currentTheme.colors.success }
-                              : { backgroundColor: currentTheme.colors.textMuted },
+                              : {
+                                  backgroundColor:
+                                    currentTheme.colors.textMuted,
+                                },
                           ]}
                         />
                         <Text variant="caption" style={styles.statusText}>
@@ -135,7 +160,8 @@ export default function AreaScreen() {
               <FadeInView key={automation.id} delay={450 + index * 100} spring>
                 <AnimatedCard
                   haptic
-                  onPress={() => setSelectedAutomation(automation)}>
+                  onPress={() => setSelectedAutomation(automation)}
+                >
                   <SectionCard>
                     <View style={styles.automationRow}>
                       <View style={styles.automationHeader}>
@@ -146,11 +172,20 @@ export default function AreaScreen() {
                           style={[
                             styles.statusBadge,
                             automation.status === 'active'
-                              ? { backgroundColor: currentTheme.colors.successSoft }
-                              : { backgroundColor: currentTheme.colors.surfaceMuted },
-                          ]}>
+                              ? {
+                                  backgroundColor:
+                                    currentTheme.colors.successSoft,
+                                }
+                              : {
+                                  backgroundColor:
+                                    currentTheme.colors.surfaceMuted,
+                                },
+                          ]}
+                        >
                           <Text variant="caption" style={styles.statusText}>
-                            {automation.status === 'active' ? 'Active' : 'Inactive'}
+                            {automation.status === 'active'
+                              ? 'Active'
+                              : 'Inactive'}
                           </Text>
                         </View>
                       </View>
@@ -190,7 +225,8 @@ export default function AreaScreen() {
       <Modal
         visible={!!selectedAutomation}
         onClose={() => setSelectedAutomation(null)}
-        title={selectedAutomation?.name}>
+        title={selectedAutomation?.name}
+      >
         {selectedAutomation && (
           <View style={styles.modalContent}>
             <View style={styles.modalSection}>
@@ -235,9 +271,12 @@ export default function AreaScreen() {
                   selectedAutomation.status === 'active'
                     ? { backgroundColor: currentTheme.colors.successSoft }
                     : { backgroundColor: currentTheme.colors.surfaceMuted },
-                ]}>
+                ]}
+              >
                 <Text variant="caption" style={styles.statusText}>
-                  {selectedAutomation.status === 'active' ? 'Active' : 'Inactive'}
+                  {selectedAutomation.status === 'active'
+                    ? 'Active'
+                    : 'Inactive'}
                 </Text>
               </View>
             </View>

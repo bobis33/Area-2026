@@ -1,26 +1,26 @@
-import { useState } from "react";
-import { Alert, View, StyleSheet, Pressable } from "react-native";
-import { router } from "expo-router";
-import { Text } from "@area/ui";
+import { useState } from 'react';
+import { Alert, View, StyleSheet, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { Text } from '@area/ui';
 import {
   MobileScreen,
   MobileButton,
   MobileInput,
-} from "@/components/ui-mobile";
-import { SocialLoginButtons } from "@/components/auth/SocialLoginButtons";
-import { useAuth } from "@/contexts/AuthContext";
-import { spacing } from "@area/ui";
+} from '@/components/ui-mobile';
+import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
+import { useAuth } from '@/contexts/AuthContext';
+import { spacing } from '@area/ui';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      setError("Please fill in all fields");
+      setError('Please fill in all fields');
       return;
     }
 
@@ -31,9 +31,9 @@ export default function LoginScreen() {
       // Navigation is handled by AuthContext
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Connection error";
+        err instanceof Error ? err.message : 'Connection error';
       setError(errorMessage);
-      Alert.alert("Connection Error", errorMessage);
+      Alert.alert('Connection Error', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -99,9 +99,9 @@ export default function LoginScreen() {
         <View style={styles.footerSection}>
           <View style={styles.footerContent}>
             <Text variant="caption" color="muted" align="center">
-              Don't have an account?{" "}
+              Don't have an account?{' '}
             </Text>
-            <Pressable onPress={() => router.push("/(auth)/register")}>
+            <Pressable onPress={() => router.push('/(auth)/register')}>
               <Text variant="caption" color="default" style={styles.linkText}>
                 Sign up
               </Text>
@@ -121,11 +121,11 @@ const styles = StyleSheet.create({
   },
   headerSection: {
     marginBottom: spacing.xl,
-    alignItems: "center",
+    alignItems: 'center',
   },
   title: {
     marginBottom: spacing.sm,
-    textAlign: "center",
+    textAlign: 'center',
   },
   subtitle: {
     paddingHorizontal: spacing.lg,
@@ -145,12 +145,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   footerContent: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   linkText: {
-    fontWeight: "600",
+    fontWeight: '600',
   },
 });

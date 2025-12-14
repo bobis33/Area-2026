@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import "./Login.css";
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import './Login.css';
 
 export default function OAuthError() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string>(
-    "Authentication failed",
+    'Authentication failed',
   );
 
   useEffect(() => {
-    const message = searchParams.get("message");
+    const message = searchParams.get('message');
     if (message) {
       setErrorMessage(decodeURIComponent(message));
     }
     const timer = setTimeout(() => {
-      navigate("/");
+      navigate('/');
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -35,9 +35,9 @@ export default function OAuthError() {
         <div className="oauth-error-content">
           <p
             style={{
-              textAlign: "center",
-              color: "#666",
-              marginBottom: "1.5rem",
+              textAlign: 'center',
+              color: '#666',
+              marginBottom: '1.5rem',
             }}
           >
             Please try again or use a different sign-in method.
@@ -45,16 +45,16 @@ export default function OAuthError() {
           <Link
             to="/"
             className="btn btn-primary"
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: 'none' }}
           >
             Go to Login
           </Link>
           <p
             style={{
-              textAlign: "center",
-              color: "#999",
-              fontSize: "0.875rem",
-              marginTop: "1rem",
+              textAlign: 'center',
+              color: '#999',
+              fontSize: '0.875rem',
+              marginTop: '1rem',
             }}
           >
             Redirecting automatically in 5 seconds...

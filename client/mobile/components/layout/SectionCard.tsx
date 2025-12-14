@@ -21,7 +21,8 @@ export const SectionCard: React.FC<SectionCardProps> = ({
       padding="md"
       elevated
       style={[styles.card, cardProps.style] as any}
-      {...cardProps}>
+      {...cardProps}
+    >
       {(title || subtitle) && (
         <View style={styles.header}>
           {title && (
@@ -57,4 +58,3 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
-

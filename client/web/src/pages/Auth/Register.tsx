@@ -1,10 +1,10 @@
-import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import type { RegisterData } from "@/types";
-import { FaArrowLeft } from "react-icons/fa";
-import { WebInput, WebButton } from "@/components/ui-web";
-import "./Register.css";
+import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import type { RegisterData } from '@/types';
+import { FaArrowLeft } from 'react-icons/fa';
+import { WebInput, WebButton } from '@/components/ui-web';
+import './Register.css';
 
 interface RegisterFormData {
   email: string;
@@ -16,27 +16,27 @@ interface RegisterFormData {
 export default function Register() {
   const { register, loading, error } = useAuth();
   const [formData, setFormData] = useState<RegisterFormData>({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    name: "",
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
   });
-  const [validationError, setValidationError] = useState<string>("");
+  const [validationError, setValidationError] = useState<string>('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setValidationError("");
+    setValidationError('');
 
     if (!formData.email || !formData.password || !formData.name) {
-      setValidationError("Email, name and password are required");
+      setValidationError('Email, name and password are required');
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      setValidationError("Passwords do not match");
+      setValidationError('Passwords do not match');
       return;
     }
     if (formData.password.length < 6) {
-      setValidationError("Password must be at least 6 characters long");
+      setValidationError('Password must be at least 6 characters long');
       return;
     }
 
@@ -120,7 +120,7 @@ export default function Register() {
 
           <WebButton
             type="submit"
-            label={loading ? "Creating Account..." : "Sign Up"}
+            label={loading ? 'Creating Account...' : 'Sign Up'}
             variant="primary"
             disabled={loading}
             fullWidth
@@ -129,7 +129,7 @@ export default function Register() {
 
         <div className="register-footer">
           <p>
-            Already have an account?{" "}
+            Already have an account?{' '}
             <Link to="/login" className="link">
               Sign In
             </Link>

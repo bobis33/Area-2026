@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Alert, Platform } from "react-native";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { Text, OAuthButton } from "@area/ui";
-import * as Haptics from "expo-haptics";
-import { API_BASE_URL } from "@/constants/api";
-import * as WebBrowser from "expo-web-browser";
-import * as AuthSession from "expo-auth-session";
-import { spacing, colors } from "@area/ui";
-import { useAuth } from "@/contexts/AuthContext";
+import React, { useState } from 'react';
+import { View, StyleSheet, Alert, Platform } from 'react-native';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { Text, OAuthButton } from '@area/ui';
+import * as Haptics from 'expo-haptics';
+import { API_BASE_URL } from '@/constants/api';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+import { spacing, colors } from '@area/ui';
+import { useAuth } from '@/contexts/AuthContext';
 
 WebBrowser.maybeCompleteAuthSession();
 
-type OAuthProvider = "github" | "google" | "discord" | "spotify" | "gitlab";
+type OAuthProvider = 'github' | 'google' | 'discord' | 'spotify' | 'gitlab';
 
 interface SocialLoginButtonsProps {
   disabled?: boolean;
@@ -43,15 +43,15 @@ export function SocialLoginButtons({
         redirectUri,
       );
 
-      if (result.type === "success" && result.url) {
+      if (result.type === 'success' && result.url) {
         handleOAuthRedirect(result.url);
-      } else if (result.type === "locked") {
-        Alert.alert("Error", "The browser is locked. Please try again.");
+      } else if (result.type === 'locked') {
+        Alert.alert('Error', 'The browser is locked. Please try again.');
       }
     } catch (error) {
       console.error(`Error during ${provider} OAuth:`, error);
       Alert.alert(
-        "Connection Error",
+        'Connection Error',
         `Unable to connect with ${provider}. Please try again.`,
       );
     } finally {
@@ -61,7 +61,7 @@ export function SocialLoginButtons({
 
   const handlePlaceholderLogin = (provider: OAuthProvider) => {
     Alert.alert(
-      "Coming Soon",
+      'Coming Soon',
       `Connection with ${provider} will be available soon.`,
     );
   };
@@ -69,7 +69,7 @@ export function SocialLoginButtons({
   const isLoading = loadingProvider !== null;
 
   const handlePress = (provider: OAuthProvider) => {
-    if (Platform.OS !== "web") {
+    if (Platform.OS !== 'web') {
       Haptics.selectionAsync();
     }
     handleOAuthLogin(provider);
@@ -88,33 +88,33 @@ export function SocialLoginButtons({
       <View style={styles.buttonsContainer}>
         <OAuthButton
           label="Continue with Discord"
-          onPress={() => handlePress("discord")}
+          onPress={() => handlePress('discord')}
           backgroundColor="#5865F2"
           textColor={colors.white}
           icon={<Ionicons name="logo-discord" size={20} color={colors.white} />}
           disabled={disabled}
-          loading={isLoading && loadingProvider === "discord"}
+          loading={isLoading && loadingProvider === 'discord'}
         />
 
         <OAuthButton
           label="Continue with GitHub"
-          onPress={() => handlePress("github")}
+          onPress={() => handlePress('github')}
           backgroundColor="#18181B"
           textColor={colors.white}
           icon={<AntDesign name="github" size={20} color={colors.white} />}
           disabled={disabled}
-          loading={isLoading && loadingProvider === "github"}
+          loading={isLoading && loadingProvider === 'github'}
         />
 
         <OAuthButton
           label="Continue with Google"
-          onPress={() => handlePress("google")}
+          onPress={() => handlePress('google')}
           backgroundColor={colors.white}
           textColor={colors.gray900}
           borderColor={colors.gray200}
           icon={<AntDesign name="google" size={20} color={colors.gray900} />}
           disabled={disabled}
-          loading={isLoading && loadingProvider === "google"}
+          loading={isLoading && loadingProvider === 'google'}
         />
       </View>
     </View>
@@ -123,12 +123,12 @@ export function SocialLoginButtons({
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
+    width: '100%',
     marginTop: spacing.xl,
   },
   separator: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: spacing.lg,
   },
   separatorLine: {

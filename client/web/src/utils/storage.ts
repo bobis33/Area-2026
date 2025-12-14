@@ -3,11 +3,11 @@
  * Provides type-safe access to stored authentication data
  */
 
-import type { User } from "@/types";
+import type { User } from '@/types';
 
 const STORAGE_KEYS = {
-  TOKEN: "token",
-  USER: "user",
+  TOKEN: 'token',
+  USER: 'user',
 } as const;
 
 /**
@@ -17,7 +17,7 @@ export function setAuthToken(token: string): void {
   try {
     localStorage.setItem(STORAGE_KEYS.TOKEN, token);
   } catch (error) {
-    console.error("Failed to store auth token:", error);
+    console.error('Failed to store auth token:', error);
   }
 }
 
@@ -28,7 +28,7 @@ export function getAuthToken(): string | null {
   try {
     return localStorage.getItem(STORAGE_KEYS.TOKEN);
   } catch (error) {
-    console.error("Failed to retrieve auth token:", error);
+    console.error('Failed to retrieve auth token:', error);
     return null;
   }
 }
@@ -40,7 +40,7 @@ export function removeAuthToken(): void {
   try {
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
   } catch (error) {
-    console.error("Failed to remove auth token:", error);
+    console.error('Failed to remove auth token:', error);
   }
 }
 
@@ -51,7 +51,7 @@ export function setUser(user: User): void {
   try {
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
   } catch (error) {
-    console.error("Failed to store user data:", error);
+    console.error('Failed to store user data:', error);
   }
 }
 
@@ -64,7 +64,7 @@ export function getUser(): User | null {
     if (!userJson) return null;
     return JSON.parse(userJson) as User;
   } catch (error) {
-    console.error("Failed to retrieve user data:", error);
+    console.error('Failed to retrieve user data:', error);
     return null;
   }
 }
@@ -76,7 +76,7 @@ export function removeUser(): void {
   try {
     localStorage.removeItem(STORAGE_KEYS.USER);
   } catch (error) {
-    console.error("Failed to remove user data:", error);
+    console.error('Failed to remove user data:', error);
   }
 }
 
