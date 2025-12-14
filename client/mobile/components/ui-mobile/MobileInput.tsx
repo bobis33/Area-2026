@@ -17,4 +17,3 @@ export const MobileInput: React.FC<MobileInputProps> = ({
   // The default 'none' is a sensible mobile default for most inputs.
   return <Input {...inputProps} />;
 };
-

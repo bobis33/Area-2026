@@ -22,12 +22,7 @@ export const MobileButton: React.FC<MobileButtonProps> = ({
     onPress();
   };
 
-  const button = (
-    <Button
-      {...buttonProps}
-      onPress={handlePress}
-    />
-  );
+  const button = <Button {...buttonProps} onPress={handlePress} />;
 
   if (animateIn) {
     return (
@@ -39,4 +34,3 @@ export const MobileButton: React.FC<MobileButtonProps> = ({
 
   return button;
 };
-

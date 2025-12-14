@@ -50,17 +50,22 @@ class ApiService {
    */
   async login(credentials: AuthCredentials): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.AUTH_LOGIN}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${this.baseUrl}${API_ENDPOINTS.AUTH_LOGIN}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(credentials),
         },
-        body: JSON.stringify(credentials),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
       }
 
       const data: AuthResponse = await response.json();
@@ -80,7 +85,7 @@ class ApiService {
     const url = `${this.baseUrl}${API_ENDPOINTS.AUTH_REGISTER}`;
     console.log('Register URL:', url);
     console.log('Register payload:', { ...payload, password: '***' });
-    
+
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -91,12 +96,17 @@ class ApiService {
       });
 
       console.log('Register response status:', response.status);
-      console.log('Register response headers:', Object.fromEntries(response.headers.entries()));
+      console.log(
+        'Register response headers:',
+        Object.fromEntries(response.headers.entries()),
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('Register error data:', errorData);
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
       }
 
       const data: AuthResponse = await response.json();
@@ -104,7 +114,9 @@ class ApiService {
     } catch (error) {
       console.error('Error during registration:', error);
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error(`Impossible de se connecter au serveur. Vérifiez que l'URL est correcte: ${url}`);
+        throw new Error(
+          `Impossible de se connecter au serveur. Vérifiez que l'URL est correcte: ${url}`,
+        );
       }
       throw error;
     }
@@ -127,7 +139,9 @@ class ApiService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
       }
 
       const data: User[] = await response.json();
@@ -145,20 +159,29 @@ class ApiService {
    * @param token - JWT authentication token
    * @returns Promise with updated user
    */
-  async updateUser(id: number, data: Partial<{ name?: string; email?: string; role?: string }>, token: string): Promise<User> {
+  async updateUser(
+    id: number,
+    data: Partial<{ name?: string; email?: string; role?: string }>,
+    token: string,
+  ): Promise<User> {
     try {
-      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
         },
-        body: JSON.stringify(data),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
       }
 
       const updatedUser: User = await response.json();
@@ -177,17 +200,22 @@ class ApiService {
    */
   async deleteUser(id: number, token: string): Promise<User> {
     try {
-      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
       }
 
       const deletedUser: User = await response.json();
@@ -201,4 +229,3 @@ class ApiService {
 
 // Export singleton instance
 export const apiService = new ApiService();
-

@@ -32,10 +32,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   const translateY = useSharedValue(20);
 
   React.useEffect(() => {
-    opacity.value = withDelay(
-      delay,
-      withTiming(1, { duration: 400 }),
-    );
+    opacity.value = withDelay(delay, withTiming(1, { duration: 400 }));
     translateY.value = withDelay(
       delay,
       withSpring(0, {
@@ -48,10 +45,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [
-      { translateY: translateY.value },
-      { scale: scale.value },
-    ],
+    transform: [{ translateY: translateY.value }, { scale: scale.value }],
   }));
 
   const handlePressIn = (e: any) => {
@@ -78,9 +72,9 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       {...props}
       style={[animatedStyle, style]}
       onPressIn={handlePressIn}
-      onPressOut={handlePressOut}>
+      onPressOut={handlePressOut}
+    >
       {children}
     </AnimatedPressable>
   );
 };
-

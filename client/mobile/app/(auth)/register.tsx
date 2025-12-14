@@ -1,32 +1,32 @@
-import { useState } from "react";
-import { Alert } from "react-native";
-import { router } from "expo-router";
-import { Text } from "@area/ui";
+import { useState } from 'react';
+import { Alert } from 'react-native';
+import { router } from 'expo-router';
+import { Text } from '@area/ui';
 import {
   MobileScreen,
   MobileButton,
   MobileInput,
-} from "@/components/ui-mobile";
+} from '@/components/ui-mobile';
 
-import { useAuth } from "@/contexts/AuthContext";
-import { apiService } from "@/services/api.service";
+import { useAuth } from '@/contexts/AuthContext';
+import { apiService } from '@/services/api.service';
 
 export default function RegisterScreen() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
 
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
-      setError("Veuillez remplir tous les champs");
+      setError('Veuillez remplir tous les champs');
       return;
     }
 
     if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères");
+      setError('Le mot de passe doit contenir au moins 6 caractères');
       return;
     }
 
@@ -42,7 +42,7 @@ export default function RegisterScreen() {
       await login(email.trim(), password);
       // Navigation is handled by AuthContext
 
-      Alert.alert("Succès", "Compte créé avec succès !");
+      Alert.alert('Succès', 'Compte créé avec succès !');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Erreur lors de l'inscription";

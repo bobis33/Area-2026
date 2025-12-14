@@ -6,4 +6,3 @@ export type { MobileScreenProps } from './MobileScreen';
 
 export { MobileInput } from './MobileInput';
 export type { MobileInputProps } from './MobileInput';
-

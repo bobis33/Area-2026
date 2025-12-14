@@ -1,7 +1,7 @@
 /**
  * API Configuration
  * Base URL for the backend server
- * 
+ *
  * Priority:
  * 1. EXPO_PUBLIC_API_URL (full URL if provided)
  * 2. EXPO_PUBLIC_API_PORT (construct URL with port)
@@ -34,9 +34,8 @@ if (process.env.NODE_ENV !== 'production') {
     endpoints: API_ENDPOINTS,
   });
   console.warn(
-    '⚠️  IMPORTANT: Sur mobile, utilisez l\'IP de votre machine au lieu de localhost.\n' +
-    '   Exemple: EXPO_PUBLIC_API_URL=http://10.134.199.30:8080\n' +
-    '   (Trouvez votre IP avec: ifconfig | grep "inet " | grep -v 127.0.0.1)'
+    "⚠️  IMPORTANT: Sur mobile, utilisez l'IP de votre machine au lieu de localhost.\n" +
+      '   Exemple: EXPO_PUBLIC_API_URL=http://10.134.199.30:8080\n' +
+      '   (Trouvez votre IP avec: ifconfig | grep "inet " | grep -v 127.0.0.1)',
   );
 }
-

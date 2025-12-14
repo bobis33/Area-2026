@@ -54,10 +54,21 @@ export default function ProfileScreen() {
       <FadeInView delay={100} spring>
         <SectionCard>
           <View style={styles.userInfo}>
-            <View style={[styles.avatar, { backgroundColor: currentTheme.colors.primary }]}>
-              <Text 
-                variant="title" 
-                style={[styles.avatarText, { color: currentTheme.colors.primaryOn }] as any}>
+            <View
+              style={[
+                styles.avatar,
+                { backgroundColor: currentTheme.colors.primary },
+              ]}
+            >
+              <Text
+                variant="title"
+                style={
+                  [
+                    styles.avatarText,
+                    { color: currentTheme.colors.primaryOn },
+                  ] as any
+                }
+              >
                 {getInitials(user?.name, user?.email)}
               </Text>
             </View>
@@ -85,12 +96,21 @@ export default function ProfileScreen() {
             Device & app
           </Text>
           <SectionCard>
-            <View style={[styles.infoRow, { borderBottomColor: currentTheme.colors.border }]}>
+            <View
+              style={[
+                styles.infoRow,
+                { borderBottomColor: currentTheme.colors.border },
+              ]}
+            >
               <Text variant="body" color="muted">
                 Platform
               </Text>
               <Text variant="body">
-                {Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web'}
+                {Platform.OS === 'ios'
+                  ? 'iOS'
+                  : Platform.OS === 'android'
+                    ? 'Android'
+                    : 'Web'}
               </Text>
             </View>
             <View style={styles.infoRowLast}>
@@ -118,8 +138,11 @@ export default function ProfileScreen() {
                 onPress={() => setMode(option.value)}
                 style={[
                   styles.themeOption,
-                  index < themeOptions.length - 1 && { borderBottomColor: currentTheme.colors.border },
-                ]}>
+                  index < themeOptions.length - 1 && {
+                    borderBottomColor: currentTheme.colors.border,
+                  },
+                ]}
+              >
                 <View style={styles.themeOptionLeft}>
                   <Text variant="body">{option.label}</Text>
                   {option.value === 'system' && (
@@ -148,15 +171,27 @@ export default function ProfileScreen() {
             Settings
           </Text>
           <SectionCard>
-            <View style={[styles.settingRow, { borderBottomColor: currentTheme.colors.border }]}>
+            <View
+              style={[
+                styles.settingRow,
+                { borderBottomColor: currentTheme.colors.border },
+              ]}
+            >
               <View style={styles.settingInfo}>
                 <Text variant="body">Push notifications</Text>
                 <Text variant="caption" color="muted">
                   Coming soon
                 </Text>
               </View>
-              <View style={[styles.togglePlaceholder, { backgroundColor: currentTheme.colors.surfaceMuted }]}>
-                <Text variant="caption" color="muted">OFF</Text>
+              <View
+                style={[
+                  styles.togglePlaceholder,
+                  { backgroundColor: currentTheme.colors.surfaceMuted },
+                ]}
+              >
+                <Text variant="caption" color="muted">
+                  OFF
+                </Text>
               </View>
             </View>
           </SectionCard>

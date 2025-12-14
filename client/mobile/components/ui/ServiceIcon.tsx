@@ -1,5 +1,9 @@
 import React from 'react';
-import { Ionicons, AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Ionicons,
+  AntDesign,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
 import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
 
 interface ServiceIconProps {
@@ -19,16 +23,35 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
 
   switch (serviceLower) {
     case 'discord':
-      return <Ionicons name="logo-discord" size={size} color={color} style={style} />;
+      return (
+        <Ionicons name="logo-discord" size={size} color={color} style={style} />
+      );
     case 'github':
-      return <AntDesign name="github" size={size} color={color} style={style} />;
+      return (
+        <AntDesign name="github" size={size} color={color} style={style} />
+      );
     case 'google':
-      return <AntDesign name="google" size={size} color={color} style={style} />;
+      return (
+        <AntDesign name="google" size={size} color={color} style={style} />
+      );
     case 'spotify':
-      return <MaterialCommunityIcons name="spotify" size={size} color={color} style={style} />;
+      return (
+        <MaterialCommunityIcons
+          name="spotify"
+          size={size}
+          color={color}
+          style={style}
+        />
+      );
     default:
       // Fallback icon
-      return <MaterialCommunityIcons name="web" size={size} color={color} style={style} />;
+      return (
+        <MaterialCommunityIcons
+          name="web"
+          size={size}
+          color={color}
+          style={style}
+        />
+      );
   }
 };
-
