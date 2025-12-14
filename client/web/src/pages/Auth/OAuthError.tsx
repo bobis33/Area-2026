@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import './Login.css';
+import './Auth.css';
 
 export default function OAuthError() {
   const navigate = useNavigate();
@@ -23,9 +23,9 @@ export default function OAuthError() {
   }, [searchParams, navigate]);
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="login-header">
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
           <h1>Authentication Failed</h1>
           <p>We couldn't sign you in</p>
         </div>

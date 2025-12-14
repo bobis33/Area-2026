@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import type { LoginCredentials } from '@/types';
 import { FaGoogle, FaDiscord, FaGithub, FaArrowLeft } from 'react-icons/fa';
 import { WebInput, WebButton } from '@/components/ui-web';
-import './Login.css';
+import './Auth.css';
 
 export default function Login() {
   const { login, loginWithOAuth, loading, error } = useAuth();
@@ -32,12 +32,12 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className="auth-container">
       <Link to="/" className="back-to-home">
         <FaArrowLeft /> Back to Home
       </Link>
-      <div className="login-card">
-        <div className="login-header">
+      <div className="auth-card">
+        <div className="auth-header">
           <h1>Welcome Back</h1>
           <p>Sign in to your AREA account</p>
         </div>
@@ -48,7 +48,7 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="auth-form">
           <WebInput
             label="Email"
             type="email"
@@ -118,7 +118,7 @@ export default function Login() {
           </button>
         </div>
 
-        <div className="login-footer">
+        <div className="auth-footer">
           <p>
             Don't have an account?{' '}
             <Link to="/register" className="link">

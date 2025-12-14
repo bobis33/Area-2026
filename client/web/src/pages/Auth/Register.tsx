@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import type { RegisterData } from '@/types';
 import { FaArrowLeft } from 'react-icons/fa';
 import { WebInput, WebButton } from '@/components/ui-web';
-import './Register.css';
+import './Auth.css';
 
 interface RegisterFormData {
   email: string;
@@ -52,12 +52,12 @@ export default function Register() {
     }
   };
   return (
-    <div className="register-container">
+    <div className="auth-container">
       <Link to="/" className="back-to-home">
         <FaArrowLeft /> Back to Home
       </Link>
-      <div className="register-card">
-        <div className="register-header">
+      <div className="auth-card">
+        <div className="auth-header">
           <h1>Create Account</h1>
           <p>Join AREA and start automating your digital life</p>
         </div>
@@ -67,7 +67,7 @@ export default function Register() {
             {error || validationError}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="register-form">
+        <form onSubmit={handleSubmit} className="auth-form">
           <WebInput
             label="Name"
             type="text"
@@ -127,7 +127,7 @@ export default function Register() {
           />
         </form>
 
-        <div className="register-footer">
+        <div className="auth-footer">
           <p>
             Already have an account?{' '}
             <Link to="/login" className="link">

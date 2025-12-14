@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { handleOAuthCallback } from '@/services/auth.service';
-import './Login.css';
+import './Auth.css';
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
@@ -33,9 +33,9 @@ export default function OAuthCallback() {
   }, [searchParams, navigate]);
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="login-header">
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-header">
           <h1>
             {status === 'processing' && 'Processing Authentication...'}
             {status === 'success' && 'Authentication Successful'}

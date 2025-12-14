@@ -5,7 +5,7 @@
     "owner": "area-epitech-2026",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/main_logo.png",
     "scheme": "area",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -15,16 +15,16 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/main_logo.png",
+        "backgroundImage": "./assets/images/main_logo.png",
+        "monochromeImage": "./assets/images/main_logo.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/main_logo.png"
     },
     "plugins": [
       "expo-router",

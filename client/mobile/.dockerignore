@@ -1,9 +1,12 @@
 dist
 node_modules
+scripts
 .expo
 .git
 
-eslint.config.js
+eslint.config.cjs
 expo-env.d.ts
 .gitignore
+.prettierrc
 README.md
+.env

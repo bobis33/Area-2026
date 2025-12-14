@@ -2,12 +2,18 @@
   "name": "@area/ui",
   "version": "0.0.1",
   "description": "Shared UI component library for AREA project",
+  "homepage": "https://github.com/bobis33/Area-2026/packages/ui",
+  "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "react-native": "src/index.ts",
   "sideEffects": false,
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bobis33/Area-2026.git",
+    "directory": "packages/ui"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
