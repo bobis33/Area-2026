@@ -1,6 +1,7 @@
-name: 'CI - AREA'
-run-name: 'AREA - "${{ github.ref_name }}"'
-
+name: 'CI - Build'
+run-name: 'Build - "${{ github.ref_name }}"'
+permissions:
+  contents: read
 on:
   push:
     branches:
@@ -15,8 +16,6 @@ on:
 jobs:
 
   build:
-    permissions:
-      contents: read
     name: ''
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-24.04
