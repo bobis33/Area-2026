@@ -1,0 +1,31 @@
+name: "Fullstack CodeQL config"
+
+queries:
+  - uses: security-and-quality
+
+paths:
+  - backend
+  - client
+  - packages
+  - .github
+
+paths-ignore:
+  - "**/node_modules"
+  - "**/.pnpm"
+  - "**/.yarn"
+  - "**/.npm"
+  - "**/*.lock"
+
+  - "**/dist"
+  - "**/build"
+  - "**/.next"
+  - "**/out"
+
+  - "**/*.test.ts"
+  - "**/*.spec.ts"
+  - "**/__tests__/**"
+
+  - "**/*.d.ts"
+
+  - ".idea/**"
+  - ".vscode/**"

@@ -1,6 +1,7 @@
 name: 'CD - Mirror'
 run-name: 'Mirror - "${{ github.ref_name }}"'
-
+permissions:
+  contents: read
 on:
   push:
     branches:
