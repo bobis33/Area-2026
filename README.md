@@ -3,6 +3,7 @@
 # EPITECH | Area
 
 [![CI - Build](https://github.com/bobis33/Area-2026/actions/workflows/area.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/area.yml)
+[![CI - CodeQL](https://github.com/bobis33/Area-2026/actions/workflows/codeql.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/codeql.yml)
 [![CI - Gitleaks](https://github.com/bobis33/Area-2026/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/gitleaks.yml)
 [![CD - Mirror](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml)
 [![License](https://img.shields.io/github/license/bobis33/Area-2026.svg)](https://github.com/bobis33/Area-2026/blob/main/LICENSE.md)
@@ -82,6 +83,17 @@ docker compose up
 
 ### Manually with node
 
+First create a `.env` fil at the root of the repository:
+```bash
+PROJECT_NAME=area
+
+POSTGRES_DB="${PROJECT_NAME}_database"
+POSTGRES_USER="${PROJECT_NAME}_postgres-user"
+POSTGRES_PASSWORD="${PROJECT_NAME}_postgres-password"
+POSTGRES_CONTAINER_PORT=8000
+POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${PROJECT_NAME}_postgresql:${POSTGRES_CONTAINER_PORT}/${POSTGRES_DB}"
+```
+
 Change postgres network config in `docker-compose.yml` (internal become false):
 ```yaml
 networks:
@@ -127,6 +139,7 @@ DISCORD_CLIENT_ID=""
 DISCORD_CLIENT_SECRET=""
 DISCORD_CLIENT_CALLBACK_URL=""
 DISCORD_BOT_TOKEN=""
+DISCORD_BOT_TOKEN=""
 
 SPOTIFY_CLIENT_ID=""
 SPOTIFY_CLIENT_SECRET=""
@@ -143,13 +156,13 @@ FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_
 ```bash
 PORT=8081
 API_PORT=8080
-API_URL="http://localhost:${API_PORT}/api"
+API_URL="http://localhost:${API_PORT}"
 ```
 #### Mobile (.env in /client/mobile)
 ```bash
 PORT=8082
 API_PORT=8080
-API_URL="http://localhost:${API_PORT}/api"
+API_URL="http://localhost:${API_PORT}"
 ```
 
 Finally, run the project you want:
