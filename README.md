@@ -32,6 +32,7 @@ First create a `.env` fil at the root of the repository:
 VERSION=0.0.0
 PROJECT_NAME=area
 MODE=development
+JWT_SECRET="jwt-secret-key"
 
 API_CONTAINER_PORT=8080
 WEB_CONTAINER_PORT=8081
@@ -66,9 +67,6 @@ SPOTIFY_CLIENT_CALLBACK_URL=""
 GITLAB_CLIENT_ID=""
 GITLAB_CLIENT_SECRET=""
 GITLAB_CLIENT_CALLBACK_URL=""
-
-JWT_SECRET="jwt-secret-key"
-FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
 ```
 ### With docker
 
@@ -120,6 +118,7 @@ Create .env files in each project folder:
 ```bash
 PROJECT_NAME=area
 PORT=8080
+JWT_SECRET="jwt-secret-key"
 
 POSTGRES_DB="${PROJECT_NAME}_database"
 POSTGRES_USER="${PROJECT_NAME}_postgres-user"
@@ -139,7 +138,6 @@ DISCORD_CLIENT_ID=""
 DISCORD_CLIENT_SECRET=""
 DISCORD_CLIENT_CALLBACK_URL=""
 DISCORD_BOT_TOKEN=""
-DISCORD_BOT_TOKEN=""
 
 SPOTIFY_CLIENT_ID=""
 SPOTIFY_CLIENT_SECRET=""
@@ -149,7 +147,6 @@ GITLAB_CLIENT_ID=""
 GITLAB_CLIENT_SECRET=""
 GITLAB_CLIENT_CALLBACK_URL=""
 
-JWT_SECRET="jwt-secret-key"
 FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
 ```
 #### Web (.env in /client/web)
