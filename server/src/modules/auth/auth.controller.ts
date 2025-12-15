@@ -212,6 +212,7 @@ export class AuthController {
   }
 
   @Get('providersLinked')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get linked OAuth providers for authenticated user' })
   @ApiResponse({ status: HttpStatus.OK, type: [String] })
   async getLinkedProviders(@Req() req: RequestWithUser): Promise<{ providers: OAuthProvider[] }> {
@@ -266,6 +267,7 @@ export class AuthController {
   }
 
   @Get('logout')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Logout user' })
   @ApiResponse({ status: HttpStatus.OK })
   logout(@Req() req: RequestWithUser, @Res() res: Response): void {

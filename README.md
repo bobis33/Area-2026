@@ -41,7 +41,7 @@ WEB_CONTAINER_PORT=8081
 MOBILE_CONTAINER_PORT=8082
 
 API_URL="http://localhost:${API_CONTAINER_PORT}"
-FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
+FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT},http://localhost:${API_CONTAINER_PORT}"
 
 POSTGRES_DB="${PROJECT_NAME}_database"
 POSTGRES_USER="${PROJECT_NAME}_postgres-user"
@@ -148,7 +148,7 @@ GITLAB_CLIENT_ID=""
 GITLAB_CLIENT_SECRET=""
 GITLAB_CLIENT_CALLBACK_URL=""
 
-FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT}"
+FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT},http://localhost:${API_CONTAINER_PORT}"
 ```
 #### Web (.env in /client/web)
 ```bash
