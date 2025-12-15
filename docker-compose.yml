@@ -77,10 +77,7 @@ services:
     volumes:
       - ./client/shared:/app/shared:rw,Z
     command: >
-      sh -c "
-        cd /app/client/mobile/android &&
-        cp ./app/build/outputs/apk/release/app-release.apk /app/shared/
-      "
+      sh -c "cp ./client.apk /app/shared/"
     environment:
       PORT: ${MOBILE_CONTAINER_PORT}
     ports:

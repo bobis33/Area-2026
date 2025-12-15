@@ -27,6 +27,8 @@ Make sure you have the following dependencies installed on your system:
 
 ## Getting started
 
+### With docker
+
 First create a `.env` fil at the root of the repository:
 ```bash
 VERSION=0.0.0
@@ -68,7 +70,6 @@ GITLAB_CLIENT_ID=""
 GITLAB_CLIENT_SECRET=""
 GITLAB_CLIENT_CALLBACK_URL=""
 ```
-### With docker
 
 Build and run docker compose:
 ```bash
