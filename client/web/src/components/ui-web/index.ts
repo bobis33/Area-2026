@@ -12,12 +12,17 @@ export type { WebButtonProps } from "./WebButton";
 export { WebInput } from "./WebInput";
 export type { WebInputProps } from "./WebInput";
 
-// Temporarily disabled to avoid React Native dependencies
-// export { WebCard } from "./WebCard";
-// export type { WebCardProps } from "./WebCard";
+export { WebCard } from "./WebCard";
+export type { WebCardProps } from "./WebCard";
 
-// export { WebText } from "./WebText";
-// export type { WebTextProps } from "./WebText";
+export { WebText } from "./WebText";
+export type { WebTextProps } from "./WebText";
+
+export { WebOAuthButton } from "./WebOAuthButton";
+export type { WebOAuthButtonProps } from "./WebOAuthButton";
+
+export { WebScreenLayout } from "./WebScreenLayout";
+export type { WebScreenLayoutProps } from "./WebScreenLayout";
 
 export const colors = {
   primary: "#1e40af",

@@ -119,7 +119,6 @@ export default function Register() {
           />
 
           <WebButton
-            type="submit"
             label={loading ? "Creating Account..." : "Sign Up"}
             variant="primary"
             disabled={loading}

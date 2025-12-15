@@ -1,9 +1,11 @@
 import React from "react";
-import "./WebButton.css";
+import { Button } from "@area/ui";
 
 /**
- * WebButton - Custom Web wrapper for Button with current design style
- * Uses the shared Button logic but applies custom CSS styling
+ * WebButton - Wrapper pour le composant Button partagé de @area/ui
+ *
+ * Ce composant utilise le Button de React Native via React Native Web.
+ * Les styles sont automatiquement convertis du StyleSheet React Native vers CSS.
  */
 export interface WebButtonProps {
   label: string;
@@ -12,7 +14,6 @@ export interface WebButtonProps {
   disabled?: boolean;
   fullWidth?: boolean;
   className?: string;
-  type?: "button" | "submit" | "reset";
 }
 
 export const WebButton: React.FC<WebButtonProps> = ({
@@ -22,29 +23,19 @@ export const WebButton: React.FC<WebButtonProps> = ({
   disabled = false,
   fullWidth = false,
   className = "",
-  type = "button",
 }) => {
-  const getButtonClass = () => {
-    const classes = ["web-button"];
-
-    if (variant === "primary") classes.push("web-button-primary");
-    if (variant === "secondary") classes.push("web-button-secondary");
-    if (variant === "ghost") classes.push("web-button-ghost");
-    if (fullWidth) classes.push("web-button-full");
-    if (disabled) classes.push("web-button-disabled");
-    if (className) classes.push(className);
-
-    return classes.join(" ");
-  };
+  // Le composant Button de @area/ui utilise 'onPress' au lieu de 'onClick'
+  const handlePress = onClick || (() => {});
 
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      className={getButtonClass()}
-    >
-      {label}
-    </button>
+    <div className={className} style={{ width: fullWidth ? "100%" : "auto" }}>
+      <Button
+        label={label}
+        onPress={handlePress}
+        variant={variant}
+        disabled={disabled}
+        fullWidth={fullWidth}
+      />
+    </div>
   );
 };

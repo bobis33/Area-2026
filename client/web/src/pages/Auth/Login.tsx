@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import type { LoginCredentials } from "@/types";
 import { FaGoogle, FaDiscord, FaGithub, FaArrowLeft } from "react-icons/fa";
-import { WebInput, WebButton } from "@/components/ui-web";
+import { WebInput, WebButton, WebOAuthButton } from "@/components/ui-web";
 import "./Login.css";
 
 export default function Login() {
@@ -74,7 +74,6 @@ export default function Login() {
           />
 
           <WebButton
-            type="submit"
             label={loading ? "Signing In..." : "Sign In"}
             variant="primary"
             disabled={loading}
@@ -87,35 +86,29 @@ export default function Login() {
         </div>
 
         <div className="oauth-buttons">
-          <button
-            type="button"
-            className="btn btn-oauth btn-google"
+          <WebOAuthButton
+            label="Continue with Google"
             onClick={() => handleOAuthLogin("google")}
+            provider="google"
             disabled={loading}
-          >
-            <FaGoogle className="oauth-icon" />
-            Continue with Google
-          </button>
+            icon={<FaGoogle />}
+          />
 
-          <button
-            type="button"
-            className="btn btn-oauth btn-discord"
+          <WebOAuthButton
+            label="Continue with Discord"
             onClick={() => handleOAuthLogin("discord")}
+            provider="discord"
             disabled={loading}
-          >
-            <FaDiscord className="oauth-icon" />
-            Continue with Discord
-          </button>
+            icon={<FaDiscord />}
+          />
 
-          <button
-            type="button"
-            className="btn btn-oauth btn-github"
+          <WebOAuthButton
+            label="Continue with GitHub"
             onClick={() => handleOAuthLogin("github")}
+            provider="github"
             disabled={loading}
-          >
-            <FaGithub className="oauth-icon" />
-            Continue with GitHub
-          </button>
+            icon={<FaGithub />}
+          />
         </div>
 
         <div className="login-footer">

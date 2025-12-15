@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { get } from "@/services/api";
 import type { AboutResponse } from "@/types";
 import { FaArrowLeft } from "react-icons/fa";
+import { WebCard } from "@/components/ui-web";
 import "./About.css";
 
 export default function About() {
@@ -86,17 +87,17 @@ export default function About() {
 
       <section className="about-section">
         <h2>Client Information</h2>
-        <div className="info-card">
+        <WebCard padding="md" border className="info-card">
           <div className="info-row">
             <span className="info-label">Host:</span>
             <span className="info-value">{aboutData.client.host}</span>
           </div>
-        </div>
+        </WebCard>
       </section>
 
       <section className="about-section">
         <h2>Server Information</h2>
-        <div className="info-card">
+        <WebCard padding="md" border className="info-card">
           <div className="info-row">
             <span className="info-label">Current Time:</span>
             <span className="info-value">
@@ -117,20 +118,25 @@ export default function About() {
               <span className="info-value">{aboutData.server.version}</span>
             </div>
           )}
-        </div>
+        </WebCard>
       </section>
 
       <section className="about-section">
         <h2>Available Services</h2>
         {aboutData.server.services.length === 0 ||
         !aboutData.server.services[0].name ? (
-          <div className="info-card">
+          <WebCard padding="md" border className="info-card">
             <p className="no-services">No services configured yet</p>
-          </div>
+          </WebCard>
         ) : (
           <div className="services-grid">
             {aboutData.server.services.map((service, index) => (
-              <div key={index} className="service-card">
+              <WebCard
+                key={index}
+                padding="lg"
+                elevated
+                className="service-card"
+              >
                 <h3>{service.name}</h3>
 
                 <div className="service-section">
@@ -169,7 +175,7 @@ export default function About() {
                     </ul>
                   )}
                 </div>
-              </div>
+              </WebCard>
             ))}
           </div>
         )}

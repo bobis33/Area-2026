@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { handleOAuthCallback } from "@/services/auth.service";
+import { WebCard } from "@/components/ui-web";
 import "./Login.css";
 
 export default function OAuthCallback() {
@@ -34,7 +35,7 @@ export default function OAuthCallback() {
 
   return (
     <div className="login-container">
-      <div className="login-card">
+      <WebCard padding="lg" elevated className="login-card">
         <div className="login-header">
           <h1>
             {status === "processing" && "Processing Authentication..."}
@@ -50,7 +51,7 @@ export default function OAuthCallback() {
         <div className="loading-spinner">
           <div className="spinner"></div>
         </div>
-      </div>
+      </WebCard>
     </div>
   );
 }

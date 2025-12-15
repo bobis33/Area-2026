@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { WebCard, WebButton } from "@/components/ui-web";
 import "./Login.css";
 
 export default function OAuthError() {
@@ -24,7 +25,7 @@ export default function OAuthError() {
 
   return (
     <div className="login-container">
-      <div className="login-card">
+      <WebCard padding="lg" elevated className="login-card">
         <div className="login-header">
           <h1>Authentication Failed</h1>
           <p>We couldn't sign you in</p>
@@ -42,12 +43,8 @@ export default function OAuthError() {
           >
             Please try again or use a different sign-in method.
           </p>
-          <Link
-            to="/"
-            className="btn btn-primary"
-            style={{ textDecoration: "none" }}
-          >
-            Go to Login
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <WebButton label="Go to Login" variant="primary" fullWidth />
           </Link>
           <p
             style={{
@@ -60,7 +57,7 @@ export default function OAuthError() {
             Redirecting automatically in 5 seconds...
           </p>
         </div>
-      </div>
+      </WebCard>
     </div>
   );
 }

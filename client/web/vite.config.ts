@@ -12,10 +12,20 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "react-native": "react-native-web"
+      "react-native": "react-native-web",
+      "react-native-safe-area-context": path.resolve(
+        __dirname,
+        "./src/mocks/safe-area-context.ts",
+      ),
     },
   },
-    optimizeDeps: {
-        include: ["@area/ui"]
+  optimizeDeps: {
+    include: ["@area/ui"],
+    exclude: ["react-native-safe-area-context"],
+  },
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
     },
+  },
 });

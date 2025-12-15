@@ -1,9 +1,11 @@
 import React from "react";
-import "./WebInput.css";
+import { Input } from "@area/ui";
 
 /**
- * WebInput - Custom Web wrapper for Input with current design style
- * Uses custom CSS styling matching the web design system
+ * WebInput - Wrapper pour le composant Input partagé de @area/ui
+ *
+ * Ce composant utilise l'Input de React Native via React Native Web.
+ * Les styles sont automatiquement convertis du StyleSheet React Native vers CSS.
  */
 export interface WebInputProps {
   value: string;
@@ -29,46 +31,25 @@ export const WebInput: React.FC<WebInputProps> = ({
   error,
   required = false,
   className = "",
-  id,
-  name,
+  id: _id,
+  name: _name,
 }) => {
-  const inputId =
-    id || name || `input-${Math.random().toString(36).substr(2, 9)}`;
-
-  const getInputClass = () => {
-    const classes = ["web-input"];
-    if (error) classes.push("web-input-error");
-    if (disabled) classes.push("web-input-disabled");
-    if (className) classes.push(className);
-    return classes.join(" ");
-  };
+  // Le composant Input de @area/ui utilise 'onChangeText' au lieu de 'onChange'
+  // et 'secureTextEntry' pour les mots de passe
+  const isPassword = type === "password";
 
   return (
-    <div className="web-input-wrapper">
-      {label && (
-        <label htmlFor={inputId} className="web-input-label">
-          {label}
-          {required && <span className="web-input-required">*</span>}
-        </label>
-      )}
-      <input
-        id={inputId}
-        name={name}
-        type={type}
+    <div className={className} style={{ width: "100%" }}>
+      <Input
+        label={label}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChangeText={onChange}
         placeholder={placeholder}
+        secureTextEntry={isPassword}
         disabled={disabled}
-        required={required}
-        className={getInputClass()}
-        aria-invalid={!!error}
-        aria-describedby={error ? `${inputId}-error` : undefined}
+        errorMessage={error}
+        helperText={required ? "Requis" : undefined}
       />
-      {error && (
-        <span id={`${inputId}-error`} className="web-input-error-message">
-          {error}
-        </span>
-      )}
     </div>
   );
 };

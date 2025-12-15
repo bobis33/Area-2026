@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { WebButton, WebCard } from "@/components/ui-web";
 import "./Home.css";
 
 export default function Home() {
@@ -19,12 +20,15 @@ export default function Home() {
                 You're successfully authenticated
               </p>
             </div>
-            <button onClick={logout} className="btn btn-logout">
-              Logout
-            </button>
+            <WebButton
+              onClick={logout}
+              label="Logout"
+              variant="secondary"
+              className="btn-logout"
+            />
           </div>
 
-          <div className="user-info-card">
+          <WebCard padding="lg" elevated className="user-info-card">
             <h2>Your Profile</h2>
             <div className="user-details">
               <p>
@@ -48,32 +52,53 @@ export default function Home() {
                 {new Date(user.created_at).toLocaleDateString()}
               </p>
             </div>
-          </div>
+          </WebCard>
 
           <section className="features-section dashboard-features">
             <h2>What's Next?</h2>
             <div className="feature-grid">
-              <div className="feature-card dashboard-card">
+              <WebCard
+                padding="md"
+                border
+                className="feature-card dashboard-card"
+              >
                 <h3>📧 Connect Services</h3>
                 <p>Link your favorite apps and services</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
-              </div>
-              <div className="feature-card dashboard-card">
+                <WebButton
+                  label="Coming Soon"
+                  variant="ghost"
+                  disabled
+                  className="btn-feature"
+                />
+              </WebCard>
+              <WebCard
+                padding="md"
+                border
+                className="feature-card dashboard-card"
+              >
                 <h3>⚡ Create Actions</h3>
                 <p>Define triggers for your automations</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
-              </div>
-              <div className="feature-card dashboard-card">
+                <WebButton
+                  label="Coming Soon"
+                  variant="ghost"
+                  disabled
+                  className="btn-feature"
+                />
+              </WebCard>
+              <WebCard
+                padding="md"
+                border
+                className="feature-card dashboard-card"
+              >
                 <h3>🎯 Set Reactions</h3>
                 <p>Choose what happens automatically</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
-              </div>
+                <WebButton
+                  label="Coming Soon"
+                  variant="ghost"
+                  disabled
+                  className="btn-feature"
+                />
+              </WebCard>
             </div>
           </section>
         </div>
@@ -110,8 +135,8 @@ export default function Home() {
         </p>
 
         <div className="cta-buttons">
-          <Link to="/register" className="btn btn-primary">
-            Get Started
+          <Link to="/register">
+            <WebButton label="Get Started" variant="primary" />
           </Link>
         </div>
       </section>
@@ -119,18 +144,18 @@ export default function Home() {
       <section className="features-section">
         <h2>How It Works</h2>
         <div className="feature-grid">
-          <div className="feature-card">
+          <WebCard padding="md" elevated className="feature-card">
             <h3>📧 Connect Services</h3>
             <p>Link your email, social media, and productivity tools</p>
-          </div>
-          <div className="feature-card">
+          </WebCard>
+          <WebCard padding="md" elevated className="feature-card">
             <h3>⚡ Create Actions</h3>
             <p>Set triggers like "new email" or "new tweet"</p>
-          </div>
-          <div className="feature-card">
+          </WebCard>
+          <WebCard padding="md" elevated className="feature-card">
             <h3>🎯 Set Reactions</h3>
             <p>Define what happens: send notification, create task, etc.</p>
-          </div>
+          </WebCard>
         </div>
       </section>
 
