@@ -211,6 +211,18 @@ export class AuthController {
     return res.redirect(redirectUrl);
   }
 
+  @Get('providersLinked')
+  @ApiOperation({ summary: 'Get linked OAuth providers for authenticated user' })
+  @ApiResponse({ status: HttpStatus.OK, type: [String] })
+  async getLinkedProviders(@Req() req: RequestWithUser): Promise<{ providers: OAuthProvider[] }> {
+    if (!req.user) {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+
+    const providers = await this.authService.getProvidersByUserId(req.user.id);
+    return { providers };
+  }
+
   @Get('status')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Check authentication status' })

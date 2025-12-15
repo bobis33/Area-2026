@@ -306,4 +306,14 @@ export class AuthService {
       token: this.generateToken(user),
     };
   }
+
+  async getProvidersByUserId(user_id: number): Promise<OAuthProvider[]> {
+    const accounts = await this.prisma.providerAccount.findMany({
+      where: { user_id },
+    });
+
+    return accounts.map(
+      (account) => OAuthProvider[account.provider as keyof typeof OAuthProvider],
+    );
+  }
 }
