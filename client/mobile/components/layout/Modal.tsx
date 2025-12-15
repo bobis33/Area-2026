@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Platform,
   ScrollView,
 } from 'react-native';
 import Animated, {

@@ -59,13 +59,6 @@ export function SocialLoginButtons({
     }
   };
 
-  const handlePlaceholderLogin = (provider: OAuthProvider) => {
-    Alert.alert(
-      'Coming Soon',
-      `Connection with ${provider} will be available soon.`,
-    );
-  };
-
   const isLoading = loadingProvider !== null;
 
   const handlePress = (provider: OAuthProvider) => {

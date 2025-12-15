@@ -4,7 +4,7 @@
  */
 
 import { lightColors, darkColors } from './colors';
-import { spacing, borderRadius, fontSizes, fontWeights, lineHeights, shadows } from '../tokens';
+import { borderRadius, fontSizes, fontWeights, lineHeights, shadows } from '../tokens';
 
 export const theme = {
   light: {

@@ -6,7 +6,6 @@ import React, {
   ReactNode,
 } from 'react';
 import * as Linking from 'expo-linking';
-import { router } from 'expo-router';
 import { apiService } from '@/services/api.service';
 import { AuthenticatedUser, AuthCredentials } from '@/types/api';
 
