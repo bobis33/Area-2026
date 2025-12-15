@@ -57,7 +57,7 @@ WORKDIR /app/client/mobile/android
 RUN chmod +x ./gradlew && ./gradlew assembleRelease
 
 
-FROM debian:12-slim AS artifact
+FROM debian:13-slim AS artifact
 
 WORKDIR /output
 
