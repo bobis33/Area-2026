@@ -418,13 +418,29 @@
   padding: 0.75rem 1.5rem;
   font-size: 0.875rem;
   margin-top: 1rem;
-  background: #e2e8f0;
-  color: #64748b;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: white;
   border: none;
   border-radius: 8px;
-  cursor: not-allowed;
+  cursor: pointer;
   font-weight: 600;
   font-family: "Poppins", sans-serif;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.btn-feature:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+}
+
+.btn-feature:disabled {
+  background: #e2e8f0;
+  color: #64748b;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 @media (max-width: 1024px) {

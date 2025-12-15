@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import './Home.css';
+import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import "./Home.css";
 
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -31,45 +31,47 @@ export default function Home() {
                 <strong>Email:</strong> {user.email}
               </p>
               <p>
-                <strong>Name:</strong> {user.name || 'Not set'}
+                <strong>Name:</strong> {user.name || "Not set"}
               </p>
               <p>
                 <strong>Role:</strong> {user.role}
               </p>
               <p>
-                <strong>Provider:</strong>{' '}
-                {user.provider === 'local'
-                  ? 'Email/Password'
+                <strong>Provider:</strong>{" "}
+                {user.provider === "local"
+                  ? "Email/Password"
                   : user.provider.charAt(0).toUpperCase() +
                     user.provider.slice(1)}
               </p>
               <p>
-                <strong>Account created:</strong>{' '}
+                <strong>Account created:</strong>{" "}
                 {new Date(user.created_at).toLocaleDateString()}
               </p>
             </div>
           </div>
 
           <section className="features-section dashboard-features">
-            <h2>What's Next?</h2>
+            <h2>Quick Access</h2>
             <div className="feature-grid">
               <div className="feature-card dashboard-card">
-                <h3>📧 Connect Services</h3>
-                <p>Link your favorite apps and services</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
+                <h3>⚡ Your Automations</h3>
+                <p>Manage your services and scenarios</p>
+                <Link to="/area" className="btn btn-feature">
+                  Go to Area
+                </Link>
               </div>
+              {user.role === "admin" && (
+                <div className="feature-card dashboard-card">
+                  <h3>🛡️ Admin Panel</h3>
+                  <p>Manage users and system settings</p>
+                  <Link to="/admin" className="btn btn-feature">
+                    Go to Admin
+                  </Link>
+                </div>
+              )}
               <div className="feature-card dashboard-card">
-                <h3>⚡ Create Actions</h3>
-                <p>Define triggers for your automations</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
-              </div>
-              <div className="feature-card dashboard-card">
-                <h3>🎯 Set Reactions</h3>
-                <p>Choose what happens automatically</p>
+                <h3>📊 Statistics</h3>
+                <p>View your automation analytics</p>
                 <button className="btn btn-feature" disabled>
                   Coming Soon
                 </button>
