@@ -1,4 +1,27 @@
-FROM node:20-slim
+FROM node:25-slim AS node-deps
+
+WORKDIR /app
+
+COPY ./package.json ./tsconfig.json ./
+COPY ./client/mobile/package.json ./client/mobile/package.json
+COPY ./packages/ui/package.json ./packages/ui/package.json
+
+RUN npm i --workspace client/mobile && npm i --workspace packages/ui
+
+FROM node:25-slim AS expo-prebuild
+
+WORKDIR /app
+
+COPY --from=node-deps /app/node_modules ./node_modules
+
+COPY ./client/mobile ./client/mobile
+COPY ./packages/ui ./packages/ui
+
+WORKDIR /app/client/mobile
+
+RUN npx expo prebuild --platform android --non-interactive
+
+FROM node:25-slim AS android-build
 
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
@@ -21,23 +44,23 @@ RUN mkdir -p ${ANDROID_HOME}/cmdline-tools/latest \
     && rm -rf cmdline-tools
 
 RUN yes | sdkmanager --licenses
-RUN sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+RUN sdkmanager \
+    "platform-tools" \
+    "platforms;android-34" \
+    "build-tools;34.0.0"
 
 WORKDIR /app
 
-COPY ./package.json ./tsconfig.json ./
-COPY ./client/mobile/package.json ./client/mobile/package.json
-COPY ./packages/ui/package.json ./packages/ui/package.json
-
-RUN npm i --workspace client/mobile && npm i --workspace packages/ui
-
-COPY ./client/mobile ./client/mobile
-COPY ./packages/ui ./packages/ui
-
-WORKDIR /app/client/mobile
-
-RUN npx expo prebuild --platform android --non-interactive
+COPY --from=expo-prebuild /app /app
 
 WORKDIR /app/client/mobile/android
-
 RUN chmod +x ./gradlew && ./gradlew assembleRelease
+
+
+FROM debian:12-slim AS artifact
+
+WORKDIR /output
+
+COPY --from=android-build \
+  /app/client/mobile/android/app/build/outputs/apk/release/*.apk \
+  ./client.apk
