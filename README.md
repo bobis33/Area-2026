@@ -31,7 +31,6 @@ Make sure you have the following dependencies installed on your system:
 
 First create a `.env` fil at the root of the repository:
 ```bash
-VERSION=0.0.0
 PROJECT_NAME=area
 MODE=development
 JWT_SECRET="jwt-secret-key"

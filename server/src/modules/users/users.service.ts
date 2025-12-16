@@ -26,20 +26,6 @@ export class UsersService {
     return user;
   }
 
-  async findByEmail(email: string): Promise<UserResponseDto | null> {
-    return this.prisma.user.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        created_at: true,
-        updated_at: true,
-      },
-    });
-  }
-
   async findAll(): Promise<UserResponseDto[]> {
     return this.prisma.user.findMany({
       select: {

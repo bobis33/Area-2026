@@ -12,18 +12,110 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { Roles } from '@interfaces/roles';
 import { AuthenticatedUser } from '@interfaces/user';
+import {ConfigService} from "@nestjs/config";
+import {URL} from "url";
+import {Request, Response} from "express";
 
 type UserSelect = Pick<
   User,
   'id' | 'email' | 'name' | 'role' | 'created_at' | 'updated_at'
 >;
 
+export type RequestWithUser = Request & {
+  user?: AuthenticatedUser;
+  logout: (callback: (err?: any) => void) => void;
+  session: {
+    destroy: (callback: (err?: any) => void) => void;
+  };
+};
+
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
+
+  private isValidRedirectUrl(url: string): boolean {
+    const allowedUrls = [
+      this.configService.get<string>('FRONTEND_URLS'),
+    ].filter(Boolean) as string[];
+
+    if (url.startsWith('area://') || url.startsWith('exp://')) {
+      return true;
+    }
+
+    try {
+      const parsedUrl = new URL(url);
+
+      const urlOrigin = parsedUrl.origin;
+
+      return allowedUrls.some((allowed) => {
+        if (!allowed) return false;
+        try {
+          const allowedUrl = new URL(allowed);
+          return urlOrigin === allowedUrl.origin;
+        } catch {
+          return false;
+        }
+      });
+    } catch {
+      return false;
+    }
+  }
+
+  public handleCallback(req: RequestWithUser, res: Response): void {
+    const redirectFromQuery = req.query?.redirect as string | undefined;
+    const redirectFromState = req.query?.state as string | undefined;
+
+    const redirectParam = redirectFromState || redirectFromQuery || '';
+
+    let baseUrl = 'http://localhost:8081';
+
+    if (redirectParam) {
+      try {
+        const decodedUrl = decodeURIComponent(redirectParam);
+        if (this.isValidRedirectUrl(decodedUrl)) {
+          baseUrl = decodedUrl;
+        } else {
+          console.warn(`Invalid redirect URL attempted: ${decodedUrl}`);
+        }
+      } catch {
+        console.warn(`Failed to decode redirect URL: ${redirectParam}`);
+      }
+    }
+
+    const isMobile =
+        baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
+
+    if (!req.user) {
+      return res.redirect(
+          `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
+      );
+    }
+
+    const token = this.generateToken({
+      id: req.user.id,
+      email: req.user.email,
+      name: req.user.name || null,
+      role: req.user.role,
+      created_at: req.user.created_at,
+      updated_at: req.user.updated_at,
+    });
+
+    const userJson = encodeURIComponent(JSON.stringify(req.user));
+    const tokenParam = encodeURIComponent(token);
+
+    let redirectUrl: string;
+    if (isMobile) {
+      redirectUrl = `${baseUrl}?user=${userJson}&token=${tokenParam}`;
+    } else {
+      redirectUrl = `${baseUrl}/auth/success?user=${userJson}&token=${tokenParam}`;
+    }
+
+    return res.redirect(redirectUrl);
+  }
 
   async validateOAuthLogin(
     profile: NormalizedOAuthProfile,
@@ -202,53 +294,7 @@ export class AuthService {
     };
   }
 
-  async hasLinkedProvider(
-    user_id: number,
-    provider: OAuthProvider,
-  ): Promise<boolean> {
-    const account = await this.prisma.providerAccount.findFirst({
-      where: {
-        user_id,
-        provider: provider.toString(),
-      },
-    });
-    return !!account;
-  }
-
-  async unlinkProvider(user_id: number): Promise<void> {
-    await this.prisma.providerAccount.deleteMany({
-      where: { user_id },
-    });
-  }
-
-  async getUsersByProvider(
-    provider: OAuthProvider,
-  ): Promise<AuthenticatedUser[]> {
-    const accounts = await this.prisma.providerAccount.findMany({
-      where: { provider: provider.toString() },
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            role: true,
-            created_at: true,
-            updated_at: true,
-          },
-        },
-      },
-    });
-
-    return accounts.map((account) =>
-      this.mapToAuthenticatedUser(account.user, {
-        provider: account.provider,
-        provider_id: account.provider_id,
-      }),
-    );
-  }
-
-  generateToken(user: UserSelect) {
+  private generateToken(user: UserSelect) {
     return this.jwtService.sign({
       sub: user.id,
       email: user.email,

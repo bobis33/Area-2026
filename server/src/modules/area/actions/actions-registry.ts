@@ -1,5 +1,5 @@
 import { TimeCronAction } from '@modules/area/actions/time/cron';
-import { ActionHandler } from '@interfaces/actions';
+import { ActionHandler } from '@interfaces/area';
 
 export const ActionsRegistry: Record<
   string,

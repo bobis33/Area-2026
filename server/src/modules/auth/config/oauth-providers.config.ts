@@ -147,7 +147,7 @@ export function normalizeOAuthProfile(
   return normalizedProfile;
 }
 
-export function isProviderEnabled(
+function isProviderEnabled(
   provider: OAuthProvider,
   configService: ConfigService,
 ): boolean {
