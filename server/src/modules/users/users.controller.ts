@@ -35,7 +35,7 @@ export class UsersController {
   @Get(':id')
   @ApiBearerAuth()
   @ApiResponse({ status: 200, type: UserResponseDto })
-  async findOne(
+  async findById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserResponseDto> {
     return this.usersService.findById(id);

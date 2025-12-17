@@ -9,7 +9,7 @@ import {
   GoogleProfile,
   SpotifyProfile,
   GitLabProfile,
-} from '@/interfaces/oauth';
+} from '@/interfaces/oauth.interface';
 import { getProviderConfig } from '@modules/auth/config/oauth-providers.config';
 import { GenericOAuthStrategy } from '@modules/auth/strategies/oauth.strategy';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';

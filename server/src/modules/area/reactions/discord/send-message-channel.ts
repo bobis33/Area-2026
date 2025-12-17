@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DiscordService } from '@modules/discord/discord.service';
 import { TextChannel } from 'discord.js';
-import { ReactionHandler } from '@interfaces/reaction';
+import { ReactionHandler } from '@interfaces/area.interface';
 import { Reaction } from '@decorators/area.decorator';
 
 @Reaction({
