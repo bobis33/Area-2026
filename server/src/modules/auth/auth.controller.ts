@@ -17,7 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { OAuthProvider } from '@interfaces/oauth';
+import { OAuthProvider } from '@interfaces/oauth.interface';
 import {
   AuthResponseDto,
   AuthStatusDto,

@@ -1,4 +1,4 @@
-import { ReactionHandler } from '@interfaces/area';
+import { ReactionHandler } from '@interfaces/area.interface';
 import { Type } from '@nestjs/common';
 import { DiscordSendMessageChannelReaction } from '@modules/area/reactions/discord/send-message-channel';
 import { DiscordSendMessageUserReaction } from '@modules/area/reactions/discord/send-message-user';

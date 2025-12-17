@@ -6,12 +6,12 @@ import {
   OAuthTokens,
   OAuthValidationResult,
   OAuthProvider,
-} from '@interfaces/oauth';
+} from '@interfaces/oauth.interface';
 import { RegisterDto, LoginDto, AuthResponseDto } from '@dto/auth.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { Roles } from '@interfaces/roles';
-import { AuthenticatedUser } from '@interfaces/user';
+import { RolesInterface } from '@interfaces/roles.interface';
+import { AuthenticatedUser } from '@interfaces/user.interface';
 import {ConfigService} from "@nestjs/config";
 import {URL} from "url";
 import {Request, Response} from "express";
@@ -222,7 +222,7 @@ export class AuthService {
       data: {
         email: profile.email,
         name: profile.displayName || null,
-        role: Roles.USER,
+        role: RolesInterface.USER,
         password: null,
       },
       select: {
@@ -315,7 +315,7 @@ export class AuthService {
         email: dto.email,
         name: dto.name,
         password: hashedPassword,
-        role: Roles.USER,
+        role: RolesInterface.USER,
       },
       select: {
         id: true,

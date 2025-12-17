@@ -1,6 +1,6 @@
 import { Type } from "@nestjs/common";
 import { ACTION_METADATA_KEY, REACTION_METADATA_KEY } from "@decorators/area.decorator";
-import { AreaMetadata } from "@interfaces/area";
+import { AreaMetadata } from "@interfaces/area.interface";
 
 function getServiceName(fullName: string) {
     return fullName.split('.')[0];

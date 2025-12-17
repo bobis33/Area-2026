@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CronExpressionParser } from 'cron-parser';
-import { ActionHandler } from '@interfaces/area';
+import { ActionHandler } from '@interfaces/area.interface';
 import { Action } from '@decorators/area.decorator';
 
 @Action({
