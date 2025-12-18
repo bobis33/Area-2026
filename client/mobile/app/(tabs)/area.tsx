@@ -300,7 +300,8 @@ export default function AreaScreen() {
       <Modal
         visible={!!selectedAutomation}
         onClose={() => setSelectedAutomation(null)}
-        title={selectedAutomation?.name}>
+        title={selectedAutomation?.name}
+      >
         {selectedAutomation && (
           <View style={styles.modalContent}>
             <View style={styles.modalSection}>

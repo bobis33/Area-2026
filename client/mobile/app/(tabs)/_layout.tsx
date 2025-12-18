@@ -34,7 +34,8 @@ export default function TabLayout() {
         tabBarIconStyle: {
           marginTop: 4,
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{

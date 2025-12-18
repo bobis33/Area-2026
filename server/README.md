@@ -15,7 +15,7 @@ Actions must implement the `ActionHandler` interface.
 
 ```ts
 import { Injectable } from '@nestjs/common';
-import { ActionHandler } from '@interfaces/actions';
+import { ActionHandler } from '@interfaces/area';
 
 @Injectable()
 export class MyCustomAction implements ActionHandler {
@@ -67,7 +67,7 @@ Reactions must implement the `ReactionHandler` interface.
 
 ```ts
 import { Injectable } from '@nestjs/common';
-import { ReactionHandler } from '@interfaces/reaction';
+import { ReactionHandler } from '@interfaces/area';
 
 @Injectable()
 export class MyCustomReaction implements ReactionHandler {

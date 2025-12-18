@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ViewProps } from 'react-native';
+import { ViewProps } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -29,11 +29,8 @@ export const FadeInView: React.FC<FadeInViewProps> = ({
   const translateY = useSharedValue(fromY);
 
   React.useEffect(() => {
-    opacity.value = withDelay(
-      delay,
-      withTiming(1, { duration }),
-    );
-    
+    opacity.value = withDelay(delay, withTiming(1, { duration }));
+
     if (spring) {
       translateY.value = withDelay(
         delay,
@@ -44,10 +41,7 @@ export const FadeInView: React.FC<FadeInViewProps> = ({
         }),
       );
     } else {
-      translateY.value = withDelay(
-        delay,
-        withTiming(0, { duration }),
-      );
+      translateY.value = withDelay(delay, withTiming(0, { duration }));
     }
   }, [delay, duration, spring, fromY]);
 
@@ -62,4 +56,3 @@ export const FadeInView: React.FC<FadeInViewProps> = ({
     </Animated.View>
   );
 };
-

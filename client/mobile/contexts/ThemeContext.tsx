@@ -19,7 +19,9 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 const STORAGE_KEY = 'area_theme_mode';
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const systemScheme = useColorScheme();
   const [mode, setModeState] = useState<ThemeMode>('system');
   const [isInitialized, setIsInitialized] = useState(false);
@@ -48,7 +50,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const isDark = mode === 'dark' || (mode === 'system' && systemScheme === 'dark');
+  const isDark =
+    mode === 'dark' || (mode === 'system' && systemScheme === 'dark');
   const currentTheme: Theme = (isDark ? uiTheme.dark : uiTheme.light) as Theme;
 
   // Don't render until theme is loaded to avoid flash
@@ -70,4 +73,3 @@ export const useAppTheme = () => {
   }
   return ctx;
 };
-

@@ -1,5 +1,5 @@
 import { AuthService } from '@modules/auth/auth.service';
-import { OAuthProvider } from '@interfaces/oauth';
+import { OAuthProvider } from '@interfaces/oauth.interface';
 import { normalizeOAuthProfile } from '@modules/auth/config/oauth-providers.config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 

@@ -9,7 +9,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from '@modules/users/users.service';
-import { ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
+import {ApiTags, ApiBody, ApiResponse, ApiBearerAuth} from '@nestjs/swagger';
 import { CreateUserDto } from '@dto/create-user.dto';
 import { UserResponseDto } from '@dto/user-response.dto';
 
@@ -26,20 +26,23 @@ export class UsersController {
   }
 
   @Get()
+  @ApiBearerAuth()
   @ApiResponse({ status: 200, type: [UserResponseDto] })
   async findAll(): Promise<UserResponseDto[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @ApiResponse({ status: 200, type: UserResponseDto })
-  async findOne(
+  async findById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserResponseDto> {
     return this.usersService.findById(id);
   }
 
   @Put(':id')
+  @ApiBearerAuth()
   @ApiResponse({ status: 200, type: UserResponseDto })
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -49,6 +52,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiResponse({ status: 200, type: UserResponseDto })
   async delete(
     @Param('id', ParseIntPipe) id: number,

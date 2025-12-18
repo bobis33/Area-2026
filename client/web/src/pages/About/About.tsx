@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { get } from "@/services/api";
-import type { AboutResponse } from "@/types";
-import { FaArrowLeft } from "react-icons/fa";
-import "./About.css";
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { get } from '@/services/api';
+import type { AboutResponse } from '@/types';
+import { FaArrowLeft } from 'react-icons/fa';
+import './About.css';
 
 export default function About() {
   const [aboutData, setAboutData] = useState<AboutResponse | null>(null);
@@ -15,13 +15,13 @@ export default function About() {
       try {
         setLoading(true);
         setError(null);
-        const data = await get<AboutResponse>("/about.json");
+        const data = await get<AboutResponse>('/about.json');
         setAboutData(data);
       } catch (err) {
         setError(
           err instanceof Error
             ? err.message
-            : "Failed to fetch server information",
+            : 'Failed to fetch server information',
         );
       } finally {
         setLoading(false);
@@ -74,7 +74,7 @@ export default function About() {
     if (minutes > 0) parts.push(`${minutes}m`);
     if (secs > 0) parts.push(`${secs}s`);
 
-    return parts.join(" ") || "0s";
+    return parts.join(' ') || '0s';
   };
 
   return (

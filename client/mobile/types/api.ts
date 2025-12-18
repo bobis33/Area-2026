@@ -122,4 +122,3 @@ export type CreateAreaPayload = {
   };
   is_active?: boolean;
 };
-

@@ -1,4 +1,4 @@
-import { AuthenticatedUser } from '@interfaces/user';
+import { AuthenticatedUser } from '@interfaces/user.interface';
 
 export enum OAuthProvider {
   DISCORD = 'discord',

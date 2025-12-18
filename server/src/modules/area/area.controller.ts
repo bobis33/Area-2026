@@ -8,11 +8,10 @@ import {
   Delete,
   Param,
   ParseIntPipe,
-  ParseBoolPipe,
 } from '@nestjs/common';
 import { AreaService } from './area.service';
 import { CreateAreaDto, UpdateAreaDto } from '@dto/area.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Area')
 @Controller('areas')
@@ -20,6 +19,7 @@ export class AreaController {
   constructor(private readonly areaService: AreaService) {}
 
   @Get('actions')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all available actions' })
   @ApiResponse({ status: 200, description: 'List of actions' })
   getActions() {
@@ -27,6 +27,7 @@ export class AreaController {
   }
 
   @Get('reactions')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all available reactions' })
   @ApiResponse({ status: 200, description: 'List of reactions' })
   getReactions() {
@@ -34,6 +35,7 @@ export class AreaController {
   }
 
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new area' })
   @ApiResponse({ status: 201, description: 'The area has been created.' })
   @ApiBody({ type: CreateAreaDto })
@@ -42,6 +44,7 @@ export class AreaController {
   }
 
   @Get()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all areas' })
   @ApiResponse({ status: 200, description: 'List of areas' })
   getAll() {
@@ -49,6 +52,7 @@ export class AreaController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get area by ID' })
   @ApiResponse({ status: 200, description: 'The area details' })
   getById(@Param('id', ParseIntPipe) id: number) {
@@ -56,33 +60,11 @@ export class AreaController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete area by ID' })
   @ApiResponse({ status: 200, description: 'The area has been deleted.' })
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.areaService.delete(id);
-  }
-
-  @Put(':id/activate')
-  @ApiOperation({ summary: 'Activate or deactivate an area' })
-  @ApiResponse({
-    status: 200,
-    description: 'The area activation status has been updated.',
-  })
-  activate(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('active', ParseBoolPipe) active: boolean,
-  ) {
-    return this.areaService.activate(id, active);
-  }
-
-  @Put(':id/rename')
-  @ApiOperation({ summary: 'Rename an area' })
-  @ApiResponse({ status: 200, description: 'The area has been renamed.' })
-  rename(
-    @Param('id', ParseIntPipe) id: number,
-    @Param('new_name') newName: string,
-  ) {
-    return this.areaService.rename(id, newName);
   }
 
   @Patch(':id')

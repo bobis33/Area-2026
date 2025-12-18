@@ -1,5 +1,5 @@
-import React from "react";
-import "./WebInput.css";
+import React from 'react';
+import './WebInput.css';
 
 /**
  * WebInput - Custom Web wrapper for Input with current design style
@@ -9,7 +9,7 @@ export interface WebInputProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  type?: "text" | "email" | "password" | "number" | "tel";
+  type?: 'text' | 'email' | 'password' | 'number' | 'tel';
   disabled?: boolean;
   label?: string;
   error?: string;
@@ -23,12 +23,12 @@ export const WebInput: React.FC<WebInputProps> = ({
   value,
   onChange,
   placeholder,
-  type = "text",
+  type = 'text',
   disabled = false,
   label,
   error,
   required = false,
-  className = "",
+  className = '',
   id,
   name,
 }) => {
@@ -36,11 +36,11 @@ export const WebInput: React.FC<WebInputProps> = ({
     id || name || `input-${Math.random().toString(36).substr(2, 9)}`;
 
   const getInputClass = () => {
-    const classes = ["web-input"];
-    if (error) classes.push("web-input-error");
-    if (disabled) classes.push("web-input-disabled");
+    const classes = ['web-input'];
+    if (error) classes.push('web-input-error');
+    if (disabled) classes.push('web-input-disabled');
     if (className) classes.push(className);
-    return classes.join(" ");
+    return classes.join(' ');
   };
 
   return (

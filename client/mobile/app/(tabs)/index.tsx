@@ -23,8 +23,9 @@ export default function HomeScreen() {
             Automatise ta vie digitale.
           </Text>
           <Text variant="body" color="muted" style={styles.description}>
-            Connecte tes services préférés et crée des automatisations puissantes. 
-            Quand une Action se produit, une Réaction se déclenche automatiquement.
+            Connecte tes services préférés et crée des automatisations
+            puissantes. Quand une Action se produit, une Réaction se déclenche
+            automatiquement.
           </Text>
         </View>
       </FadeInView>
@@ -36,9 +37,9 @@ export default function HomeScreen() {
             What is AREA ?
           </Text>
           <Text variant="body" color="muted" style={styles.sectionText}>
-            AREA est une plateforme d'automatisation qui te permet de connecter 
-            différents services (Discord, GitHub, Google, etc.) et de créer des 
-            scénarios personnalisés. Quand une Action se produit sur un service, 
+            AREA est une plateforme d'automatisation qui te permet de connecter
+            différents services (Discord, GitHub, Google, etc.) et de créer des
+            scénarios personnalisés. Quand une Action se produit sur un service,
             une Réaction se déclenche automatiquement sur un autre.
           </Text>
         </View>
@@ -49,7 +50,12 @@ export default function HomeScreen() {
         <FadeInView delay={200} spring>
           <SectionCard>
             <View style={styles.cardContent}>
-              <View style={[styles.cardIcon, { backgroundColor: currentTheme.colors.primarySoft }]}>
+              <View
+                style={[
+                  styles.cardIcon,
+                  { backgroundColor: currentTheme.colors.primarySoft },
+                ]}
+              >
                 <IconSymbol
                   size={28}
                   name="link"
@@ -61,8 +67,8 @@ export default function HomeScreen() {
                   Connect services
                 </Text>
                 <Text variant="body" color="muted" style={styles.cardText}>
-                  Lie tes comptes Discord, GitHub, Google et bien d'autres services 
-                  pour créer des automatisations puissantes.
+                  Lie tes comptes Discord, GitHub, Google et bien d'autres
+                  services pour créer des automatisations puissantes.
                 </Text>
               </View>
             </View>
@@ -72,7 +78,12 @@ export default function HomeScreen() {
         <FadeInView delay={300} spring>
           <SectionCard>
             <View style={styles.cardContent}>
-              <View style={[styles.cardIcon, { backgroundColor: currentTheme.colors.primarySoft }]}>
+              <View
+                style={[
+                  styles.cardIcon,
+                  { backgroundColor: currentTheme.colors.primarySoft },
+                ]}
+              >
                 <IconSymbol
                   size={28}
                   name="bolt.fill"
@@ -84,8 +95,8 @@ export default function HomeScreen() {
                   Create automations
                 </Text>
                 <Text variant="body" color="muted" style={styles.cardText}>
-                  Construis des flux Action → Réaction pour automatiser tes tâches 
-                  quotidiennes et gagner du temps.
+                  Construis des flux Action → Réaction pour automatiser tes
+                  tâches quotidiennes et gagner du temps.
                 </Text>
               </View>
             </View>

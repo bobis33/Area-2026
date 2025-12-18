@@ -1,5 +1,8 @@
 dist
 node_modules
-eslint.config.js
 .git
-*.md
+
+eslint.config.mjs
+.prettierrc
+README.md
+.env

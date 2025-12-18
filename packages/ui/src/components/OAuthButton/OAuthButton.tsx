@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View, Text, StyleSheet, Platform } from 'react-native';
+import { Pressable, View, Text, StyleSheet } from 'react-native';
 import type { OAuthButtonProps } from './OAuthButton.types';
 import { spacing, borderRadius, fontSizes, fontWeights } from '../../tokens';
 

@@ -3,7 +3,7 @@ import {
   OAuthProvider,
   OAuthProviderConfig,
   NormalizedOAuthProfile,
-} from '@interfaces/oauth';
+} from '@interfaces/oauth.interface';
 
 export function getProviderConfig(
   provider: OAuthProvider,
@@ -147,7 +147,7 @@ export function normalizeOAuthProfile(
   return normalizedProfile;
 }
 
-export function isProviderEnabled(
+function isProviderEnabled(
   provider: OAuthProvider,
   configService: ConfigService,
 ): boolean {

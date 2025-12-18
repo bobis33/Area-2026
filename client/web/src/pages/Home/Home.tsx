@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import "./Home.css";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import './Home.css';
 
 export default function Home() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -31,20 +31,20 @@ export default function Home() {
                 <strong>Email:</strong> {user.email}
               </p>
               <p>
-                <strong>Name:</strong> {user.name || "Not set"}
+                <strong>Name:</strong> {user.name || 'Not set'}
               </p>
               <p>
                 <strong>Role:</strong> {user.role}
               </p>
               <p>
-                <strong>Provider:</strong>{" "}
-                {user.provider === "local"
-                  ? "Email/Password"
+                <strong>Provider:</strong>{' '}
+                {user.provider === 'local'
+                  ? 'Email/Password'
                   : user.provider.charAt(0).toUpperCase() +
                     user.provider.slice(1)}
               </p>
               <p>
-                <strong>Account created:</strong>{" "}
+                <strong>Account created:</strong>{' '}
                 {new Date(user.created_at).toLocaleDateString()}
               </p>
             </div>

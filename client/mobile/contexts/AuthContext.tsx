@@ -4,11 +4,10 @@ import React, {
   useState,
   useEffect,
   ReactNode,
-} from "react";
-import * as Linking from "expo-linking";
-import { router } from "expo-router";
-import { apiService } from "@/services/api.service";
-import { AuthenticatedUser, AuthCredentials } from "@/types/api";
+} from 'react';
+import * as Linking from 'expo-linking';
+import { apiService } from '@/services/api.service';
+import { AuthenticatedUser, AuthCredentials } from '@/types/api';
 
 interface AuthContextType {
   token: string | null;
@@ -39,7 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     handleInitialUrl();
 
-    const subscription = Linking.addEventListener("url", (event) => {
+    const subscription = Linking.addEventListener('url', (event) => {
       handleDeepLink(event.url);
     });
 
@@ -53,8 +52,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       const parsed = Linking.parse(url);
-      const path = parsed.path || "";
-      const normalizedPath = path.replace(/^\/+|\/+$/g, "");
+      const path = parsed.path || '';
+      const normalizedPath = path.replace(/^\/+|\/+$/g, '');
       const query = parsed.queryParams ?? {};
 
       const userParam = query.user as string | undefined;
@@ -63,8 +62,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       // Check if this is an error path
       if (
-        normalizedPath === "auth/error" ||
-        normalizedPath.includes("auth/error")
+        normalizedPath === 'auth/error' ||
+        normalizedPath.includes('auth/error')
       ) {
         return;
       }
@@ -82,6 +81,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(userData);
       // Navigation will be handled by the useEffect in _layout.tsx
     } catch (error) {
+      // Error handling deep link
     }
   };
 
@@ -121,7 +121,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }

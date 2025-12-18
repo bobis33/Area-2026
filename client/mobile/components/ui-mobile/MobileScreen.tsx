@@ -68,7 +68,8 @@ export const MobileScreen: React.FC<MobileScreenProps> = ({
           style={styles.scrollView}
           contentContainerStyle={scrollContentStyle}
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"
+        >
           {children}
         </ScrollView>
       );
@@ -94,7 +95,8 @@ export const MobileScreen: React.FC<MobileScreenProps> = ({
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={80}
-        style={containerStyle}>
+        style={containerStyle}
+      >
         {content}
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

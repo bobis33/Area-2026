@@ -38,7 +38,10 @@ export default function AdminScreen() {
       const usersData = await apiService.getUsers(token);
       setUsers(usersData);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur lors du chargement des utilisateurs';
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Erreur lors du chargement des utilisateurs';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -66,14 +69,17 @@ export default function AdminScreen() {
               await loadUsers(); // Refresh the list
               Alert.alert('Succès', 'Utilisateur promu en administrateur');
             } catch (err) {
-              const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la promotion';
+              const errorMessage =
+                err instanceof Error
+                  ? err.message
+                  : 'Erreur lors de la promotion';
               Alert.alert('Erreur', errorMessage);
             } finally {
               setUpdatingUserId(null);
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -98,14 +104,17 @@ export default function AdminScreen() {
               await loadUsers(); // Refresh the list
               Alert.alert('Succès', 'Administrateur rétrogradé en utilisateur');
             } catch (err) {
-              const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la rétrogradation';
+              const errorMessage =
+                err instanceof Error
+                  ? err.message
+                  : 'Erreur lors de la rétrogradation';
               Alert.alert('Erreur', errorMessage);
             } finally {
               setUpdatingUserId(null);
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -116,7 +125,7 @@ export default function AdminScreen() {
     }
 
     Alert.alert(
-      'Révoquer l\'accès',
+      "Révoquer l'accès",
       'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.',
       [
         { text: 'Annuler', style: 'cancel' },
@@ -130,14 +139,17 @@ export default function AdminScreen() {
               await loadUsers(); // Refresh the list
               Alert.alert('Succès', 'Utilisateur supprimé');
             } catch (err) {
-              const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la suppression';
+              const errorMessage =
+                err instanceof Error
+                  ? err.message
+                  : 'Erreur lors de la suppression';
               Alert.alert('Erreur', errorMessage);
             } finally {
               setDeletingUserId(null);
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -174,7 +186,10 @@ export default function AdminScreen() {
           <SectionCard>
             {loading ? (
               <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={currentTheme.colors.primary} />
+                <ActivityIndicator
+                  size="large"
+                  color={currentTheme.colors.primary}
+                />
                 <Text variant="body" color="muted" style={styles.loadingText}>
                   Chargement des utilisateurs...
                 </Text>
@@ -204,8 +219,11 @@ export default function AdminScreen() {
                   <View
                     style={[
                       styles.memberRow,
-                      index < users.length - 1 && { borderBottomColor: currentTheme.colors.border },
-                    ]}>
+                      index < users.length - 1 && {
+                        borderBottomColor: currentTheme.colors.border,
+                      },
+                    ]}
+                  >
                     <View style={styles.memberInfo}>
                       <Text variant="body" style={styles.memberName}>
                         {user.name || user.email}
@@ -219,9 +237,16 @@ export default function AdminScreen() {
                         style={[
                           styles.roleBadge,
                           user.role === 'admin'
-                            ? { backgroundColor: currentTheme.colors.primarySoft }
-                            : { backgroundColor: currentTheme.colors.surfaceMuted },
-                        ]}>
+                            ? {
+                                backgroundColor:
+                                  currentTheme.colors.primarySoft,
+                              }
+                            : {
+                                backgroundColor:
+                                  currentTheme.colors.surfaceMuted,
+                              },
+                        ]}
+                      >
                         <Text variant="caption" style={styles.roleText}>
                           {user.role}
                         </Text>
@@ -234,8 +259,8 @@ export default function AdminScreen() {
                                 ? 'Demoting...'
                                 : 'Promoting...'
                               : user.role === 'admin'
-                              ? 'Demote'
-                              : 'Promote'
+                                ? 'Demote'
+                                : 'Promote'
                           }
                           onPress={() =>
                             user.role === 'admin'
@@ -243,14 +268,24 @@ export default function AdminScreen() {
                               : handlePromoteUser(user.id)
                           }
                           variant="ghost"
-                          disabled={updatingUserId === user.id || deletingUserId === user.id}
+                          disabled={
+                            updatingUserId === user.id ||
+                            deletingUserId === user.id
+                          }
                           style={styles.memberButton}
                         />
                         <MobileButton
-                          label={deletingUserId === user.id ? 'Deleting...' : 'Revoke'}
+                          label={
+                            deletingUserId === user.id
+                              ? 'Deleting...'
+                              : 'Revoke'
+                          }
                           onPress={() => handleRevokeUser(user.id)}
                           variant="ghost"
-                          disabled={deletingUserId === user.id || updatingUserId === user.id}
+                          disabled={
+                            deletingUserId === user.id ||
+                            updatingUserId === user.id
+                          }
                           style={styles.memberButton}
                         />
                       </View>

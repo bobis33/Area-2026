@@ -9,4 +9,3 @@ export type { MobileInputProps } from './MobileInput';
 
 export { MobileBadge } from './MobileBadge';
 export type { BadgeVariant } from './MobileBadge';
-

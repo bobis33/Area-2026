@@ -3,12 +3,12 @@
  * Provides authentication state and methods throughout the application
  */
 
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import type { LoginCredentials, RegisterData, AuthResponse } from "@/types";
-import * as authService from "@/services/auth.service";
-import { getUser, isAuthenticated as checkAuth } from "@/utils/storage";
-import type { User } from "@/types";
+import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import type { LoginCredentials, RegisterData, AuthResponse } from '@/types';
+import * as authService from '@/services/auth.service';
+import { getUser, isAuthenticated as checkAuth } from '@/utils/storage';
+import type { User } from '@/types';
 
 interface UseAuthReturn {
   user: User | null;
@@ -17,7 +17,7 @@ interface UseAuthReturn {
   error: string | null;
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  loginWithOAuth: (provider: "google" | "discord" | "github") => void;
+  loginWithOAuth: (provider: 'google' | 'discord' | 'github') => void;
   logout: () => void;
   clearError: () => void;
 }
@@ -53,10 +53,10 @@ export function useAuth(): UseAuthReturn {
       try {
         const response: AuthResponse = await authService.login(credentials);
         setUser(response.user);
-        navigate("/");
+        navigate('/');
       } catch (err: any) {
         const errorMessage =
-          err.message || "Login failed. Please check your credentials.";
+          err.message || 'Login failed. Please check your credentials.';
         setError(errorMessage);
         throw new Error(errorMessage);
       } finally {
@@ -77,10 +77,10 @@ export function useAuth(): UseAuthReturn {
       try {
         const response: AuthResponse = await authService.register(data);
         setUser(response.user);
-        navigate("/");
+        navigate('/');
       } catch (err: any) {
         const errorMessage =
-          err.message || "Registration failed. Please try again.";
+          err.message || 'Registration failed. Please try again.';
         setError(errorMessage);
         throw new Error(errorMessage);
       } finally {
@@ -95,7 +95,7 @@ export function useAuth(): UseAuthReturn {
    * Redirects to OAuth provider
    */
   const loginWithOAuth = useCallback(
-    (provider: "google" | "discord" | "github"): void => {
+    (provider: 'google' | 'discord' | 'github'): void => {
       authService.loginWithOAuth(provider);
     },
     [],
@@ -107,7 +107,7 @@ export function useAuth(): UseAuthReturn {
   const logout = useCallback((): void => {
     authService.logout();
     setUser(null);
-    navigate("/");
+    navigate('/');
   }, [navigate]);
 
   /**

@@ -1,16 +1,16 @@
-import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import type { LoginCredentials } from "@/types";
-import { FaGoogle, FaDiscord, FaGithub, FaArrowLeft } from "react-icons/fa";
-import { WebInput, WebButton } from "@/components/ui-web";
-import "./Login.css";
+import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import type { LoginCredentials } from '@/types';
+import { FaGoogle, FaDiscord, FaGithub, FaArrowLeft } from 'react-icons/fa';
+import { WebInput, WebButton } from '@/components/ui-web';
+import './Auth.css';
 
 export default function Login() {
   const { login, loginWithOAuth, loading, error } = useAuth();
   const [formData, setFormData] = useState<LoginCredentials>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -27,17 +27,17 @@ export default function Login() {
     }
   };
 
-  const handleOAuthLogin = (provider: "google" | "discord" | "github") => {
+  const handleOAuthLogin = (provider: 'google' | 'discord' | 'github') => {
     loginWithOAuth(provider);
   };
 
   return (
-    <div className="login-container">
+    <div className="auth-container">
       <Link to="/" className="back-to-home">
         <FaArrowLeft /> Back to Home
       </Link>
-      <div className="login-card">
-        <div className="login-header">
+      <div className="auth-card">
+        <div className="auth-header">
           <h1>Welcome Back</h1>
           <p>Sign in to your AREA account</p>
         </div>
@@ -48,7 +48,7 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="auth-form">
           <WebInput
             label="Email"
             type="email"
@@ -75,7 +75,7 @@ export default function Login() {
 
           <WebButton
             type="submit"
-            label={loading ? "Signing In..." : "Sign In"}
+            label={loading ? 'Signing In...' : 'Sign In'}
             variant="primary"
             disabled={loading}
             fullWidth
@@ -90,7 +90,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-google"
-            onClick={() => handleOAuthLogin("google")}
+            onClick={() => handleOAuthLogin('google')}
             disabled={loading}
           >
             <FaGoogle className="oauth-icon" />
@@ -100,7 +100,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-discord"
-            onClick={() => handleOAuthLogin("discord")}
+            onClick={() => handleOAuthLogin('discord')}
             disabled={loading}
           >
             <FaDiscord className="oauth-icon" />
@@ -110,7 +110,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-github"
-            onClick={() => handleOAuthLogin("github")}
+            onClick={() => handleOAuthLogin('github')}
             disabled={loading}
           >
             <FaGithub className="oauth-icon" />
@@ -118,9 +118,9 @@ export default function Login() {
           </button>
         </div>
 
-        <div className="login-footer">
+        <div className="auth-footer">
           <p>
-            Don't have an account?{" "}
+            Don't have an account?{' '}
             <Link to="/register" className="link">
               Sign Up
             </Link>

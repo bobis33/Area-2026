@@ -1,4 +1,4 @@
-import type { ApiError, FetchOptions } from "@/types/api";
+import type { ApiError, FetchOptions } from '@/types/api';
 
 /**
  * Base API URL from environment variables
@@ -21,13 +21,13 @@ export async function apiRequest<T>(
   const { token, ...fetchOptions } = options;
 
   const headers: Record<string, string> = {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   };
   if (fetchOptions.headers) {
     Object.assign(headers, fetchOptions.headers);
   }
   if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
   const url = `${API_BASE_URL}${endpoint}`;
@@ -56,17 +56,17 @@ export async function apiRequest<T>(
     }
 
     //handle responses
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
       return {} as T;
     }
     return await response.json();
   } catch (error) {
-    if (error instanceof Error && "statusCode" in error) {
+    if (error instanceof Error && 'statusCode' in error) {
       throw error as ApiError;
     }
     const apiError: ApiError = {
-      message: error instanceof Error ? error.message : "Network error",
+      message: error instanceof Error ? error.message : 'Network error',
       statusCode: 0,
     };
 
@@ -78,7 +78,7 @@ export async function apiRequest<T>(
  * Helper function for GET requests
  */
 export async function get<T>(endpoint: string, token?: string): Promise<T> {
-  return apiRequest<T>(endpoint, { method: "GET", token });
+  return apiRequest<T>(endpoint, { method: 'GET', token });
 }
 
 /**
@@ -90,7 +90,7 @@ export async function post<T>(
   token?: string,
 ): Promise<T> {
   return apiRequest<T>(endpoint, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(data),
     token,
   });
@@ -105,7 +105,7 @@ export async function put<T>(
   token?: string,
 ): Promise<T> {
   return apiRequest<T>(endpoint, {
-    method: "PUT",
+    method: 'PUT',
     body: JSON.stringify(data),
     token,
   });
@@ -115,5 +115,5 @@ export async function put<T>(
  * Helper function for DELETE requests
  */
 export async function del<T>(endpoint: string, token?: string): Promise<T> {
-  return apiRequest<T>(endpoint, { method: "DELETE", token });
+  return apiRequest<T>(endpoint, { method: 'DELETE', token });
 }
