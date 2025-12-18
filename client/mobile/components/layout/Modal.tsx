@@ -78,13 +78,16 @@ export const Modal: React.FC<ModalProps> = ({ visible, onClose, title, children 
                   </TouchableOpacity>
                 </View>
               )}
-              <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled">
-                {children}
-              </ScrollView>
+              <View style={styles.contentContainer}>
+                <ScrollView
+                  style={[styles.scrollView, { width: '100%' }]}
+                  contentContainerStyle={[styles.scrollContent, { alignItems: 'stretch' }]}
+                  showsVerticalScrollIndicator={true}
+                  keyboardShouldPersistTaps="handled"
+                  nestedScrollEnabled={true}>
+                  {children}
+                </ScrollView>
+              </View>
             </AnimatedCard>
           </TouchableWithoutFeedback>
         </Animated.View>
@@ -105,12 +108,15 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     borderRadius: borderRadius.xl,
     maxHeight: '80%',
+    flexShrink: 1,
+    minHeight: 200,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: spacing.md,
+    flexShrink: 0,
   },
   title: {
     flex: 1,
@@ -119,10 +125,17 @@ const styles = StyleSheet.create({
     padding: spacing.xs,
     marginLeft: spacing.sm,
   },
+  contentContainer: {
+    flex: 1,
+    flexGrow: 1,
+    minHeight: 100,
+    width: '100%',
+  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
+    flexGrow: 1,
     paddingBottom: spacing.lg,
   },
 });

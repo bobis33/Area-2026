@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Alert, Platform } from "react-native";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Text, OAuthButton } from "@area/ui";
 import * as Haptics from "expo-haptics";
 import { API_BASE_URL } from "@/constants/api";
@@ -32,7 +32,6 @@ export function SocialLoginButtons({
 
     try {
       const redirectUri = AuthSession.makeRedirectUri({
-        useProxy: true,
         path: `auth/${provider}/callback`,
       });
 
@@ -49,7 +48,6 @@ export function SocialLoginButtons({
         Alert.alert("Error", "The browser is locked. Please try again.");
       }
     } catch (error) {
-      console.error(`Error during ${provider} OAuth:`, error);
       Alert.alert(
         "Connection Error",
         `Unable to connect with ${provider}. Please try again.`,
@@ -115,6 +113,26 @@ export function SocialLoginButtons({
           icon={<AntDesign name="google" size={20} color={colors.gray900} />}
           disabled={disabled}
           loading={isLoading && loadingProvider === "google"}
+        />
+
+        <OAuthButton
+          label="Continue with Spotify"
+          onPress={() => handlePress("spotify")}
+          backgroundColor="#1DB954"
+          textColor={colors.white}
+          icon={<MaterialCommunityIcons name="spotify" size={20} color={colors.white} />}
+          disabled={disabled}
+          loading={isLoading && loadingProvider === "spotify"}
+        />
+
+        <OAuthButton
+          label="Continue with GitLab"
+          onPress={() => handlePress("gitlab")}
+          backgroundColor="#FC6D26"
+          textColor={colors.white}
+          icon={<MaterialCommunityIcons name="gitlab" size={20} color={colors.white} />}
+          disabled={disabled}
+          loading={isLoading && loadingProvider === "gitlab"}
         />
       </View>
     </View>
