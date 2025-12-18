@@ -25,17 +25,8 @@ export const API_ENDPOINTS = {
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
   USERS: '/users',
+  AREAS: '/areas',
+  AREAS_ACTIONS: '/areas/actions',
+  AREAS_REACTIONS: '/areas/reactions',
 } as const;
 
-// Log the API configuration in development
-if (process.env.NODE_ENV !== 'production') {
-  console.log('API Configuration:', {
-    baseUrl: API_BASE_URL,
-    endpoints: API_ENDPOINTS,
-  });
-  console.warn(
-    "⚠️  IMPORTANT: Sur mobile, utilisez l'IP de votre machine au lieu de localhost.\n" +
-      '   Exemple: EXPO_PUBLIC_API_URL=http://10.134.199.30:8080\n' +
-      '   (Trouvez votre IP avec: ifconfig | grep "inet " | grep -v 127.0.0.1)',
-  );
-}

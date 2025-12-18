@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsNumber, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ActionDto {
@@ -48,6 +48,22 @@ export class CreateAreaDto {
   @ValidateNested()
   @Type(() => ReactionDto)
   reaction!: ReactionDto;
+
+  @ApiProperty({ required: false, default: true })
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
+}
+
+export class UpdateAreaDto {
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  name?: string;
+  @ApiProperty({ required: false, default: true })
+  @IsOptional()
+  @IsBoolean()
+  is_active?: boolean;
 }
 
 export class AreaResponseDto {

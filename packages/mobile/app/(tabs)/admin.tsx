@@ -1,31 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { Text } from '@area/ui';
-import {
-  MobileScreen,
-  MobileButton,
-  MobileInput,
-} from '@/components/ui-mobile';
+import { MobileScreen, MobileButton } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
-import { Modal } from '@/components/layout/Modal';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { AnimatedCard, FadeInView } from '@/components/animations';
+import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/api.service';
 import { User } from '@/types/api';
 
-type ModalType = 'action' | 'reaction' | null;
-
 export default function AdminScreen() {
   const { currentTheme } = useAppTheme();
   const { token } = useAuth();
-  const [modalType, setModalType] = useState<ModalType>(null);
-  const [actionName, setActionName] = useState('');
-  const [actionDescription, setActionDescription] = useState('');
-  const [reactionName, setReactionName] = useState('');
-  const [reactionDescription, setReactionDescription] = useState('');
-
+  
   // Users state
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,48 +43,9 @@ export default function AdminScreen() {
           ? err.message
           : 'Erreur lors du chargement des utilisateurs';
       setError(errorMessage);
-      console.error('Error loading users:', err);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleOpenModal = (type: ModalType) => {
-    setModalType(type);
-    if (type === 'action') {
-      setActionName('');
-      setActionDescription('');
-    } else if (type === 'reaction') {
-      setReactionName('');
-      setReactionDescription('');
-    }
-  };
-
-  const handleCloseModal = () => {
-    setModalType(null);
-  };
-
-  const handleSaveAction = () => {
-    // TODO: Implement create action API call
-    console.log('Create action - TODO', {
-      name: actionName,
-      description: actionDescription,
-    });
-    handleCloseModal();
-  };
-
-  const handleSaveReaction = () => {
-    // TODO: Implement create reaction API call
-    console.log('Create reaction - TODO', {
-      name: reactionName,
-      description: reactionDescription,
-    });
-    handleCloseModal();
-  };
-
-  const handleLinkActionReaction = () => {
-    // TODO: Implement link action → reaction API call
-    console.log('Link action → reaction - TODO');
   };
 
   const handlePromoteUser = async (userId: number) => {
@@ -213,137 +161,9 @@ export default function AdminScreen() {
           <Text variant="title" style={styles.title}>
             Admin
           </Text>
-        </View>
-      </FadeInView>
-
-      {/* Manage Services Section */}
-      <FadeInView delay={100} spring>
-        <View style={styles.section}>
-          <Text variant="subtitle" style={styles.sectionTitle}>
-            Manage automations
+          <Text variant="body" color="muted" style={styles.subtitle}>
+            Manage users and their roles
           </Text>
-
-          <FadeInView delay={150} spring>
-            <AnimatedCard haptic onPress={() => handleOpenModal('action')}>
-              <SectionCard>
-                <View style={styles.actionHeader}>
-                  <View
-                    style={[
-                      styles.actionIconContainer,
-                      { backgroundColor: currentTheme.colors.primarySoft },
-                    ]}
-                  >
-                    <IconSymbol
-                      size={24}
-                      name="plus.circle.fill"
-                      color={currentTheme.colors.primary}
-                    />
-                  </View>
-                  <View style={styles.actionContent}>
-                    <Text variant="subtitle" style={styles.actionTitle}>
-                      Create new Action
-                    </Text>
-                    <Text
-                      variant="body"
-                      color="muted"
-                      style={styles.actionDescription}
-                    >
-                      Define a new action that can trigger reactions when it
-                      occurs.
-                    </Text>
-                  </View>
-                </View>
-                <MobileButton
-                  label="Create Action"
-                  onPress={() => handleOpenModal('action')}
-                  variant="primary"
-                  fullWidth
-                  style={styles.actionButton}
-                />
-              </SectionCard>
-            </AnimatedCard>
-          </FadeInView>
-
-          <FadeInView delay={200} spring>
-            <AnimatedCard haptic onPress={() => handleOpenModal('reaction')}>
-              <SectionCard>
-                <View style={styles.actionHeader}>
-                  <View
-                    style={[
-                      styles.actionIconContainer,
-                      { backgroundColor: currentTheme.colors.primarySoft },
-                    ]}
-                  >
-                    <IconSymbol
-                      size={24}
-                      name="bolt.fill"
-                      color={currentTheme.colors.primary}
-                    />
-                  </View>
-                  <View style={styles.actionContent}>
-                    <Text variant="subtitle" style={styles.actionTitle}>
-                      Create new Reaction
-                    </Text>
-                    <Text
-                      variant="body"
-                      color="muted"
-                      style={styles.actionDescription}
-                    >
-                      Define a new reaction that will be triggered by actions.
-                    </Text>
-                  </View>
-                </View>
-                <MobileButton
-                  label="Create Reaction"
-                  onPress={() => handleOpenModal('reaction')}
-                  variant="primary"
-                  fullWidth
-                  style={styles.actionButton}
-                />
-              </SectionCard>
-            </AnimatedCard>
-          </FadeInView>
-
-          <FadeInView delay={250} spring>
-            <AnimatedCard haptic onPress={handleLinkActionReaction}>
-              <SectionCard>
-                <View style={styles.actionHeader}>
-                  <View
-                    style={[
-                      styles.actionIconContainer,
-                      { backgroundColor: currentTheme.colors.primarySoft },
-                    ]}
-                  >
-                    <IconSymbol
-                      size={24}
-                      name="link"
-                      color={currentTheme.colors.primary}
-                    />
-                  </View>
-                  <View style={styles.actionContent}>
-                    <Text variant="subtitle" style={styles.actionTitle}>
-                      Link Action → Reaction
-                    </Text>
-                    <Text
-                      variant="body"
-                      color="muted"
-                      style={styles.actionDescription}
-                    >
-                      Connect an action to a reaction to create an automation
-                      scenario.
-                    </Text>
-                  </View>
-                </View>
-                <MobileButton
-                  label="Link Action → Reaction"
-                  onPress={handleLinkActionReaction}
-                  variant="primary"
-                  fullWidth
-                  style={styles.actionButton}
-                />
-              </SectionCard>
-            </AnimatedCard>
-          </FadeInView>
         </View>
       </FadeInView>
 
@@ -477,88 +297,6 @@ export default function AdminScreen() {
           </SectionCard>
         </View>
       </FadeInView>
-
-      {/* Create Action Modal */}
-      <Modal
-        visible={modalType === 'action'}
-        onClose={handleCloseModal}
-        title="Create new Action"
-      >
-        <View style={styles.modalContent}>
-          <MobileInput
-            label="Action name"
-            value={actionName}
-            onChangeText={setActionName}
-            placeholder="e.g., New GitHub push"
-          />
-          <View style={styles.modalSpacing} />
-          <MobileInput
-            label="Description"
-            value={actionDescription}
-            onChangeText={setActionDescription}
-            placeholder="Describe when this action occurs"
-            multiline
-          />
-          <View style={styles.modalActions}>
-            <MobileButton
-              label="Cancel"
-              onPress={handleCloseModal}
-              variant="ghost"
-              fullWidth
-              style={styles.modalButton}
-            />
-            <MobileButton
-              label="Save"
-              onPress={handleSaveAction}
-              variant="primary"
-              fullWidth
-              style={styles.modalButton}
-              disabled={!actionName.trim() || !actionDescription.trim()}
-            />
-          </View>
-        </View>
-      </Modal>
-
-      {/* Create Reaction Modal */}
-      <Modal
-        visible={modalType === 'reaction'}
-        onClose={handleCloseModal}
-        title="Create new Reaction"
-      >
-        <View style={styles.modalContent}>
-          <MobileInput
-            label="Reaction name"
-            value={reactionName}
-            onChangeText={setReactionName}
-            placeholder="e.g., Send Discord message"
-          />
-          <View style={styles.modalSpacing} />
-          <MobileInput
-            label="Description"
-            value={reactionDescription}
-            onChangeText={setReactionDescription}
-            placeholder="Describe what this reaction does"
-            multiline
-          />
-          <View style={styles.modalActions}>
-            <MobileButton
-              label="Cancel"
-              onPress={handleCloseModal}
-              variant="ghost"
-              fullWidth
-              style={styles.modalButton}
-            />
-            <MobileButton
-              label="Save"
-              onPress={handleSaveReaction}
-              variant="primary"
-              fullWidth
-              style={styles.modalButton}
-              disabled={!reactionName.trim() || !reactionDescription.trim()}
-            />
-          </View>
-        </View>
-      </Modal>
     </MobileScreen>
   );
 }
@@ -566,9 +304,13 @@ export default function AdminScreen() {
 const styles = StyleSheet.create({
   header: {
     marginBottom: 24,
+    gap: 8,
   },
   title: {
     marginBottom: 4,
+  },
+  subtitle: {
+    lineHeight: 22,
   },
   section: {
     marginBottom: 24,
@@ -611,32 +353,6 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
   },
-  actionHeader: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 12,
-    alignItems: 'flex-start',
-  },
-  actionIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  actionContent: {
-    flex: 1,
-    gap: 4,
-  },
-  actionTitle: {
-    marginBottom: 4,
-  },
-  actionDescription: {
-    lineHeight: 20,
-  },
-  actionButton: {
-    marginTop: 8,
-  },
   memberRow: {
     paddingVertical: 12,
     borderBottomWidth: 1,
@@ -666,20 +382,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   memberButton: {
-    flex: 1,
-  },
-  modalContent: {
-    gap: 12,
-  },
-  modalSpacing: {
-    height: 8,
-  },
-  modalActions: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 12,
-  },
-  modalButton: {
     flex: 1,
   },
 });

@@ -50,9 +50,10 @@ export interface AuthenticatedUser {
   name?: string;
   avatar?: string;
   provider: string;
-  providerId: string;
+  providerId?: string;
+  provider_id?: string;
   role: string;
-  createdAt: Date;
+  createdAt: string | Date;
 }
 
 export interface AuthResponse {
@@ -66,6 +67,59 @@ export interface User {
   email: string;
   name?: string | null;
   role: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
 }
+
+// Area types
+export type ParamField = {
+  type: 'string' | 'number' | 'boolean';
+  description?: string;
+  example?: any;
+  optional?: boolean;
+};
+
+export type AreaActionDefinition = {
+  service: string;
+  type: string;
+  parameters: Record<string, ParamField> | string;
+};
+
+export type AreaReactionDefinition = {
+  service: string;
+  type: string;
+  parameters: Record<string, ParamField> | string;
+};
+
+export type AreaModel = {
+  id: number;
+  name: string;
+  is_active: boolean;
+  action?: {
+    service: string;
+    type: string;
+    parameters: any;
+  };
+  reaction?: {
+    service: string;
+    type: string;
+    parameters: any;
+  };
+};
+
+export type CreateAreaPayload = {
+  name: string;
+  userId: number;
+  action: {
+    service: string;
+    type: string;
+    parameters: Record<string, any>;
+  };
+  reaction: {
+    service: string;
+    type: string;
+    parameters: Record<string, any>;
+  };
+  is_active?: boolean;
+};
+

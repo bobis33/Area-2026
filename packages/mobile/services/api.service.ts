@@ -5,6 +5,10 @@ import {
   AuthResponse,
   RegisterPayload,
   User,
+  AreaModel,
+  AreaActionDefinition,
+  AreaReactionDefinition,
+  CreateAreaPayload,
 } from '@/types/api';
 
 /**
@@ -38,7 +42,6 @@ class ApiService {
       const data: AboutResponse = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching about data:', error);
       throw error;
     }
   }
@@ -71,7 +74,6 @@ class ApiService {
       const data: AuthResponse = await response.json();
       return data;
     } catch (error) {
-      console.error('Error during login:', error);
       throw error;
     }
   }
@@ -83,9 +85,7 @@ class ApiService {
    */
   async register(payload: RegisterPayload): Promise<AuthResponse> {
     const url = `${this.baseUrl}${API_ENDPOINTS.AUTH_REGISTER}`;
-    console.log('Register URL:', url);
-    console.log('Register payload:', { ...payload, password: '***' });
-
+    
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -95,24 +95,14 @@ class ApiService {
         body: JSON.stringify(payload),
       });
 
-      console.log('Register response status:', response.status);
-      console.log(
-        'Register response headers:',
-        Object.fromEntries(response.headers.entries()),
-      );
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('Register error data:', errorData);
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`,
-        );
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
 
       const data: AuthResponse = await response.json();
       return data;
     } catch (error) {
-      console.error('Error during registration:', error);
       if (error instanceof TypeError && error.message.includes('fetch')) {
         throw new Error(
           `Impossible de se connecter au serveur. Vérifiez que l'URL est correcte: ${url}`,
@@ -147,7 +137,6 @@ class ApiService {
       const data: User[] = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching users:', error);
       throw error;
     }
   }
@@ -187,7 +176,6 @@ class ApiService {
       const updatedUser: User = await response.json();
       return updatedUser;
     } catch (error) {
-      console.error('Error updating user:', error);
       throw error;
     }
   }
@@ -221,9 +209,119 @@ class ApiService {
       const deletedUser: User = await response.json();
       return deletedUser;
     } catch (error) {
-      console.error('Error deleting user:', error);
       throw error;
     }
+  }
+
+  /**
+   * Get all AREAs for the authenticated user
+   * @param token - JWT authentication token
+   * @returns Promise with array of AREAs
+   */
+  async getAreas(token: string): Promise<AreaModel[]> {
+    const res = await fetch(`${this.baseUrl}${API_ENDPOINTS.AREAS}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error('Failed to fetch areas');
+    return res.json();
+  }
+
+  /**
+   * Get available area actions
+   * @param token - JWT authentication token
+   * @returns Promise with array of action definitions
+   */
+  async getAreaActions(token: string): Promise<AreaActionDefinition[]> {
+    const res = await fetch(`${this.baseUrl}${API_ENDPOINTS.AREAS_ACTIONS}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error('Failed to fetch actions');
+    return res.json();
+  }
+
+  /**
+   * Get available area reactions
+   * @param token - JWT authentication token
+   * @returns Promise with array of reaction definitions
+   */
+  async getAreaReactions(token: string): Promise<AreaReactionDefinition[]> {
+    const res = await fetch(`${this.baseUrl}${API_ENDPOINTS.AREAS_REACTIONS}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error('Failed to fetch reactions');
+    return res.json();
+  }
+
+  /**
+   * Create a new AREA
+   * @param payload - AREA creation payload
+   * @param token - JWT authentication token
+   * @returns Promise with created AREA
+   */
+  async createArea(payload: CreateAreaPayload, token: string): Promise<AreaModel> {
+    const res = await fetch(`${this.baseUrl}${API_ENDPOINTS.AREAS}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error('Failed to create area');
+    return res.json();
+  }
+
+  /**
+   * Update an AREA (name or is_active)
+   * @param id - AREA ID
+   * @param payload - Update payload with name and/or is_active
+   * @param token - JWT authentication token
+   * @returns Promise with updated AREA
+   */
+  async updateArea(
+    id: number,
+    payload: { name?: string; is_active?: boolean },
+    token: string,
+  ): Promise<AreaModel> {
+    const res = await fetch(`${this.baseUrl}${API_ENDPOINTS.AREAS}/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error('Failed to update area');
+    return res.json();
+  }
+
+  /**
+   * Delete an AREA
+   * @param id - AREA ID
+   * @param token - JWT authentication token
+   * @returns Promise<void>
+   */
+  async deleteArea(id: number, token: string): Promise<void> {
+    const res = await fetch(`${this.baseUrl}${API_ENDPOINTS.AREAS}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error('Failed to delete area');
   }
 }
 

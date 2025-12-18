@@ -39,7 +39,7 @@ export class AreaService {
     return this.prisma.area.create({
       data: {
         name: dto.name,
-        is_active: true,
+        is_active: dto.is_active ?? true,
         user: { connect: { id: dto.userId } },
         action: {
           create: {
@@ -55,6 +55,17 @@ export class AreaService {
             parameters: dto.reaction.parameters,
           },
         },
+      },
+      include: { action: true, reaction: true },
+    });
+  }
+
+  async update(id: number, dto: { name?: string; is_active?: boolean }) {
+    return this.prisma.area.update({
+      where: { id },
+      data: {
+        ...(dto.name !== undefined && { name: dto.name }),
+        ...(dto.is_active !== undefined && { is_active: dto.is_active }),
       },
       include: { action: true, reaction: true },
     });

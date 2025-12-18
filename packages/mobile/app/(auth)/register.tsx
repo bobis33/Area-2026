@@ -55,7 +55,6 @@ export default function RegisterScreen() {
 
   return (
     <MobileScreen
-      title="Créer un compte"
       scroll={true}
       safeArea={true}
       keyboardAware

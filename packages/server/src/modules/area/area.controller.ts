@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Put,
+  Patch,
   Delete,
   Param,
   ParseIntPipe,
@@ -96,5 +97,16 @@ export class AreaController {
     @Param('new_name') newName: string,
   ) {
     return this.areaService.rename(id, newName);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update an area (name or is_active)' })
+  @ApiResponse({ status: 200, description: 'The area has been updated.' })
+  @ApiBody({ type: UpdateAreaDto })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateAreaDto,
+  ) {
+    return this.areaService.update(id, dto);
   }
 }
