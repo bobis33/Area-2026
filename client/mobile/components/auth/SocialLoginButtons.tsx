@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert, Platform } from 'react-native';
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, OAuthButton } from '@area/ui';
+import { OAuthButton } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import * as Haptics from 'expo-haptics';
 import { API_BASE_URL } from '@/constants/api';
 import * as WebBrowser from 'expo-web-browser';

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
-import { Text, spacing, borderRadius } from '@area/ui';
+import { spacing, borderRadius } from '@area/ui';
+import { MobileText as Text } from './MobileText';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 export type BadgeVariant = 'active' | 'inactive' | 'connected' | 'paused';
@@ -43,7 +44,7 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
           ...base,
           backgroundColor: currentTheme.colors.surfaceMuted || currentTheme.colors.surface,
           borderWidth: 1,
-          borderColor: currentTheme.colors.tabBarBorder || currentTheme.colors.border,
+          borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
         };
       default:
         return base;

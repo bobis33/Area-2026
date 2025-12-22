@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Switch } from 'react-native';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { ParamField } from '@/types/api';
 import { ParamMap, isParamObject } from '@/utils/areaHelpers';
@@ -51,6 +51,12 @@ export function ParameterForm({
               <Switch
                 value={Boolean(value)}
                 onValueChange={(v) => onParamChange(key, field.type, v)}
+                trackColor={{
+                  false: currentTheme.colors.surfaceMuted,
+                  true: currentTheme.colors.primary,
+                }}
+                thumbColor={currentTheme.colors.white}
+                ios_backgroundColor={currentTheme.colors.surfaceMuted}
               />
             </View>
           );

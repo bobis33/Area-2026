@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { AreaActionDefinition, AreaReactionDefinition, ParamField } from '@/types/api';
@@ -44,7 +44,7 @@ export function ActionReactionSelector({
               backgroundColor: selectedKey
                 ? currentTheme.colors.primarySoft
                 : currentTheme.colors.surfaceMuted,
-              borderColor: currentTheme.colors.tabBarBorder,
+              borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
             },
           ]}
           onPress={onSelect}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity, Switch } from 'react-native';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { MobileScreen } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
@@ -121,6 +121,12 @@ export default function CreateAreaScreen() {
           <Switch
             value={isActive}
             onValueChange={setIsActive}
+            trackColor={{
+              false: currentTheme.colors.surfaceMuted,
+              true: currentTheme.colors.primary,
+            }}
+            thumbColor={currentTheme.colors.white}
+            ios_backgroundColor={currentTheme.colors.surfaceMuted}
           />
         </View>
       </SectionCard>

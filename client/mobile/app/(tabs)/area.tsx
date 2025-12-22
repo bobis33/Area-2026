@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Switch, Alert } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { MobileScreen } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { Modal } from '@/components/layout/Modal';
@@ -336,7 +336,7 @@ export default function AreaScreen() {
                                 styles.toggleButton,
                                 {
                                   opacity: togglingIds.has(automation.id) ? 0.5 : 1,
-                                  borderColor: currentTheme.colors.tabBarBorder,
+                                  borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
                                   backgroundColor: automation.status === 'active'
                                     ? currentTheme.colors.surfaceMuted
                                     : currentTheme.colors.primarySoft,
@@ -469,7 +469,7 @@ export default function AreaScreen() {
           style={[styles.fab, { backgroundColor: currentTheme.colors.primary }]}
           onPress={handleCreateArea}
           activeOpacity={0.8}>
-          <IconSymbol name="plus.circle.fill" size={26} color="#FFFFFF" />
+          <IconSymbol name="plus.circle.fill" size={26} color={currentTheme.colors.primaryOn} />
         </TouchableOpacity>
       )}
     </MobileScreen>

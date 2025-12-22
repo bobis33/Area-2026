@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { MobileScreen, MobileButton } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { IconSymbol } from '@/components/ui/icon-symbol';
