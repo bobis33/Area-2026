@@ -2,7 +2,8 @@ import React from 'react';
 import { Platform, TouchableOpacity, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { Button, type ButtonProps, Text, colors, spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
+import { Button, type ButtonProps, colors, spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
+import { MobileText as Text } from './MobileText';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -36,81 +37,85 @@ export const MobileButton: React.FC<MobileButtonProps> = ({
     onPress();
   };
 
-  // Use custom implementation for danger variant, otherwise use Button from @area/ui
-  if (variant === 'danger') {
-    const getButtonStyles = (): ViewStyle => {
-      const base: ViewStyle = {
-        paddingHorizontal: spacing.lg,
-        paddingVertical: spacing.md,
-        borderRadius: borderRadius.lg,
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: 44,
-        flexDirection: 'row',
-        gap: spacing.sm,
-        backgroundColor: currentTheme.colors.danger, // Using theme color for danger
-      };
-
-      if (fullWidth) {
-        base.width = '100%';
-      }
-
-      return base;
+  // Custom implementation for all variants to use theme colors
+  const getButtonStyles = (): ViewStyle => {
+    const base: ViewStyle = {
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+      borderRadius: borderRadius.lg,
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: 44,
+      flexDirection: 'row',
+      gap: spacing.sm,
     };
 
-    const opacity = disabled || loading ? 0.5 : 1;
-
-    const button = (
-      <TouchableOpacity
-        style={[getButtonStyles(), { opacity }, style]}
-        onPress={handlePress}
-        disabled={disabled || loading}
-        activeOpacity={0.8}
-      >
-        {loading && (
-        <ActivityIndicator
-          size="small"
-          color={colors.white}
-          style={{ marginRight: spacing.xs }}
-        />
-        )}
-        <Text
-          variant="body"
-          style={{
-            fontSize: fontSizes.md,
-            fontWeight: fontWeights.semibold,
-            color: colors.white,
-            ...labelStyle,
-          } as TextStyle}
-        >
-          {label}
-        </Text>
-      </TouchableOpacity>
-    );
-
-    if (animateIn) {
-      return (
-        <Animated.View entering={FadeIn} exiting={FadeOut}>
-          {button}
-        </Animated.View>
-      );
+    if (fullWidth) {
+      base.width = '100%';
     }
 
-    return button;
-  }
+    switch (variant) {
+      case 'primary':
+        base.backgroundColor = currentTheme.colors.primary;
+        break;
+      case 'secondary':
+        base.backgroundColor = currentTheme.colors.surfaceMuted;
+        base.borderWidth = 1;
+        base.borderColor = (currentTheme.colors as any).borderSubtle || currentTheme.colors.border;
+        break;
+      case 'ghost':
+        base.backgroundColor = 'transparent';
+        break;
+      case 'danger':
+        base.backgroundColor = currentTheme.colors.danger;
+        break;
+    }
 
-  // For other variants, use the existing Button from @area/ui
+    return base;
+  };
+
+  const getTextColor = (): string => {
+    switch (variant) {
+      case 'primary':
+        return currentTheme.colors.primaryOn || currentTheme.colors.white;
+      case 'danger':
+        return currentTheme.colors.dangerOn || currentTheme.colors.white;
+      case 'secondary':
+      case 'ghost':
+        return currentTheme.colors.text;
+      default:
+        return currentTheme.colors.text;
+    }
+  };
+
+  const opacity = disabled || loading ? 0.5 : 1;
+
   const button = (
-    <Button
-      {...buttonProps}
-      variant={variant}
+    <TouchableOpacity
+      style={[getButtonStyles(), { opacity }, style]}
       onPress={handlePress}
-      disabled={disabled}
-      fullWidth={fullWidth}
-      label={label}
-      style={style}
-      labelStyle={labelStyle}
-    />
+      disabled={disabled || loading}
+      activeOpacity={0.8}
+    >
+      {loading && (
+        <ActivityIndicator
+          size="small"
+          color={getTextColor()}
+          style={{ marginRight: spacing.xs }}
+        />
+      )}
+      <Text
+        variant="body"
+        style={{
+          fontSize: fontSizes.md,
+          fontWeight: fontWeights.semibold,
+          color: getTextColor(),
+          ...labelStyle,
+        } as TextStyle}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
   );
 
   if (animateIn) {

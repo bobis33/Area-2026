@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { Modal } from '@/components/layout/Modal';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import {
@@ -69,14 +69,14 @@ export function SelectionModal({
                     style={[
                       styles.choiceRow,
                       {
-                        backgroundColor: currentTheme.colors.surfaceMuted || currentTheme.colors.surface,
-                        borderColor: currentTheme.colors.tabBarBorder || currentTheme.colors.border,
+                        backgroundColor: currentTheme.colors.surfaceMuted,
+                        borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
                       },
                     ]}
                     onPress={() => onServiceSelect(service)}
                     activeOpacity={0.8}
                   >
-                    <Text variant="body" style={{ color: currentTheme.colors.text }}>
+                    <Text variant="body">
                       {service} ({count})
                     </Text>
                   </TouchableOpacity>
@@ -121,14 +121,14 @@ export function SelectionModal({
                     style={[
                       styles.choiceRow,
                       {
-                        backgroundColor: currentTheme.colors.surfaceMuted || currentTheme.colors.surface,
-                        borderColor: currentTheme.colors.tabBarBorder || currentTheme.colors.border,
+                        backgroundColor: currentTheme.colors.surfaceMuted,
+                        borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
                       },
                     ]}
                     onPress={() => onActionSelect(action)}
                     activeOpacity={0.8}
                   >
-                    <Text variant="body" style={{ color: currentTheme.colors.text }}>
+                    <Text variant="body">
                       {key}
                     </Text>
                   </TouchableOpacity>
@@ -173,14 +173,14 @@ export function SelectionModal({
                     style={[
                       styles.choiceRow,
                       {
-                        backgroundColor: currentTheme.colors.surfaceMuted || currentTheme.colors.surface,
-                        borderColor: currentTheme.colors.tabBarBorder || currentTheme.colors.border,
+                        backgroundColor: currentTheme.colors.surfaceMuted,
+                        borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
                       },
                     ]}
                     onPress={() => onReactionSelect(reaction)}
                     activeOpacity={0.8}
                   >
-                    <Text variant="body" style={{ color: currentTheme.colors.text }}>
+                    <Text variant="body">
                       {key}
                     </Text>
                   </TouchableOpacity>

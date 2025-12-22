@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import {
   MobileScreen,
   MobileButton,

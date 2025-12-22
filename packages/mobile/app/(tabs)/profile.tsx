@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
-import { Text } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { MobileScreen, MobileButton } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';

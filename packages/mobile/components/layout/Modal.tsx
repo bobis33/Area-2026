@@ -13,7 +13,8 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { Text, Card } from '@area/ui';
+import { Card } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { spacing, borderRadius } from '@area/ui';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -74,18 +75,29 @@ export const Modal: React.FC<ModalProps> = ({
           style={[
             styles.overlay,
             overlayStyle,
-            { backgroundColor: currentTheme.colors.background + '80' },
+            { backgroundColor: 'rgba(0,0,0,0.6)' },
           ]}
         >
           <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
             <AnimatedCard
               padding="lg"
               elevated
-              style={[styles.modalContent, animatedCardStyle]}
+              style={[
+                styles.modalContent,
+                animatedCardStyle,
+                {
+                  backgroundColor: currentTheme.colors.surface,
+                  borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                  borderWidth: 1,
+                },
+              ]}
             >
               {title && (
                 <View style={styles.header}>
-                  <Text variant="subtitle" style={styles.title}>
+                  <Text
+                    variant="subtitle"
+                    style={styles.title}
+                  >
                     {title}
                   </Text>
                   <TouchableOpacity
@@ -103,7 +115,10 @@ export const Modal: React.FC<ModalProps> = ({
               <View style={styles.contentContainer}>
                 <ScrollView
                   style={[styles.scrollView, { width: '100%' }]}
-                  contentContainerStyle={[styles.scrollContent, { alignItems: 'stretch' }]}
+                  contentContainerStyle={[
+                    styles.scrollContent,
+                    { alignItems: 'stretch', width: '100%' },
+                  ]}
                   showsVerticalScrollIndicator={true}
                   keyboardShouldPersistTaps="handled"
                   nestedScrollEnabled={true}>
