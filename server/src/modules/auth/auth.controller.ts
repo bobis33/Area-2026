@@ -9,6 +9,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -123,6 +124,7 @@ export class AuthController {
   }
 
   @Get('providersLinked')
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get linked OAuth providers for authenticated user' })
   @ApiResponse({ status: HttpStatus.OK, type: [String] })
