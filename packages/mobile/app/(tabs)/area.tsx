@@ -7,6 +7,7 @@ import { SectionCard } from '@/components/layout/SectionCard';
 import { Modal } from '@/components/layout/Modal';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { MobileBadge } from '@/components/ui-mobile';
+import { ServiceIcon } from '@/components/ui/ServiceIcon';
 import { AnimatedCard, FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -49,6 +50,9 @@ export default function AreaScreen() {
   const [loading, setLoading] = useState(false);
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+  const [availableProviders, setAvailableProviders] = useState<string[]>([]);
+  const [linkedProviders, setLinkedProviders] = useState<string[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(false);
 
   const loadAreas = useCallback(async () => {
     if (!token) return;
@@ -71,11 +75,43 @@ export default function AreaScreen() {
     loadAreas();
   }, [loadAreas]);
 
+  const loadProviders = useCallback(async () => {
+    try {
+      setLoadingProviders(true);
+      // Get available providers (doesn't require auth)
+      const available = await apiService.getOAuthProviders();
+      setAvailableProviders(available);
+      
+      // Get linked providers only if user is authenticated
+      if (token) {
+        const linked = await apiService.getLinkedProviders(token);
+        // Ensure we normalize the linked providers to lowercase strings
+        const normalizedLinked = linked.map((p) => String(p).toLowerCase());
+        setLinkedProviders(normalizedLinked);
+      } else {
+        setLinkedProviders([]);
+      }
+    } catch (error) {
+      // Keep empty arrays on error
+      setAvailableProviders([]);
+      setLinkedProviders([]);
+    } finally {
+      setLoadingProviders(false);
+    }
+  }, [token]);
+
+  // Load areas on mount
+  useEffect(() => {
+    loadAreas();
+    loadProviders();
+  }, [loadAreas, loadProviders]);
+
   // Reload areas when screen comes into focus (e.g., after creating a new area)
   useFocusEffect(
     useCallback(() => {
       loadAreas();
-    }, [loadAreas])
+      loadProviders();
+    }, [loadAreas, loadProviders])
   );
 
   const handleCreateArea = () => {
@@ -178,6 +214,82 @@ export default function AreaScreen() {
           </Text>
         </View>
       </FadeInView>
+
+      {/* Connected Services Section */}
+      {token && (
+        <FadeInView delay={50} spring>
+          <View style={styles.section}>
+            <Text variant="subtitle" style={styles.sectionTitle}>
+              Connected services
+            </Text>
+            <View style={styles.servicesList}>
+              {loadingProviders ? (
+                <View style={styles.emptyState}>
+                  <Text variant="body" color="muted">
+                    Loading services...
+                  </Text>
+                </View>
+              ) : availableProviders.length === 0 ? (
+                <View style={styles.emptyState}>
+                  <Text variant="body" color="muted">
+                    No services available. Please check your backend configuration.
+                  </Text>
+                </View>
+              ) : (
+                availableProviders.map((provider, index) => {
+                // Normalize provider names for comparison (lowercase)
+                const normalizedProvider = String(provider).toLowerCase();
+                const isConnected = linkedProviders.some(
+                  (linked) => String(linked).toLowerCase() === normalizedProvider
+                );
+                return (
+                  <FadeInView key={provider} delay={100 + index * 50} spring>
+                    <AnimatedCard haptic>
+                      <SectionCard>
+                        <TouchableOpacity
+                          style={styles.serviceRow}
+                          activeOpacity={0.7}
+                        >
+                          <View style={styles.serviceLeft}>
+                            <View
+                              style={[
+                                styles.serviceIconContainer,
+                                {
+                                  backgroundColor: currentTheme.colors.surfaceMuted,
+                                },
+                              ]}
+                            >
+                              <ServiceIcon
+                                service={provider}
+                                size={24}
+                                color={
+                                  isConnected
+                                    ? currentTheme.colors.primary
+                                    : currentTheme.colors.textMuted
+                                }
+                              />
+                            </View>
+                            <Text variant="body" style={styles.serviceName}>
+                              {provider.charAt(0).toUpperCase() + provider.slice(1)}
+                            </Text>
+                          </View>
+                          <MobileBadge
+                            variant={isConnected ? 'connected' : 'paused'}
+                            showDot
+                          >
+                            {isConnected ? 'Connected' : 'Not connected'}
+                          </MobileBadge>
+                        </TouchableOpacity>
+                      </SectionCard>
+                    </AnimatedCard>
+                  </FadeInView>
+                );
+              })
+            )}
+          </View>
+        </View>
+      </FadeInView>
+      )}
 
       {/* Scenarios Section */}
       <FadeInView delay={100} spring>
@@ -381,6 +493,31 @@ const styles = StyleSheet.create({
   sectionTitle: {
     marginBottom: 12,
   },
+  servicesList: {
+    gap: 12,
+  },
+  serviceRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+  },
+  serviceLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  serviceIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  serviceName: {
+    fontWeight: '500',
+  },
   automationsList: {
     gap: 12,
   },
@@ -459,6 +596,9 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  emptyText: {
+    textAlign: 'center',
   },
   fab: {
     position: 'absolute',

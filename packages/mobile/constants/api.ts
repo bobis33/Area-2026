@@ -24,6 +24,8 @@ export const API_ENDPOINTS = {
   ABOUT: '/about.json',
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
+  AUTH_PROVIDERS: '/auth/providers',
+  AUTH_PROVIDERS_LINKED: '/auth/providersLinked',
   USERS: '/users',
   AREAS: '/areas',
   AREAS_ACTIONS: '/areas/actions',

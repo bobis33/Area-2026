@@ -145,6 +145,10 @@ export class AuthService {
 
       if (!user) {
         user = await this.createUserFromOAuth(profile, tokens);
+      } else {
+        // Update access tokens for existing provider account
+        // This ensures the account is "refreshed" when reused
+        await this.updateProviderAccountLastUsed(provider, provider_id, tokens);
       }
 
       return this.mapToAuthenticatedUser(user);
@@ -277,6 +281,41 @@ export class AuthService {
     });
   }
 
+  private async updateProviderAccountLastUsed(
+    provider: OAuthProvider,
+    provider_id: string,
+    tokens: OAuthTokens,
+  ): Promise<void> {
+    // Find the existing account to get user_id
+    const existingAccount = await this.prisma.providerAccount.findFirst({
+      where: {
+        provider: provider.toString(),
+        provider_id,
+      },
+    });
+
+    if (existingAccount) {
+      // Delete and recreate to get a new id (highest id = most recently used)
+      // This ensures the most recently used provider always has the highest id
+      await this.prisma.providerAccount.deleteMany({
+        where: {
+          provider: provider.toString(),
+          provider_id,
+        },
+      });
+
+      await this.prisma.providerAccount.create({
+        data: {
+          provider: provider.toString(),
+          provider_id,
+          user_id: existingAccount.user_id,
+          access_token: tokens.accessToken,
+          refresh_token: tokens.refreshToken ?? null,
+        },
+      });
+    }
+  }
+
   private mapToAuthenticatedUser(
     user: UserSelect,
     account?: { provider: string; provider_id: string } | null,
@@ -354,13 +393,26 @@ export class AuthService {
   }
 
   async getProvidersByUserId(user_id: number): Promise<OAuthProvider[]> {
-    const accounts = await this.prisma.providerAccount.findMany({
+    // Get the most recently created provider account (highest id = most recent)
+    // When a user logs in with OAuth, if the account exists, we delete and recreate it
+    // so the most recently used provider always has the highest id
+    const mostRecentAccount = await this.prisma.providerAccount.findFirst({
       where: { user_id },
+      orderBy: { id: 'desc' },
     });
 
-    return accounts.map(
-      (account) =>
-        OAuthProvider[account.provider as keyof typeof OAuthProvider],
-    );
+    if (!mostRecentAccount) {
+      return [];
+    }
+
+    const providerStr = mostRecentAccount.provider.toLowerCase();
+    const provider = providerStr as OAuthProvider;
+
+    // Verify it's a valid OAuthProvider value
+    if (Object.values(OAuthProvider).includes(provider)) {
+      return [provider];
+    }
+
+    return [];
   }
 }

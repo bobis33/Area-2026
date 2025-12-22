@@ -323,6 +323,65 @@ class ApiService {
     });
     if (!res.ok) throw new Error('Failed to delete area');
   }
+
+  /**
+   * Get available OAuth providers
+   * @returns Promise with array of provider names
+   */
+  async getOAuthProviders(): Promise<string[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.AUTH_PROVIDERS}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: { providers: string[] } = await response.json();
+      // Ensure we return an array even if providers is undefined
+      return Array.isArray(data.providers) ? data.providers : [];
+    } catch (error) {
+      // Return empty array on error instead of throwing
+      // This allows the UI to still render even if the endpoint fails
+      return [];
+    }
+  }
+
+  /**
+   * Get linked OAuth providers for authenticated user
+   * @param token - JWT authentication token
+   * @returns Promise with array of linked provider names
+   */
+  async getLinkedProviders(token: string): Promise<string[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.AUTH_PROVIDERS_LINKED}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        // If unauthorized, return empty array (user might not be logged in)
+        if (response.status === 401 || response.status === 403) {
+          return [];
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: { providers: string[] } = await response.json();
+      // Ensure we return an array even if providers is undefined
+      return Array.isArray(data.providers) ? data.providers : [];
+    } catch (error) {
+      // Return empty array on error instead of throwing
+      return [];
+    }
+  }
 }
 
 // Export singleton instance
