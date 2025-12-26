@@ -20,8 +20,8 @@ updates:
   - package-ecosystem: "docker"
     directories:
       - "/server"
-      - "/client/web"
-      - "/client/mobile"
+      - "/packages/web"
+      - "/packages/mobile"
     schedule:
       interval: "daily"
       time: "05:00"
@@ -55,8 +55,8 @@ updates:
   - package-ecosystem: "npm"
     directories:
       - "/server"
-      - "/client/web"
-      - "/client/mobile"
+      - "/packages/web"
+      - "/packages/mobile"
       - "/packages/ui"
     schedule:
       interval: "daily"

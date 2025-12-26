@@ -2,13 +2,13 @@
   "name": "area-server",
   "version": "0.0.1",
   "description": "Area API server",
-  "homepage": "https://github.com/bobis33/Area-2026/server",
+  "homepage": "https://github.com/bobis33/Area-2026/packages/server",
   "private": true,
   "type": "commonjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bobis33/Area-2026.git",
-    "directory": "server"
+    "directory": "packages/server"
   },
   "scripts": {
     "prisma:generate": "prisma generate",

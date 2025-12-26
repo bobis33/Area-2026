@@ -2,13 +2,13 @@
   "name": "area-client-web",
   "version": "0.0.1",
   "description": "Area web frontend",
-  "homepage": "https://github.com/bobis33/Area-2026/client/web",
+  "homepage": "https://github.com/bobis33/Area-2026/packages/web",
   "private": true,
   "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bobis33/Area-2026.git",
-    "directory": "client/web"
+    "directory": "packages/web"
   },
   "scripts": {
     "dev": "vite",

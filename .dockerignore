@@ -5,7 +5,7 @@ documentation
 scripts
 node_modules
 build
-client/shared
+shared
 dist
 .git
 .github

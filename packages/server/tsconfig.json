@@ -14,7 +14,7 @@
       "@dto/*": ["dto/*"],
       "@interfaces/*": ["interfaces/*"],
       "@modules/*": ["modules/*"],
-      "@prisma/client": ["./../node_modules/.prisma/client"],
+      "@prisma/client": ["./../../node_modules/.prisma/client"],
       "@/*": ["*"]
     },
     "outDir": "./dist",

@@ -6,13 +6,13 @@ ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
 COPY ./package.json ./tsconfig.json ./
-COPY ./client/web ./client/web
+COPY ./packages/web ./packages/web
 COPY ./packages/ui ./packages/ui
 
-RUN npm i --workspace client/web
+RUN npm i --workspace packages/web
 RUN npm i --workspace packages/ui && npm --workspace packages/ui run build  && npm cache clean --force
 
-WORKDIR /app/client/web
+WORKDIR /app/packages/web
 
 RUN npm run build && npm cache clean --force
 
@@ -20,7 +20,7 @@ FROM nginx:1.29.4-alpine-slim
 
 WORKDIR /app
 
-COPY --from=builder ./app/client/web/dist /usr/share/nginx/html
+COPY --from=builder ./app/packages/web/dist /usr/share/nginx/html
 
 RUN mkdir -p /usr/share/nginx/html/downloads
 
@@ -42,7 +42,7 @@ RUN printf "server {\n\
     }\n\
     \n\
     location /client.apk {\n\
-        alias /usr/share/nginx/html/downloads/app-release.apk;\n\
+        alias /usr/share/nginx/html/downloads/client.apk;\n\
         add_header Content-Type application/vnd.android.package-archive;\n\
     }\n\
 }" > /etc/nginx/conf.d/default.conf

@@ -31,7 +31,7 @@ services:
 
   area_service_server:
     build:
-      context: server
+      context: packages/server
       dockerfile: Dockerfile
       args:
         POSTGRES_URL: ${POSTGRES_URL}
@@ -71,11 +71,11 @@ services:
   area_service_client_mobile:
     build:
       context: .
-      dockerfile: client/mobile/Dockerfile
+      dockerfile: packages/mobile/Dockerfile
     image: ${PROJECT_NAME}_client-mobile:latest
     container_name: ${PROJECT_NAME}_client-mobile
     volumes:
-      - ./client/shared:/app/shared:rw,Z
+      - ./shared:/app/shared:rw,Z
     command: >
       sh -c "cp ./client.apk /app/shared/"
     environment:
@@ -90,14 +90,14 @@ services:
   area_service_client_web:
     build:
       context: .
-      dockerfile: client/web/Dockerfile
+      dockerfile: packages/web/Dockerfile
       args:
         VITE_PORT: ${WEB_CONTAINER_PORT}
         VITE_API_URL: ${API_URL}
     image: ${PROJECT_NAME}_client-web:latest
     container_name: ${PROJECT_NAME}_client-web
     volumes:
-      - ./client/shared:/usr/share/nginx/html/downloads:ro,Z
+      - ./shared:/usr/share/nginx/html/downloads:ro,Z
     ports:
       - "${WEB_CONTAINER_PORT}:${WEB_CONTAINER_PORT}"
     depends_on:

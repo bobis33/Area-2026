@@ -26,22 +26,22 @@
     "npm": ">= 11.0.0"
   },
   "workspaces": [
-    "client/web",
-    "client/mobile",
+    "packages/web",
+    "packages/mobile",
     "packages/ui",
-    "server"
+    "packages/server"
   ],
   "scripts": {
-    "mobile:lint": "npm --workspace client/mobile run lint",
+    "mobile:lint": "npm --workspace packages/mobile run lint",
     "mobile:build": "",
-    "mobile:start": "npm --workspace client/mobile run start",
-    "server:lint": "npm --workspace server run lint",
-    "server:start": "npm --workspace server run start",
-    "server:prisma:generate": "npm --workspace server run prisma:generate",
-    "server:build": "npm --workspace server run build",
-    "web:build": "npm --workspace client/web run build",
-    "web:lint": "npm --workspace client/web run lint",
-    "web:start": "npm --workspace client/web run dev",
+    "mobile:start": "npm --workspace packages/mobile run start",
+    "server:lint": "npm --workspace packages/server run lint",
+    "server:start": "npm --workspace packages/server run start",
+    "server:prisma:generate": "npm --workspace packages/server run prisma:generate",
+    "server:build": "npm --workspace packages/server run build",
+    "web:build": "npm --workspace packages/web run build",
+    "web:lint": "npm --workspace packages/web run lint",
+    "web:start": "npm --workspace packages/web run dev",
     "packages:ui:build": "npm --workspace packages/ui run build"
   }
 }

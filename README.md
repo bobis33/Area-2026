@@ -114,7 +114,7 @@ npm run packages:ui:build ## Build UI package
 ```
 
 Create .env files in each project folder:
-#### Server (.env in /server)
+#### Server (.env in ./packages/server)
 ```bash
 PROJECT_NAME=area
 PORT=8080
@@ -149,13 +149,13 @@ GITLAB_CLIENT_CALLBACK_URL=""
 
 FRONTEND_URLS="http://localhost:${WEB_CONTAINER_PORT},http://localhost:${MOBILE_CONTAINER_PORT},http://localhost:${API_CONTAINER_PORT}"
 ```
-#### Web (.env in /client/web)
+#### Web (.env in ./packages/web)
 ```bash
 PORT=8081
 API_PORT=8080
 API_URL="http://localhost:${API_PORT}"
 ```
-#### Mobile (.env in /client/mobile)
+#### Mobile (.env in ./packages/mobile)
 ```bash
 PORT=8082
 API_PORT=8080
@@ -173,9 +173,16 @@ For more information look the [package.json](https://github.com/bobis33/Area-202
 
 ## Documentation
 
-- [Backend](https://github.com/bobis33/Area-2026/blob/main/server/README.md)
-- [Front mobile](https://github.com/bobis33/Area-2026/blob/main/client/mobile/README.md)
-- [Front web](https://github.com/bobis33/Area-2026/blob/main/client/web/README.md)
+- [Backend](https://github.com/bobis33/Area-2026/blob/main/packages/server/README.md)
+- [Front mobile](https://github.com/bobis33/Area-2026/blob/main/packages/mobile/README.md)
+- [Front web](https://github.com/bobis33/Area-2026/blob/main/packages/web/README.md)
+
+## Security
+Please review our [Security Policy](https://github.com/bobis33/Area-2026/blob/main/SECURITY.md) for more information on reporting security vulnerabilities.
+
 
 ## Contributing
 ➡️ Want to contribute? See [contributing guidelines](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/bobis33/Area-2026/blob/main//LICENSE.md) file for details.

@@ -2,13 +2,13 @@
   "name": "area-client-mobile",
   "version": "0.0.1",
   "description": "Area mobile frontend",
-  "homepage": "https://github.com/bobis33/Area-2026/client/mobile",
+  "homepage": "https://github.com/bobis33/Area-2026/packages/mobile",
   "private": true,
   "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bobis33/Area-2026.git",
-    "directory": "client/mobile"
+    "directory": "pacages/mobile"
   },
   "main": "expo-router/entry",
   "scripts": {

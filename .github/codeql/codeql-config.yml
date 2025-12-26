@@ -5,7 +5,6 @@ queries:
 
 paths:
   - backend
-  - client
   - packages
   - .github
 
