@@ -8,12 +8,9 @@
  * 3. Default: http://localhost:8080
  */
 const getApiBaseUrl = (): string => {
-  // If full URL is provided, use it
   if (process.env.EXPO_PUBLIC_API_URL) {
     return process.env.EXPO_PUBLIC_API_URL;
   }
-
-  // If only port is provided, construct URL
   const apiPort = process.env.EXPO_PUBLIC_API_PORT || '8080';
   return `http://localhost:${apiPort}`;
 };

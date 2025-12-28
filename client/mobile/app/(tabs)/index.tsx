@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { router } from 'expo-router';
 import { MobileText as Text } from '@/components/ui-mobile';
 import { MobileScreen, MobileButton } from '@/components/ui-mobile';
@@ -16,6 +16,13 @@ export default function HomeScreen() {
       {/* Hero Section */}
       <FadeInView delay={0} spring>
         <View style={styles.heroSection}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('@/assets/images/main_logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
           <Text variant="caption" color="muted" style={styles.label}>
             AREA • Automation
           </Text>
@@ -123,11 +130,22 @@ const styles = StyleSheet.create({
   heroSection: {
     marginBottom: 24,
     gap: 12,
+    alignItems: 'center',
+  },
+  logoContainer: {
+    marginBottom: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 120,
+    height: 120,
   },
   label: {
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 4,
+    textAlign: 'center',
   },
   mainTitle: {
     fontSize: 32,

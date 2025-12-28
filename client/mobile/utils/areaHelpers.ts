@@ -64,6 +64,7 @@ export const makeKey = (service: any, type: any): string =>
 
 /**
  * Group actions by service
+ * Note: "time" actions are kept with their original service but displayed under "discord"
  */
 export const groupActionsByService = (
   actions: AreaActionDefinition[],
@@ -71,12 +72,13 @@ export const groupActionsByService = (
   const grouped: Record<string, AreaActionDefinition[]> = {};
   actions.forEach(action => {
     const svc = safeService(action.service);
+    // Keep original service in the action object
     if (!grouped[svc]) {
       grouped[svc] = [];
     }
     grouped[svc].push({
       ...action,
-      service: svc,
+      service: svc, // Keep original service (time stays as time)
       type: safeType(action.type),
     });
   });
