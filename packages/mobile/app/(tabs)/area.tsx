@@ -24,7 +24,6 @@ interface Automation {
   status: 'active' | 'inactive';
 }
 
-// Helper function to convert AreaModel to Automation format
 function areaToAutomation(area: AreaModel): Automation {
   const actionService = area.action?.service || 'unknown';
   const actionType = area.action?.type || 'unknown';
@@ -63,14 +62,12 @@ export default function AreaScreen() {
       const mappedAutomations = areas.map(areaToAutomation);
       setAutomations(mappedAutomations);
     } catch (error) {
-      // Keep empty array on error
       setAutomations([]);
     } finally {
       setLoading(false);
     }
   }, [token]);
 
-  // Load areas on mount
   useEffect(() => {
     loadAreas();
   }, [loadAreas]);
@@ -78,21 +75,16 @@ export default function AreaScreen() {
   const loadProviders = useCallback(async () => {
     try {
       setLoadingProviders(true);
-      // Get available providers (doesn't require auth)
       const available = await apiService.getOAuthProviders();
       setAvailableProviders(available);
-      
-      // Get linked providers only if user is authenticated
       if (token) {
         const linked = await apiService.getLinkedProviders(token);
-        // Ensure we normalize the linked providers to lowercase strings
         const normalizedLinked = linked.map((p) => String(p).toLowerCase());
         setLinkedProviders(normalizedLinked);
       } else {
         setLinkedProviders([]);
       }
     } catch (error) {
-      // Keep empty arrays on error
       setAvailableProviders([]);
       setLinkedProviders([]);
     } finally {
@@ -100,13 +92,10 @@ export default function AreaScreen() {
     }
   }, [token]);
 
-  // Load areas on mount
   useEffect(() => {
     loadAreas();
     loadProviders();
   }, [loadAreas, loadProviders]);
-
-  // Reload areas when screen comes into focus (e.g., after creating a new area)
   useFocusEffect(
     useCallback(() => {
       loadAreas();
@@ -124,8 +113,6 @@ export default function AreaScreen() {
 
     const newStatus = automation.status === 'active' ? 'inactive' : 'active';
     const newIsActive = newStatus === 'active';
-
-    // Optimistic update
     setAutomations(prev =>
       prev.map(a =>
         a.id === automation.id
@@ -141,10 +128,8 @@ export default function AreaScreen() {
         { is_active: newIsActive },
         token,
       );
-      // Refresh to get latest state
       await loadAreas();
     } catch (error) {
-      // Rollback on error
       setAutomations(prev =>
         prev.map(a =>
           a.id === automation.id
@@ -177,16 +162,12 @@ export default function AreaScreen() {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            // Optimistic update
             setAutomations(prev => prev.filter(a => a.id !== automation.id));
             setDeletingIds(prev => new Set(prev).add(automation.id));
-
             try {
               await apiService.deleteArea(parseInt(automation.id), token);
-              // Refresh to ensure consistency
               await loadAreas();
             } catch (error) {
-              // Rollback on error
               await loadAreas();
             } finally {
               setDeletingIds(prev => {
@@ -202,18 +183,19 @@ export default function AreaScreen() {
   };
 
   return (
-    <MobileScreen scroll safeArea keyboardAware={false}>
-      {/* Header */}
-      <FadeInView delay={0} spring>
-        <View style={styles.header}>
-          <Text variant="title" style={styles.title}>
-            Your automations
-          </Text>
-          <Text variant="body" color="muted" style={styles.subtitle}>
-            Create and manage your automation scenarios.
-          </Text>
-        </View>
-      </FadeInView>
+    <View style={styles.container}>
+      <MobileScreen scroll safeArea keyboardAware={false}>
+        {/* Header */}
+        <FadeInView delay={0} spring>
+          <View style={styles.header}>
+            <Text variant="title" style={styles.title}>
+              Your automations
+            </Text>
+            <Text variant="body" color="muted" style={styles.subtitle}>
+              Create and manage your automation scenarios.
+            </Text>
+          </View>
+        </FadeInView>
 
       {/* Connected Services Section */}
       {token && (
@@ -462,8 +444,9 @@ export default function AreaScreen() {
           </View>
         )}
       </Modal>
+      </MobileScreen>
 
-      {/* Floating Create Button */}
+      {/* Floating Create Button - Fixed position */}
       {token && (
         <TouchableOpacity
           style={[styles.fab, { backgroundColor: currentTheme.colors.primary }]}
@@ -472,11 +455,14 @@ export default function AreaScreen() {
           <IconSymbol name="plus.circle.fill" size={26} color={currentTheme.colors.primaryOn} />
         </TouchableOpacity>
       )}
-    </MobileScreen>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   header: {
     marginBottom: 24,
     gap: 8,

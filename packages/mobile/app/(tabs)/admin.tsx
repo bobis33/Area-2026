@@ -259,8 +259,8 @@ export default function AdminScreen() {
                                 ? 'Demoting...'
                                 : 'Promoting...'
                               : user.role === 'admin'
-                                ? 'Demote'
-                                : 'Promote'
+                              ? 'Demote'
+                              : 'Promote'
                           }
                           onPress={() =>
                             user.role === 'admin'

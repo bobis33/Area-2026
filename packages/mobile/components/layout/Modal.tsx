@@ -12,6 +12,7 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
+  interpolate,
 } from 'react-native-reanimated';
 import { Card } from '@area/ui';
 import { MobileText as Text } from '@/components/ui-mobile';
@@ -34,28 +35,47 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
-  const { currentTheme } = useAppTheme();
+  const { currentTheme, isDark } = useAppTheme();
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
+  const translateY = useSharedValue(30);
+  const blur = useSharedValue(0);
 
   React.useEffect(() => {
     if (visible) {
       scale.value = withSpring(1, {
-        damping: 15,
+        damping: 20,
         stiffness: 300,
         mass: 0.8,
       });
-      opacity.value = withTiming(1, { duration: 200 });
+      opacity.value = withTiming(1, { duration: 300 });
+      translateY.value = withSpring(0, {
+        damping: 20,
+        stiffness: 300,
+        mass: 0.8,
+      });
+      blur.value = withTiming(1, { duration: 300 });
     } else {
-      scale.value = withTiming(0.9, { duration: 150 });
-      opacity.value = withTiming(0, { duration: 150 });
+      scale.value = withTiming(0.9, { duration: 200 });
+      opacity.value = withTiming(0, { duration: 200 });
+      translateY.value = withTiming(30, { duration: 200 });
+      blur.value = withTiming(0, { duration: 200 });
     }
   }, [visible]);
 
-  const animatedCardStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
-  }));
+  const animatedCardStyle = useAnimatedStyle(() => {
+    const borderOpacity = interpolate(opacity.value, [0, 1], [0.2, 0.3]);
+    return {
+      transform: [
+        { scale: scale.value },
+        { translateY: translateY.value },
+      ],
+      opacity: opacity.value,
+      borderColor: isDark
+        ? `rgba(255, 255, 255, ${borderOpacity})`
+        : (currentTheme.colors.borderSubtle || currentTheme.colors.border),
+    };
+  });
 
   const overlayStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -75,20 +95,28 @@ export const Modal: React.FC<ModalProps> = ({
           style={[
             styles.overlay,
             overlayStyle,
-            { backgroundColor: 'rgba(0,0,0,0.6)' },
+            { backgroundColor: 'rgba(0, 0, 0, 0.75)' }, // Dark overlay but not completely black
           ]}
         >
           <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
-            <AnimatedCard
-              padding="lg"
-              elevated
+            <Animated.View
               style={[
                 styles.modalContent,
+                {
+                  borderWidth: 1,
+                  flexShrink: 0,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 20 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 30,
+                  elevation: 20,
+                  padding: spacing.lg,
+                  borderRadius: borderRadius.xl,
+                },
                 animatedCardStyle,
                 {
+                  // Force opaque background after animation styles
                   backgroundColor: currentTheme.colors.surface,
-                  borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
-                  borderWidth: 1,
                 },
               ]}
             >
@@ -125,7 +153,7 @@ export const Modal: React.FC<ModalProps> = ({
                   {children}
                 </ScrollView>
               </View>
-            </AnimatedCard>
+            </Animated.View>
           </TouchableWithoutFeedback>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -138,14 +166,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: spacing.lg,
+    padding: spacing.md,
   },
   modalContent: {
     width: '100%',
     maxWidth: 500,
     borderRadius: borderRadius.xl,
-    maxHeight: '80%',
-    flexShrink: 1,
+    maxHeight: '95%',
     minHeight: 200,
   },
   header: {
@@ -163,13 +190,11 @@ const styles = StyleSheet.create({
     marginLeft: spacing.sm,
   },
   contentContainer: {
-    flex: 1,
-    flexGrow: 1,
-    minHeight: 100,
     width: '100%',
+    maxHeight: '100%',
   },
   scrollView: {
-    flex: 1,
+    width: '100%',
   },
   scrollContent: {
     flexGrow: 1,

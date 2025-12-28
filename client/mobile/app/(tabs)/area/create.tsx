@@ -35,6 +35,7 @@ export default function CreateAreaScreen() {
     selectedReactionService,
     actionsByService,
     reactionsByService,
+    availableProviders,
     openModal,
     closeModal,
     goBackToService,
@@ -153,6 +154,7 @@ export default function CreateAreaScreen() {
         selectedReactionService={selectedReactionService}
         actionsByService={actionsByService}
         reactionsByService={reactionsByService}
+        availableProviders={availableProviders}
         onServiceSelect={handleServiceSelect}
         onActionSelect={handleActionSelect}
         onReactionSelect={handleReactionSelect}

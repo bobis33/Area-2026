@@ -20,7 +20,6 @@ export type SelectionKind = 'action' | 'reaction';
 export type ModalStep = 'service' | 'action' | 'reaction';
 
 interface UseAreaCreationReturn {
-  // Data
   loading: boolean;
   submitting: boolean;
   actions: AreaActionDefinition[];
@@ -28,33 +27,24 @@ interface UseAreaCreationReturn {
   actionsByService: Record<string, AreaActionDefinition[]>;
   reactionsByService: Record<string, AreaReactionDefinition[]>;
   services: string[];
-  
-  // Selection state
+  availableProviders: string[];
   selectedActionKey: string;
   selectedReactionKey: string;
   selectedAction: AreaActionDefinition | undefined;
   selectedReaction: AreaReactionDefinition | undefined;
-  
-  // Parameters
   actionParams: Record<string, any>;
   reactionParams: Record<string, any>;
   setActionParams: React.Dispatch<React.SetStateAction<Record<string, any>>>;
   setReactionParams: React.Dispatch<React.SetStateAction<Record<string, any>>>;
-  
-  // Form state
   name: string;
   setName: (name: string) => void;
   isActive: boolean;
   setIsActive: (active: boolean) => void;
-  
-  // Modal state
   modalOpen: boolean;
   modalStep: ModalStep;
   selectionKind: SelectionKind;
   selectedActionService: string | null;
   selectedReactionService: string | null;
-  
-  // Actions
   openModal: (kind: SelectionKind) => void;
   closeModal: () => void;
   goBackToService: () => void;
@@ -77,16 +67,26 @@ export function useAreaCreation(): UseAreaCreationReturn {
   const [actionParams, setActionParams] = useState<Record<string, any>>({});
   const [reactionParams, setReactionParams] = useState<Record<string, any>>({});
   const [isActive, setIsActive] = useState(true);
-
-  // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<ModalStep>('service');
   const [selectionKind, setSelectionKind] = useState<SelectionKind>('action');
   const [selectedActionService, setSelectedActionService] = useState<string | null>(null);
   const [selectedReactionService, setSelectedReactionService] = useState<string | null>(null);
   const [previousAutoName, setPreviousAutoName] = useState<string>('');
+  const [availableProviders, setAvailableProviders] = useState<string[]>([]);
 
-  // Derived data structures
+  useEffect(() => {
+    const loadProviders = async () => {
+      try {
+        const providers = await apiService.getOAuthProviders();
+        setAvailableProviders(providers.map(p => String(p).toLowerCase()));
+      } catch (error) {
+        setAvailableProviders([]);
+      }
+    };
+    loadProviders();
+  }, []);
+
   const actionsByService = useMemo(
     () => groupActionsByService(actions),
     [actions],
@@ -110,7 +110,6 @@ export function useAreaCreation(): UseAreaCreationReturn {
     return reactions.find(r => makeKey(r.service, r.type) === selectedReactionKey);
   }, [reactions, selectedReactionKey]);
 
-  // Load actions and reactions
   useEffect(() => {
     const run = async () => {
       if (!token) return;
@@ -124,7 +123,6 @@ export function useAreaCreation(): UseAreaCreationReturn {
         setActions(a);
         setReactions(r);
       } catch (e) {
-        // Failed to load actions/reactions
       } finally {
         setLoading(false);
       }
@@ -133,7 +131,6 @@ export function useAreaCreation(): UseAreaCreationReturn {
     run();
   }, [token]);
 
-  // Reset params and apply defaults when action changes
   useEffect(() => {
     setActionParams({});
     if (selectedAction) {
@@ -148,19 +145,15 @@ export function useAreaCreation(): UseAreaCreationReturn {
     }
   }, [selectedActionKey, selectedAction]);
 
-  // Reset params when reaction changes
   useEffect(() => {
     setReactionParams({});
   }, [selectedReactionKey]);
 
-  // Auto-generate name when both action and reaction are selected
   useEffect(() => {
     if (selectedAction && selectedReaction) {
       const actionKey = makeKey(selectedAction.service, selectedAction.type);
       const reactionKey = makeKey(selectedReaction.service, selectedReaction.type);
       const autoName = `${actionKey} → ${reactionKey}`;
-
-      // Only update if name is empty or matches previous auto-name
       if (!name.trim() || name === previousAutoName) {
         setName(autoName);
         setPreviousAutoName(autoName);
@@ -244,8 +237,6 @@ export function useAreaCreation(): UseAreaCreationReturn {
     if (!selectedAction || !selectedReaction) {
       return;
     }
-
-    // Validate required parameters
     const actionParamsValid = validateParams(selectedAction.parameters as any, actionParams);
     const reactionParamsValid = validateParams(selectedReaction.parameters as any, reactionParams);
 
@@ -275,14 +266,12 @@ export function useAreaCreation(): UseAreaCreationReturn {
       );
       router.back();
     } catch (e) {
-      // Failed to create area
     } finally {
       setSubmitting(false);
     }
   };
 
   return {
-    // Data
     loading,
     submitting,
     actions,
@@ -290,33 +279,24 @@ export function useAreaCreation(): UseAreaCreationReturn {
     actionsByService,
     reactionsByService,
     services,
-    
-    // Selection state
+    availableProviders,
     selectedActionKey,
     selectedReactionKey,
     selectedAction,
     selectedReaction,
-    
-    // Parameters
     actionParams,
     reactionParams,
     setActionParams,
     setReactionParams,
-    
-    // Form state
     name,
     setName,
     isActive,
     setIsActive,
-    
-    // Modal state
     modalOpen,
     modalStep,
     selectionKind,
     selectedActionService,
     selectedReactionService,
-    
-    // Actions
     openModal,
     closeModal,
     goBackToService,
@@ -327,5 +307,3 @@ export function useAreaCreation(): UseAreaCreationReturn {
     handleSubmit,
   };
 }
-
-

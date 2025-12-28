@@ -10,6 +10,7 @@ import {
   AreaReactionDefinition,
   CreateAreaPayload,
 } from '@/types/api';
+import { getServerUrl } from '@/utils/serverConfig';
 
 /**
  * API Service
@@ -20,6 +21,20 @@ class ApiService {
 
   constructor() {
     this.baseUrl = API_BASE_URL;
+  }
+
+  /**
+   * Update the base URL (used when server URL is configured)
+   */
+  async updateBaseUrl(): Promise<void> {
+    this.baseUrl = await getServerUrl();
+  }
+
+  /**
+   * Get current base URL
+   */
+  getBaseUrl(): string {
+    return this.baseUrl;
   }
 
   /**
@@ -85,7 +100,6 @@ class ApiService {
    */
   async register(payload: RegisterPayload): Promise<AuthResponse> {
     const url = `${this.baseUrl}${API_ENDPOINTS.AUTH_REGISTER}`;
-    
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -342,11 +356,8 @@ class ApiService {
       }
 
       const data: { providers: string[] } = await response.json();
-      // Ensure we return an array even if providers is undefined
       return Array.isArray(data.providers) ? data.providers : [];
     } catch (error) {
-      // Return empty array on error instead of throwing
-      // This allows the UI to still render even if the endpoint fails
       return [];
     }
   }
@@ -367,18 +378,14 @@ class ApiService {
       });
 
       if (!response.ok) {
-        // If unauthorized, return empty array (user might not be logged in)
         if (response.status === 401 || response.status === 403) {
           return [];
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data: { providers: string[] } = await response.json();
-      // Ensure we return an array even if providers is undefined
       return Array.isArray(data.providers) ? data.providers : [];
     } catch (error) {
-      // Return empty array on error instead of throwing
       return [];
     }
   }
@@ -386,3 +393,6 @@ class ApiService {
 
 // Export singleton instance
 export const apiService = new ApiService();
+
+apiService.updateBaseUrl().catch(() => {
+});
