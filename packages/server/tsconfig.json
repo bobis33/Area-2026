@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES2020",
+    "target": "ES2023",
+    "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -20,6 +21,7 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "strict": true,
+    "ESModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
