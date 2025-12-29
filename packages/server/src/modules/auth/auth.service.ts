@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@common/database/prisma.service';
-import { User } from '@prisma/client';
+import { User } from '@pcg/client';
 import {
   NormalizedOAuthProfile,
   OAuthTokens,
@@ -12,9 +12,9 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RolesInterface } from '@interfaces/roles.interface';
 import { AuthenticatedUser } from '@interfaces/user.interface';
-import {ConfigService} from "@nestjs/config";
-import {URL} from "url";
-import {Request, Response} from "express";
+import { ConfigService } from '@nestjs/config';
+import { URL } from 'url';
+import { Request, Response } from 'express';
 
 type UserSelect = Pick<
   User,
@@ -87,11 +87,11 @@ export class AuthService {
     }
 
     const isMobile =
-        baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
+      baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
 
     if (!req.user) {
       return res.redirect(
-          `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
+        `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
       );
     }
 
@@ -359,7 +359,8 @@ export class AuthService {
     });
 
     return accounts.map(
-      (account) => OAuthProvider[account.provider as keyof typeof OAuthProvider],
+      (account) =>
+        OAuthProvider[account.provider as keyof typeof OAuthProvider],
     );
   }
 }

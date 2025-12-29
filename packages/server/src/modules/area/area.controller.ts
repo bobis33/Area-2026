@@ -11,7 +11,13 @@ import {
 } from '@nestjs/common';
 import { AreaService } from './area.service';
 import { CreateAreaDto } from '@dto/area.dto';
-import {ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth} from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 @ApiTags('Area')
 @Controller('areas')

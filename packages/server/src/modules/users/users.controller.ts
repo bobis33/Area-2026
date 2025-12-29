@@ -9,7 +9,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from '@modules/users/users.service';
-import {ApiTags, ApiBody, ApiResponse, ApiBearerAuth} from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateUserDto } from '@dto/create-user.dto';
 import { UserResponseDto } from '@dto/user-response.dto';
 

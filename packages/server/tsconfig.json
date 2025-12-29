@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES2020",
+    "target": "ES2023",
+    "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -14,12 +15,13 @@
       "@dto/*": ["dto/*"],
       "@interfaces/*": ["interfaces/*"],
       "@modules/*": ["modules/*"],
-      "@prisma/client": ["./../../node_modules/.prisma/client"],
+      "@pcg/*": ["../prisma/generated/*"],
       "@/*": ["*"]
     },
     "outDir": "./dist",
     "baseUrl": "./src",
     "strict": true,
+    "ESModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -30,6 +32,6 @@
     "resolveJsonModule": true,
     "incremental": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

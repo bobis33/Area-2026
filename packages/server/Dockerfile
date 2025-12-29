@@ -63,6 +63,5 @@ EXPOSE ${PORT}
 RUN npm install --omit=dev && npm cache clean --force
 
 COPY --from=build ./app/dist ./dist
-COPY --from=build ./app/node_modules/.prisma/client ./node_modules/.prisma/client
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main"]
