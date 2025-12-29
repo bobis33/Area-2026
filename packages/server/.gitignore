@@ -1,2 +1,2 @@
 openapi.json
-/prisma/migrations/*
+/prisma/generated/*

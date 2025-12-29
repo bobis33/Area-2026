@@ -1,7 +1,10 @@
 .git
+
 dist
 node_modules
+prisma/generated
 test
+
 .env
 .prettierrc
 *-lock.json

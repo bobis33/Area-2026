@@ -14,7 +14,7 @@
       "@dto/*": ["dto/*"],
       "@interfaces/*": ["interfaces/*"],
       "@modules/*": ["modules/*"],
-      "@prisma/client": ["./../../node_modules/.prisma/client"],
+      "@pcg/*": ["../prisma/generated/*"],
       "@/*": ["*"]
     },
     "outDir": "./dist",
@@ -30,6 +30,6 @@
     "resolveJsonModule": true,
     "incremental": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
