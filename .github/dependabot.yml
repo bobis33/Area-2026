@@ -19,7 +19,7 @@ updates:
 
   - package-ecosystem: "docker"
     directories:
-      - "/server"
+      - "/packages/server"
       - "/packages/web"
       - "/packages/mobile"
     schedule:
@@ -54,7 +54,7 @@ updates:
 
   - package-ecosystem: "npm"
     directories:
-      - "/server"
+      - "/packages/server"
       - "/packages/web"
       - "/packages/mobile"
       - "/packages/ui"
