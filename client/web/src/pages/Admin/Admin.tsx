@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { Link, Navigate } from 'react-router-dom';
-import { get, put, del } from '@/services/api.ts';
-import './Admin.css';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate } from "react-router-dom";
+import { get, put, del } from "@/services/api.ts";
+import "./Admin.css";
 
 interface User {
   id: number;
@@ -14,7 +14,7 @@ interface User {
 }
 
 export default function Admin() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export default function Admin() {
   const [deletingUserId, setDeletingUserId] = useState<number | null>(null);
 
   // Check if user is admin
-  if (user?.role !== 'admin') {
+  if (user?.role !== "admin") {
     return <Navigate to="/" replace />;
   }
 
@@ -34,39 +34,41 @@ export default function Admin() {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        throw new Error('No authentication token found');
+        throw new Error("No authentication token found");
       }
-      const usersData = await get<User[]>('/users', token);
+      const usersData = await get<User[]>("/users", token);
       setUsers(usersData);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to load users';
+        err instanceof Error ? err.message : "Failed to load users";
       setError(errorMessage);
-      console.error('Error loading users:', err);
+      console.error("Error loading users:", err);
     } finally {
       setLoading(false);
     }
   };
 
   const handlePromoteUser = async (userId: number) => {
-    if (!window.confirm('Are you sure you want to promote this user to admin?')) {
+    if (
+      !window.confirm("Are you sure you want to promote this user to admin?")
+    ) {
       return;
     }
 
     try {
       setUpdatingUserId(userId);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        throw new Error('No authentication token found');
+        throw new Error("No authentication token found");
       }
-      await put(`/users/${userId}`, { role: 'admin' }, token);
+      await put(`/users/${userId}`, { role: "admin" }, token);
       await loadUsers();
-      alert('User promoted to admin successfully');
+      alert("User promoted to admin successfully");
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to promote user';
+        err instanceof Error ? err.message : "Failed to promote user";
       alert(`Error: ${errorMessage}`);
     } finally {
       setUpdatingUserId(null);
@@ -74,22 +76,24 @@ export default function Admin() {
   };
 
   const handleDemoteUser = async (userId: number) => {
-    if (!window.confirm('Are you sure you want to demote this admin to user?')) {
+    if (
+      !window.confirm("Are you sure you want to demote this admin to user?")
+    ) {
       return;
     }
 
     try {
       setUpdatingUserId(userId);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        throw new Error('No authentication token found');
+        throw new Error("No authentication token found");
       }
-      await put(`/users/${userId}`, { role: 'user' }, token);
+      await put(`/users/${userId}`, { role: "user" }, token);
       await loadUsers();
-      alert('Admin demoted to user successfully');
+      alert("Admin demoted to user successfully");
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to demote user';
+        err instanceof Error ? err.message : "Failed to demote user";
       alert(`Error: ${errorMessage}`);
     } finally {
       setUpdatingUserId(null);
@@ -97,22 +101,26 @@ export default function Admin() {
   };
 
   const handleRevokeUser = async (userId: number) => {
-    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this user? This action cannot be undone.",
+      )
+    ) {
       return;
     }
 
     try {
       setDeletingUserId(userId);
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        throw new Error('No authentication token found');
+        throw new Error("No authentication token found");
       }
       await del(`/users/${userId}`, token);
       await loadUsers();
-      alert('User deleted successfully');
+      alert("User deleted successfully");
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to delete user';
+        err instanceof Error ? err.message : "Failed to delete user";
       alert(`Error: ${errorMessage}`);
     } finally {
       setDeletingUserId(null);
@@ -121,26 +129,6 @@ export default function Admin() {
 
   return (
     <div className="admin-container">
-      <nav className="admin-nav">
-        <Link to="/" className="nav-logo">
-          AREA
-        </Link>
-        <div className="nav-links">
-          <Link to="/" className="nav-link">
-            Home
-          </Link>
-          <Link to="/area" className="nav-link">
-            Area
-          </Link>
-          <Link to="/admin" className="nav-link nav-link-active">
-            Admin
-          </Link>
-          <button onClick={logout} className="btn btn-logout-nav">
-            Logout
-          </button>
-        </div>
-      </nav>
-
       <div className="admin-content">
         <header className="admin-header">
           <h1 className="admin-title">Admin Panel</h1>
@@ -151,7 +139,11 @@ export default function Admin() {
         <section className="admin-section">
           <div className="section-header">
             <h2 className="section-title">User Management</h2>
-            <button onClick={loadUsers} className="btn btn-refresh" disabled={loading}>
+            <button
+              onClick={loadUsers}
+              className="btn btn-refresh"
+              disabled={loading}
+            >
               🔄 Refresh
             </button>
           </div>
@@ -197,7 +189,7 @@ export default function Admin() {
                     <tr key={u.id}>
                       <td>{u.id}</td>
                       <td>{u.email}</td>
-                      <td>{u.name || '-'}</td>
+                      <td>{u.name || "-"}</td>
                       <td>
                         <span className={`role-badge role-${u.role}`}>
                           {u.role}
@@ -209,32 +201,38 @@ export default function Admin() {
                       </td>
                       <td>
                         <div className="action-buttons">
-                          {u.role === 'user' ? (
+                          {u.role === "user" ? (
                             <button
                               onClick={() => handlePromoteUser(u.id)}
                               className="btn btn-action btn-promote"
-                              disabled={updatingUserId === u.id || u.id === user?.id}
+                              disabled={
+                                updatingUserId === u.id || u.id === user?.id
+                              }
                               title="Promote to admin"
                             >
-                              {updatingUserId === u.id ? '⏳' : '⬆️'}
+                              {updatingUserId === u.id ? "⏳" : "⬆️"}
                             </button>
                           ) : (
                             <button
                               onClick={() => handleDemoteUser(u.id)}
                               className="btn btn-action btn-demote"
-                              disabled={updatingUserId === u.id || u.id === user?.id}
+                              disabled={
+                                updatingUserId === u.id || u.id === user?.id
+                              }
                               title="Demote to user"
                             >
-                              {updatingUserId === u.id ? '⏳' : '⬇️'}
+                              {updatingUserId === u.id ? "⏳" : "⬇️"}
                             </button>
                           )}
                           <button
                             onClick={() => handleRevokeUser(u.id)}
                             className="btn btn-action btn-delete"
-                            disabled={deletingUserId === u.id || u.id === user?.id}
+                            disabled={
+                              deletingUserId === u.id || u.id === user?.id
+                            }
                             title="Delete user"
                           >
-                            {deletingUserId === u.id ? '⏳' : '🗑️'}
+                            {deletingUserId === u.id ? "⏳" : "🗑️"}
                           </button>
                         </div>
                       </td>
