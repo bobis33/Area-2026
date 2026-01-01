@@ -5,6 +5,8 @@
     "target": "ES2024",
     "moduleResolution": "node",
     "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "declaration": true,

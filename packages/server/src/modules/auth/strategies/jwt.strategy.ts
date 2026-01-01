@@ -6,15 +6,16 @@ import { AuthService } from '@modules/auth/auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly authService: AuthService,
-  ) {
+  constructor(authService: AuthService, configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get<string>('JWT_SECRET') || '',
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('JWT_SECRET') ?? '',
     });
+    this.authService = authService;
   }
+
+  private readonly authService: AuthService;
 
   async validate(payload: any) {
     return this.authService.findById(payload.sub);
