@@ -15,8 +15,8 @@ on:
 
 jobs:
 
-  build:
-    name: ''
+  build-docker-containers:
+    name: 'Build and run Docker containers'
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -28,14 +28,15 @@ jobs:
       PROJECT_NAME: area
     steps:
 
-      - uses: actions/checkout@v6.0.1
+      - name: 'Checkout repository'
+        uses: actions/checkout@v6.0.1
         with:
           ref: ${{ github.ref }}
           repository: '${{ github.repository }}'
           fetch-depth: 1
           submodules: false
 
-      - name: Create .env file
+      - name: 'Create .env file'
         run: |
           echo "VERSION=0.0.0" >> .env
           echo "PROJECT_NAME=area" >> .env
@@ -68,13 +69,13 @@ jobs:
           
           echo "JWT_SECRET=jwt-secret-key" >> .env
 
-      - name: Build
+      - name: 'Build'
         run: docker compose build --progress plain --no-cache area_service_postgresql area_service_server area_service_client_web
 
-      - name: Run
+      - name: 'Run'
         run: docker compose up -d area_service_postgresql area_service_server area_service_client_web
 
-      - name: Check containers status
+      - name: 'Check containers status'
         run: |
           set -e
           echo "Containers status:"
