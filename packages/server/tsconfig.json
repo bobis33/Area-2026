@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "ES2023",
+    "target": "ES2024",
     "moduleResolution": "node",
     "declaration": true,
     "removeComments": true,
@@ -21,12 +21,10 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "strict": true,
-    "ESModuleInterop": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "strictBindCallApply": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,

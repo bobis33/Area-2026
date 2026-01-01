@@ -1,7 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
+    "module": "ESNext",
+    "target": "ES2024",
+    "moduleResolution": "node",
+    "strict": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "declaration": true,
@@ -12,5 +15,6 @@
       "@area/ui/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

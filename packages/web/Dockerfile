@@ -5,7 +5,7 @@ WORKDIR /app
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-COPY ./package.json ./tsconfig.json ./
+COPY ./package.json ./
 COPY ./packages/web ./packages/web
 COPY ./packages/ui ./packages/ui
 
