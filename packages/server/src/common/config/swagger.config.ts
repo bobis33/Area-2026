@@ -1,23 +1,39 @@
 import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { writeFileSync } from 'fs';
-import { join } from 'path';
 
 export function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('AREA API')
-    .setDescription('API documentation for the AREA project')
+    .setDescription(
+      `API documentation for the AREA (Automated REactions for Everyone and Anything) platform.
+    AREA is a platform that allows users to create automated workflows by connecting various services through actions and reactions.`,
+    )
     .setVersion('0.0.1')
-    .addBearerAuth({
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-      description: 'Enter your JWT token',
-    })
+    .setContact(
+      'AREA Team',
+      'https://github.com/bobis33/Area-2026',
+      'elliot.masina@epitech.eu',
+    )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Paste your JWT access token here',
+      },
+      'jwt',
+    )
+    .addTag('auth', 'Authentication and authorization')
+    .addTag('users', 'User management')
+    .addTag('areas', 'Workflow (AREA) management')
+    .addTag('health', 'Health check')
+    .addTag('meta', 'API metadata')
+    .setLicense(
+      'MIT',
+      'https://github.com/bobis33/Area-2026/blob/main/LICENSE.md',
+    )
+
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  const outputPath = join(process.cwd(), 'openapi.json');
-  writeFileSync(outputPath, JSON.stringify(document, null, 2));
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, SwaggerModule.createDocument(app, config));
 }

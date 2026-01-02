@@ -19,7 +19,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 
-@ApiTags('Area')
+@ApiTags('areas')
 @Controller('areas')
 export class AreaController {
   constructor(private readonly areaService: AreaService) {}
