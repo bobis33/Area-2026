@@ -1,8 +1,0 @@
-dist
-node_modules
-.git
-
-eslint.config.mjs
-.prettierrc
-README.md
-.env

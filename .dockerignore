@@ -1,14 +1,17 @@
 .idea
 .vscode
 
-documentation
-scripts
-node_modules
-build
-shared
-dist
 .git
 .github
+.expo
+assets
+build
+dist
+documentation
+node_modules
+postgresql
+scripts
+shared
 
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
@@ -16,6 +19,9 @@ gitleaks.toml
 LICENSE.md
 README.md
 SECURITY.md
+*eslint*
 *-lock.json
+*-env.d.ts
 .gitignore
 .env
+.prettierrc
