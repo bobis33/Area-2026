@@ -12,6 +12,7 @@ node_modules
 postgresql
 scripts
 shared
+tests
 
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
@@ -19,6 +20,7 @@ gitleaks.toml
 LICENSE.md
 README.md
 SECURITY.md
+*jest*
 *eslint*
 *-lock.json
 *-env.d.ts
