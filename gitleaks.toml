@@ -7,5 +7,6 @@ paths = [
   '**/tests/',
   '*.md',
   '*.toml',
-  '*.yml'
+  '*.yml',
+  '*.json',
 ]

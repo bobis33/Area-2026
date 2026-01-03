@@ -2,7 +2,7 @@ FROM node:25-slim AS node-deps
 
 WORKDIR /app
 
-COPY ./package.json ./tsconfig.json ./
+COPY ./package.json ./
 COPY ./packages/mobile/package.json ./packages/mobile/package.json
 COPY ./packages/ui/package.json ./packages/ui/package.json
 

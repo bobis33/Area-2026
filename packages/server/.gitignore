@@ -1,2 +1,1 @@
-openapi.json
-/prisma/generated/*
+/prisma/generated

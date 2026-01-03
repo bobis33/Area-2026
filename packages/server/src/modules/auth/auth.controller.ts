@@ -32,7 +32,7 @@ import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
 import { SpotifyAuthGuard } from '@modules/auth/guards/spotify-auth.guard';
 import { GitlabAuthGuard } from '@modules/auth/guards/gitlab-auth.guard';
 
-@ApiTags('Authentication')
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   private readonly enabledProviders: OAuthProvider[];
