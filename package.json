@@ -43,6 +43,7 @@
     "web:build": "npm --workspace packages/web run build",
     "web:lint": "npm --workspace packages/web run lint",
     "web:start": "npm --workspace packages/web run dev",
+    "web:test": "npm --workspace packages/web run test",
     "packages:ui:build": "npm --workspace packages/ui run build"
   }
 }

@@ -1,5 +1,5 @@
 name: 'CI - Build'
-run-name: 'Build - "${{ github.ref_name }}"'
+run-name: 'Build & Test - "${{ github.ref_name }}"'
 permissions:
   contents: read
 on:
@@ -141,9 +141,9 @@ jobs:
             build: npm i --workspace packages/server && npm run server:prisma:generate
             test: npm run server:test
 
-##          - package: web
-##            build: npm i
-##            test: npm run web:test
+          - package: web
+            build: npm i --workspace packages/web && npm i --workspace packages/ui && npm run packages:ui:build
+            test: npm run web:test
 
           - package: mobile
             build: npm i --workspace packages/mobile && npm i --workspace packages/ui && npm run packages:ui:build
@@ -170,7 +170,7 @@ jobs:
       - name: 'Build'
         run: ${{ matrix.build }}
 
-      - name: 'Run tests'
+      - name: 'Run'
         run: ${{ matrix.test }}
         env:
           JWT_SECRET: ${{ env.JWT_SECRET }}

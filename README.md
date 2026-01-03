@@ -2,7 +2,7 @@
 
 # EPITECH | Area
 
-[![CI - Build](https://github.com/bobis33/Area-2026/actions/workflows/area.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/area.yml)
+[![CI - Build & Test](https://github.com/bobis33/Area-2026/actions/workflows/ci.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/ci.yml)
 [![CI - CodeQL](https://github.com/bobis33/Area-2026/actions/workflows/codeql.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/codeql.yml)
 [![CI - Gitleaks](https://github.com/bobis33/Area-2026/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/gitleaks.yml)
 [![CD - Mirror](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml)
