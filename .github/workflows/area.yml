@@ -103,3 +103,90 @@ jobs:
             docker compose ps
             exit 1
           fi
+
+  build-manually-and-test:
+    name: 'Manual build and Test'
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      VERSION: 0.0.0
+      PROJECT_NAME: area
+      MODE: development
+      PORT: 8080
+      JWT_SECRET: jwt-secret-key
+      API_URL: http://localhost:8080
+      POSTGRES_URL: postgresql://area_postgres-user:area_postgres-password@area_postgresql:8000/area_database
+      GOOGLE_CLIENT_ID: a
+      GOOGLE_CLIENT_SECRET: a
+      GOOGLE_CLIENT_CALLBACK_URL: http://localhost:8080/auth/google/callback
+      GITHUB_CLIENT_ID: a
+      GITHUB_CLIENT_SECRET: a
+      GITHUB_CLIENT_CALLBACK_URL: http://localhost:8080/auth/github/callback
+      DISCORD_CLIENT_ID: a
+      DISCORD_CLIENT_SECRET: a
+      DISCORD_CLIENT_CALLBACK_URL: http://localhost:8080/auth/discord/callback
+      SPOTIFY_CLIENT_ID: a
+      SPOTIFY_CLIENT_SECRET: a
+      SPOTIFY_CLIENT_CALLBACK_URL: http://localhost:8080/auth/spotify/callback
+      GITLAB_CLIENT_ID: a
+      GITLAB_CLIENT_SECRET: a
+      GITLAB_CLIENT_CALLBACK_URL: http://localhost:8080/auth/gitlab/callback
+      FRONTEND_URLS: http://localhost:8081,http://localhost:8082
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: server
+            build: npm i --workspace packages/server && npm run server:prisma:generate
+            test: npm run server:test
+
+##          - package: web
+##            build: npm i
+##            test: npm run web:test
+
+          - package: mobile
+            build: npm i --workspace packages/mobile && npm i --workspace packages/ui && npm run packages:ui:build
+            test: npm run mobile:test
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    steps:
+
+      - name: 'Checkout repository'
+        uses: actions/checkout@v6.0.1
+        with:
+          ref: ${{ github.ref }}
+          repository: '${{ github.repository }}'
+          fetch-depth: 1
+          submodules: false
+
+      - name: 'Set up Node.js'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 25.x
+
+      - name: 'Build'
+        run: ${{ matrix.build }}
+
+      - name: 'Run tests'
+        run: ${{ matrix.test }}
+        env:
+          JWT_SECRET: ${{ env.JWT_SECRET }}
+          FRONTEND_URLS: ${{ env.FRONTEND_URLS }}
+          DISCORD_CLIENT_ID: ${{ env.DISCORD_CLIENT_ID }}
+          DISCORD_CLIENT_SECRET: ${{ env.DISCORD_CLIENT_SECRET }}
+          DISCORD_CLIENT_CALLBACK_URL: ${{ env.DISCORD_CLIENT_CALLBACK_URL }}
+          GOOGLE_CLIENT_ID: ${{ env.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ env.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CLIENT_CALLBACK_URL: ${{ env.GOOGLE_CLIENT_CALLBACK_URL }}
+          GITHUB_CLIENT_ID: ${{ env.GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ env.GITHUB_CLIENT_SECRET }}
+          GITHUB_CLIENT_CALLBACK_URL: ${{ env.GITHUB_CLIENT_CALLBACK_URL }}
+          SPOTIFY_CLIENT_ID: ${{ env.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ env.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_CLIENT_CALLBACK_URL: ${{ env.SPOTIFY_CLIENT_CALLBACK_URL }}
+          GITLAB_CLIENT_ID: ${{ env.GITLAB_CLIENT_ID }}
+          GITLAB_CLIENT_SECRET: ${{ env.GITLAB_CLIENT_SECRET }}
+          GITLAB_CLIENT_CALLBACK_URL: ${{ env.GITLAB_CLIENT_CALLBACK_URL }}
