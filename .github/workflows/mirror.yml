@@ -13,7 +13,7 @@ jobs:
   mirror:
     permissions:
       contents: write
-    name: ''
+    name: 'Mirror to Epitech Repository'
     if: github.actor != 'dependabot[bot]'
     timeout-minutes: 15
     runs-on: ubuntu-24.04
@@ -22,26 +22,27 @@ jobs:
         shell: bash
     steps:
 
-      - uses: actions/checkout@v6.0.1
+      - name: 'Checkout repository'
+        uses: actions/checkout@v6.0.1
         with:
           ref: ${{ github.ref }}
           repository: '${{ github.repository }}'
           fetch-depth: 0
           submodules: true
 
-      - name: Configure Git
+      - name: 'Configure Git'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "actions@github.com"
 
-      - name: Setup SSH
+      - name: 'Setup SSH'
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.PRIVATE_REPO_PAT }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      - name: Mirror push
+      - name: 'Mirror to Epitech Repository'
         env:
           INPUT_TARGET_REPO_URL: "git@github.com:EpitechPGE3-2025/G-DEV-500-BDX-5-2-area-4.git"
           INPUT_SSH_USERNAME: git

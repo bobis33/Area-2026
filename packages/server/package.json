@@ -22,7 +22,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --forceExit",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -39,7 +39,6 @@
     "@nestjs/swagger": "^11.2.3",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
-    "@types/passport-jwt": "^4.0.1",
     "bcryptjs": "^3.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
@@ -74,6 +73,7 @@
     "@types/passport-discord": "^0.1.15",
     "@types/passport-github2": "^1.2.9",
     "@types/passport-google-oauth20": "^2.0.17",
+    "@types/passport-jwt": "^4.0.1",
     "@types/passport-oauth2": "^1.8.0",
     "@types/passport-spotify": "^2.0.4",
     "@types/pg": "^8.16.0",
@@ -81,7 +81,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
-    "globals": "^16.5.0",
+    "globals": "^17.0.0",
     "jest": "^30.2.0",
     "prettier": "^3.7.4",
     "prisma": "^7.2.0",
@@ -96,12 +96,21 @@
   },
   "jest": {
     "moduleFileExtensions": [
-      "js",
       "json",
-      "ts"
+      "ts",
+      "js"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "rootDir": ".",
+    "testRegex": ".*\\.*spec\\.ts$",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^@common/(.*)$": "<rootDir>/src/common/$1",
+      "^@decorators/(.*)$": "<rootDir>/src/decorators/$1",
+      "^@modules/(.*)$": "<rootDir>/src/modules/$1",
+      "^@dto/(.*)$": "<rootDir>/src/dto/$1",
+      "^@interfaces/(.*)$": "<rootDir>/src/interfaces/$1",
+      "^@pcg/(.*)$": "<rootDir>/prisma/generated/$1"
+    },
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

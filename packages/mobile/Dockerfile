@@ -2,11 +2,11 @@ FROM node:25-slim AS node-deps
 
 WORKDIR /app
 
-COPY ./package.json ./tsconfig.json ./
+COPY ./package.json ./
 COPY ./packages/mobile/package.json ./packages/mobile/package.json
 COPY ./packages/ui/package.json ./packages/ui/package.json
 
-RUN npm i --workspace packages/mobile && npm i --workspace packages/ui
+RUN npm i --workspace packages/mobile && npm i --workspace packages/ui && npm cache clean --force
 
 FROM node:25-slim AS expo-prebuild
 

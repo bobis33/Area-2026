@@ -2,7 +2,7 @@
 
 # EPITECH | Area
 
-[![CI - Build](https://github.com/bobis33/Area-2026/actions/workflows/area.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/area.yml)
+[![CI - Build & Test](https://github.com/bobis33/Area-2026/actions/workflows/ci.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/ci.yml)
 [![CI - CodeQL](https://github.com/bobis33/Area-2026/actions/workflows/codeql.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/codeql.yml)
 [![CI - Gitleaks](https://github.com/bobis33/Area-2026/actions/workflows/gitleaks.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/gitleaks.yml)
 [![CD - Mirror](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml)
@@ -110,7 +110,7 @@ Then install dependencies and generate prisma client:
 ```bash
 npm i ## Install dependencies
 npm run server:prisma:generate ## Run migrations
-npm run packages:ui:build ## Build UI package
+npm run ui:build ## Build UI package
 ```
 
 Create .env files in each project folder:
@@ -124,15 +124,15 @@ POSTGRES_DB="${PROJECT_NAME}_database"
 POSTGRES_USER="${PROJECT_NAME}_postgres-user"
 POSTGRES_PASSWORD="${PROJECT_NAME}_postgres-password"
 POSTGRES_CONTAINER_PORT=8000
-POSTGRES_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:${POSTGRES_CONTAINER_PORT}/${POSTGRES_DB}"
+POSTGRES_URL="postgresql://area_postgres-user:area_postgres-password@localhost:8000/area_database"
 
 GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
-GOOGLE_CALLBACK_URL=""
+GOOGLE_CLIENT_CALLBACK_URL=""
 
 GITHUB_CLIENT_ID=""
 GITHUB_CLIENT_SECRET=""
-GITHUB_CALLBACK_URL=""
+GITHUB_CLIENT_CALLBACK_URL=""
 
 DISCORD_CLIENT_ID=""
 DISCORD_CLIENT_SECRET=""
@@ -168,8 +168,8 @@ npm run server:start ## run server
 npm run web:start ## run web frontend
 npm run mobile:start ## run mobile frontend
 ```
-
-For more information look the [package.json](https://github.com/bobis33/Area-2026/blob/main/package.json)
+> [!INFO]
+> For more information look the [package.json](https://github.com/bobis33/Area-2026/blob/main/package.json)
 
 ## Documentation
 
@@ -182,7 +182,7 @@ Please review our [Security Policy](https://github.com/bobis33/Area-2026/blob/ma
 
 
 ## Contributing
-➡️ Want to contribute? See [contributing guidelines](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
+Want to contribute? See [contributing guidelines](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/bobis33/Area-2026/blob/main//LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [License](https://github.com/bobis33/Area-2026/blob/main//LICENSE.md) file for details.

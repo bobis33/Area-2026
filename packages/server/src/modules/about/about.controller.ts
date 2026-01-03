@@ -9,7 +9,7 @@ import {
 } from '@common/utils/services.service';
 import { ActionsRegistry } from '@modules/area/actions/actions-registry';
 
-@ApiTags('About')
+@ApiTags('meta')
 @Controller('about.json')
 export class AboutController {
   @Get()

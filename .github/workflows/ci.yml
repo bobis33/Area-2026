@@ -1,0 +1,192 @@
+name: 'CI - Build & Test'
+run-name: 'Build & Test - "${{ github.ref_name }}"'
+permissions:
+  contents: read
+on:
+  push:
+    branches:
+      - "main"
+
+  pull_request:
+    branches:
+      - "**"
+
+  workflow_dispatch:
+
+jobs:
+
+  build-docker-containers:
+    name: 'Build and run Docker containers'
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    env:
+      PROJECT_NAME: area
+    steps:
+
+      - name: 'Checkout repository'
+        uses: actions/checkout@v6.0.1
+        with:
+          ref: ${{ github.ref }}
+          repository: '${{ github.repository }}'
+          fetch-depth: 1
+          submodules: false
+
+      - name: 'Create .env file'
+        run: |
+          echo "VERSION=0.0.0" >> .env
+          echo "PROJECT_NAME=area" >> .env
+          echo "MODE=development" >> .env
+          
+          echo "API_CONTAINER_PORT=8080" >> .env
+          echo "WEB_CONTAINER_PORT=8081" >> .env
+          echo "MOBILE_CONTAINER_PORT=8082" >> .env
+          
+          echo "API_URL=http://localhost:8080" >> .env
+          echo "FRONTEND_URLS=http://localhost:8081,http://localhost:8082" >> .env
+          
+          echo "POSTGRES_DB=area_database" >> .env
+          echo "POSTGRES_USER=area_postgres-user" >> .env
+          echo "POSTGRES_PASSWORD=area_postgres-password" >> .env
+          echo "POSTGRES_CONTAINER_PORT=8000" >> .env
+          echo "POSTGRES_URL=postgresql://area_postgres-user:area_postgres-password@area_postgresql:8000/area_database" >> .env
+
+          echo "GOOGLE_CLIENT_ID=" >> .env
+          echo "GOOGLE_CLIENT_SECRET=" >> .env
+          echo "GOOGLE_CLIENT_CALLBACK_URL=http://localhost:8080/auth/google/callback" >> .env
+          
+          echo "GITHUB_CLIENT_ID=" >> .env
+          echo "GITHUB_CLIENT_SECRET=" >> .env
+          echo "GITHUB_CLIENT_CALLBACK_URL=http://localhost:8080/auth/github/callback" >> .env
+          
+          echo "DISCORD_CLIENT_ID=" >> .env
+          echo "DISCORD_CLIENT_SECRET=" >> .env
+          echo "DISCORD_CLIENT_CALLBACK_URL=http://localhost:8080/auth/discord/callback" >> .env
+          
+          echo "JWT_SECRET=jwt-secret-key" >> .env
+
+      - name: 'Build'
+        run: docker compose build --progress plain --no-cache area_service_postgresql area_service_server area_service_client_web
+
+      - name: 'Run'
+        run: docker compose up -d area_service_postgresql area_service_server area_service_client_web
+
+      - name: 'Check containers status'
+        run: |
+          set -e
+          echo "Containers status:"
+          docker compose ps
+          
+          echo "⏳ Waiting for containers to become healthy..."
+          TIMEOUT=60
+          INTERVAL=3
+          elapsed=0
+          
+          while [ $elapsed -lt $TIMEOUT ]; do
+            unhealthy=$(docker ps --filter "health=unhealthy" -q | wc -l)
+            starting=$(docker ps --filter "health=starting" -q | wc -l)
+            if [ "$unhealthy" -eq 0 ] && [ "$starting" -eq 0 ]; then
+              echo "✅ All containers are healthy"
+              break
+            fi
+            sleep $INTERVAL
+            elapsed=$((elapsed + INTERVAL))
+            echo "Waiting... (${elapsed}s/${TIMEOUT}s)"
+          done
+          
+          if [ $elapsed -ge $TIMEOUT ]; then
+            echo "❌ Timeout: Some containers are not healthy"
+            docker compose ps
+            exit 1
+          fi
+
+  build-manually-and-test:
+    name: 'Manual build and Test'
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      VERSION: 0.0.0
+      PROJECT_NAME: area
+      MODE: development
+      PORT: 8080
+      JWT_SECRET: jwt-secret-key
+      API_URL: http://localhost:8080
+      POSTGRES_URL: postgresql://area_postgres-user:area_postgres-password@area_postgresql:8000/area_database
+      GOOGLE_CLIENT_ID: a
+      GOOGLE_CLIENT_SECRET: a
+      GOOGLE_CLIENT_CALLBACK_URL: http://localhost:8080/auth/google/callback
+      GITHUB_CLIENT_ID: a
+      GITHUB_CLIENT_SECRET: a
+      GITHUB_CLIENT_CALLBACK_URL: http://localhost:8080/auth/github/callback
+      DISCORD_CLIENT_ID: a
+      DISCORD_CLIENT_SECRET: a
+      DISCORD_CLIENT_CALLBACK_URL: http://localhost:8080/auth/discord/callback
+      SPOTIFY_CLIENT_ID: a
+      SPOTIFY_CLIENT_SECRET: a
+      SPOTIFY_CLIENT_CALLBACK_URL: http://localhost:8080/auth/spotify/callback
+      GITLAB_CLIENT_ID: a
+      GITLAB_CLIENT_SECRET: a
+      GITLAB_CLIENT_CALLBACK_URL: http://localhost:8080/auth/gitlab/callback
+      FRONTEND_URLS: http://localhost:8081,http://localhost:8082
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: server
+            build: npm i --workspace packages/server && npm run server:prisma:generate
+            test: npm run server:test
+
+          - package: web
+            build: npm i --workspace packages/web && npm i --workspace packages/ui && npm run ui:build
+            test: npm run web:test
+
+          - package: mobile
+            build: npm i --workspace packages/mobile && npm i --workspace packages/ui && npm run ui:build
+            test: npm run mobile:test
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    steps:
+
+      - name: 'Checkout repository'
+        uses: actions/checkout@v6.0.1
+        with:
+          ref: ${{ github.ref }}
+          repository: '${{ github.repository }}'
+          fetch-depth: 1
+          submodules: false
+
+      - name: 'Set up Node.js'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 25.x
+
+      - name: 'Build'
+        run: ${{ matrix.build }}
+
+      - name: 'Run'
+        run: ${{ matrix.test }}
+        env:
+          JWT_SECRET: ${{ env.JWT_SECRET }}
+          FRONTEND_URLS: ${{ env.FRONTEND_URLS }}
+          DISCORD_CLIENT_ID: ${{ env.DISCORD_CLIENT_ID }}
+          DISCORD_CLIENT_SECRET: ${{ env.DISCORD_CLIENT_SECRET }}
+          DISCORD_CLIENT_CALLBACK_URL: ${{ env.DISCORD_CLIENT_CALLBACK_URL }}
+          GOOGLE_CLIENT_ID: ${{ env.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ env.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CLIENT_CALLBACK_URL: ${{ env.GOOGLE_CLIENT_CALLBACK_URL }}
+          GITHUB_CLIENT_ID: ${{ env.GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ env.GITHUB_CLIENT_SECRET }}
+          GITHUB_CLIENT_CALLBACK_URL: ${{ env.GITHUB_CLIENT_CALLBACK_URL }}
+          SPOTIFY_CLIENT_ID: ${{ env.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ env.SPOTIFY_CLIENT_SECRET }}
+          SPOTIFY_CLIENT_CALLBACK_URL: ${{ env.SPOTIFY_CLIENT_CALLBACK_URL }}
+          GITLAB_CLIENT_ID: ${{ env.GITLAB_CLIENT_ID }}
+          GITLAB_CLIENT_SECRET: ${{ env.GITLAB_CLIENT_SECRET }}
+          GITLAB_CLIENT_CALLBACK_URL: ${{ env.GITLAB_CLIENT_CALLBACK_URL }}

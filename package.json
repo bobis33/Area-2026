@@ -33,15 +33,17 @@
   ],
   "scripts": {
     "mobile:lint": "npm --workspace packages/mobile run lint",
-    "mobile:build": "",
     "mobile:start": "npm --workspace packages/mobile run start",
+    "mobile:test": "npm --workspace packages/mobile run test",
+    "server:build": "npm --workspace packages/server run build",
     "server:lint": "npm --workspace packages/server run lint",
     "server:start": "npm --workspace packages/server run start",
+    "server:test": "npm --workspace packages/server run test",
     "server:prisma:generate": "npm --workspace packages/server run prisma:generate",
-    "server:build": "npm --workspace packages/server run build",
     "web:build": "npm --workspace packages/web run build",
     "web:lint": "npm --workspace packages/web run lint",
     "web:start": "npm --workspace packages/web run dev",
-    "packages:ui:build": "npm --workspace packages/ui run build"
+    "web:test": "npm --workspace packages/web run test",
+    "ui:build": "npm --workspace packages/ui run build"
   }
 }

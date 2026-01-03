@@ -16,7 +16,7 @@ on:
 jobs:
 
   scan:
-    name: ''
+    name: 'Scan repository with Gitleaks'
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-24.04
     defaults:
@@ -24,21 +24,22 @@ jobs:
         shell: bash
     steps:
 
-      - uses: actions/checkout@v6.0.1
+      - name: 'Checkout repository'
+        uses: actions/checkout@v6.0.1
         with:
           ref: ${{ github.ref }}
           repository: '${{ github.repository }}'
           fetch-depth: 0
           submodules: true
 
-      - name: Install Gitleaks
+      - name: 'Install Gitleaks'
         run: ./scripts/install-gitleaks.sh
 
-      - name: Run Gitleaks
+      - name: 'Run Gitleaks'
         id: gitleaks
         run: gitleaks detect --redact --report-format=json --report-path=gitleaks-report.json --exit-code=1
 
-      - name: Summary
+      - name: 'Summary'
         if: always()
         run: |
           echo "## Gitleaks Summary" >> $GITHUB_STEP_SUMMARY
