@@ -138,7 +138,7 @@ jobs:
       matrix:
         include:
           - package: server
-            build: npm i --workspace packages/server && npm run server:prisma:generate
+            build: npm i --workspace packages/server && npm run server:build
             test: npm run server:test
 
           - package: web
