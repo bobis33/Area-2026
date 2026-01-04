@@ -1,32 +1,49 @@
-import React from 'react';
-import { Card, type CardProps } from '@area/ui';
+import React from "react";
+import "./WebCard.css";
 
 /**
- * WebCard - Web wrapper for the shared Card component
+ * WebCard - Pure web card component
  *
- * This wraps the Card from @area/ui and adds web-specific features
- * while maintaining visual consistency with the mobile app.
+ * A simple card component for web without React Native dependencies.
  */
-export interface WebCardProps extends CardProps {
+export interface WebCardProps {
   /**
-   * Optional CSS class name (web-specific)
+   * Content of the card
+   */
+  children: React.ReactNode;
+  /**
+   * Optional CSS class name
    */
   className?: string;
   /**
-   * Optional HTML id attribute (web-specific)
+   * Optional HTML id attribute
    */
   id?: string;
+  /**
+   * Optional click handler
+   */
+  onClick?: () => void;
+  /**
+   * Optional inline styles
+   */
+  style?: React.CSSProperties;
 }
 
 export const WebCard: React.FC<WebCardProps> = ({
-  className,
-  id,
   children,
-  ...cardProps
+  className = "",
+  id,
+  onClick,
+  style,
 }) => {
   return (
-    <div className={className} id={id} style={{ display: 'block' }}>
-      <Card {...cardProps}>{children}</Card>
+    <div
+      id={id}
+      className={`web-card ${className}`}
+      onClick={onClick}
+      style={style}
+    >
+      {children}
     </div>
   );
 };
