@@ -8,7 +8,6 @@
 [![CD - Mirror](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml/badge.svg)](https://github.com/bobis33/Area-2026/actions/workflows/mirror.yml)
 [![License](https://img.shields.io/github/license/bobis33/Area-2026.svg)](https://github.com/bobis33/Area-2026/blob/main/LICENSE.md)
 
-
 The **AREA** project is a project that aims to create a platform that allows users to create and manage their own automation scenarios. The platform is composed of three main parts:
 - A **backend** that manages the user's data and the automation scenarios.
 - A **web frontend** that allows users to create and manage their automation scenarios.
@@ -106,10 +105,9 @@ Run postgresSQL container:
 docker compose up -d area_service_postgresql ## Run only Postgres DB
 ```
 
-Then install dependencies and generate prisma client:
+Then install dependencies and build UI package:
 ```bash
 npm i ## Install dependencies
-npm run server:prisma:generate ## Run migrations
 npm run ui:build ## Build UI package
 ```
 
@@ -168,8 +166,8 @@ npm run server:start ## run server
 npm run web:start ## run web frontend
 npm run mobile:start ## run mobile frontend
 ```
-> [!INFO]
-> For more information look the [package.json](https://github.com/bobis33/Area-2026/blob/main/package.json)
+> [!NOTE]
+> For more information, see the [package.json](https://github.com/bobis33/Area-2026/blob/main/package.json).
 
 ## Documentation
 
@@ -179,7 +177,6 @@ npm run mobile:start ## run mobile frontend
 
 ## Security
 Please review our [Security Policy](https://github.com/bobis33/Area-2026/blob/main/SECURITY.md) for more information on reporting security vulnerabilities.
-
 
 ## Contributing
 Want to contribute? See [contributing guidelines](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).

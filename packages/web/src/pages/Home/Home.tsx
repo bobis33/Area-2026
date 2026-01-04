@@ -1,84 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import './Home.css';
 
 export default function Home() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  // If user is authenticated, show dashboard
-  if (isAuthenticated && user) {
-    return (
-      <div className="home-container">
-        <div className="dashboard-container">
-          <div className="dashboard-header">
-            <div>
-              <h1 className="dashboard-title">
-                Welcome back, {user.name || user.email}! 👋
-              </h1>
-              <p className="dashboard-subtitle">
-                You're successfully authenticated
-              </p>
-            </div>
-            <button onClick={logout} className="btn btn-logout">
-              Logout
-            </button>
-          </div>
-
-          <div className="user-info-card">
-            <h2>Your Profile</h2>
-            <div className="user-details">
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-              <p>
-                <strong>Name:</strong> {user.name || 'Not set'}
-              </p>
-              <p>
-                <strong>Role:</strong> {user.role}
-              </p>
-              <p>
-                <strong>Provider:</strong>{' '}
-                {user.provider === 'local'
-                  ? 'Email/Password'
-                  : user.provider.charAt(0).toUpperCase() +
-                    user.provider.slice(1)}
-              </p>
-              <p>
-                <strong>Account created:</strong>{' '}
-                {new Date(user.created_at).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-
-          <section className="features-section dashboard-features">
-            <h2>What's Next?</h2>
-            <div className="feature-grid">
-              <div className="feature-card dashboard-card">
-                <h3>📧 Connect Services</h3>
-                <p>Link your favorite apps and services</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
-              </div>
-              <div className="feature-card dashboard-card">
-                <h3>⚡ Create Actions</h3>
-                <p>Define triggers for your automations</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
-              </div>
-              <div className="feature-card dashboard-card">
-                <h3>🎯 Set Reactions</h3>
-                <p>Choose what happens automatically</p>
-                <button className="btn btn-feature" disabled>
-                  Coming Soon
-                </button>
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
-    );
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   // If user is not authenticated, show landing page

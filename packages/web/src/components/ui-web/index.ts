@@ -6,38 +6,37 @@
  * with the mobile app.
  */
 
-export { WebButton } from './WebButton';
-export type { WebButtonProps } from './WebButton';
+export { WebButton } from "./WebButton";
+export type { WebButtonProps } from "./WebButton";
 
-export { WebInput } from './WebInput';
-export type { WebInputProps } from './WebInput';
+export { WebInput } from "./WebInput";
+export type { WebInputProps } from "./WebInput";
 
-// Temporarily disabled to avoid React Native dependencies
-// export { WebCard } from "./WebCard";
-// export type { WebCardProps } from "./WebCard";
+export { WebCard } from "./WebCard";
+export type { WebCardProps } from "./WebCard";
 
 // export { WebText } from "./WebText";
 // export type { WebTextProps } from "./WebText";
 
 export const colors = {
-  primary: '#1e40af',
-  primaryDark: '#1e3a8a',
-  primaryLight: '#3b82f6',
-  white: '#ffffff',
-  black: '#000000',
-  gray50: '#f8fafc',
-  gray100: '#f1f5f9',
-  gray200: '#e2e8f0',
-  gray300: '#cbd5e1',
-  gray400: '#94a3b8',
-  gray500: '#64748b',
-  gray600: '#475569',
-  gray700: '#334155',
-  gray800: '#1e293b',
-  gray900: '#0f172a',
-  success: '#10b981',
-  error: '#ef4444',
-  warning: '#f59e0b',
+  primary: "#1e40af",
+  primaryDark: "#1e3a8a",
+  primaryLight: "#3b82f6",
+  white: "#ffffff",
+  black: "#000000",
+  gray50: "#f8fafc",
+  gray100: "#f1f5f9",
+  gray200: "#e2e8f0",
+  gray300: "#cbd5e1",
+  gray400: "#94a3b8",
+  gray500: "#64748b",
+  gray600: "#475569",
+  gray700: "#334155",
+  gray800: "#1e293b",
+  gray900: "#0f172a",
+  success: "#10b981",
+  error: "#ef4444",
+  warning: "#f59e0b",
 } as const;
 
 export const spacing = {

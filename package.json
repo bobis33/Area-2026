@@ -39,7 +39,6 @@
     "server:lint": "npm --workspace packages/server run lint",
     "server:start": "npm --workspace packages/server run start",
     "server:test": "npm --workspace packages/server run test",
-    "server:prisma:generate": "npm --workspace packages/server run prisma:generate",
     "web:build": "npm --workspace packages/web run build",
     "web:lint": "npm --workspace packages/web run lint",
     "web:start": "npm --workspace packages/web run dev",

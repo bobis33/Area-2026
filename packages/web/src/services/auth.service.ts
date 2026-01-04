@@ -3,9 +3,9 @@
  * Handles all authentication-related business logic
  */
 
-import { get, post } from '@/services/api';
-import type { AuthResponse, LoginCredentials, RegisterData } from '@/types';
-import { setAuthToken, setUser, clearAuthData } from '@/utils/storage';
+import { get, post } from "@/services/api";
+import type { AuthResponse, LoginCredentials, RegisterData } from "@/types";
+import { setAuthToken, setUser, clearAuthData } from "@/utils/storage";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -16,7 +16,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL;
 export async function login(
   credentials: LoginCredentials,
 ): Promise<AuthResponse> {
-  const response = await post<AuthResponse>('/auth/login', credentials);
+  const response = await post<AuthResponse>("/auth/login", credentials);
 
   // Store authentication data
   setAuthToken(response.token);
@@ -30,7 +30,7 @@ export async function login(
  * Stores token and user data in localStorage
  */
 export async function register(data: RegisterData): Promise<AuthResponse> {
-  const response = await post<AuthResponse>('/auth/register', data);
+  const response = await post<AuthResponse>("/auth/register", data);
 
   // Store authentication data
   setAuthToken(response.token);
@@ -44,7 +44,7 @@ export async function register(data: RegisterData): Promise<AuthResponse> {
  * Redirects to the OAuth provider (Google, Discord, GitHub)
  */
 export function loginWithOAuth(
-  provider: 'google' | 'discord' | 'github',
+  provider: "google" | "discord" | "github" | "spotify" | "gitlab",
 ): void {
   window.location.href = `${API_BASE_URL}/auth/${provider}`;
 }
@@ -57,7 +57,7 @@ export function handleOAuthCallback(userParam: string): void {
   const user = JSON.parse(decodeURIComponent(userParam));
 
   if (!user || !user.id || !user.email) {
-    throw new Error('Invalid user data received from OAuth provider');
+    throw new Error("Invalid user data received from OAuth provider");
   }
 
   // OAuth uses session-based auth, so we only store user info
@@ -78,10 +78,10 @@ export function logout(): void {
  */
 export async function getOAuthProviders(): Promise<string[]> {
   try {
-    const response = await get<{ providers: string[] }>('/auth/providers');
+    const response = await get<{ providers: string[] }>("/auth/providers");
     return response.providers;
   } catch (error) {
-    console.error('Failed to fetch OAuth providers:', error);
+    console.error("Failed to fetch OAuth providers:", error);
     return [];
   }
 }
