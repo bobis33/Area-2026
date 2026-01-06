@@ -81,7 +81,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(userData);
       // Navigation will be handled by the useEffect in _layout.tsx
     } catch (error) {
-      console.error('Error handling deep link:', error);
+      // Error handling deep link
     }
   };
 
@@ -93,7 +93,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(response.user);
       // Navigation will be handled by the useEffect in _layout.tsx
     } catch (error) {
-      console.error('Login failed:', error);
       throw error;
     }
   };

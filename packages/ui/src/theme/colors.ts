@@ -11,6 +11,7 @@ export const lightColors = {
   // Surfaces
   surface: '#FFFFFF',
   surfaceMuted: '#F4F4F5',
+  surface0: '#FFFFFF',
 
   // Text
   text: '#222120',
@@ -19,16 +20,21 @@ export const lightColors = {
 
   // Border
   border: '#E2E2E3',
+  borderSubtle: 'rgba(0,0,0,0.08)',
 
   // Primary / brand
   primary: '#3A56D2',
   primarySoft: '#E3E8FF',
   primaryOn: '#FFFFFF',
+  brandPrimary: '#3A56D2',
+  brandOnPrimary: '#FFFFFF',
 
   // Danger / accent
   danger: '#E03434',
   dangerSoft: '#FCE5E5',
   dangerOn: '#FFFFFF',
+  brandDanger: '#E03434',
+  brandOnDanger: '#FFFFFF',
 
   // Status
   success: '#1A9E5B',
@@ -58,56 +64,61 @@ export const lightColors = {
 } as const;
 
 export const darkColors = {
-  // Backgrounds
-  background: '#222120',
-  backgroundAlt: '#2C2B2A',
+  // Backgrounds - Very dark base
+  background: '#060010',
+  backgroundAlt: '#0D0820',
 
-  // Surfaces
-  surface: '#2F2E2D',
-  surfaceMuted: '#3A3938',
+  // Surfaces - Distinct layers for depth
+  surface: '#0D0820',      // Cards, modals (surface1)
+  surfaceMuted: '#14102A', // Inputs, rows (surface2)
+  surface0: '#060010',     // App background (same as background)
 
-  // Text
+  // Text - High contrast for readability
   text: '#FFFFFF',
-  textSecondary: '#D0CFCE',
-  textMuted: '#8C8A89',
+  textSecondary: 'rgba(255,255,255,0.85)',
+  textMuted: 'rgba(255,255,255,0.65)', // WCAG compliant muted text
 
-  // Border
-  border: '#3E3D3C',
+  // Border - Subtle but visible
+  border: 'rgba(255,255,255,0.08)',
+  borderSubtle: 'rgba(255,255,255,0.08)',
 
-  // Primary / brand
+  // Primary / brand - Brand blue
   primary: '#3A56D2',
-  primarySoft: '#27336A',
+  primarySoft: 'rgba(58,86,210,0.15)',
   primaryOn: '#FFFFFF',
+  brandPrimary: '#3A56D2',
+  brandOnPrimary: '#FFFFFF',
 
-  // Danger / accent
+  // Danger / accent - Brand red
   danger: '#E03434',
-  dangerSoft: '#5E2222',
+  dangerSoft: 'rgba(224,52,52,0.15)',
   dangerOn: '#FFFFFF',
+  brandDanger: '#E03434',
+  brandOnDanger: '#FFFFFF',
 
   // Status
   success: '#42CF88',
-  successSoft: '#214635',
+  successSoft: 'rgba(66,207,136,0.15)',
   warning: '#F2A93B',
-  warningSoft: '#4D3A1C',
+  warningSoft: 'rgba(242,169,59,0.15)',
 
   // Tab bar
-  tabBarBackground: '#222120',
-  tabBarBorder: 'rgba(255,255,255,0.05)',
+  tabBarBackground: '#060010',
+  tabBarBorder: 'rgba(255,255,255,0.08)',
   tabIconActive: '#FFFFFF',
-  tabIconInactive: '#8C8A89',
+  tabIconInactive: 'rgba(255,255,255,0.65)',
 
   // Legacy support (for backward compatibility)
   white: '#FFFFFF',
   black: '#000000',
-  gray50: '#2C2B2A',
-  gray100: '#3A3938',
-  gray200: '#3E3D3C',
-  gray300: '#4E4D4C',
-  gray400: '#8C8A89',
-  gray500: '#A3A1A0',
-  gray600: '#B0AFAE',
-  gray700: '#C0BFBE',
-  gray800: '#D0CFCE',
+  gray50: '#0D0820',
+  gray100: '#14102A',
+  gray200: 'rgba(255,255,255,0.08)',
+  gray300: 'rgba(255,255,255,0.12)',
+  gray400: 'rgba(255,255,255,0.45)',
+  gray500: 'rgba(255,255,255,0.65)',
+  gray600: 'rgba(255,255,255,0.85)',
+  gray700: '#FFFFFF',
+  gray800: '#FFFFFF',
   gray900: '#FFFFFF',
 } as const;
-

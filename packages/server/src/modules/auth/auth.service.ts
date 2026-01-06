@@ -12,9 +12,9 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RolesInterface } from '@interfaces/roles.interface';
 import { AuthenticatedUser } from '@interfaces/user.interface';
-import { ConfigService } from '@nestjs/config';
-import { URL } from 'url';
-import { Request, Response } from 'express';
+import {ConfigService} from "@nestjs/config";
+import {URL} from "url";
+import {Request, Response} from "express";
 
 type UserSelect = Pick<
   User,
@@ -87,11 +87,11 @@ export class AuthService {
     }
 
     const isMobile =
-      baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
+        baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
 
     if (!req.user) {
       return res.redirect(
-        `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
+          `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
       );
     }
 
@@ -123,16 +123,12 @@ export class AuthService {
   ): Promise<OAuthValidationResult> {
     try {
       const { email, provider, provider_id } = profile;
-
       if (!email) {
         throw new Error('Email not provided by OAuth provider');
       }
-
       let user = await this.findUserByProviderId(provider, provider_id);
-
       if (!user) {
         const existingUser = await this.findByEmail(email);
-
         if (existingUser) {
           user = await this.linkOAuthProvider(
             existingUser.id,
@@ -142,11 +138,22 @@ export class AuthService {
           );
         }
       }
-
       if (!user) {
         user = await this.createUserFromOAuth(profile, tokens);
+      } else {
+        const existingProviderAccount = await this.prisma.providerAccount.findFirst({
+          where: {
+            user_id: user.id,
+            provider: provider.toString(),
+            provider_id,
+          },
+        });
+        if (existingProviderAccount) {
+          await this.updateProviderAccountLastUsed(provider, provider_id, tokens);
+        } else {
+          await this.linkOAuthProvider(user.id, provider, provider_id, tokens);
+        }
       }
-
       return this.mapToAuthenticatedUser(user);
     } catch (error) {
       console.error('[AuthService] validateOAuthLogin error:', error);
@@ -254,16 +261,26 @@ export class AuthService {
     provider_id: string,
     tokens: OAuthTokens,
   ): Promise<UserSelect | null> {
-    await this.prisma.providerAccount.create({
-      data: {
+    const existingAccount = await this.prisma.providerAccount.findFirst({
+      where: {
+        user_id,
         provider: provider.toString(),
         provider_id,
-        user_id,
-        access_token: tokens.accessToken,
-        refresh_token: tokens.refreshToken ?? null,
       },
     });
-
+    if (!existingAccount) {
+      await this.prisma.providerAccount.create({
+        data: {
+          provider: provider.toString(),
+          provider_id,
+          user_id,
+          access_token: tokens.accessToken,
+          refresh_token: tokens.refreshToken ?? null,
+        },
+      });
+    } else {
+      await this.updateProviderAccountLastUsed(provider, provider_id, tokens);
+    }
     return this.prisma.user.findUnique({
       where: { id: user_id },
       select: {
@@ -273,6 +290,23 @@ export class AuthService {
         role: true,
         created_at: true,
         updated_at: true,
+      },
+    });
+  }
+
+  private async updateProviderAccountLastUsed(
+    provider: OAuthProvider,
+    provider_id: string,
+    tokens: OAuthTokens,
+  ): Promise<void> {
+    await this.prisma.providerAccount.updateMany({
+      where: {
+        provider: provider.toString(),
+        provider_id,
+      },
+      data: {
+        access_token: tokens.accessToken,
+        refresh_token: tokens.refreshToken ?? null,
       },
     });
   }
@@ -357,10 +391,14 @@ export class AuthService {
     const accounts = await this.prisma.providerAccount.findMany({
       where: { user_id },
     });
-
-    return accounts.map(
-      (account) =>
-        OAuthProvider[account.provider as keyof typeof OAuthProvider],
-    );
+    const providers: OAuthProvider[] = [];
+    for (const account of accounts) {
+      const providerStr = account.provider.toLowerCase();
+      const provider = providerStr as OAuthProvider;
+      if (Object.values(OAuthProvider).includes(provider)) {
+        providers.push(provider);
+      }
+    }
+    return providers;
   }
 }

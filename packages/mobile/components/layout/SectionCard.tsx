@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Card, Text } from '@area/ui';
+import { Card } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { spacing, borderRadius } from '@area/ui';
 import type { CardProps } from '@area/ui';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 interface SectionCardProps extends Omit<CardProps, 'children'> {
   title?: string;
@@ -16,11 +18,21 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   children,
   ...cardProps
 }) => {
+  const { currentTheme } = useAppTheme();
+
   return (
     <Card
       padding="md"
       elevated
-      style={[styles.card, cardProps.style] as any}
+      style={[
+        styles.card,
+        {
+          backgroundColor: currentTheme.colors.surface,
+          borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+          borderWidth: 1,
+        },
+        cardProps.style,
+      ] as any}
       {...cardProps}
     >
       {(title || subtitle) && (

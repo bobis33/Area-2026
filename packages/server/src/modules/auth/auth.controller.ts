@@ -9,6 +9,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -25,14 +26,14 @@ import {
   RegisterDto,
 } from '@dto/auth.dto';
 import { getEnabledProviders } from '@modules/auth/config/oauth-providers.config';
-import { AuthService, RequestWithUser } from '@modules/auth/auth.service';
+import {AuthService, RequestWithUser} from '@modules/auth/auth.service';
 import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
 import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
 import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
 import { SpotifyAuthGuard } from '@modules/auth/guards/spotify-auth.guard';
 import { GitlabAuthGuard } from '@modules/auth/guards/gitlab-auth.guard';
 
-@ApiTags('auth')
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   private readonly enabledProviders: OAuthProvider[];
@@ -81,6 +82,7 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.FOUND })
   spotifyAuth(): void {}
 
+
   @Get('discord/callback')
   @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })
@@ -122,14 +124,11 @@ export class AuthController {
   }
 
   @Get('providersLinked')
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Get linked OAuth providers for authenticated user',
-  })
+  @ApiOperation({ summary: 'Get linked OAuth providers for authenticated user' })
   @ApiResponse({ status: HttpStatus.OK, type: [String] })
-  async getLinkedProviders(
-    @Req() req: RequestWithUser,
-  ): Promise<{ providers: OAuthProvider[] }> {
+  async getLinkedProviders(@Req() req: RequestWithUser): Promise<{ providers: OAuthProvider[] }> {
     if (!req.user) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }

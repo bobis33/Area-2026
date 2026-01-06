@@ -5,7 +5,7 @@
     "owner": "area-epitech-2026",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/main_logo.png",
+    "icon": "./assets/images/icon.svg",
     "scheme": "area",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

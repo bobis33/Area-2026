@@ -63,6 +63,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="area/create"
+        options={{
+          title: 'Create',
+          tabBarIcon: ({ color, focused }) => (
+            <IconSymbol
+              size={focused ? 26 : 24}
+              name="plus.circle.fill"
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',

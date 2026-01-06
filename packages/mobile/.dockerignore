@@ -1,0 +1,11 @@
+dist
+node_modules
+.expo
+.git
+
+eslint.config.cjs
+expo-env.d.ts
+.gitignore
+.prettierrc
+README.md
+.env
