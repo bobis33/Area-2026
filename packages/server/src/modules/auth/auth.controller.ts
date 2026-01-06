@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -205,5 +206,28 @@ export class AuthController {
         });
       });
     });
+  }
+
+  @Post('unlink/:provider')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Unlink OAuth provider from authenticated user' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async unlinkProvider(
+    @Req() req: RequestWithUser,
+    @Param('provider') provider: string,
+  ): Promise<{ message: string }> {
+    if (!req.user) {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+    const providerLower = provider.toLowerCase();
+    if (!this.enabledProviders.includes(providerLower as OAuthProvider)) {
+      throw new HttpException('Invalid provider', HttpStatus.BAD_REQUEST);
+    }
+    await this.authService.unlinkProvider(
+      req.user.id,
+      providerLower as OAuthProvider,
+    );
+    return { message: `Provider ${provider} unlinked successfully` };
   }
 }

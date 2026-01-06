@@ -401,4 +401,13 @@ export class AuthService {
     }
     return providers;
   }
+
+  async unlinkProvider(user_id: number, provider: OAuthProvider): Promise<void> {
+    await this.prisma.providerAccount.deleteMany({
+      where: {
+        user_id,
+        provider: provider.toString(),
+      },
+    });
+  }
 }

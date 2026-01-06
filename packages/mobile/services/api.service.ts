@@ -293,7 +293,11 @@ class ApiService {
       },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) throw new Error('Failed to create area');
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const errorMessage = errorData.message || errorData.error || `HTTP error! status: ${res.status}`;
+      throw new Error(errorMessage);
+    }
     return res.json();
   }
 
@@ -387,6 +391,33 @@ class ApiService {
       return Array.isArray(data.providers) ? data.providers : [];
     } catch (error) {
       return [];
+    }
+  }
+
+  /**
+   * Unlink an OAuth provider from authenticated user
+   * @param provider - Provider name to unlink
+   * @param token - JWT authentication token
+   * @returns Promise<void>
+   */
+  async unlinkProvider(provider: string, token: string): Promise<void> {
+    try {
+      const response = await fetch(`${this.baseUrl}/auth/unlink/${provider}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
+      }
+    } catch (error) {
+      throw error;
     }
   }
 }

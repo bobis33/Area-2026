@@ -19,7 +19,7 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
   showDot = false,
   style,
 }) => {
-  const { currentTheme } = useAppTheme();
+  const { currentTheme, isDark } = useAppTheme();
 
   const getBadgeStyles = (): ViewStyle => {
     const base: ViewStyle = {
@@ -33,18 +33,26 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
 
     switch (variant) {
       case 'active':
-      case 'connected':
         return {
           ...base,
           backgroundColor: currentTheme.colors.primarySoft || `${currentTheme.colors.primary}20`,
         };
+      case 'connected':
+        return {
+          ...base,
+          backgroundColor: currentTheme.colors.successSoft || 'rgba(26,158,91,0.15)',
+        };
       case 'inactive':
-      case 'paused':
         return {
           ...base,
           backgroundColor: currentTheme.colors.surfaceMuted || currentTheme.colors.surface,
           borderWidth: 1,
           borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+        };
+      case 'paused':
+        return {
+          ...base,
+          backgroundColor: currentTheme.colors.dangerSoft || 'rgba(224,52,52,0.15)',
         };
       default:
         return base;
@@ -54,11 +62,13 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
   const getDotColor = (): string => {
     switch (variant) {
       case 'active':
-      case 'connected':
         return currentTheme.colors.primary;
+      case 'connected':
+        return currentTheme.colors.success || (isDark ? '#42CF88' : '#1A9E5B');
       case 'inactive':
-      case 'paused':
         return currentTheme.colors.textMuted || currentTheme.colors.textSecondary;
+      case 'paused':
+        return currentTheme.colors.danger || '#E03434';
       default:
         return currentTheme.colors.primary;
     }
@@ -67,11 +77,13 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
   const getTextColor = (): string => {
     switch (variant) {
       case 'active':
-      case 'connected':
         return currentTheme.colors.primary;
+      case 'connected':
+        return currentTheme.colors.success || (isDark ? '#42CF88' : '#1A9E5B');
       case 'inactive':
-      case 'paused':
         return currentTheme.colors.textMuted || currentTheme.colors.textSecondary;
+      case 'paused':
+        return currentTheme.colors.danger || '#E03434';
       default:
         return currentTheme.colors.primary;
     }

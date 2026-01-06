@@ -64,14 +64,14 @@ export const lightColors = {
 } as const;
 
 export const darkColors = {
-  // Backgrounds - Very dark base
-  background: '#060010',
-  backgroundAlt: '#0D0820',
+  // Backgrounds - Pure black
+  background: '#000000',
+  backgroundAlt: '#000000',
 
   // Surfaces - Distinct layers for depth
-  surface: '#0D0820',      // Cards, modals (surface1)
-  surfaceMuted: '#14102A', // Inputs, rows (surface2)
-  surface0: '#060010',     // App background (same as background)
+  surface: '#0A0A0A',      // Cards, modals (surface1) - slightly lighter for depth
+  surfaceMuted: '#111111', // Inputs, rows (surface2) - slightly lighter
+  surface0: '#000000',     // App background (pure black)
 
   // Text - High contrast for readability
   text: '#FFFFFF',
@@ -103,7 +103,7 @@ export const darkColors = {
   warningSoft: 'rgba(242,169,59,0.15)',
 
   // Tab bar
-  tabBarBackground: '#060010',
+  tabBarBackground: '#000000',
   tabBarBorder: 'rgba(255,255,255,0.08)',
   tabIconActive: '#FFFFFF',
   tabIconInactive: 'rgba(255,255,255,0.65)',
@@ -111,8 +111,8 @@ export const darkColors = {
   // Legacy support (for backward compatibility)
   white: '#FFFFFF',
   black: '#000000',
-  gray50: '#0D0820',
-  gray100: '#14102A',
+  gray50: '#0A0A0A',
+  gray100: '#111111',
   gray200: 'rgba(255,255,255,0.08)',
   gray300: 'rgba(255,255,255,0.12)',
   gray400: 'rgba(255,255,255,0.45)',

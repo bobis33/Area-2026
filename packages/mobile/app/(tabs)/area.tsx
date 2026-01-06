@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity, Switch, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Switch, Alert, Platform } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { MobileText as Text } from '@/components/ui-mobile';
 import { MobileScreen } from '@/components/ui-mobile';
@@ -13,6 +13,15 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { apiService } from '@/services/api.service';
 import { AreaModel } from '@/types/api';
+import { getServiceBrandColors } from '@/utils/areaHelpers';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+import * as Haptics from 'expo-haptics';
+import { API_BASE_URL } from '@/constants/api';
+
+WebBrowser.maybeCompleteAuthSession();
+
+type OAuthProvider = 'github' | 'google' | 'discord' | 'spotify' | 'gitlab';
 
 interface Automation {
   id: string;
@@ -52,6 +61,9 @@ export default function AreaScreen() {
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
   const [linkedProviders, setLinkedProviders] = useState<string[]>([]);
   const [loadingProviders, setLoadingProviders] = useState(false);
+  const [connectingProvider, setConnectingProvider] = useState<string | null>(null);
+  const [unlinkingProvider, setUnlinkingProvider] = useState<string | null>(null);
+  const { handleOAuthRedirect } = useAuth();
 
   const loadAreas = useCallback(async () => {
     if (!token) return;
@@ -182,6 +194,78 @@ export default function AreaScreen() {
     );
   };
 
+  const handleConnectProvider = async (provider: string, e: any) => {
+    e.stopPropagation();
+    if (!token || connectingProvider) return;
+
+    setConnectingProvider(provider);
+
+    try {
+      const redirectUri = AuthSession.makeRedirectUri({
+        path: `auth/${provider.toLowerCase()}/callback`,
+      });
+
+      const oauthUrl = `${API_BASE_URL}/auth/${provider.toLowerCase()}?redirect=${encodeURIComponent(redirectUri)}`;
+
+      const result = await WebBrowser.openAuthSessionAsync(
+        oauthUrl,
+        redirectUri,
+      );
+
+      if (result.type === 'success' && result.url) {
+        handleOAuthRedirect(result.url);
+        // Reload providers after successful connection
+        setTimeout(() => {
+          loadProviders();
+        }, 1000);
+      } else if (result.type === 'locked') {
+        Alert.alert('Error', 'The browser is locked. Please try again.');
+      }
+    } catch (error) {
+      Alert.alert(
+        'Connection Error',
+        `Unable to connect with ${provider}. Please try again.`,
+      );
+    } finally {
+      setConnectingProvider(null);
+    }
+  };
+
+  const handleUnlinkProvider = async (provider: string, e: any) => {
+    e.stopPropagation();
+    if (!token || unlinkingProvider) return;
+
+    Alert.alert(
+      'Disconnect service',
+      `Are you sure you want to disconnect ${provider}? You won't be able to use it in your automations.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Disconnect',
+          style: 'destructive',
+          onPress: async () => {
+            setUnlinkingProvider(provider);
+            try {
+              await apiService.unlinkProvider(provider.toLowerCase(), token);
+              await loadProviders();
+              Alert.alert('Success', `${provider} has been disconnected.`);
+            } catch (error: any) {
+              Alert.alert(
+                'Error',
+                error.message || `Failed to disconnect ${provider}. Please try again.`,
+              );
+            } finally {
+              setUnlinkingProvider(null);
+            }
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <View style={styles.container}>
     <MobileScreen scroll safeArea keyboardAware={false}>
@@ -224,6 +308,8 @@ export default function AreaScreen() {
                 const isConnected = linkedProviders.some(
                   (linked) => String(linked).toLowerCase() === normalizedProvider
                 );
+                const brandColors = getServiceBrandColors(provider);
+                const hasBrandColors = brandColors.backgroundColor !== 'transparent';
                 return (
                   <FadeInView key={provider} delay={100 + index * 50} spring>
                 <AnimatedCard haptic>
@@ -237,7 +323,9 @@ export default function AreaScreen() {
                               style={[
                                 styles.serviceIconContainer,
                                 {
-                                  backgroundColor: currentTheme.colors.surfaceMuted,
+                                  backgroundColor: hasBrandColors && isConnected
+                                    ? brandColors.backgroundColor
+                                    : currentTheme.colors.surfaceMuted,
                                 },
                               ]}
                             >
@@ -245,7 +333,9 @@ export default function AreaScreen() {
                                 service={provider}
                             size={24}
                                 color={
-                                  isConnected
+                                  hasBrandColors && isConnected
+                                    ? brandColors.iconColor
+                                    : isConnected
                                     ? currentTheme.colors.primary
                                     : currentTheme.colors.textMuted
                                 }
@@ -255,12 +345,62 @@ export default function AreaScreen() {
                               {provider.charAt(0).toUpperCase() + provider.slice(1)}
                         </Text>
                       </View>
+                      <View style={styles.serviceRight}>
                           <MobileBadge
                             variant={isConnected ? 'connected' : 'paused'}
                             showDot
                           >
                             {isConnected ? 'Connected' : 'Not connected'}
                           </MobileBadge>
+                          {isConnected ? (
+                            <TouchableOpacity
+                              onPress={(e) => handleUnlinkProvider(provider, e)}
+                              disabled={unlinkingProvider === provider}
+                              style={[
+                                styles.actionButton,
+                                {
+                                  opacity: unlinkingProvider === provider ? 0.5 : 1,
+                                  borderColor: currentTheme.colors.danger,
+                                },
+                              ]}
+                              activeOpacity={0.7}
+                            >
+                              <IconSymbol
+                                name="xmark.circle"
+                                size={20}
+                                color={currentTheme.colors.danger}
+                              />
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity
+                              onPress={(e) => handleConnectProvider(provider, e)}
+                              disabled={connectingProvider === provider}
+                              style={[
+                                styles.actionButton,
+                                {
+                                  opacity: connectingProvider === provider ? 0.5 : 1,
+                                  borderColor: currentTheme.colors.primary,
+                                  backgroundColor: currentTheme.colors.primarySoft,
+                                },
+                              ]}
+                              activeOpacity={0.7}
+                            >
+                              {connectingProvider === provider ? (
+                                <IconSymbol
+                                  name="arrow.clockwise"
+                                  size={20}
+                                  color={currentTheme.colors.primary}
+                                />
+                              ) : (
+                                <IconSymbol
+                                  name="plus.circle"
+                                  size={20}
+                                  color={currentTheme.colors.primary}
+                                />
+                              )}
+                            </TouchableOpacity>
+                          )}
+                      </View>
                     </TouchableOpacity>
                   </SectionCard>
                 </AnimatedCard>
@@ -493,6 +633,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     flex: 1,
+  },
+  serviceRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  actionButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   serviceIconContainer: {
     width: 40,

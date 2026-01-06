@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Alert } from 'react-native';
 import { router } from 'expo-router';
 import { apiService } from '@/services/api.service';
 import { useAuth } from '@/contexts/AuthContext';
@@ -14,6 +15,7 @@ import {
   groupReactionsByService,
   getAllServices,
   validateParams,
+  isParamObject,
 } from '@/utils/areaHelpers';
 
 export type SelectionKind = 'action' | 'reaction';
@@ -240,12 +242,53 @@ export function useAreaCreation(): UseAreaCreationReturn {
     const actionParamsValid = validateParams(selectedAction.parameters as any, actionParams);
     const reactionParamsValid = validateParams(selectedReaction.parameters as any, reactionParams);
 
-    if (!actionParamsValid || !reactionParamsValid) {
+    if (!actionParamsValid) {
+      const missingParams: string[] = [];
+      if (isParamObject(selectedAction.parameters)) {
+        Object.entries(selectedAction.parameters).forEach(([key, field]) => {
+          if (field.optional !== true && (actionParams[key] === undefined || actionParams[key] === '')) {
+            missingParams.push(key);
+          }
+        });
+      }
+      Alert.alert(
+        'Paramètres manquants',
+        `Veuillez remplir tous les paramètres requis pour l'action : ${missingParams.join(', ')}`
+      );
+      return;
+    }
+
+    if (!reactionParamsValid) {
+      const missingParams: string[] = [];
+      if (isParamObject(selectedReaction.parameters)) {
+        Object.entries(selectedReaction.parameters).forEach(([key, field]) => {
+          if (field.optional !== true && (reactionParams[key] === undefined || reactionParams[key] === '')) {
+            missingParams.push(key);
+          }
+        });
+      }
+      Alert.alert(
+        'Paramètres manquants',
+        `Veuillez remplir tous les paramètres requis pour la réaction : ${missingParams.join(', ')}`
+      );
       return;
     }
 
     try {
       setSubmitting(true);
+      
+      // Filter out empty string values from parameters, but keep at least an empty object
+      const cleanActionParams = Object.keys(actionParams).length > 0
+        ? Object.fromEntries(
+            Object.entries(actionParams).filter(([_, v]) => v !== '' && v !== undefined)
+          )
+        : {};
+      const cleanReactionParams = Object.keys(reactionParams).length > 0
+        ? Object.fromEntries(
+            Object.entries(reactionParams).filter(([_, v]) => v !== '' && v !== undefined)
+          )
+        : {};
+
       await apiService.createArea(
         {
           name: finalName,
@@ -253,19 +296,20 @@ export function useAreaCreation(): UseAreaCreationReturn {
           action: {
             service: selectedAction.service,
             type: selectedAction.type,
-            parameters: actionParams,
+            parameters: cleanActionParams,
           },
           reaction: {
             service: selectedReaction.service,
             type: selectedReaction.type,
-            parameters: reactionParams,
+            parameters: cleanReactionParams,
           },
-          is_active: isActive,
         },
         token,
       );
       router.back();
-    } catch (e) {
+    } catch (e: any) {
+      const errorMessage = e instanceof Error ? e.message : 'Erreur lors de la création de l\'automatisation';
+      Alert.alert('Erreur', errorMessage);
     } finally {
       setSubmitting(false);
     }

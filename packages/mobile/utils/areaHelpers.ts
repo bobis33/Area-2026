@@ -137,4 +137,51 @@ export const validateParams = (
   return true;
 };
 
+export const getServiceBrandColors = (service: string): { 
+  backgroundColor: string; 
+  borderColor: string;
+  iconColor: string;
+} => {
+  const serviceLower = service.toLowerCase();
+  
+  switch (serviceLower) {
+    case 'discord':
+      return {
+        backgroundColor: '#5865F2', 
+        borderColor: '#5865F2',
+        iconColor: '#FFFFFF',
+      };
+    case 'spotify':
+      return {
+        backgroundColor: '#1DB954', 
+        borderColor: '#1DB954',
+        iconColor: '#FFFFFF',
+      };
+    case 'gitlab':
+      return {
+        backgroundColor: '#FC6D26', 
+        borderColor: '#FC6D26',
+        iconColor: '#FFFFFF',
+      };
+    case 'github':
+      return {
+        backgroundColor: '#18181B', 
+        borderColor: '#18181B',
+        iconColor: '#FFFFFF',
+      };
+    case 'google':
+      return {
+        backgroundColor: '#FFFFFF', 
+        borderColor: '#E2E2E3',
+        iconColor: '#222120', 
+      };
+    default:
+      return {
+        backgroundColor: 'transparent',
+        borderColor: 'transparent',
+        iconColor: 'transparent',
+      };
+  }
+};
+
 
