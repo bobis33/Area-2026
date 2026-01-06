@@ -8,6 +8,7 @@ export interface ActionHandler {
   check(
     parameters: any,
     currentState: any,
+    context?: { userId: number },
   ): Promise<{
     triggered: boolean;
     newState?: any;

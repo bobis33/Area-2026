@@ -41,6 +41,7 @@ export class EngineService {
     const result = await handler.check(
       area.action.parameters,
       area.action.current_state,
+      { userId: area.user_id },
     );
 
     if (result.newState !== undefined) {
