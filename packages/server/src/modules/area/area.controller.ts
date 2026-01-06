@@ -11,7 +11,7 @@ import {
   ParseBoolPipe,
 } from '@nestjs/common';
 import { AreaService } from './area.service';
-import { CreateAreaDto } from '@dto/area.dto';
+import { CreateAreaDto, UpdateAreaDto } from '@dto/area.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -103,10 +103,7 @@ export class AreaController {
   @ApiOperation({ summary: 'Update an area (name or is_active)' })
   @ApiResponse({ status: 200, description: 'The area has been updated.' })
   @ApiBody({ type: UpdateAreaDto })
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateAreaDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateAreaDto) {
     return this.areaService.update(id, dto);
   }
 }

@@ -123,16 +123,12 @@ export class AuthService {
   ): Promise<OAuthValidationResult> {
     try {
       const { email, provider, provider_id } = profile;
-
       if (!email) {
         throw new Error('Email not provided by OAuth provider');
       }
-
       let user = await this.findUserByProviderId(provider, provider_id);
-
       if (!user) {
         const existingUser = await this.findByEmail(email);
-
         if (existingUser) {
           user = await this.linkOAuthProvider(
             existingUser.id,
@@ -142,15 +138,27 @@ export class AuthService {
           );
         }
       }
-
       if (!user) {
         user = await this.createUserFromOAuth(profile, tokens);
       } else {
-        // Update access tokens for existing provider account
-        // This ensures the account is "refreshed" when reused
-        await this.updateProviderAccountLastUsed(provider, provider_id, tokens);
+        const existingProviderAccount =
+          await this.prisma.providerAccount.findFirst({
+            where: {
+              user_id: user.id,
+              provider: provider.toString(),
+              provider_id,
+            },
+          });
+        if (existingProviderAccount) {
+          await this.updateProviderAccountLastUsed(
+            provider,
+            provider_id,
+            tokens,
+          );
+        } else {
+          await this.linkOAuthProvider(user.id, provider, provider_id, tokens);
+        }
       }
-
       return this.mapToAuthenticatedUser(user);
     } catch (error) {
       console.error('[AuthService] validateOAuthLogin error:', error);
@@ -258,16 +266,26 @@ export class AuthService {
     provider_id: string,
     tokens: OAuthTokens,
   ): Promise<UserSelect | null> {
-    await this.prisma.providerAccount.create({
-      data: {
+    const existingAccount = await this.prisma.providerAccount.findFirst({
+      where: {
+        user_id,
         provider: provider.toString(),
         provider_id,
-        user_id,
-        access_token: tokens.accessToken,
-        refresh_token: tokens.refreshToken ?? null,
       },
     });
-
+    if (!existingAccount) {
+      await this.prisma.providerAccount.create({
+        data: {
+          provider: provider.toString(),
+          provider_id,
+          user_id,
+          access_token: tokens.accessToken,
+          refresh_token: tokens.refreshToken ?? null,
+        },
+      });
+    } else {
+      await this.updateProviderAccountLastUsed(provider, provider_id, tokens);
+    }
     return this.prisma.user.findUnique({
       where: { id: user_id },
       select: {
@@ -286,34 +304,16 @@ export class AuthService {
     provider_id: string,
     tokens: OAuthTokens,
   ): Promise<void> {
-    // Find the existing account to get user_id
-    const existingAccount = await this.prisma.providerAccount.findFirst({
+    await this.prisma.providerAccount.updateMany({
       where: {
         provider: provider.toString(),
         provider_id,
       },
+      data: {
+        access_token: tokens.accessToken,
+        refresh_token: tokens.refreshToken ?? null,
+      },
     });
-
-    if (existingAccount) {
-      // Delete and recreate to get a new id (highest id = most recently used)
-      // This ensures the most recently used provider always has the highest id
-      await this.prisma.providerAccount.deleteMany({
-        where: {
-          provider: provider.toString(),
-          provider_id,
-        },
-      });
-
-      await this.prisma.providerAccount.create({
-        data: {
-          provider: provider.toString(),
-          provider_id,
-          user_id: existingAccount.user_id,
-          access_token: tokens.accessToken,
-          refresh_token: tokens.refreshToken ?? null,
-        },
-      });
-    }
   }
 
   private mapToAuthenticatedUser(
@@ -393,26 +393,17 @@ export class AuthService {
   }
 
   async getProvidersByUserId(user_id: number): Promise<OAuthProvider[]> {
-    // Get the most recently created provider account (highest id = most recent)
-    // When a user logs in with OAuth, if the account exists, we delete and recreate it
-    // so the most recently used provider always has the highest id
-    const mostRecentAccount = await this.prisma.providerAccount.findFirst({
+    const accounts = await this.prisma.providerAccount.findMany({
       where: { user_id },
-      orderBy: { id: 'desc' },
     });
-
-    if (!mostRecentAccount) {
-      return [];
+    const providers: OAuthProvider[] = [];
+    for (const account of accounts) {
+      const providerStr = account.provider.toLowerCase();
+      const provider = providerStr as OAuthProvider;
+      if (Object.values(OAuthProvider).includes(provider)) {
+        providers.push(provider);
+      }
     }
-
-    const providerStr = mostRecentAccount.provider.toLowerCase();
-    const provider = providerStr as OAuthProvider;
-
-    // Verify it's a valid OAuthProvider value
-    if (Object.values(OAuthProvider).includes(provider)) {
-      return [provider];
-    }
-
-    return [];
+    return providers;
   }
 }

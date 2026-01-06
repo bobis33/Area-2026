@@ -66,14 +66,11 @@ export const Modal: React.FC<ModalProps> = ({
   const animatedCardStyle = useAnimatedStyle(() => {
     const borderOpacity = interpolate(opacity.value, [0, 1], [0.2, 0.3]);
     return {
-      transform: [
-        { scale: scale.value },
-        { translateY: translateY.value },
-      ],
+      transform: [{ scale: scale.value }, { translateY: translateY.value }],
       opacity: opacity.value,
       borderColor: isDark
         ? `rgba(255, 255, 255, ${borderOpacity})`
-        : (currentTheme.colors.borderSubtle || currentTheme.colors.border),
+        : currentTheme.colors.borderSubtle || currentTheme.colors.border,
     };
   });
 
@@ -149,7 +146,8 @@ export const Modal: React.FC<ModalProps> = ({
                   ]}
                   showsVerticalScrollIndicator={true}
                   keyboardShouldPersistTaps="handled"
-                  nestedScrollEnabled={true}>
+                  nestedScrollEnabled={true}
+                >
                   {children}
                 </ScrollView>
               </View>
