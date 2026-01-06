@@ -13,6 +13,8 @@ export interface OAuthProviderConfig {
   clientSecret: string;
   callbackURL: string;
   scope: string[];
+  accessType?: string;
+  prompt?: string;
 }
 
 export interface NormalizedOAuthProfile {

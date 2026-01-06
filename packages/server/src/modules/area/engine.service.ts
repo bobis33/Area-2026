@@ -60,6 +60,8 @@ export class EngineService {
       strict: false,
     });
 
-    await reactionHandler.execute(area.reaction.parameters);
+    await reactionHandler.execute(area.reaction.parameters, {
+      userId: area.user_id,
+    });
   }
 }

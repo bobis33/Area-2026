@@ -24,7 +24,14 @@ export function getProviderConfig(
       callbackURL:
         configService.get<string>('GOOGLE_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/google/callback',
-      scope: ['profile', 'email'],
+      scope: [
+        'profile',
+        'email',
+        'https://www.googleapis.com/auth/gmail.send',
+        'https://www.googleapis.com/auth/gmail.compose',
+      ],
+      accessType: 'offline',
+      prompt: 'consent',
     },
     [OAuthProvider.GITHUB]: {
       clientID: configService.get<string>('GITHUB_CLIENT_ID') || '',
