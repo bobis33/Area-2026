@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { EngineService } from '@modules/area/engine.service';
 import { PrismaService } from '@common/database/prisma.service';
 import { DiscordModule } from '@modules/discord/discord.module';
+import { GithubModule } from '@modules/github/github.module';
+import { GithubNewNotificationAction } from '@modules/area/actions/github/new-notification';
 import { GmailModule } from '@modules/gmail/gmail.module';
 import { TimeCronAction } from '@modules/area/actions/time/cron';
 import { DiscordSendMessageChannelReaction } from '@modules/area/reactions/discord/send-message-channel';
@@ -12,12 +14,13 @@ import { AreaService } from '@modules/area/area.service';
 import { AreaController } from '@modules/area/area.controller';
 
 @Module({
-  imports: [DiscordModule, GmailModule],
+  imports: [DiscordModule, GmailModule, GithubModule],
   providers: [
     PrismaService,
     EngineService,
     TimeCronAction,
     AreaService,
+    GithubNewNotificationAction,
     DiscordSendMessageChannelReaction,
     DiscordSendMessageUserReaction,
     GmailSendEmailReaction,
