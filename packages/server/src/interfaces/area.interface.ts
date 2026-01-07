@@ -15,5 +15,5 @@ export interface ActionHandler {
 }
 
 export interface ReactionHandler {
-  execute(parameters: any): Promise<void>;
+  execute(parameters: any, context?: { userId: number }): Promise<void>;
 }

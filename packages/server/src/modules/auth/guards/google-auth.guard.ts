@@ -11,7 +11,10 @@ export class GoogleAuthGuard extends AuthGuard('google') {
       (request.body?.redirect as string | undefined) ||
       undefined;
 
-    const options: any = {};
+    const options: any = {
+      accessType: 'offline',
+      prompt: 'consent',
+    };
 
     if (redirect) {
       options.state = redirect;
