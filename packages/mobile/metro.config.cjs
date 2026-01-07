@@ -3,7 +3,7 @@ const path = require('path');
 
 const config = getDefaultConfig(__dirname);
 
-config.watchFolders = [path.resolve(__dirname, '../../packages/ui')];
+config.watchFolders = [path.resolve(__dirname, '../ui')];
 
 config.resolver.nodeModulesPaths = [
   path.resolve(__dirname, '../../node_modules'),

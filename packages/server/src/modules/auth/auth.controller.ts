@@ -34,7 +34,7 @@ import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
 import { SpotifyAuthGuard } from '@modules/auth/guards/spotify-auth.guard';
 import { GitlabAuthGuard } from '@modules/auth/guards/gitlab-auth.guard';
 
-@ApiTags('Authentication')
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   private readonly enabledProviders: OAuthProvider[];
@@ -83,7 +83,6 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.FOUND })
   spotifyAuth(): void {}
 
-
   @Get('discord/callback')
   @UseGuards(DiscordAuthGuard)
   @ApiOperation({ summary: 'Discord callback' })
@@ -127,14 +126,41 @@ export class AuthController {
   @Get('providersLinked')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get linked OAuth providers for authenticated user' })
+  @ApiOperation({
+    summary: 'Get linked OAuth providers for authenticated user',
+  })
   @ApiResponse({ status: HttpStatus.OK, type: [String] })
-  async getLinkedProviders(@Req() req: RequestWithUser): Promise<{ providers: OAuthProvider[] }> {
+  async getLinkedProviders(
+    @Req() req: RequestWithUser,
+  ): Promise<{ providers: OAuthProvider[] }> {
     if (!req.user) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
     const providers = await this.authService.getProvidersByUserId(req.user.id);
     return { providers };
+  }
+
+  @Post('unlink/:provider')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Unlink OAuth provider from authenticated user' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async unlinkProvider(
+    @Req() req: RequestWithUser,
+    @Param('provider') provider: string,
+  ): Promise<{ message: string }> {
+    if (!req.user) {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+    const providerLower = provider.toLowerCase();
+    if (!this.enabledProviders.includes(providerLower as OAuthProvider)) {
+      throw new HttpException('Invalid provider', HttpStatus.BAD_REQUEST);
+    }
+    await this.authService.unlinkProvider(
+      req.user.id,
+      providerLower as OAuthProvider,
+    );
+    return { message: `Provider ${provider} unlinked successfully` };
   }
 
   @Get('status')
@@ -206,28 +232,5 @@ export class AuthController {
         });
       });
     });
-  }
-
-  @Post('unlink/:provider')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Unlink OAuth provider from authenticated user' })
-  @ApiResponse({ status: HttpStatus.OK })
-  async unlinkProvider(
-    @Req() req: RequestWithUser,
-    @Param('provider') provider: string,
-  ): Promise<{ message: string }> {
-    if (!req.user) {
-      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-    }
-    const providerLower = provider.toLowerCase();
-    if (!this.enabledProviders.includes(providerLower as OAuthProvider)) {
-      throw new HttpException('Invalid provider', HttpStatus.BAD_REQUEST);
-    }
-    await this.authService.unlinkProvider(
-      req.user.id,
-      providerLower as OAuthProvider,
-    );
-    return { message: `Provider ${provider} unlinked successfully` };
   }
 }

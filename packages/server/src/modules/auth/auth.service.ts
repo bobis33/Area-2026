@@ -12,9 +12,9 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { RolesInterface } from '@interfaces/roles.interface';
 import { AuthenticatedUser } from '@interfaces/user.interface';
-import {ConfigService} from "@nestjs/config";
-import {URL} from "url";
-import {Request, Response} from "express";
+import { ConfigService } from '@nestjs/config';
+import { URL } from 'url';
+import { Request, Response } from 'express';
 
 type UserSelect = Pick<
   User,
@@ -87,11 +87,11 @@ export class AuthService {
     }
 
     const isMobile =
-        baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
+      baseUrl.startsWith('area://') || baseUrl.startsWith('exp://');
 
     if (!req.user) {
       return res.redirect(
-          `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
+        `${baseUrl}/auth/error?message=${encodeURIComponent('Authentication failed')}`,
       );
     }
 
@@ -141,15 +141,20 @@ export class AuthService {
       if (!user) {
         user = await this.createUserFromOAuth(profile, tokens);
       } else {
-        const existingProviderAccount = await this.prisma.providerAccount.findFirst({
-          where: {
-            user_id: user.id,
-            provider: provider.toString(),
-            provider_id,
-          },
-        });
+        const existingProviderAccount =
+          await this.prisma.providerAccount.findFirst({
+            where: {
+              user_id: user.id,
+              provider: provider.toString(),
+              provider_id,
+            },
+          });
         if (existingProviderAccount) {
-          await this.updateProviderAccountLastUsed(provider, provider_id, tokens);
+          await this.updateProviderAccountLastUsed(
+            provider,
+            provider_id,
+            tokens,
+          );
         } else {
           await this.linkOAuthProvider(user.id, provider, provider_id, tokens);
         }
@@ -402,7 +407,10 @@ export class AuthService {
     return providers;
   }
 
-  async unlinkProvider(user_id: number, provider: OAuthProvider): Promise<void> {
+  async unlinkProvider(
+    user_id: number,
+    provider: OAuthProvider,
+  ): Promise<void> {
     await this.prisma.providerAccount.deleteMany({
       where: {
         user_id,
