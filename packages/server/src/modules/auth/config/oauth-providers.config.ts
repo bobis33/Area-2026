@@ -39,7 +39,7 @@ export function getProviderConfig(
       callbackURL:
         configService.get<string>('GITHUB_CLIENT_CALLBACK_URL') ||
         'http://localhost:8080/auth/github/callback',
-      scope: ['user:email'],
+      scope: ['user:email', 'notifications'],
     },
     [OAuthProvider.SPOTIFY]: {
       clientID: configService.get<string>('SPOTIFY_CLIENT_ID') || '',

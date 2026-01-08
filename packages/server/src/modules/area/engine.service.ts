@@ -8,6 +8,7 @@ import { ReactionsRegistry } from '@modules/area/reactions/reactions-registry';
 @Injectable()
 export class EngineService {
   private readonly logger = new Logger(EngineService.name);
+  private processing = new Set<number>();
 
   constructor(
     private prisma: PrismaService,
@@ -22,11 +23,16 @@ export class EngineService {
     });
 
     for (const area of areas) {
+      if (this.processing.has(area.id)) continue;
+
+      this.processing.add(area.id);
       try {
         await this.processArea(area);
         this.logger.log(`Processed area ${area.id}`);
       } catch (err) {
         this.logger.error(`Error processing area ${area.id}`, err);
+      } finally {
+        this.processing.delete(area.id);
       }
     }
   }
@@ -41,6 +47,7 @@ export class EngineService {
     const result = await handler.check(
       area.action.parameters,
       area.action.current_state,
+      { userId: area.user_id },
     );
 
     if (result.newState !== undefined) {
