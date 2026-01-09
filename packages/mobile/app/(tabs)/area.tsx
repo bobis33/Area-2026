@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text } from '@area/ui';
-import { MobileScreen } from '@/components/ui-mobile';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
+import { MobileText as Text , MobileScreen , MobileBadge } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { Modal } from '@/components/layout/Modal';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { ServiceIcon } from '@/components/ui/ServiceIcon';
 import { AnimatedCard, FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { apiService } from '@/services/api.service';
+import { AreaModel } from '@/types/api';
+import { getServiceBrandColors } from '@/utils/areaHelpers';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+import { API_BASE_URL } from '@/constants/api';
 
-interface Service {
-  id: string;
-  name: string;
-  serviceKey: 'discord' | 'github' | 'google' | 'spotify';
-  connected: boolean;
-}
+WebBrowser.maybeCompleteAuthSession();
+
+type OAuthProvider = 'github' | 'google' | 'discord' | 'spotify' | 'gitlab';
 
 interface Automation {
   id: string;
@@ -26,40 +30,241 @@ interface Automation {
   status: 'active' | 'inactive';
 }
 
-const mockServices: Service[] = [
-  { id: '1', name: 'Discord', serviceKey: 'discord', connected: true },
-  { id: '2', name: 'GitHub', serviceKey: 'github', connected: true },
-  { id: '3', name: 'Google', serviceKey: 'google', connected: false },
-  { id: '4', name: 'Spotify', serviceKey: 'spotify', connected: false },
-];
+function areaToAutomation(area: AreaModel): Automation {
+  const actionService = area.action?.service || 'unknown';
+  const actionType = area.action?.type || 'unknown';
+  const reactionService = area.reaction?.service || 'unknown';
+  const reactionType = area.reaction?.type || 'unknown';
 
-const mockAutomations: Automation[] = [
-  {
-    id: '1',
-    name: 'GitHub → Discord',
-    action: 'When I push to GitHub',
-    reaction: 'Send a message on Discord',
-    actionService: 'GitHub',
-    reactionService: 'Discord',
-    status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Follower → Sheets',
-    action: 'When I get a new follower',
-    reaction: 'Add a row in Google Sheets',
-    actionService: 'GitHub',
-    reactionService: 'Google',
-    status: 'inactive',
-  },
-];
+  return {
+    id: area.id.toString(),
+    name: area.name,
+    action: `${actionService}.${actionType}`,
+    reaction: `${reactionService}.${reactionType}`,
+    actionService,
+    reactionService,
+    status: area.is_active ? 'active' : 'inactive',
+  };
+}
 
 export default function AreaScreen() {
   const { currentTheme } = useAppTheme();
-  const [selectedAutomation, setSelectedAutomation] =
-    useState<Automation | null>(null);
+  const { token } = useAuth();
+  const [selectedAutomation, setSelectedAutomation] = useState<Automation | null>(null);
+  const [automations, setAutomations] = useState<Automation[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
+  const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+  const [availableProviders, setAvailableProviders] = useState<string[]>([]);
+  const [linkedProviders, setLinkedProviders] = useState<string[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(false);
+  const [connectingProvider, setConnectingProvider] = useState<string | null>(null);
+  const [unlinkingProvider, setUnlinkingProvider] = useState<string | null>(null);
+  const { handleOAuthRedirect } = useAuth();
+
+  const loadAreas = useCallback(async () => {
+    if (!token) return;
+
+    try {
+      setLoading(true);
+      const areas = await apiService.getAreas(token);
+      const mappedAutomations = areas.map(areaToAutomation);
+      setAutomations(mappedAutomations);
+    } catch (error) {
+      setAutomations([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    loadAreas();
+  }, [loadAreas]);
+
+  const loadProviders = useCallback(async () => {
+    try {
+      setLoadingProviders(true);
+      const available = await apiService.getOAuthProviders();
+      setAvailableProviders(available);
+      if (token) {
+        const linked = await apiService.getLinkedProviders(token);
+        const normalizedLinked = linked.map((p) => String(p).toLowerCase());
+        setLinkedProviders(normalizedLinked);
+      } else {
+        setLinkedProviders([]);
+      }
+    } catch (error) {
+      setAvailableProviders([]);
+      setLinkedProviders([]);
+    } finally {
+      setLoadingProviders(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    loadAreas();
+    loadProviders();
+  }, [loadAreas, loadProviders]);
+  useFocusEffect(
+    useCallback(() => {
+      loadAreas();
+      loadProviders();
+    }, [loadAreas, loadProviders])
+  );
+
+  const handleCreateArea = () => {
+    router.push('/(tabs)/area/create');
+  };
+
+  const handleToggleActive = async (automation: Automation, e: any) => {
+    e.stopPropagation();
+    if (!token) return;
+
+    const newStatus = automation.status === 'active' ? 'inactive' : 'active';
+    const newIsActive = newStatus === 'active';
+    setAutomations(prev =>
+      prev.map(a =>
+        a.id === automation.id
+          ? { ...a, status: newStatus }
+          : a
+      )
+    );
+    setTogglingIds(prev => new Set(prev).add(automation.id));
+
+    try {
+      await apiService.updateArea(
+        parseInt(automation.id),
+        { is_active: newIsActive },
+        token,
+      );
+      await loadAreas();
+    } catch (error) {
+      setAutomations(prev =>
+        prev.map(a =>
+          a.id === automation.id
+            ? { ...a, status: automation.status }
+            : a
+        )
+      );
+    } finally {
+      setTogglingIds(prev => {
+        const next = new Set(prev);
+        next.delete(automation.id);
+        return next;
+      });
+    }
+  };
+
+  const handleDelete = async (automation: Automation, e: any) => {
+    e.stopPropagation();
+    if (!token) return;
+
+    Alert.alert(
+      'Delete automation',
+      `Are you sure you want to delete "${automation.name}"? This action cannot be undone.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            setAutomations(prev => prev.filter(a => a.id !== automation.id));
+            setDeletingIds(prev => new Set(prev).add(automation.id));
+            try {
+              await apiService.deleteArea(parseInt(automation.id), token);
+              await loadAreas();
+            } catch (error) {
+              await loadAreas();
+            } finally {
+              setDeletingIds(prev => {
+                const next = new Set(prev);
+                next.delete(automation.id);
+                return next;
+              });
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const handleConnectProvider = async (provider: string, e: any) => {
+    e.stopPropagation();
+    if (!token || connectingProvider) return;
+
+    setConnectingProvider(provider);
+
+    try {
+      const redirectUri = AuthSession.makeRedirectUri({
+        path: `auth/${provider.toLowerCase()}/callback`,
+      });
+
+      const oauthUrl = `${API_BASE_URL}/auth/${provider.toLowerCase()}?redirect=${encodeURIComponent(redirectUri)}`;
+
+      const result = await WebBrowser.openAuthSessionAsync(
+        oauthUrl,
+        redirectUri,
+      );
+
+      if (result.type === 'success' && result.url) {
+        handleOAuthRedirect(result.url);
+        // Reload providers after successful connection
+        setTimeout(() => {
+          loadProviders();
+        }, 1000);
+      } else if (result.type === 'locked') {
+        Alert.alert('Error', 'The browser is locked. Please try again.');
+      }
+    } catch (error) {
+      Alert.alert(
+        'Connection Error',
+        `Unable to connect with ${provider}. Please try again.`,
+      );
+    } finally {
+      setConnectingProvider(null);
+    }
+  };
+
+  const handleUnlinkProvider = async (provider: string, e: any) => {
+    e.stopPropagation();
+    if (!token || unlinkingProvider) return;
+
+    Alert.alert(
+      'Disconnect service',
+      `Are you sure you want to disconnect ${provider}? You won't be able to use it in your automations.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Disconnect',
+          style: 'destructive',
+          onPress: async () => {
+            setUnlinkingProvider(provider);
+            try {
+              await apiService.unlinkProvider(provider.toLowerCase(), token);
+              await loadProviders();
+              Alert.alert('Success', `${provider} has been disconnected.`);
+            } catch (error: any) {
+              Alert.alert(
+                'Error',
+                error.message || `Failed to disconnect ${provider}. Please try again.`,
+              );
+            } finally {
+              setUnlinkingProvider(null);
+            }
+          },
+        },
+      ],
+    );
+  };
 
   return (
+    <View style={styles.container}>
     <MobileScreen scroll safeArea keyboardAware={false}>
       {/* Header */}
       <FadeInView delay={0} spring>
@@ -68,125 +273,225 @@ export default function AreaScreen() {
             Your automations
           </Text>
           <Text variant="body" color="muted" style={styles.subtitle}>
-            Services, actions & reactions connected to your account.
+              Create and manage your automation scenarios.
           </Text>
         </View>
       </FadeInView>
 
       {/* Connected Services Section */}
-      <FadeInView delay={100} spring>
+      {token && (
+        <FadeInView delay={50} spring>
         <View style={styles.section}>
           <Text variant="subtitle" style={styles.sectionTitle}>
             Connected services
           </Text>
           <View style={styles.servicesList}>
-            {mockServices.map((service, index) => (
-              <FadeInView key={service.id} delay={150 + index * 50} spring>
+              {loadingProviders ? (
+                <View style={styles.emptyState}>
+                  <Text variant="body" color="muted">
+                    Loading services...
+                  </Text>
+                </View>
+              ) : availableProviders.length === 0 ? (
+                <View style={styles.emptyState}>
+                  <Text variant="body" color="muted">
+                    No services available. Please check your backend configuration.
+                  </Text>
+                </View>
+              ) : (
+                availableProviders.map((provider, index) => {
+                // Normalize provider names for comparison (lowercase)
+                const normalizedProvider = String(provider).toLowerCase();
+                const isConnected = linkedProviders.some(
+                  (linked) => String(linked).toLowerCase() === normalizedProvider
+                );
+                const brandColors = getServiceBrandColors(provider);
+                const hasBrandColors = brandColors.backgroundColor !== 'transparent';
+                return (
+                  <FadeInView key={provider} delay={100 + index * 50} spring>
                 <AnimatedCard haptic>
                   <SectionCard>
-                    <TouchableOpacity
-                      style={styles.serviceRow}
-                      activeOpacity={0.7}
-                    >
-                      <View style={styles.serviceLeft}>
-                        <View
-                          style={[
-                            styles.serviceIconContainer,
-                            {
-                              backgroundColor: currentTheme.colors.surfaceMuted,
-                            },
-                          ]}
+                        <TouchableOpacity
+                          style={styles.serviceRow}
+                          activeOpacity={0.7}
                         >
+                      <View style={styles.serviceLeft}>
+                            <View
+                              style={[
+                                styles.serviceIconContainer,
+                                {
+                                  backgroundColor: hasBrandColors && isConnected
+                                    ? brandColors.backgroundColor
+                                    : currentTheme.colors.surfaceMuted,
+                                },
+                              ]}
+                            >
                           <ServiceIcon
-                            service={service.serviceKey}
+                                service={provider}
                             size={24}
-                            color={
-                              service.connected
-                                ? currentTheme.colors.primary
-                                : currentTheme.colors.textMuted
-                            }
+                                color={
+                                  hasBrandColors && isConnected
+                                    ? brandColors.iconColor
+                                    : isConnected
+                                    ? currentTheme.colors.primary
+                                    : currentTheme.colors.textMuted
+                                }
                           />
                         </View>
                         <Text variant="body" style={styles.serviceName}>
-                          {service.name}
+                              {provider.charAt(0).toUpperCase() + provider.slice(1)}
                         </Text>
                       </View>
-                      <View
-                        style={[
-                          styles.statusBadge,
-                          service.connected
-                            ? {
-                                backgroundColor:
-                                  currentTheme.colors.successSoft,
-                              }
-                            : {
-                                backgroundColor:
-                                  currentTheme.colors.surfaceMuted,
-                              },
-                        ]}
-                      >
-                        <View
-                          style={[
-                            styles.statusDot,
-                            service.connected
-                              ? { backgroundColor: currentTheme.colors.success }
-                              : {
-                                  backgroundColor:
-                                    currentTheme.colors.textMuted,
+                      <View style={styles.serviceRight}>
+                          <MobileBadge
+                            variant={isConnected ? 'connected' : 'paused'}
+                            showDot
+                          >
+                            {isConnected ? 'Connected' : 'Not connected'}
+                          </MobileBadge>
+                          {isConnected ? (
+                            <TouchableOpacity
+                              onPress={(e) => handleUnlinkProvider(provider, e)}
+                              disabled={unlinkingProvider === provider}
+                              style={[
+                                styles.actionButton,
+                                {
+                                  opacity: unlinkingProvider === provider ? 0.5 : 1,
+                                  borderColor: currentTheme.colors.danger,
                                 },
-                          ]}
-                        />
-                        <Text variant="caption" style={styles.statusText}>
-                          {service.connected ? 'Connected' : 'Not connected'}
-                        </Text>
+                              ]}
+                              activeOpacity={0.7}
+                            >
+                              <IconSymbol
+                                name="xmark.circle"
+                                size={20}
+                                color={currentTheme.colors.danger}
+                              />
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity
+                              onPress={(e) => handleConnectProvider(provider, e)}
+                              disabled={connectingProvider === provider}
+                              style={[
+                                styles.actionButton,
+                                {
+                                  opacity: connectingProvider === provider ? 0.5 : 1,
+                                  borderColor: currentTheme.colors.primary,
+                                  backgroundColor: currentTheme.colors.primarySoft,
+                                },
+                              ]}
+                              activeOpacity={0.7}
+                            >
+                              {connectingProvider === provider ? (
+                                <IconSymbol
+                                  name="arrow.clockwise"
+                                  size={20}
+                                  color={currentTheme.colors.primary}
+                                />
+                              ) : (
+                                <IconSymbol
+                                  name="plus.circle"
+                                  size={20}
+                                  color={currentTheme.colors.primary}
+                                />
+                              )}
+                            </TouchableOpacity>
+                          )}
                       </View>
                     </TouchableOpacity>
                   </SectionCard>
                 </AnimatedCard>
               </FadeInView>
-            ))}
+                );
+              })
+            )}
           </View>
         </View>
       </FadeInView>
+      )}
 
       {/* Scenarios Section */}
-      <FadeInView delay={400} spring>
+      <FadeInView delay={100} spring>
         <View style={styles.section}>
           <Text variant="subtitle" style={styles.sectionTitle}>
             Scenarios (Actions → Reactions)
           </Text>
           <View style={styles.automationsList}>
-            {mockAutomations.map((automation, index) => (
-              <FadeInView key={automation.id} delay={450 + index * 100} spring>
+            {loading ? (
+              <View style={styles.emptyState}>
+                <Text variant="body" color="muted">
+                  Loading…
+                </Text>
+              </View>
+            ) : automations.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Text variant="body" color="muted">
+                  No automations yet. Create one to get started!
+                </Text>
+              </View>
+            ) : (
+              automations.map((automation, index) => (
+                <FadeInView key={automation.id} delay={150 + index * 100} spring>
                 <AnimatedCard
                   haptic
-                  onPress={() => setSelectedAutomation(automation)}
-                >
+                  onPress={() => setSelectedAutomation(automation)}>
                   <SectionCard>
                     <View style={styles.automationRow}>
                       <View style={styles.automationHeader}>
                         <Text variant="body" style={styles.automationName}>
                           {automation.name}
                         </Text>
-                        <View
-                          style={[
-                            styles.statusBadge,
-                            automation.status === 'active'
-                              ? {
-                                  backgroundColor:
-                                    currentTheme.colors.successSoft,
-                                }
-                              : {
-                                  backgroundColor:
-                                    currentTheme.colors.surfaceMuted,
+                          <View style={styles.automationControls}>
+                            <MobileBadge
+                              variant={automation.status === 'active' ? 'active' : 'paused'}
+                              showDot
+                            >
+                              {automation.status === 'active' ? 'Active' : 'Paused'}
+                            </MobileBadge>
+                            <TouchableOpacity
+                              onPress={(e) => handleToggleActive(automation, e)}
+                              disabled={togglingIds.has(automation.id)}
+                              style={[
+                                styles.toggleButton,
+                                {
+                                  opacity: togglingIds.has(automation.id) ? 0.5 : 1,
+                                  borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                                  backgroundColor: automation.status === 'active'
+                                    ? currentTheme.colors.surfaceMuted
+                                    : currentTheme.colors.primarySoft,
                                 },
-                          ]}
-                        >
-                          <Text variant="caption" style={styles.statusText}>
-                            {automation.status === 'active'
-                              ? 'Active'
-                              : 'Inactive'}
+                              ]}
+                              activeOpacity={0.7}>
+                              <Text
+                                variant="caption"
+                          style={[
+                                  styles.toggleButtonText,
+                                  {
+                                    color: automation.status === 'active'
+                                      ? currentTheme.colors.text
+                                      : currentTheme.colors.primary,
+                                  },
+                                ] as any}>
+                                {automation.status === 'active' ? 'Pause' : 'Resume'}
                           </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={(e) => handleDelete(automation, e)}
+                              disabled={deletingIds.has(automation.id)}
+                              style={[
+                                styles.deleteButton,
+                                {
+                                  opacity: deletingIds.has(automation.id) ? 0.5 : 1,
+                                  borderColor: currentTheme.colors.danger,
+                                },
+                              ]}
+                              activeOpacity={0.7}>
+                              <IconSymbol
+                                name="trash"
+                                size={16}
+                                color={currentTheme.colors.danger}
+                              />
+                            </TouchableOpacity>
                         </View>
                       </View>
                       <View style={styles.automationFlow}>
@@ -216,7 +521,8 @@ export default function AreaScreen() {
                   </SectionCard>
                 </AnimatedCard>
               </FadeInView>
-            ))}
+              ))
+            )}
           </View>
         </View>
       </FadeInView>
@@ -265,29 +571,35 @@ export default function AreaScreen() {
               <Text variant="caption" color="muted" style={styles.modalLabel}>
                 Status
               </Text>
-              <View
-                style={[
-                  styles.statusBadge,
-                  selectedAutomation.status === 'active'
-                    ? { backgroundColor: currentTheme.colors.successSoft }
-                    : { backgroundColor: currentTheme.colors.surfaceMuted },
-                ]}
+              <MobileBadge
+                variant={selectedAutomation.status === 'active' ? 'active' : 'inactive'}
+                showDot
               >
-                <Text variant="caption" style={styles.statusText}>
-                  {selectedAutomation.status === 'active'
-                    ? 'Active'
-                    : 'Inactive'}
-                </Text>
-              </View>
+                  {selectedAutomation.status === 'active' ? 'Active' : 'Inactive'}
+              </MobileBadge>
             </View>
           </View>
         )}
       </Modal>
     </MobileScreen>
+
+      {/* Floating Create Button - Fixed position */}
+      {token && (
+        <TouchableOpacity
+          style={[styles.fab, { backgroundColor: currentTheme.colors.primary }]}
+          onPress={handleCreateArea}
+          activeOpacity={0.8}>
+          <IconSymbol name="plus.circle.fill" size={26} color={currentTheme.colors.primaryOn} />
+        </TouchableOpacity>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   header: {
     marginBottom: 24,
     gap: 8,
@@ -309,8 +621,9 @@ const styles = StyleSheet.create({
   },
   serviceRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 4,
   },
   serviceLeft: {
     flexDirection: 'row',
@@ -318,33 +631,28 @@ const styles = StyleSheet.create({
     gap: 12,
     flex: 1,
   },
+  serviceRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  actionButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   serviceIconContainer: {
     width: 40,
     height: 40,
-    borderRadius: 8,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
   },
   serviceName: {
-    flex: 1,
-  },
-  statusBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  statusDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  statusText: {
-    fontSize: 11,
-    textTransform: 'capitalize',
+    fontWeight: '500',
   },
   automationsList: {
     gap: 12,
@@ -356,6 +664,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  automationControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  automationActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 12,
+  },
+  toggleButton: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    minWidth: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  toggleButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  deleteButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   automationName: {
     fontWeight: '600',
@@ -388,5 +727,28 @@ const styles = StyleSheet.create({
   },
   modalValue: {
     marginTop: 4,
+  },
+  emptyState: {
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    textAlign: 'center',
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });

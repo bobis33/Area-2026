@@ -4,11 +4,13 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -25,7 +27,7 @@ import {
   RegisterDto,
 } from '@dto/auth.dto';
 import { getEnabledProviders } from '@modules/auth/config/oauth-providers.config';
-import { AuthService, RequestWithUser } from '@modules/auth/auth.service';
+import {AuthService, RequestWithUser} from '@modules/auth/auth.service';
 import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
 import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
 import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
@@ -122,6 +124,7 @@ export class AuthController {
   }
 
   @Get('providersLinked')
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get linked OAuth providers for authenticated user',
@@ -135,6 +138,29 @@ export class AuthController {
     }
     const providers = await this.authService.getProvidersByUserId(req.user.id);
     return { providers };
+  }
+
+  @Post('unlink/:provider')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Unlink OAuth provider from authenticated user' })
+  @ApiResponse({ status: HttpStatus.OK })
+  async unlinkProvider(
+    @Req() req: RequestWithUser,
+    @Param('provider') provider: string,
+  ): Promise<{ message: string }> {
+    if (!req.user) {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
+    const providerLower = provider.toLowerCase();
+    if (!this.enabledProviders.includes(providerLower as OAuthProvider)) {
+      throw new HttpException('Invalid provider', HttpStatus.BAD_REQUEST);
+    }
+    await this.authService.unlinkProvider(
+      req.user.id,
+      providerLower as OAuthProvider,
+    );
+    return { message: `Provider ${provider} unlinked successfully` };
   }
 
   @Get('status')

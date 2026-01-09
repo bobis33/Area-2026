@@ -1,12 +1,74 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Image } from 'react-native';
 import { router } from 'expo-router';
-import { Text } from '@area/ui';
-import { MobileScreen, MobileButton } from '@/components/ui-mobile';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
+import { MobileText as Text , MobileScreen, MobileButton } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
+
+// Component for animated glow border
+const GlowCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const progress = useSharedValue(0);
+
+  useEffect(() => {
+    progress.value = withRepeat(
+      withTiming(1, { duration: 4000 }),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const phase = progress.value * 3; // 0 to 3
+    
+    let r = 58; // Blue default
+    let g = 86;
+    let b = 210;
+    
+    if (phase < 1) {
+      const t = phase;
+      r = Math.round(58 + (255 - 58) * t);
+      g = Math.round(86 + (255 - 86) * t);
+      b = Math.round(210 + (255 - 210) * t);
+    } else if (phase < 2) {
+      const t = phase - 1;
+      r = Math.round(255 - (255 - 224) * t);
+      g = Math.round(255 - (255 - 52) * t);
+      b = Math.round(255 - (255 - 52) * t);
+    } else {
+      const t = phase - 2;
+      r = Math.round(224 - (224 - 58) * t);
+      g = Math.round(52 - (52 - 86) * t);
+      b = Math.round(52 - (52 - 210) * t);
+    }
+
+    return {
+      shadowColor: `rgba(${r}, ${g}, ${b}, 0.4)`,
+      shadowOffset: {
+        width: 0,
+        height: 0,
+      },
+      shadowOpacity: 0.6,
+      shadowRadius: 8,
+      elevation: 6,
+      borderWidth: 1.5,
+      borderColor: `rgba(${r}, ${g}, ${b}, 0.4)`,
+    };
+  });
+
+  return (
+    <Animated.View style={[styles.glowCardContainer, animatedStyle]}>
+      <View style={styles.glowCardContent}>{children}</View>
+    </Animated.View>
+  );
+};
 
 export default function HomeScreen() {
   const { currentTheme } = useAppTheme();
@@ -16,95 +78,94 @@ export default function HomeScreen() {
       {/* Hero Section */}
       <FadeInView delay={0} spring>
         <View style={styles.heroSection}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('@/assets/images/main_logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
           <Text variant="caption" color="muted" style={styles.label}>
             AREA • Automation
           </Text>
           <Text variant="title" style={styles.mainTitle}>
-            Automatise ta vie digitale.
-          </Text>
-          <Text variant="body" color="muted" style={styles.description}>
-            Connecte tes services préférés et crée des automatisations
-            puissantes. Quand une Action se produit, une Réaction se déclenche
-            automatiquement.
+            Automatise ta vie{'\n'}digitale.
           </Text>
         </View>
       </FadeInView>
 
-      {/* What is AREA Section */}
       <FadeInView delay={100} spring>
-        <View style={styles.section}>
-          <Text variant="subtitle" style={styles.sectionTitle}>
-            What is AREA ?
-          </Text>
-          <Text variant="body" color="muted" style={styles.sectionText}>
-            AREA est une plateforme d'automatisation qui te permet de connecter
-            différents services (Discord, GitHub, Google, etc.) et de créer des
-            scénarios personnalisés. Quand une Action se produit sur un service,
-            une Réaction se déclenche automatiquement sur un autre.
-          </Text>
+        <View style={styles.widgetContainer}>
+          <Image
+            source={require('@/assets/images/widget1.png')}
+            style={styles.widgetImage}
+            resizeMode="contain"
+          />
         </View>
       </FadeInView>
 
       {/* Feature Cards - Full Width */}
       <View style={styles.cardsContainer}>
         <FadeInView delay={200} spring>
-          <SectionCard>
-            <View style={styles.cardContent}>
-              <View
-                style={[
-                  styles.cardIcon,
-                  { backgroundColor: currentTheme.colors.primarySoft },
-                ]}
-              >
-                <IconSymbol
-                  size={28}
-                  name="link"
-                  color={currentTheme.colors.primary}
-                />
+          <GlowCard>
+            <SectionCard>
+              <View style={styles.cardContent}>
+                <View
+                  style={[
+                    styles.cardIcon,
+                    { backgroundColor: currentTheme.colors.primarySoft },
+                  ]}
+                >
+                  <IconSymbol
+                    size={28}
+                    name="link"
+                    color={currentTheme.colors.primary}
+                  />
+                </View>
+                <View style={styles.cardTextContent}>
+                  <Text variant="subtitle" style={styles.cardTitle}>
+                    Connect services
+                  </Text>
+                  <Text variant="body" color="muted" style={styles.cardText}>
+                    Lie tes comptes Discord, GitHub, Google et bien d'autres
+                    services pour créer des automatisations puissantes.
+                  </Text>
+                </View>
               </View>
-              <View style={styles.cardTextContent}>
-                <Text variant="subtitle" style={styles.cardTitle}>
-                  Connect services
-                </Text>
-                <Text variant="body" color="muted" style={styles.cardText}>
-                  Lie tes comptes Discord, GitHub, Google et bien d'autres
-                  services pour créer des automatisations puissantes.
-                </Text>
-              </View>
-            </View>
-          </SectionCard>
+            </SectionCard>
+          </GlowCard>
         </FadeInView>
 
         <FadeInView delay={300} spring>
-          <SectionCard>
-            <View style={styles.cardContent}>
-              <View
-                style={[
-                  styles.cardIcon,
-                  { backgroundColor: currentTheme.colors.primarySoft },
-                ]}
-              >
-                <IconSymbol
-                  size={28}
-                  name="bolt.fill"
-                  color={currentTheme.colors.primary}
-                />
+          <GlowCard>
+            <SectionCard>
+              <View style={styles.cardContent}>
+                <View
+                  style={[
+                    styles.cardIcon,
+                    { backgroundColor: currentTheme.colors.primarySoft },
+                  ]}
+                >
+                  <IconSymbol
+                    size={28}
+                    name="bolt.fill"
+                    color={currentTheme.colors.primary}
+                  />
+                </View>
+                <View style={styles.cardTextContent}>
+                  <Text variant="subtitle" style={styles.cardTitle}>
+                    Create automations
+                  </Text>
+                  <Text variant="body" color="muted" style={styles.cardText}>
+                    Construis des flux Action → Réaction pour automatiser tes
+                    tâches quotidiennes et gagner du temps.
+                  </Text>
+                </View>
               </View>
-              <View style={styles.cardTextContent}>
-                <Text variant="subtitle" style={styles.cardTitle}>
-                  Create automations
-                </Text>
-                <Text variant="body" color="muted" style={styles.cardText}>
-                  Construis des flux Action → Réaction pour automatiser tes
-                  tâches quotidiennes et gagner du temps.
-                </Text>
-              </View>
-            </View>
-          </SectionCard>
+            </SectionCard>
+          </GlowCard>
         </FadeInView>
       </View>
-
-      {/* CTA Button */}
       <FadeInView delay={400} spring>
         <View style={styles.ctaSection}>
           <MobileButton
@@ -121,60 +182,88 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   heroSection: {
-    marginBottom: 24,
-    gap: 12,
+    marginBottom: 32,
+    gap: 16,
+    paddingTop: 20,
+    zIndex: 1,
+    alignItems: 'center',
+  },
+  logoContainer: {
+    marginBottom: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 120,
+    height: 120,
   },
   label: {
     textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 4,
+    letterSpacing: 2,
+    marginBottom: 8,
+    textAlign: 'left',
+    fontWeight: '600',
   },
   mainTitle: {
-    fontSize: 32,
-    lineHeight: 38,
-    marginBottom: 8,
+    fontSize: 42,
+    lineHeight: 50,
+    marginBottom: 12,
+    fontWeight: '700',
+    letterSpacing: -0.5,
   },
-  description: {
-    lineHeight: 24,
-    marginTop: 8,
-  },
-  section: {
+  widgetContainer: {
     marginBottom: 24,
-    gap: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
   },
-  sectionTitle: {
-    marginBottom: 8,
-  },
-  sectionText: {
-    lineHeight: 22,
+  widgetImage: {
+    width: '100%',
+    height: undefined,
+    aspectRatio: 1,
+    maxHeight: 400,
   },
   cardsContainer: {
-    gap: 12,
-    marginBottom: 24,
+    gap: 16,
+    marginBottom: 32,
+    zIndex: 1,
   },
   cardContent: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 16,
     alignItems: 'flex-start',
   },
   cardIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 12,
+    width: 64,
+    height: 64,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardTextContent: {
     flex: 1,
-    gap: 4,
+    gap: 6,
   },
   cardTitle: {
-    marginBottom: 4,
+    marginBottom: 2,
+    fontSize: 18,
+    fontWeight: '600',
   },
   cardText: {
-    lineHeight: 20,
+    lineHeight: 22,
+    fontSize: 15,
   },
   ctaSection: {
-    marginTop: 16,
+    marginTop: 8,
+    marginBottom: 32,
+    zIndex: 1,
+  },
+  glowCardContainer: {
+    borderRadius: 16,
+    marginBottom: 0,
+  },
+  glowCardContent: {
+    borderRadius: 14,
+    overflow: 'hidden',
   },
 });

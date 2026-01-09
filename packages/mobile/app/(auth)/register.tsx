@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
-import { Text } from '@area/ui';
-import {
+import { MobileText as Text ,
   MobileScreen,
   MobileButton,
   MobileInput,
@@ -55,7 +54,6 @@ export default function RegisterScreen() {
 
   return (
     <MobileScreen
-      title="Créer un compte"
       scroll={true}
       safeArea={true}
       keyboardAware

@@ -12,9 +12,10 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
+  interpolate,
 } from 'react-native-reanimated';
-import { Text, Card } from '@area/ui';
-import { spacing, borderRadius } from '@area/ui';
+import { Card , spacing, borderRadius } from '@area/ui';
+import { MobileText as Text } from '@/components/ui-mobile';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
@@ -33,28 +34,47 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
-  const { currentTheme } = useAppTheme();
+  const { currentTheme, isDark } = useAppTheme();
   const scale = useSharedValue(0.9);
   const opacity = useSharedValue(0);
+  const translateY = useSharedValue(30);
+  const blur = useSharedValue(0);
 
   React.useEffect(() => {
     if (visible) {
       scale.value = withSpring(1, {
-        damping: 15,
+        damping: 20,
         stiffness: 300,
         mass: 0.8,
       });
-      opacity.value = withTiming(1, { duration: 200 });
+      opacity.value = withTiming(1, { duration: 300 });
+      translateY.value = withSpring(0, {
+        damping: 20,
+        stiffness: 300,
+        mass: 0.8,
+      });
+      blur.value = withTiming(1, { duration: 300 });
     } else {
-      scale.value = withTiming(0.9, { duration: 150 });
-      opacity.value = withTiming(0, { duration: 150 });
+      scale.value = withTiming(0.9, { duration: 200 });
+      opacity.value = withTiming(0, { duration: 200 });
+      translateY.value = withTiming(30, { duration: 200 });
+      blur.value = withTiming(0, { duration: 200 });
     }
   }, [visible]);
 
-  const animatedCardStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+  const animatedCardStyle = useAnimatedStyle(() => {
+    const borderOpacity = interpolate(opacity.value, [0, 1], [0.2, 0.3]);
+    return {
+      transform: [
+        { scale: scale.value },
+        { translateY: translateY.value },
+      ],
     opacity: opacity.value,
-  }));
+      borderColor: isDark
+        ? `rgba(255, 255, 255, ${borderOpacity})`
+        : (currentTheme.colors.borderSubtle || currentTheme.colors.border),
+    };
+  });
 
   const overlayStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
@@ -74,18 +94,37 @@ export const Modal: React.FC<ModalProps> = ({
           style={[
             styles.overlay,
             overlayStyle,
-            { backgroundColor: currentTheme.colors.background + '80' },
+            { backgroundColor: 'rgba(0, 0, 0, 0.75)' }, // Dark overlay but not completely black
           ]}
         >
           <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
-            <AnimatedCard
-              padding="lg"
-              elevated
-              style={[styles.modalContent, animatedCardStyle]}
+            <Animated.View
+              style={[
+                styles.modalContent,
+                {
+                  borderWidth: 1,
+                  flexShrink: 0,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 20 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 30,
+                  elevation: 20,
+                  padding: spacing.lg,
+                  borderRadius: borderRadius.xl,
+                },
+                animatedCardStyle,
+                {
+                  // Force opaque background after animation styles
+                  backgroundColor: currentTheme.colors.surface,
+                },
+              ]}
             >
               {title && (
                 <View style={styles.header}>
-                  <Text variant="subtitle" style={styles.title}>
+                  <Text
+                    variant="subtitle"
+                    style={styles.title}
+                  >
                     {title}
                   </Text>
                   <TouchableOpacity
@@ -100,15 +139,20 @@ export const Modal: React.FC<ModalProps> = ({
                   </TouchableOpacity>
                 </View>
               )}
+              <View style={styles.contentContainer}>
               <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled"
-              >
+                  style={[styles.scrollView, { width: '100%' }]}
+                  contentContainerStyle={[
+                    styles.scrollContent,
+                    { alignItems: 'stretch', width: '100%' },
+                  ]}
+                  showsVerticalScrollIndicator={true}
+                  keyboardShouldPersistTaps="handled"
+                  nestedScrollEnabled={true}>
                 {children}
               </ScrollView>
-            </AnimatedCard>
+              </View>
+            </Animated.View>
           </TouchableWithoutFeedback>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -121,19 +165,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: spacing.lg,
+    padding: spacing.md,
   },
   modalContent: {
     width: '100%',
     maxWidth: 500,
     borderRadius: borderRadius.xl,
-    maxHeight: '80%',
+    maxHeight: '95%',
+    minHeight: 200,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: spacing.md,
+    flexShrink: 0,
   },
   title: {
     flex: 1,
@@ -142,10 +188,15 @@ const styles = StyleSheet.create({
     padding: spacing.xs,
     marginLeft: spacing.sm,
   },
+  contentContainer: {
+    width: '100%',
+    maxHeight: '100%',
+  },
   scrollView: {
-    flex: 1,
+    width: '100%',
   },
   scrollContent: {
+    flexGrow: 1,
     paddingBottom: spacing.lg,
   },
 });
