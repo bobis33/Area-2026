@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Switch } from 'react-native';
-import { MobileText as Text } from '@/components/ui-mobile';
+import { MobileText as Text , MobileInput } from '@/components/ui-mobile';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { ParamField } from '@/types/api';
 import { ParamMap, isParamObject } from '@/utils/areaHelpers';
-import { MobileInput } from '@/components/ui-mobile';
-import { borderRadius, spacing } from '@area/ui';
+import { spacing } from '@area/ui';
 
 interface ParameterFormProps {
   paramsDef: ParamMap | undefined;

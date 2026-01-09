@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Card } from '@area/ui';
+import { Card , spacing, borderRadius } from '@area/ui';
 import { MobileText as Text } from '@/components/ui-mobile';
-import { spacing, borderRadius } from '@area/ui';
 import type { CardProps } from '@area/ui';
 import { useAppTheme } from '@/contexts/ThemeContext';
 

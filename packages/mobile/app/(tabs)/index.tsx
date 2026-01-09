@@ -6,10 +6,8 @@ import Animated, {
   useAnimatedStyle,
   withRepeat,
   withTiming,
-  interpolate,
 } from 'react-native-reanimated';
-import { MobileText as Text } from '@/components/ui-mobile';
-import { MobileScreen, MobileButton } from '@/components/ui-mobile';
+import { MobileText as Text , MobileScreen, MobileButton } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { FadeInView } from '@/components/animations';

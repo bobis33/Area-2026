@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { MobileText as Text } from '@/components/ui-mobile';
-import { MobileScreen, MobileButton } from '@/components/ui-mobile';
+import { MobileText as Text , MobileScreen, MobileButton } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';

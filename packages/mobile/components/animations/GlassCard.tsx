@@ -1,13 +1,11 @@
 import React from 'react';
-import { ViewProps } from 'react-native';
+import { ViewProps , StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
-  interpolate,
 } from 'react-native-reanimated';
-import { StyleSheet, ViewStyle } from 'react-native';
 
 interface GlassCardProps extends ViewProps {
   children: React.ReactNode;

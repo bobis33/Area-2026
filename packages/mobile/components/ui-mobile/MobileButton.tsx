@@ -1,8 +1,8 @@
 import React from 'react';
-import { Platform, TouchableOpacity, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import { Platform, TouchableOpacity, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { Button, type ButtonProps, colors, spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
+import { type ButtonProps, spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
 import { MobileText as Text } from './MobileText';
 import { useAppTheme } from '@/contexts/ThemeContext';
 

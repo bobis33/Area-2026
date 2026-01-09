@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity, Switch, Alert, Platform } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { MobileText as Text } from '@/components/ui-mobile';
-import { MobileScreen } from '@/components/ui-mobile';
+import { MobileText as Text , MobileScreen , MobileBadge } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { Modal } from '@/components/layout/Modal';
 import { IconSymbol } from '@/components/ui/icon-symbol';
-import { MobileBadge } from '@/components/ui-mobile';
 import { ServiceIcon } from '@/components/ui/ServiceIcon';
 import { AnimatedCard, FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -16,7 +14,6 @@ import { AreaModel } from '@/types/api';
 import { getServiceBrandColors } from '@/utils/areaHelpers';
 import * as WebBrowser from 'expo-web-browser';
 import * as AuthSession from 'expo-auth-session';
-import * as Haptics from 'expo-haptics';
 import { API_BASE_URL } from '@/constants/api';
 
 WebBrowser.maybeCompleteAuthSession();

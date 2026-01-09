@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Alert, View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
-import { MobileText as Text } from '@/components/ui-mobile';
-import {
+import { MobileText as Text ,
   MobileScreen,
   MobileButton,
   MobileInput,

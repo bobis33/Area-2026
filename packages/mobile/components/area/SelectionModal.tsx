@@ -1,12 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  interpolate,
-} from 'react-native-reanimated';
+import { View, StyleSheet } from 'react-native';
 import { MobileText as Text } from '@/components/ui-mobile';
 import { Modal } from '@/components/layout/Modal';
 import { useAppTheme } from '@/contexts/ThemeContext';

@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity, Switch } from 'react-native';
-import { MobileText as Text } from '@/components/ui-mobile';
-import { MobileScreen } from '@/components/ui-mobile';
+import { View, StyleSheet, Switch } from 'react-native';
+import { MobileText as Text , MobileScreen , MobileButton , MobileInput } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -9,8 +8,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAreaCreation } from '@/hooks/useAreaCreation';
 import { ActionReactionSelector } from '@/components/area/ActionReactionSelector';
 import { SelectionModal } from '@/components/area/SelectionModal';
-import { MobileButton } from '@/components/ui-mobile';
-import { MobileInput } from '@/components/ui-mobile';
 
 export default function CreateAreaScreen() {
   const { currentTheme } = useAppTheme();
