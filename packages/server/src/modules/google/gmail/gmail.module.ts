@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { GmailService } from '@modules/gmail/gmail.service';
+import { GmailService } from '@modules/google/gmail/gmail.service';
 
 @Module({
   providers: [GmailService],

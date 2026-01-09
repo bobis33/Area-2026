@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GmailService } from '@modules/gmail/gmail.service';
+import { GmailService } from '@modules/google/gmail/gmail.service';
 import { ReactionHandler } from '@interfaces/area.interface';
 import { Reaction } from '@decorators/area.decorator';
 

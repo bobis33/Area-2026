@@ -54,6 +54,27 @@ export class GmailService {
     return google.gmail({ version: 'v1', auth: oauth2Client });
   }
 
+  private encodeMessage(
+    to: string,
+    subject: string,
+    body: string,
+    isHtml: boolean,
+  ): string {
+    const message = [
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      `Content-Type: text/${isHtml ? 'html' : 'plain'}; charset=utf-8`,
+      '',
+      body,
+    ].join('\n');
+
+    return Buffer.from(message)
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  }
+
   async sendEmail(
     userId: number,
     params: {
@@ -64,22 +85,8 @@ export class GmailService {
     },
   ): Promise<void> {
     const { to, subject, body, isHtml = false } = params;
-
     const gmail = await this.getGmailClient(userId);
-
-    const message = [
-      `To: ${to}`,
-      `Subject: ${subject}`,
-      `Content-Type: text/${isHtml ? 'html' : 'plain'}; charset=utf-8`,
-      '',
-      body,
-    ].join('\n');
-
-    const encodedMessage = Buffer.from(message)
-      .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+    const encodedMessage = this.encodeMessage(to, subject, body, isHtml);
 
     await gmail.users.messages.send({
       userId: 'me',
@@ -101,22 +108,8 @@ export class GmailService {
     },
   ): Promise<void> {
     const { to, subject, body, isHtml = false } = params;
-
     const gmail = await this.getGmailClient(userId);
-
-    const message = [
-      `To: ${to}`,
-      `Subject: ${subject}`,
-      `Content-Type: text/${isHtml ? 'html' : 'plain'}; charset=utf-8`,
-      '',
-      body,
-    ].join('\n');
-
-    const encodedMessage = Buffer.from(message)
-      .toString('base64')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
+    const encodedMessage = this.encodeMessage(to, subject, body, isHtml);
 
     await gmail.users.drafts.create({
       userId: 'me',

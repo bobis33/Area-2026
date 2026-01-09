@@ -1,10 +1,9 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits, TextChannel } from 'discord.js';
 
 @Injectable()
 export class DiscordService implements OnModuleInit {
-  private readonly logger = new Logger(DiscordService.name);
   public client: Client;
 
   constructor(private configService: ConfigService) {
@@ -15,8 +14,31 @@ export class DiscordService implements OnModuleInit {
 
   async onModuleInit() {
     const token = this.configService.get<string>('DISCORD_BOT_TOKEN');
-
     await this.client.login(token);
-    this.logger.log('Discord bot logged in successfully');
+  }
+
+  async sendMessageToChannel(
+    channelId: string,
+    message: string,
+  ): Promise<void> {
+    const channel = await this.client.channels.fetch(channelId);
+    if (
+      !channel ||
+      !channel.isTextBased() ||
+      !(channel instanceof TextChannel)
+    ) {
+      throw new Error(`Invalid channel ${channelId}`);
+    }
+
+    await channel.send(message);
+  }
+
+  async sendMessageToUser(userId: string, message: string): Promise<void> {
+    const user = await this.client.users.fetch(userId);
+    if (!user) {
+      throw new Error(`Invalid user ${userId}`);
+    }
+
+    await user.send(message);
   }
 }
