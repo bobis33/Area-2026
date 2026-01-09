@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { ActionHandler } from '@interfaces/area.interface';
 import { Action } from '@decorators/area.decorator';
 import { SpotifyService } from '@modules/spotify/spotify.service';
+
+interface TrackPlayingState {
+  lastTrackId?: string;
+}
 
 @Action({
   name: 'spotify.track_is_playing',
@@ -14,26 +18,26 @@ export class SpotifyTrackIsPlayingAction implements ActionHandler {
 
   async check(
     _parameters: object,
-    currentState: { lastTrackId?: string; wasPlaying?: boolean } | null,
+    currentState: TrackPlayingState | null,
     context?: { userId: number },
   ): Promise<{ triggered: boolean; newState?: any }> {
-    const track = await this.spotifyService.getCurrentTrack(context!.userId);
-    const state = currentState ?? { wasPlaying: false };
-
-    if (!track) {
-      return { triggered: false, newState: { ...state, wasPlaying: false } };
+    if (!context?.userId) {
+      throw new BadRequestException('User ID is required');
     }
 
-    const isPlaying = track.is_playing;
-    const newTrack = track.id !== state.lastTrackId;
+    const track = await this.spotifyService.getCurrentTrack(context.userId);
+    const state = currentState ?? {};
 
-    const triggered = isPlaying && newTrack;
+    if (!track?.is_playing) {
+      return { triggered: false, newState: state };
+    }
+
+    const isNewTrack = track.id !== state.lastTrackId;
 
     return {
-      triggered,
+      triggered: isNewTrack,
       newState: {
         lastTrackId: track.id,
-        wasPlaying: isPlaying,
         currentTrack: {
           id: track.id,
           name: track.name,

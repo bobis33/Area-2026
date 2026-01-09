@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { ActionHandler } from '@interfaces/area.interface';
 import { Action } from '@decorators/area.decorator';
 import { SpotifyService } from '@modules/spotify/spotify.service';
+
+interface SavedTrackState {
+  lastTrackId?: string;
+}
 
 @Action({
   name: 'spotify.new_saved_track',
@@ -14,10 +18,14 @@ export class SpotifyNewSavedTrackAction implements ActionHandler {
 
   async check(
     _parameters: object,
-    currentState: { lastTrackId?: string; totalSaved?: number } | null,
+    currentState: SavedTrackState | null,
     context?: { userId: number },
   ): Promise<{ triggered: boolean; newState?: any }> {
-    const tracks = await this.spotifyService.getSavedTracks(context!.userId, 1);
+    if (!context?.userId) {
+      throw new BadRequestException('User ID is required');
+    }
+
+    const tracks = await this.spotifyService.getSavedTracks(context.userId, 1);
     const state = currentState ?? {};
 
     if (!tracks.length) {
@@ -25,18 +33,9 @@ export class SpotifyNewSavedTrackAction implements ActionHandler {
     }
 
     const latestTrack = tracks[0];
+    const isNewTrack = latestTrack.id !== state.lastTrackId;
 
-    if (!state.lastTrackId) {
-      return {
-        triggered: false,
-        newState: {
-          lastTrackId: latestTrack.id,
-          totalSaved: 1,
-        },
-      };
-    }
-
-    if (latestTrack.id === state.lastTrackId) {
+    if (!isNewTrack) {
       return { triggered: false, newState: state };
     }
 

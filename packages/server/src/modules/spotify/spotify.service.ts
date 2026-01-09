@@ -33,10 +33,55 @@ export interface SpotifyTrack {
 @Injectable()
 export class SpotifyService {
   private readonly apiBaseUrl = 'https://api.spotify.com/v1';
+  private readonly accessTokenCache = new Map<
+    number,
+    { token: string; expiresAt: number }
+  >();
 
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Extracts Spotify resource ID from URI or URL format
+   * @example extractSpotifyId('spotify:track:123') -> '123'
+   * @example extractSpotifyId('https://open.spotify.com/track/123?si=xxx') -> '123'
+   */
+  private extractSpotifyId(
+    input: string,
+    resourceType: 'track' | 'playlist',
+  ): string {
+    const cleaned = input.split('?')[0]; // Remove query params
+
+    // Handle spotify:track:ID or spotify:playlist:ID format
+    if (cleaned.startsWith(`spotify:${resourceType}:`)) {
+      return cleaned.split(':')[2] || '';
+    }
+
+    // Handle https://open.spotify.com/track/ID format
+    const pattern = new RegExp(`${resourceType}\\/([a-zA-Z0-9]+)`);
+    const match = cleaned.match(pattern);
+    return match ? match[1] : '';
+  }
+
+  /**
+   * Normalizes Spotify URI to canonical format (spotify:type:ID)
+   */
+  private normalizeToUri(input: string, type: 'track' | 'playlist'): string {
+    const id = this.extractSpotifyId(input, type);
+    if (!id) {
+      throw new BadRequestException(
+        `Invalid Spotify ${type} URI/URL format. Expected spotify:${type}:ID or https://open.spotify.com/${type}/ID`,
+      );
+    }
+    return `spotify:${type}:${id}`;
+  }
+
   async getAccessToken(userId: number): Promise<string> {
+    // Check cache first
+    const cached = this.accessTokenCache.get(userId);
+    if (cached && cached.expiresAt > Date.now()) {
+      return cached.token;
+    }
+
     const account = await this.prisma.providerAccount.findFirst({
       where: {
         user_id: userId,
@@ -47,6 +92,12 @@ export class SpotifyService {
     if (!account || !account.access_token) {
       throw new BadRequestException('Spotify account not linked');
     }
+
+    // Cache for 55 minutes (tokens valid for 60 minutes)
+    this.accessTokenCache.set(userId, {
+      token: account.access_token,
+      expiresAt: Date.now() + 55 * 60 * 1000,
+    });
 
     return account.access_token;
   }
@@ -197,15 +248,22 @@ export class SpotifyService {
     trackUri: string,
   ): Promise<void> {
     const accessToken = await this.getAccessToken(userId);
+    const normalizedPlaylistId = this.extractSpotifyId(playlistId, 'playlist');
+    const normalizedTrackUri = this.normalizeToUri(trackUri, 'track');
 
-    await this.request<void>(accessToken, `/playlists/${playlistId}/tracks`, {
-      method: 'POST',
-      body: JSON.stringify({ uris: [trackUri] }),
-    });
+    await this.request<void>(
+      accessToken,
+      `/playlists/${normalizedPlaylistId}/tracks`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ uris: [normalizedTrackUri] }),
+      },
+    );
   }
 
-  async saveTrack(userId: number, trackId: string): Promise<void> {
+  async saveTrack(userId: number, trackUri: string): Promise<void> {
     const accessToken = await this.getAccessToken(userId);
+    const trackId = this.extractSpotifyId(trackUri, 'track');
 
     await this.request<void>(accessToken, `/me/tracks?ids=${trackId}`, {
       method: 'PUT',
@@ -214,10 +272,11 @@ export class SpotifyService {
 
   async playTrack(userId: number, trackUri: string): Promise<void> {
     const accessToken = await this.getAccessToken(userId);
+    const normalizedUri = this.normalizeToUri(trackUri, 'track');
 
     await this.request<void>(accessToken, '/me/player/play', {
       method: 'PUT',
-      body: JSON.stringify({ uris: [trackUri] }),
+      body: JSON.stringify({ uris: [normalizedUri] }),
     });
   }
 
