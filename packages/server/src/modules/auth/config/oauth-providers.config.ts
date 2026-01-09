@@ -47,7 +47,17 @@ export function getProviderConfig(
       callbackURL:
         configService.get<string>('SPOTIFY_CALLBACK_URL') ||
         'http://127.0.0.1:8080/auth/spotify/callback',
-      scope: ['user-read-email', 'user-read-private'],
+      scope: [
+        'user-read-email',
+        'user-read-private',
+        'user-read-currently-playing',
+        'user-read-playback-state',
+        'user-modify-playback-state',
+        'user-library-read',
+        'user-library-modify',
+        'playlist-modify-public',
+        'playlist-modify-private',
+      ],
     },
     [OAuthProvider.GITLAB]: {
       clientID: configService.get<string>('GITLAB_CLIENT_ID') || '',

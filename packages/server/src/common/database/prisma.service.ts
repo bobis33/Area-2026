@@ -11,7 +11,11 @@ export class PrismaService
     super({
       adapter: new PrismaPg({
         connectionString: process.env.POSTGRES_URL,
+        max: 10,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 5000,
       }),
+      log: ['error', 'warn'],
     });
   }
 
