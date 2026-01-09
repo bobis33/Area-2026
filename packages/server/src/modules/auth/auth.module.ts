@@ -3,7 +3,6 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { AuthService } from '@modules/auth/auth.service';
 import { AuthController } from '@modules/auth/auth.controller';
-import { DatabaseModule } from '@common/database/database.module';
 import {
   DiscordOAuthStrategy,
   GoogleOAuthStrategy,
@@ -24,7 +23,6 @@ import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';
   imports: [
     PassportModule.register({ session: false }),
     ConfigModule,
-    DatabaseModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
