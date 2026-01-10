@@ -6,6 +6,7 @@ import {
   Put,
   Delete,
   Param,
+  Query,
   ParseIntPipe,
   ParseBoolPipe,
 } from '@nestjs/common';
@@ -82,7 +83,7 @@ export class AreaController {
   })
   activate(
     @Param('id', ParseIntPipe) id: number,
-    @Param('active', ParseBoolPipe) active: boolean,
+    @Query('active', ParseBoolPipe) active: boolean,
   ) {
     return this.areaService.activate(id, active);
   }
