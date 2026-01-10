@@ -8,6 +8,6 @@ import { GmailCreateDraftReaction } from '@modules/area/reactions/google/gmail/c
 export const ReactionsRegistry: Record<string, Type<ReactionHandler>> = {
   'discord.send_message_channel': DiscordSendMessageChannelReaction,
   'discord.send_message_user': DiscordSendMessageUserReaction,
-  'gmail.send_email': GmailSendEmailReaction,
-  'gmail.create_draft': GmailCreateDraftReaction,
+  'google.send_email': GmailSendEmailReaction,
+  'google.create_draft': GmailCreateDraftReaction,
 };
