@@ -326,6 +326,42 @@ class ApiService {
   }
 
   /**
+   * Activate or deactivate an AREA using the /activate endpoint
+   * @param id - AREA ID
+   * @param active - Activation status (true to activate, false to deactivate)
+   * @param token - JWT authentication token
+   * @returns Promise with updated AREA
+   */
+  async toggleAreaActive(
+    id: number,
+    active: boolean,
+    token: string,
+  ): Promise<AreaModel> {
+    // Use query param as the backend expects @Query('active', ParseBoolPipe)
+    const url = `${this.baseUrl}${API_ENDPOINTS.AREAS}/${id}/activate?active=${active}`;
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      const errorText = await res.text();
+      let errorMessage = `Failed to toggle area activation: ${res.status}`;
+      try {
+        const errorData = JSON.parse(errorText);
+        errorMessage = errorData.message || errorMessage;
+      } catch {
+        // If not JSON, use the text or default message
+        if (errorText) errorMessage = errorText;
+      }
+      throw new Error(errorMessage);
+    }
+    return res.json();
+  }
+
+  /**
    * Delete an AREA
    * @param id - AREA ID
    * @param token - JWT authentication token

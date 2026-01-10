@@ -18,7 +18,6 @@ import { API_BASE_URL } from '@/constants/api';
 
 WebBrowser.maybeCompleteAuthSession();
 
-type OAuthProvider = 'github' | 'google' | 'discord' | 'spotify' | 'gitlab';
 
 interface Automation {
   id: string;
@@ -116,8 +115,7 @@ export default function AreaScreen() {
     router.push('/(tabs)/area/create');
   };
 
-  const handleToggleActive = async (automation: Automation, e: any) => {
-    e.stopPropagation();
+  const handleToggleActive = async (automation: Automation) => {
     if (!token) return;
 
     const newStatus = automation.status === 'active' ? 'inactive' : 'active';
@@ -132,19 +130,25 @@ export default function AreaScreen() {
     setTogglingIds(prev => new Set(prev).add(automation.id));
 
     try {
-      await apiService.updateArea(
+      await apiService.toggleAreaActive(
         parseInt(automation.id),
-        { is_active: newIsActive },
+        newIsActive,
         token,
       );
+      // Reload areas to get the updated status from server
       await loadAreas();
-    } catch (error) {
+    } catch (error: any) {
+      // Revert optimistic update on error
       setAutomations(prev =>
         prev.map(a =>
           a.id === automation.id
             ? { ...a, status: automation.status }
             : a
         )
+      );
+      Alert.alert(
+        'Error',
+        error.message || 'Failed to update automation status. Please try again.',
       );
     } finally {
       setTogglingIds(prev => {
@@ -155,8 +159,7 @@ export default function AreaScreen() {
     }
   };
 
-  const handleDelete = async (automation: Automation, e: any) => {
-    e.stopPropagation();
+  const handleDelete = async (automation: Automation) => {
     if (!token) return;
 
     Alert.alert(
@@ -432,7 +435,7 @@ export default function AreaScreen() {
             ) : (
               automations.map((automation, index) => (
                 <FadeInView key={automation.id} delay={150 + index * 100} spring>
-                <AnimatedCard
+                <AnimatedCard 
                   haptic
                   onPress={() => setSelectedAutomation(automation)}>
                   <SectionCard>
@@ -441,7 +444,10 @@ export default function AreaScreen() {
                         <Text variant="body" style={styles.automationName}>
                           {automation.name}
                         </Text>
-                          <View style={styles.automationControls}>
+                          <View 
+                            style={styles.automationControls}
+                            onStartShouldSetResponder={() => true}
+                            onResponderTerminationRequest={() => false}>
                             <MobileBadge
                               variant={automation.status === 'active' ? 'active' : 'paused'}
                               showDot
@@ -449,13 +455,13 @@ export default function AreaScreen() {
                               {automation.status === 'active' ? 'Active' : 'Paused'}
                             </MobileBadge>
                             <TouchableOpacity
-                              onPress={(e) => handleToggleActive(automation, e)}
+                              onPress={() => handleToggleActive(automation)}
                               disabled={togglingIds.has(automation.id)}
                               style={[
                                 styles.toggleButton,
                                 {
                                   opacity: togglingIds.has(automation.id) ? 0.5 : 1,
-                                  borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                                  borderColor: (currentTheme.colors as any).borderSubtle || currentTheme.colors.border,
                                   backgroundColor: automation.status === 'active'
                                     ? currentTheme.colors.surfaceMuted
                                     : currentTheme.colors.primarySoft,
@@ -476,7 +482,7 @@ export default function AreaScreen() {
                           </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                              onPress={(e) => handleDelete(automation, e)}
+                              onPress={() => handleDelete(automation)}
                               disabled={deletingIds.has(automation.id)}
                               style={[
                                 styles.deleteButton,
