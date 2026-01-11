@@ -1,8 +1,20 @@
 import React from 'react';
-import { Platform, TouchableOpacity, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import {
+  Platform,
+  TouchableOpacity,
+  ActivityIndicator,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { type ButtonProps, spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
+import {
+  type ButtonProps,
+  spacing,
+  borderRadius,
+  fontSizes,
+  fontWeights,
+} from '@area/ui';
 import { MobileText as Text } from './MobileText';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
@@ -61,7 +73,9 @@ export const MobileButton: React.FC<MobileButtonProps> = ({
       case 'secondary':
         base.backgroundColor = currentTheme.colors.surfaceMuted;
         base.borderWidth = 1;
-        base.borderColor = (currentTheme.colors as any).borderSubtle || currentTheme.colors.border;
+        base.borderColor =
+          (currentTheme.colors as any).borderSubtle ||
+          currentTheme.colors.border;
         break;
       case 'ghost':
         base.backgroundColor = 'transparent';
@@ -106,12 +120,14 @@ export const MobileButton: React.FC<MobileButtonProps> = ({
       )}
       <Text
         variant="body"
-        style={{
-          fontSize: fontSizes.md,
-          fontWeight: fontWeights.semibold,
-          color: getTextColor(),
-          ...labelStyle,
-        } as TextStyle}
+        style={
+          {
+            fontSize: fontSizes.md,
+            fontWeight: fontWeights.semibold,
+            color: getTextColor(),
+            ...labelStyle,
+          } as TextStyle
+        }
       >
         {label}
       </Text>

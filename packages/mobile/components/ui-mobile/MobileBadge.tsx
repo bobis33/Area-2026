@@ -35,24 +35,30 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
       case 'active':
         return {
           ...base,
-          backgroundColor: currentTheme.colors.primarySoft || `${currentTheme.colors.primary}20`,
+          backgroundColor:
+            currentTheme.colors.primarySoft ||
+            `${currentTheme.colors.primary}20`,
         };
       case 'connected':
         return {
           ...base,
-          backgroundColor: currentTheme.colors.successSoft || 'rgba(26,158,91,0.15)',
+          backgroundColor:
+            currentTheme.colors.successSoft || 'rgba(26,158,91,0.15)',
         };
       case 'inactive':
         return {
           ...base,
-          backgroundColor: currentTheme.colors.surfaceMuted || currentTheme.colors.surface,
+          backgroundColor:
+            currentTheme.colors.surfaceMuted || currentTheme.colors.surface,
           borderWidth: 1,
-          borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+          borderColor:
+            currentTheme.colors.borderSubtle || currentTheme.colors.border,
         };
       case 'paused':
         return {
           ...base,
-          backgroundColor: currentTheme.colors.dangerSoft || 'rgba(224,52,52,0.15)',
+          backgroundColor:
+            currentTheme.colors.dangerSoft || 'rgba(224,52,52,0.15)',
         };
       default:
         return base;
@@ -66,7 +72,9 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
       case 'connected':
         return currentTheme.colors.success || (isDark ? '#42CF88' : '#1A9E5B');
       case 'inactive':
-        return currentTheme.colors.textMuted || currentTheme.colors.textSecondary;
+        return (
+          currentTheme.colors.textMuted || currentTheme.colors.textSecondary
+        );
       case 'paused':
         return currentTheme.colors.danger || '#E03434';
       default:
@@ -81,7 +89,9 @@ export const MobileBadge: React.FC<MobileBadgeProps> = ({
       case 'connected':
         return currentTheme.colors.success || (isDark ? '#42CF88' : '#1A9E5B');
       case 'inactive':
-        return currentTheme.colors.textMuted || currentTheme.colors.textSecondary;
+        return (
+          currentTheme.colors.textMuted || currentTheme.colors.textSecondary
+        );
       case 'paused':
         return currentTheme.colors.danger || '#E03434';
       default:
@@ -122,5 +132,3 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
 });
-
-

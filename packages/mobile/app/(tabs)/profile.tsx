@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Platform, TouchableOpacity, Alert } from 'react-native';
-import { MobileText as Text , MobileScreen, MobileButton, MobileInput } from '@/components/ui-mobile';
+import {
+  View,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import {
+  MobileText as Text,
+  MobileScreen,
+  MobileButton,
+  MobileInput,
+} from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme, type ThemeMode } from '@/contexts/ThemeContext';
-import { getServerUrl, saveServerUrl, resetServerUrl } from '@/utils/serverConfig';
+import {
+  getServerUrl,
+  saveServerUrl,
+  resetServerUrl,
+} from '@/utils/serverConfig';
 import { apiService } from '@/services/api.service';
 import Constants from 'expo-constants';
 
@@ -25,8 +40,7 @@ export default function ProfileScreen() {
     try {
       const url = await getServerUrl();
       setServerUrl(url);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleSaveServerUrl = async () => {
@@ -38,7 +52,10 @@ export default function ProfileScreen() {
     try {
       new URL(serverUrl.trim());
     } catch {
-      Alert.alert('Error', 'Please enter a valid URL (e.g., http://localhost:8080)');
+      Alert.alert(
+        'Error',
+        'Please enter a valid URL (e.g., http://localhost:8080)',
+      );
       return;
     }
 
@@ -49,34 +66,33 @@ export default function ProfileScreen() {
       setEditingServerUrl(false);
       Alert.alert('Success', 'Server URL updated successfully');
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to save server URL');
+      Alert.alert(
+        'Error',
+        error instanceof Error ? error.message : 'Failed to save server URL',
+      );
     } finally {
       setSaving(false);
     }
   };
 
   const handleResetServerUrl = async () => {
-    Alert.alert(
-      'Reset Server URL',
-      'Reset to default server URL?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Reset',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await resetServerUrl();
-              await loadServerUrl();
-              await apiService.updateBaseUrl();
-              Alert.alert('Success', 'Server URL reset to default');
-            } catch (error) {
-              Alert.alert('Error', 'Failed to reset server URL');
-            }
-          },
+    Alert.alert('Reset Server URL', 'Reset to default server URL?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Reset',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await resetServerUrl();
+            await loadServerUrl();
+            await apiService.updateBaseUrl();
+            Alert.alert('Success', 'Server URL reset to default');
+          } catch (error) {
+            Alert.alert('Error', 'Failed to reset server URL');
+          }
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const getInitials = (name?: string, email?: string): string => {
@@ -292,7 +308,7 @@ export default function ProfileScreen() {
                   </TouchableOpacity>
                 )}
               </View>
-              
+
               {editingServerUrl ? (
                 <View style={styles.serverUrlEditor}>
                   <MobileInput

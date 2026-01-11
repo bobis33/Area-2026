@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import { WebCard } from "@/components/ui-web";
-import "./Dashboard.css";
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { WebCard } from '@/components/ui-web';
+import './Dashboard.css';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -83,8 +83,8 @@ export default function Dashboard() {
                 <div className="quick-info-details">
                   <span className="quick-info-label">Provider</span>
                   <span className="quick-info-value">
-                    {user.provider === "local"
-                      ? "Email/Password"
+                    {user.provider === 'local'
+                      ? 'Email/Password'
                       : user.provider.charAt(0).toUpperCase() +
                         user.provider.slice(1)}
                   </span>
@@ -94,10 +94,10 @@ export default function Dashboard() {
                 <div className="quick-info-details">
                   <span className="quick-info-label">Member since</span>
                   <span className="quick-info-value">
-                    {new Date(user.created_at).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
+                    {new Date(user.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
                     })}
                   </span>
                 </div>

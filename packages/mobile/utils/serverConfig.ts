@@ -11,8 +11,7 @@ export const getServerUrl = async (): Promise<string> => {
     if (savedUrl) {
       return savedUrl;
     }
-  } catch (error) {
-  }
+  } catch (error) {}
   if (process.env.EXPO_PUBLIC_API_URL) {
     return process.env.EXPO_PUBLIC_API_URL;
   }
@@ -26,7 +25,11 @@ export const getServerUrl = async (): Promise<string> => {
 export const saveServerUrl = async (url: string): Promise<void> => {
   try {
     const trimmedUrl = url.trim();
-    if (trimmedUrl && !trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+    if (
+      trimmedUrl &&
+      !trimmedUrl.startsWith('http://') &&
+      !trimmedUrl.startsWith('https://')
+    ) {
       throw new Error('URL must start with http:// or https://');
     }
     if (trimmedUrl) {
@@ -49,4 +52,3 @@ export const resetServerUrl = async (): Promise<void> => {
     throw error;
   }
 };
-

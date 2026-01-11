@@ -80,5 +80,3 @@ export const typography = {
     bold: '700' as const,
   },
 } as const;
-
-

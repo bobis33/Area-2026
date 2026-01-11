@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Card , spacing, borderRadius } from '@area/ui';
+import { Card, spacing, borderRadius } from '@area/ui';
 import { MobileText as Text } from '@/components/ui-mobile';
 import type { CardProps } from '@area/ui';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -23,15 +23,18 @@ export const SectionCard: React.FC<SectionCardProps> = ({
     <Card
       padding="md"
       elevated
-      style={[
-        styles.card,
-        {
-          backgroundColor: currentTheme.colors.surface,
-          borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
-          borderWidth: 1,
-        },
-        cardProps.style,
-      ] as any}
+      style={
+        [
+          styles.card,
+          {
+            backgroundColor: currentTheme.colors.surface,
+            borderColor:
+              currentTheme.colors.borderSubtle || currentTheme.colors.border,
+            borderWidth: 1,
+          },
+          cardProps.style,
+        ] as any
+      }
       {...cardProps}
     >
       {(title || subtitle) && (

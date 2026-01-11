@@ -14,7 +14,7 @@ import Animated, {
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import { Card , spacing, borderRadius } from '@area/ui';
+import { Card, spacing, borderRadius } from '@area/ui';
 import { MobileText as Text } from '@/components/ui-mobile';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -65,14 +65,11 @@ export const Modal: React.FC<ModalProps> = ({
   const animatedCardStyle = useAnimatedStyle(() => {
     const borderOpacity = interpolate(opacity.value, [0, 1], [0.2, 0.3]);
     return {
-      transform: [
-        { scale: scale.value },
-        { translateY: translateY.value },
-      ],
-    opacity: opacity.value,
+      transform: [{ scale: scale.value }, { translateY: translateY.value }],
+      opacity: opacity.value,
       borderColor: isDark
         ? `rgba(255, 255, 255, ${borderOpacity})`
-        : (currentTheme.colors.borderSubtle || currentTheme.colors.border),
+        : currentTheme.colors.borderSubtle || currentTheme.colors.border,
     };
   });
 
@@ -121,10 +118,7 @@ export const Modal: React.FC<ModalProps> = ({
             >
               {title && (
                 <View style={styles.header}>
-                  <Text
-                    variant="subtitle"
-                    style={styles.title}
-                  >
+                  <Text variant="subtitle" style={styles.title}>
                     {title}
                   </Text>
                   <TouchableOpacity
@@ -140,7 +134,7 @@ export const Modal: React.FC<ModalProps> = ({
                 </View>
               )}
               <View style={styles.contentContainer}>
-              <ScrollView
+                <ScrollView
                   style={[styles.scrollView, { width: '100%' }]}
                   contentContainerStyle={[
                     styles.scrollContent,
@@ -148,9 +142,10 @@ export const Modal: React.FC<ModalProps> = ({
                   ]}
                   showsVerticalScrollIndicator={true}
                   keyboardShouldPersistTaps="handled"
-                  nestedScrollEnabled={true}>
-                {children}
-              </ScrollView>
+                  nestedScrollEnabled={true}
+                >
+                  {children}
+                </ScrollView>
               </View>
             </Animated.View>
           </TouchableWithoutFeedback>

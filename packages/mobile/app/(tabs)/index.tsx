@@ -7,7 +7,11 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import { MobileText as Text , MobileScreen, MobileButton } from '@/components/ui-mobile';
+import {
+  MobileText as Text,
+  MobileScreen,
+  MobileButton,
+} from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { FadeInView } from '@/components/animations';
@@ -18,20 +22,16 @@ const GlowCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const progress = useSharedValue(0);
 
   useEffect(() => {
-    progress.value = withRepeat(
-      withTiming(1, { duration: 4000 }),
-      -1,
-      false
-    );
+    progress.value = withRepeat(withTiming(1, { duration: 4000 }), -1, false);
   }, []);
 
   const animatedStyle = useAnimatedStyle(() => {
     const phase = progress.value * 3; // 0 to 3
-    
+
     let r = 58; // Blue default
     let g = 86;
     let b = 210;
-    
+
     if (phase < 1) {
       const t = phase;
       r = Math.round(58 + (255 - 58) * t);

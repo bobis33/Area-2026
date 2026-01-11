@@ -27,7 +27,7 @@ import {
   RegisterDto,
 } from '@dto/auth.dto';
 import { getEnabledProviders } from '@modules/auth/config/oauth-providers.config';
-import {AuthService, RequestWithUser} from '@modules/auth/auth.service';
+import { AuthService, RequestWithUser } from '@modules/auth/auth.service';
 import { DiscordAuthGuard } from '@modules/auth/guards/discord-auth.guard';
 import { GithubAuthGuard } from '@modules/auth/guards/github-auth.guard';
 import { GoogleAuthGuard } from '@modules/auth/guards/google-auth.guard';

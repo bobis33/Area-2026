@@ -3,10 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { MobileText as Text } from '@/components/ui-mobile';
 import { Modal } from '@/components/layout/Modal';
 import { useAppTheme } from '@/contexts/ThemeContext';
-import {
-  AreaActionDefinition,
-  AreaReactionDefinition,
-} from '@/types/api';
+import { AreaActionDefinition, AreaReactionDefinition } from '@/types/api';
 import { makeKey } from '@/utils/areaHelpers';
 import { ModalStep, SelectionKind } from '@/hooks/useAreaCreation';
 import { borderRadius, spacing } from '@area/ui';
@@ -18,13 +15,15 @@ import * as Haptics from 'expo-haptics';
 /**
  * Get brand colors for a service
  */
-const getServiceBrandColors = (service: string): { 
-  backgroundColor: string; 
+const getServiceBrandColors = (
+  service: string,
+): {
+  backgroundColor: string;
   borderColor: string;
   iconColor: string;
 } => {
   const serviceLower = service.toLowerCase();
-  
+
   switch (serviceLower) {
     case 'discord':
       return {
@@ -99,11 +98,13 @@ export function SelectionModal({
   const { currentTheme } = useAppTheme();
 
   const sortServices = (services: string[]): string[] => {
-    const normalizedProviders = availableProviders.map(p => String(p).toLowerCase());
+    const normalizedProviders = availableProviders.map((p) =>
+      String(p).toLowerCase(),
+    );
     const oauthServices: string[] = [];
     const systemServices: string[] = [];
-    
-    services.forEach(service => {
+
+    services.forEach((service) => {
       const normalized = String(service).toLowerCase();
       if (normalizedProviders.includes(normalized)) {
         oauthServices.push(service);
@@ -123,11 +124,13 @@ export function SelectionModal({
           ? Object.keys(actionsByService)
           : Object.keys(reactionsByService);
       if (selectionKind === 'action') {
-        servicesFromData = servicesFromData.filter(s => s.toLowerCase() !== 'time');
+        servicesFromData = servicesFromData.filter(
+          (s) => s.toLowerCase() !== 'time',
+        );
       }
       const allServicesSet = new Set([
         ...servicesFromData,
-        ...availableProviders.map(p => String(p).toLowerCase()),
+        ...availableProviders.map((p) => String(p).toLowerCase()),
       ]);
       const servicesForMode = sortServices(Array.from(allServicesSet));
 
@@ -136,7 +139,8 @@ export function SelectionModal({
           {servicesForMode.length === 0 ? (
             <View style={styles.emptyState}>
               <Text variant="body" color="muted" style={styles.emptyText}>
-                No {selectionKind === 'action' ? 'actions' : 'reactions'} available.
+                No {selectionKind === 'action' ? 'actions' : 'reactions'}{' '}
+                available.
               </Text>
             </View>
           ) : (
@@ -145,18 +149,22 @@ export function SelectionModal({
                 let count = 0;
                 if (selectionKind === 'action') {
                   if (service.toLowerCase() === 'discord') {
-                    count = (actionsByService['discord']?.length ?? 0) + (actionsByService['time']?.length ?? 0);
+                    count =
+                      (actionsByService['discord']?.length ?? 0) +
+                      (actionsByService['time']?.length ?? 0);
                   } else {
-                    count = (actionsByService[service]?.length ?? 0);
+                    count = actionsByService[service]?.length ?? 0;
                   }
                 } else {
-                  count = (reactionsByService[service]?.length ?? 0);
+                  count = reactionsByService[service]?.length ?? 0;
                 }
 
-                const serviceName = service.charAt(0).toUpperCase() + service.slice(1);
+                const serviceName =
+                  service.charAt(0).toUpperCase() + service.slice(1);
                 const hasActionsOrReactions = count > 0;
                 const brandColors = getServiceBrandColors(service);
-                const isBrandedService = brandColors.backgroundColor !== 'transparent';
+                const isBrandedService =
+                  brandColors.backgroundColor !== 'transparent';
                 const index = servicesForMode.indexOf(service);
 
                 return (
@@ -169,51 +177,67 @@ export function SelectionModal({
                     <AnimatedServiceCard
                       delay={index * 50}
                       haptic={hasActionsOrReactions}
-                      glowColor={isBrandedService ? brandColors.backgroundColor : undefined}
+                      glowColor={
+                        isBrandedService
+                          ? brandColors.backgroundColor
+                          : undefined
+                      }
                       style={[
                         styles.serviceCard,
                         {
                           backgroundColor: currentTheme.colors.surfaceMuted,
-                          borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                          borderColor:
+                            currentTheme.colors.borderSubtle ||
+                            currentTheme.colors.border,
                           opacity: hasActionsOrReactions ? 1 : 0.6,
                         },
                       ]}
                       onPress={() => {
                         if (hasActionsOrReactions) {
-                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                          Haptics.impactAsync(
+                            Haptics.ImpactFeedbackStyle.Medium,
+                          );
                           onServiceSelect(service);
                         }
                       }}
                       disabled={!hasActionsOrReactions}
                     >
-                    <View
-                      style={[
-                        styles.serviceIconContainer,
-                        {
-                          backgroundColor: isBrandedService 
-                            ? brandColors.backgroundColor 
-                            : currentTheme.colors.surface,
-                        },
-                      ]}
-                    >
-                      <ServiceIcon
-                        service={service}
-                        size={26}
-                        color={isBrandedService 
-                          ? brandColors.iconColor 
-                          : currentTheme.colors.primary}
-                      />
-                    </View>
-                    <Text variant="body" style={styles.serviceName}>
-                      {serviceName}
-                    </Text>
-                    <Text variant="caption" color="muted" style={styles.serviceCount}>
-                      {count > 0 
-                        ? `${count} ${count === 1 ? (selectionKind === 'action' ? 'action' : 'reaction') : (selectionKind === 'action' ? 'actions' : 'reactions')}`
-                        : 'No ' + (selectionKind === 'action' ? 'actions' : 'reactions')
-                      }
-                    </Text>
-                  </AnimatedServiceCard>
+                      <View
+                        style={[
+                          styles.serviceIconContainer,
+                          {
+                            backgroundColor: isBrandedService
+                              ? brandColors.backgroundColor
+                              : currentTheme.colors.surface,
+                          },
+                        ]}
+                      >
+                        <ServiceIcon
+                          service={service}
+                          size={26}
+                          color={
+                            isBrandedService
+                              ? brandColors.iconColor
+                              : currentTheme.colors.primary
+                          }
+                        />
+                      </View>
+                      <Text variant="body" style={styles.serviceName}>
+                        {serviceName}
+                      </Text>
+                      <Text
+                        variant="caption"
+                        color="muted"
+                        style={styles.serviceCount}
+                      >
+                        {count > 0
+                          ? `${count} ${count === 1 ? (selectionKind === 'action' ? 'action' : 'reaction') : selectionKind === 'action' ? 'actions' : 'reactions'}`
+                          : 'No ' +
+                            (selectionKind === 'action'
+                              ? 'actions'
+                              : 'reactions')}
+                      </Text>
+                    </AnimatedServiceCard>
                   </FadeInView>
                 );
               })}
@@ -246,7 +270,9 @@ export function SelectionModal({
                 styles.backButton,
                 {
                   backgroundColor: currentTheme.colors.surfaceMuted,
-                  borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                  borderColor:
+                    currentTheme.colors.borderSubtle ||
+                    currentTheme.colors.border,
                 },
               ]}
               onPress={() => {
@@ -260,9 +286,7 @@ export function SelectionModal({
                   size={20}
                   color={currentTheme.colors.primary}
                 />
-                <Text variant="body">
-                  Back to services
-                </Text>
+                <Text variant="body">Back to services</Text>
               </View>
             </AnimatedServiceCard>
           </FadeInView>
@@ -275,7 +299,9 @@ export function SelectionModal({
             <View style={styles.listContainer}>
               {serviceActions.map((action, index) => {
                 const key = makeKey(action.service, action.type);
-                const actionName = action.type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                const actionName = action.type
+                  .replace(/_/g, ' ')
+                  .replace(/\b\w/g, (l) => l.toUpperCase());
                 return (
                   <FadeInView
                     key={key}
@@ -290,7 +316,9 @@ export function SelectionModal({
                         styles.actionReactionRow,
                         {
                           backgroundColor: currentTheme.colors.surfaceMuted,
-                          borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                          borderColor:
+                            currentTheme.colors.borderSubtle ||
+                            currentTheme.colors.border,
                         },
                       ]}
                       onPress={() => {
@@ -298,28 +326,31 @@ export function SelectionModal({
                         onActionSelect(action);
                       }}
                     >
-                    <View style={styles.actionReactionContent}>
-                      <View
-                        style={[
-                          styles.actionReactionIconContainer,
-                          {
-                            backgroundColor: currentTheme.colors.surface,
-                          },
-                        ]}
-                      >
-                        <IconSymbol
-                          name="arrow.right"
-                          size={20}
-                          color={currentTheme.colors.primary}
-                        />
+                      <View style={styles.actionReactionContent}>
+                        <View
+                          style={[
+                            styles.actionReactionIconContainer,
+                            {
+                              backgroundColor: currentTheme.colors.surface,
+                            },
+                          ]}
+                        >
+                          <IconSymbol
+                            name="arrow.right"
+                            size={20}
+                            color={currentTheme.colors.primary}
+                          />
+                        </View>
+                        <View style={styles.actionReactionTextContainer}>
+                          <Text
+                            variant="body"
+                            style={styles.actionReactionName}
+                          >
+                            {actionName}
+                          </Text>
+                        </View>
                       </View>
-                      <View style={styles.actionReactionTextContainer}>
-                        <Text variant="body" style={styles.actionReactionName}>
-                          {actionName}
-                        </Text>
-                      </View>
-                    </View>
-                  </AnimatedServiceCard>
+                    </AnimatedServiceCard>
                   </FadeInView>
                 );
               })}
@@ -330,7 +361,8 @@ export function SelectionModal({
     }
 
     if (modalStep === 'reaction' && selectedReactionService) {
-      const serviceReactions = reactionsByService[selectedReactionService] || [];
+      const serviceReactions =
+        reactionsByService[selectedReactionService] || [];
 
       return (
         <View style={styles.container}>
@@ -341,7 +373,9 @@ export function SelectionModal({
                 styles.backButton,
                 {
                   backgroundColor: currentTheme.colors.surfaceMuted,
-                  borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                  borderColor:
+                    currentTheme.colors.borderSubtle ||
+                    currentTheme.colors.border,
                 },
               ]}
               onPress={() => {
@@ -355,9 +389,7 @@ export function SelectionModal({
                   size={20}
                   color={currentTheme.colors.primary}
                 />
-                <Text variant="body">
-                  Back to services
-                </Text>
+                <Text variant="body">Back to services</Text>
               </View>
             </AnimatedServiceCard>
           </FadeInView>
@@ -370,7 +402,9 @@ export function SelectionModal({
             <View style={styles.listContainer}>
               {serviceReactions.map((reaction, index) => {
                 const key = makeKey(reaction.service, reaction.type);
-                const reactionName = reaction.type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                const reactionName = reaction.type
+                  .replace(/_/g, ' ')
+                  .replace(/\b\w/g, (l) => l.toUpperCase());
                 return (
                   <FadeInView
                     key={key}
@@ -385,7 +419,9 @@ export function SelectionModal({
                         styles.actionReactionRow,
                         {
                           backgroundColor: currentTheme.colors.surfaceMuted,
-                          borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+                          borderColor:
+                            currentTheme.colors.borderSubtle ||
+                            currentTheme.colors.border,
                         },
                       ]}
                       onPress={() => {
@@ -393,28 +429,31 @@ export function SelectionModal({
                         onReactionSelect(reaction);
                       }}
                     >
-                    <View style={styles.actionReactionContent}>
-                      <View
-                        style={[
-                          styles.actionReactionIconContainer,
-                          {
-                            backgroundColor: currentTheme.colors.surface,
-                          },
-                        ]}
-                      >
-                        <IconSymbol
-                          name="arrow.right"
-                          size={20}
-                          color={currentTheme.colors.primary}
-                        />
+                      <View style={styles.actionReactionContent}>
+                        <View
+                          style={[
+                            styles.actionReactionIconContainer,
+                            {
+                              backgroundColor: currentTheme.colors.surface,
+                            },
+                          ]}
+                        >
+                          <IconSymbol
+                            name="arrow.right"
+                            size={20}
+                            color={currentTheme.colors.primary}
+                          />
+                        </View>
+                        <View style={styles.actionReactionTextContainer}>
+                          <Text
+                            variant="body"
+                            style={styles.actionReactionName}
+                          >
+                            {reactionName}
+                          </Text>
+                        </View>
                       </View>
-                      <View style={styles.actionReactionTextContainer}>
-                        <Text variant="body" style={styles.actionReactionName}>
-                          {reactionName}
-                        </Text>
-                      </View>
-                    </View>
-                  </AnimatedServiceCard>
+                    </AnimatedServiceCard>
                   </FadeInView>
                 );
               })}
@@ -443,9 +482,7 @@ export function SelectionModal({
 
   return (
     <Modal visible={visible} onClose={onClose} title={getTitle()}>
-      <View style={styles.modalContent}>
-        {renderContent()}
-      </View>
+      <View style={styles.modalContent}>{renderContent()}</View>
     </Modal>
   );
 }
@@ -557,5 +594,3 @@ const styles = StyleSheet.create({
     height: spacing.sm,
   },
 });
-
-

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Switch } from 'react-native';
-import { MobileText as Text , MobileInput } from '@/components/ui-mobile';
+import { MobileText as Text, MobileInput } from '@/components/ui-mobile';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { ParamField } from '@/types/api';
 import { ParamMap, isParamObject } from '@/utils/areaHelpers';
@@ -10,7 +10,11 @@ interface ParameterFormProps {
   paramsDef: ParamMap | undefined;
   values: Record<string, any>;
   kind: 'action' | 'reaction';
-  onParamChange: (key: string, fieldType: ParamField['type'], rawValue: any) => void;
+  onParamChange: (
+    key: string,
+    fieldType: ParamField['type'],
+    rawValue: any,
+  ) => void;
 }
 
 export function ParameterForm({
@@ -21,7 +25,12 @@ export function ParameterForm({
 }: ParameterFormProps) {
   const { currentTheme } = useAppTheme();
 
-  if (!paramsDef || typeof paramsDef === 'string' || !isParamObject(paramsDef) || Object.keys(paramsDef).length === 0) {
+  if (
+    !paramsDef ||
+    typeof paramsDef === 'string' ||
+    !isParamObject(paramsDef) ||
+    Object.keys(paramsDef).length === 0
+  ) {
     return (
       <Text variant="body" color="muted">
         No parameters.
@@ -72,7 +81,9 @@ export function ParameterForm({
               </Text>
             )}
             <MobileInput
-              placeholder={field.example !== undefined ? String(field.example) : undefined}
+              placeholder={
+                field.example !== undefined ? String(field.example) : undefined
+              }
               value={value === undefined ? '' : String(value)}
               onChangeText={(t) => onParamChange(key, field.type, t)}
               keyboardType={field.type === 'number' ? 'numeric' : 'default'}

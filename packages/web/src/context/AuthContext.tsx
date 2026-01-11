@@ -5,16 +5,16 @@ import {
   useCallback,
   useEffect,
   type ReactNode,
-} from "react";
-import { useNavigate } from "react-router-dom";
+} from 'react';
+import { useNavigate } from 'react-router-dom';
 import type {
   LoginCredentials,
   RegisterData,
   AuthResponse,
   User,
-} from "@/types";
-import * as authService from "@/services/auth.service";
-import { getUser, isAuthenticated as checkAuth } from "@/utils/storage";
+} from '@/types';
+import * as authService from '@/services/auth.service';
+import { getUser, isAuthenticated as checkAuth } from '@/utils/storage';
 
 interface AuthContextType {
   user: User | null;
@@ -24,7 +24,7 @@ interface AuthContextType {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   loginWithOAuth: (
-    provider: "google" | "discord" | "github" | "spotify" | "gitlab",
+    provider: 'google' | 'discord' | 'github' | 'spotify' | 'gitlab',
   ) => void;
   logout: () => void;
   clearError: () => void;
@@ -58,23 +58,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     // Listen for storage changes (e.g., from OAuth callback)
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "token" || e.key === "user") {
+      if (e.key === 'token' || e.key === 'user') {
         refreshAuth();
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener('storage', handleStorageChange);
 
     // Custom event for same-window updates
     const handleAuthChange = () => {
       refreshAuth();
     };
 
-    window.addEventListener("auth-change", handleAuthChange);
+    window.addEventListener('auth-change', handleAuthChange);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("auth-change", handleAuthChange);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('auth-change', handleAuthChange);
     };
   }, [refreshAuth]);
 
@@ -89,12 +89,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setIsAuthenticated(true);
 
         // Dispatch custom event
-        window.dispatchEvent(new Event("auth-change"));
+        window.dispatchEvent(new Event('auth-change'));
 
-        navigate("/dashboard");
+        navigate('/dashboard');
       } catch (err: any) {
         const errorMessage =
-          err.message || "Login failed. Please check your credentials.";
+          err.message || 'Login failed. Please check your credentials.';
         setError(errorMessage);
         throw new Error(errorMessage);
       } finally {
@@ -115,12 +115,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setIsAuthenticated(true);
 
         // Dispatch custom event
-        window.dispatchEvent(new Event("auth-change"));
+        window.dispatchEvent(new Event('auth-change'));
 
-        navigate("/dashboard");
+        navigate('/dashboard');
       } catch (err: any) {
         const errorMessage =
-          err.message || "Registration failed. Please try again.";
+          err.message || 'Registration failed. Please try again.';
         setError(errorMessage);
         throw new Error(errorMessage);
       } finally {
@@ -132,7 +132,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const loginWithOAuth = useCallback(
     (
-      provider: "google" | "discord" | "github" | "spotify" | "gitlab",
+      provider: 'google' | 'discord' | 'github' | 'spotify' | 'gitlab',
     ): void => {
       authService.loginWithOAuth(provider);
     },
@@ -145,9 +145,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsAuthenticated(false);
 
     // Dispatch custom event
-    window.dispatchEvent(new Event("auth-change"));
+    window.dispatchEvent(new Event('auth-change'));
 
-    navigate("/");
+    navigate('/');
   }, [navigate]);
 
   const clearError = useCallback((): void => {
@@ -173,7 +173,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }
