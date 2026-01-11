@@ -31,6 +31,12 @@ export default function Navigation() {
           Automations
         </Link>
         <Link
+          to="/services"
+          className={`nav-link ${isActive('/services') ? 'active' : ''}`}
+        >
+          Services
+        </Link>
+        <Link
           to="/profile"
           className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
         >

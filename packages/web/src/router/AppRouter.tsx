@@ -3,6 +3,7 @@ import Home from '@/pages/Home/Home';
 import Dashboard from '@/pages/Dashboard/Dashboard';
 import Profile from '@/pages/Profile/Profile';
 import About from '@/pages/About/About';
+import Services from '@/pages/Services/Services';
 import Login from '@/pages/Auth/Login';
 import Register from '@/pages/Auth/Register';
 import OAuthCallback from '@/pages/Auth/OAuthCallback';
@@ -48,6 +49,14 @@ export default function AppRouter() {
           element={
             <ProtectedRoute>
               <Area />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/services"
+          element={
+            <ProtectedRoute>
+              <Services />
             </ProtectedRoute>
           }
         />

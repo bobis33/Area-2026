@@ -34,6 +34,19 @@ export default function Dashboard() {
         </WebCard>
 
         <WebCard>
+          <Link to="/services" className="dashboard-card-link">
+            <h2>Connected Services</h2>
+            <p>
+              Link multiple providers like GitHub, Spotify, and Discord to
+              unlock more automations.
+            </p>
+            <div className="dashboard-card-footer">
+              <span className="dashboard-card-arrow">→</span>
+            </div>
+          </Link>
+        </WebCard>
+
+        <WebCard>
           <Link to="/profile" className="dashboard-card-link">
             <h2>My Profile</h2>
             <p>
