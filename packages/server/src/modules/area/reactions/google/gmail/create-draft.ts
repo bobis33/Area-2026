@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GmailService } from '@modules/google/gmail/gmail.service';
 import { ReactionHandler } from '@interfaces/area.interface';
 import { Reaction } from '@decorators/area.decorator';
@@ -31,6 +31,7 @@ import { Reaction } from '@decorators/area.decorator';
 })
 @Injectable()
 export class GmailCreateDraftReaction implements ReactionHandler {
+  private readonly logger = new Logger(GmailCreateDraftReaction.name);
   constructor(private gmail: GmailService) {}
 
   async execute(
@@ -49,6 +50,6 @@ export class GmailCreateDraftReaction implements ReactionHandler {
     const { to, subject, body, isHtml } = params;
 
     await this.gmail.createDraft(context.userId, { to, subject, body, isHtml });
-    console.log(`Draft created for ${to} with subject: '${subject}'`);
+    this.logger.log(`Draft created for ${to} with subject: '${subject}'`);
   }
 }

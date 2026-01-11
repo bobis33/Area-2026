@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@common/database/prisma.service';
-import { GithubNotification } from '@interfaces/github-notification.interface';
+import { GithubNotification } from '@interfaces/github.interface';
 
 @Injectable()
 export class GithubService {

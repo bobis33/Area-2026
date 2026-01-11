@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { ModuleRef } from '@nestjs/core';
 import { PrismaService } from '@common/database/prisma.service';
@@ -8,6 +8,7 @@ import { ReactionsRegistry } from '@modules/area/reactions/reactions-registry';
 @Injectable()
 export class EngineService {
   private processing = new Set<number>();
+  private readonly logger = new Logger(EngineService.name);
 
   constructor(
     private prisma: PrismaService,
@@ -31,14 +32,14 @@ export class EngineService {
         try {
           await this.processArea(area);
         } catch (err) {
-          console.error(`Error processing area ${area.id}:`, err);
+          this.logger.error(`Error processing area ID ${area.id}:`, err);
         } finally {
           this.processing.delete(area.id);
         }
       }
     } catch (err: any) {
       if (err.code !== 'P2037') {
-        console.error('Error in runAreas cron:', err);
+        this.logger.error('Error in runAreas cron:', err);
       }
     }
   }

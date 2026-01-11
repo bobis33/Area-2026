@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   OnModuleDestroy,
   OnModuleInit,
   Scope,
@@ -12,20 +13,23 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
+  private readonly logger = new Logger(PrismaService.name);
+
   constructor() {
     super({
       adapter: new PrismaPg({
         connectionString: process.env.POSTGRES_URL,
       }),
-      log: ['error', 'warn'],
     });
   }
 
   async onModuleInit() {
     await this.$connect();
+    this.logger.log('Connected to the database');
   }
 
   async onModuleDestroy() {
     await this.$disconnect();
+    this.logger.log('Disconnected from the database');
   }
 }
