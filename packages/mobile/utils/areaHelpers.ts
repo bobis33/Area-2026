@@ -14,11 +14,6 @@ export function isParamObject(p: ParamMap): p is Record<string, ParamField> {
 }
 
 /**
- * Normalize a value to a trimmed string
- */
-const norm = (v: any) => String(v ?? '').trim();
-
-/**
  * Pick the first non-empty string from multiple values
  */
 const pickFirstString = (...vals: any[]): string => {
