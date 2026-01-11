@@ -1,7 +1,7 @@
 /**
  * API Configuration
  * Base URL for the backend server
- * 
+ *
  * Priority:
  * 1. EXPO_PUBLIC_API_URL (full URL if provided)
  * 2. EXPO_PUBLIC_API_PORT (construct URL with port)

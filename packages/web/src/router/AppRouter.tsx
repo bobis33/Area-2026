@@ -1,16 +1,16 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "@/pages/Home/Home";
-import Dashboard from "@/pages/Dashboard/Dashboard";
-import Profile from "@/pages/Profile/Profile";
-import About from "@/pages/About/About";
-import Login from "@/pages/Auth/Login";
-import Register from "@/pages/Auth/Register";
-import OAuthCallback from "@/pages/Auth/OAuthCallback";
-import OAuthError from "@/pages/Auth/OAuthError";
-import Area from "@/pages/Area/Area";
-import Admin from "@/pages/Admin/Admin";
-import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
-import Navigation from "@/components/Navigation/Navigation";
+import { Routes, Route, Navigate } from 'react-router-dom';
+import Home from '@/pages/Home/Home';
+import Dashboard from '@/pages/Dashboard/Dashboard';
+import Profile from '@/pages/Profile/Profile';
+import About from '@/pages/About/About';
+import Login from '@/pages/Auth/Login';
+import Register from '@/pages/Auth/Register';
+import OAuthCallback from '@/pages/Auth/OAuthCallback';
+import OAuthError from '@/pages/Auth/OAuthError';
+import Area from '@/pages/Area/Area';
+import Admin from '@/pages/Admin/Admin';
+import ProtectedRoute from '@/components/ProtectedRoute/ProtectedRoute';
+import Navigation from '@/components/Navigation/Navigation';
 
 /**
  * Main application router

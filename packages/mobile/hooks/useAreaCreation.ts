@@ -3,14 +3,9 @@ import { Alert } from 'react-native';
 import { router } from 'expo-router';
 import { apiService } from '@/services/api.service';
 import { useAuth } from '@/contexts/AuthContext';
-import {
-  AreaActionDefinition,
-  AreaReactionDefinition,
-} from '@/types/api';
+import { AreaActionDefinition, AreaReactionDefinition } from '@/types/api';
 import {
   makeKey,
-  safeService,
-  safeType,
   groupActionsByService,
   groupReactionsByService,
   getAllServices,
@@ -53,7 +48,12 @@ interface UseAreaCreationReturn {
   handleServiceSelect: (service: string) => void;
   handleActionSelect: (action: AreaActionDefinition) => void;
   handleReactionSelect: (reaction: AreaReactionDefinition) => void;
-  setParamValue: (kind: 'action' | 'reaction', key: string, fieldType: string, rawValue: any) => void;
+  setParamValue: (
+    kind: 'action' | 'reaction',
+    key: string,
+    fieldType: string,
+    rawValue: any,
+  ) => void;
   handleSubmit: () => Promise<void>;
 }
 
@@ -72,8 +72,12 @@ export function useAreaCreation(): UseAreaCreationReturn {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalStep, setModalStep] = useState<ModalStep>('service');
   const [selectionKind, setSelectionKind] = useState<SelectionKind>('action');
-  const [selectedActionService, setSelectedActionService] = useState<string | null>(null);
-  const [selectedReactionService, setSelectedReactionService] = useState<string | null>(null);
+  const [selectedActionService, setSelectedActionService] = useState<
+    string | null
+  >(null);
+  const [selectedReactionService, setSelectedReactionService] = useState<
+    string | null
+  >(null);
   const [previousAutoName, setPreviousAutoName] = useState<string>('');
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
 
@@ -81,7 +85,7 @@ export function useAreaCreation(): UseAreaCreationReturn {
     const loadProviders = async () => {
       try {
         const providers = await apiService.getOAuthProviders();
-        setAvailableProviders(providers.map(p => String(p).toLowerCase()));
+        setAvailableProviders(providers.map((p) => String(p).toLowerCase()));
       } catch (error) {
         setAvailableProviders([]);
       }
@@ -105,11 +109,15 @@ export function useAreaCreation(): UseAreaCreationReturn {
   );
 
   const selectedAction = useMemo(() => {
-    return actions.find(a => makeKey(a.service, a.type) === selectedActionKey);
+    return actions.find(
+      (a) => makeKey(a.service, a.type) === selectedActionKey,
+    );
   }, [actions, selectedActionKey]);
 
   const selectedReaction = useMemo(() => {
-    return reactions.find(r => makeKey(r.service, r.type) === selectedReactionKey);
+    return reactions.find(
+      (r) => makeKey(r.service, r.type) === selectedReactionKey,
+    );
   }, [reactions, selectedReactionKey]);
 
   useEffect(() => {
@@ -138,7 +146,8 @@ export function useAreaCreation(): UseAreaCreationReturn {
     if (selectedAction) {
       const actionKey = makeKey(selectedAction.service, selectedAction.type);
       if (actionKey === 'time.cron') {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Paris';
+        const timezone =
+          Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Paris';
         setActionParams({
           cron: '*/1 * * * *',
           timezone,
@@ -154,7 +163,10 @@ export function useAreaCreation(): UseAreaCreationReturn {
   useEffect(() => {
     if (selectedAction && selectedReaction) {
       const actionKey = makeKey(selectedAction.service, selectedAction.type);
-      const reactionKey = makeKey(selectedReaction.service, selectedReaction.type);
+      const reactionKey = makeKey(
+        selectedReaction.service,
+        selectedReaction.type,
+      );
       const autoName = `${actionKey} → ${reactionKey}`;
       if (!name.trim() || name === previousAutoName) {
         setName(autoName);
@@ -213,24 +225,28 @@ export function useAreaCreation(): UseAreaCreationReturn {
   ) => {
     const nextValue =
       fieldType === 'number'
-        ? (rawValue === '' ? '' : Number(rawValue))
+        ? rawValue === ''
+          ? ''
+          : Number(rawValue)
         : fieldType === 'boolean'
           ? Boolean(rawValue)
           : rawValue;
 
     if (kind === 'action') {
-      setActionParams(prev => ({ ...prev, [key]: nextValue }));
+      setActionParams((prev) => ({ ...prev, [key]: nextValue }));
     } else {
-      setReactionParams(prev => ({ ...prev, [key]: nextValue }));
+      setReactionParams((prev) => ({ ...prev, [key]: nextValue }));
     }
   };
 
   const handleSubmit = async () => {
     if (!token || !user) return;
 
-    const finalName = name.trim() || (selectedAction && selectedReaction
-      ? `${makeKey(selectedAction.service, selectedAction.type)} → ${makeKey(selectedReaction.service, selectedReaction.type)}`
-      : '');
+    const finalName =
+      name.trim() ||
+      (selectedAction && selectedReaction
+        ? `${makeKey(selectedAction.service, selectedAction.type)} → ${makeKey(selectedReaction.service, selectedReaction.type)}`
+        : '');
 
     if (!finalName) {
       return;
@@ -239,21 +255,30 @@ export function useAreaCreation(): UseAreaCreationReturn {
     if (!selectedAction || !selectedReaction) {
       return;
     }
-    const actionParamsValid = validateParams(selectedAction.parameters as any, actionParams);
-    const reactionParamsValid = validateParams(selectedReaction.parameters as any, reactionParams);
+    const actionParamsValid = validateParams(
+      selectedAction.parameters as any,
+      actionParams,
+    );
+    const reactionParamsValid = validateParams(
+      selectedReaction.parameters as any,
+      reactionParams,
+    );
 
     if (!actionParamsValid) {
       const missingParams: string[] = [];
       if (isParamObject(selectedAction.parameters)) {
         Object.entries(selectedAction.parameters).forEach(([key, field]) => {
-          if (field.optional !== true && (actionParams[key] === undefined || actionParams[key] === '')) {
+          if (
+            field.optional !== true &&
+            (actionParams[key] === undefined || actionParams[key] === '')
+          ) {
             missingParams.push(key);
           }
         });
       }
       Alert.alert(
         'Paramètres manquants',
-        `Veuillez remplir tous les paramètres requis pour l'action : ${missingParams.join(', ')}`
+        `Veuillez remplir tous les paramètres requis pour l'action : ${missingParams.join(', ')}`,
       );
       return;
     }
@@ -262,32 +287,41 @@ export function useAreaCreation(): UseAreaCreationReturn {
       const missingParams: string[] = [];
       if (isParamObject(selectedReaction.parameters)) {
         Object.entries(selectedReaction.parameters).forEach(([key, field]) => {
-          if (field.optional !== true && (reactionParams[key] === undefined || reactionParams[key] === '')) {
+          if (
+            field.optional !== true &&
+            (reactionParams[key] === undefined || reactionParams[key] === '')
+          ) {
             missingParams.push(key);
           }
         });
       }
       Alert.alert(
         'Paramètres manquants',
-        `Veuillez remplir tous les paramètres requis pour la réaction : ${missingParams.join(', ')}`
+        `Veuillez remplir tous les paramètres requis pour la réaction : ${missingParams.join(', ')}`,
       );
       return;
     }
 
     try {
       setSubmitting(true);
-      
+
       // Filter out empty string values from parameters, but keep at least an empty object
-      const cleanActionParams = Object.keys(actionParams).length > 0
-        ? Object.fromEntries(
-            Object.entries(actionParams).filter(([_, v]) => v !== '' && v !== undefined)
-          )
-        : {};
-      const cleanReactionParams = Object.keys(reactionParams).length > 0
-        ? Object.fromEntries(
-            Object.entries(reactionParams).filter(([_, v]) => v !== '' && v !== undefined)
-          )
-        : {};
+      const cleanActionParams =
+        Object.keys(actionParams).length > 0
+          ? Object.fromEntries(
+              Object.entries(actionParams).filter(
+                ([_, v]) => v !== '' && v !== undefined,
+              ),
+            )
+          : {};
+      const cleanReactionParams =
+        Object.keys(reactionParams).length > 0
+          ? Object.fromEntries(
+              Object.entries(reactionParams).filter(
+                ([_, v]) => v !== '' && v !== undefined,
+              ),
+            )
+          : {};
 
       await apiService.createArea(
         {
@@ -308,7 +342,10 @@ export function useAreaCreation(): UseAreaCreationReturn {
       );
       router.back();
     } catch (e: any) {
-      const errorMessage = e instanceof Error ? e.message : 'Erreur lors de la création de l\'automatisation';
+      const errorMessage =
+        e instanceof Error
+          ? e.message
+          : "Erreur lors de la création de l'automatisation";
       Alert.alert('Erreur', errorMessage);
     } finally {
       setSubmitting(false);

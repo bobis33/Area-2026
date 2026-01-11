@@ -1,4 +1,8 @@
-import { AreaActionDefinition, AreaReactionDefinition, ParamField } from '@/types/api';
+import {
+  AreaActionDefinition,
+  AreaReactionDefinition,
+  ParamField,
+} from '@/types/api';
 
 export type ParamMap = Record<string, ParamField> | string;
 
@@ -70,7 +74,7 @@ export const groupActionsByService = (
   actions: AreaActionDefinition[],
 ): Record<string, AreaActionDefinition[]> => {
   const grouped: Record<string, AreaActionDefinition[]> = {};
-  actions.forEach(action => {
+  actions.forEach((action) => {
     const svc = safeService(action.service);
     // Keep original service in the action object
     if (!grouped[svc]) {
@@ -92,7 +96,7 @@ export const groupReactionsByService = (
   reactions: AreaReactionDefinition[],
 ): Record<string, AreaReactionDefinition[]> => {
   const grouped: Record<string, AreaReactionDefinition[]> = {};
-  reactions.forEach(reaction => {
+  reactions.forEach((reaction) => {
     const svc = safeService(reaction.service);
     if (!grouped[svc]) {
       grouped[svc] = [];
@@ -125,55 +129,64 @@ export const validateParams = (
   paramsDef: ParamMap | undefined,
   values: Record<string, any>,
 ): boolean => {
-  if (!paramsDef || typeof paramsDef === 'string' || !isParamObject(paramsDef)) {
+  if (
+    !paramsDef ||
+    typeof paramsDef === 'string' ||
+    !isParamObject(paramsDef)
+  ) {
     return true;
   }
 
   for (const [key, field] of Object.entries(paramsDef)) {
-    if (field.optional !== true && (values[key] === undefined || values[key] === '')) {
+    if (
+      field.optional !== true &&
+      (values[key] === undefined || values[key] === '')
+    ) {
       return false;
     }
   }
   return true;
 };
 
-export const getServiceBrandColors = (service: string): { 
-  backgroundColor: string; 
+export const getServiceBrandColors = (
+  service: string,
+): {
+  backgroundColor: string;
   borderColor: string;
   iconColor: string;
 } => {
   const serviceLower = service.toLowerCase();
-  
+
   switch (serviceLower) {
     case 'discord':
       return {
-        backgroundColor: '#5865F2', 
+        backgroundColor: '#5865F2',
         borderColor: '#5865F2',
         iconColor: '#FFFFFF',
       };
     case 'spotify':
       return {
-        backgroundColor: '#1DB954', 
+        backgroundColor: '#1DB954',
         borderColor: '#1DB954',
         iconColor: '#FFFFFF',
       };
     case 'gitlab':
       return {
-        backgroundColor: '#FC6D26', 
+        backgroundColor: '#FC6D26',
         borderColor: '#FC6D26',
         iconColor: '#FFFFFF',
       };
     case 'github':
       return {
-        backgroundColor: '#18181B', 
+        backgroundColor: '#18181B',
         borderColor: '#18181B',
         iconColor: '#FFFFFF',
       };
     case 'google':
       return {
-        backgroundColor: '#FFFFFF', 
+        backgroundColor: '#FFFFFF',
         borderColor: '#E2E2E3',
-        iconColor: '#222120', 
+        iconColor: '#222120',
       };
     default:
       return {
@@ -183,5 +196,3 @@ export const getServiceBrandColors = (service: string): {
       };
   }
 };
-
-

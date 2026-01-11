@@ -86,7 +86,8 @@ export const MobileText: React.FC<MobileTextProps> = ({
   return (
     <RNText
       style={[getTextStyle(), { color: getTextColor() }, style]}
-      numberOfLines={numberOfLines}>
+      numberOfLines={numberOfLines}
+    >
       {children}
     </RNText>
   );

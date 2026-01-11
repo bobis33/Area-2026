@@ -71,11 +71,11 @@ class ApiService {
       const response = await fetch(
         `${this.baseUrl}${API_ENDPOINTS.AUTH_LOGIN}`,
         {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(credentials),
         },
       );
 
@@ -111,7 +111,9 @@ class ApiService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        throw new Error(
+          errorData.message || `HTTP error! status: ${response.status}`,
+        );
       }
 
       const data: AuthResponse = await response.json();
@@ -171,12 +173,12 @@ class ApiService {
       const response = await fetch(
         `${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`,
         {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
         },
       );
 
@@ -205,11 +207,11 @@ class ApiService {
       const response = await fetch(
         `${this.baseUrl}${API_ENDPOINTS.USERS}/${id}`,
         {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
 
@@ -284,7 +286,10 @@ class ApiService {
    * @param token - JWT authentication token
    * @returns Promise with created AREA
    */
-  async createArea(payload: CreateAreaPayload, token: string): Promise<AreaModel> {
+  async createArea(
+    payload: CreateAreaPayload,
+    token: string,
+  ): Promise<AreaModel> {
     const res = await fetch(`${this.baseUrl}${API_ENDPOINTS.AREAS}`, {
       method: 'POST',
       headers: {
@@ -295,7 +300,10 @@ class ApiService {
     });
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      const errorMessage = errorData.message || errorData.error || `HTTP error! status: ${res.status}`;
+      const errorMessage =
+        errorData.message ||
+        errorData.error ||
+        `HTTP error! status: ${res.status}`;
       throw new Error(errorMessage);
     }
     return res.json();
@@ -384,12 +392,15 @@ class ApiService {
    */
   async getOAuthProviders(): Promise<string[]> {
     try {
-      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.AUTH_PROVIDERS}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${this.baseUrl}${API_ENDPOINTS.AUTH_PROVIDERS}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -409,13 +420,16 @@ class ApiService {
    */
   async getLinkedProviders(token: string): Promise<string[]> {
     try {
-      const response = await fetch(`${this.baseUrl}${API_ENDPOINTS.AUTH_PROVIDERS_LINKED}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${this.baseUrl}${API_ENDPOINTS.AUTH_PROVIDERS_LINKED}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
@@ -461,5 +475,4 @@ class ApiService {
 // Export singleton instance
 export const apiService = new ApiService();
 
-apiService.updateBaseUrl().catch(() => {
-});
+apiService.updateBaseUrl().catch(() => {});

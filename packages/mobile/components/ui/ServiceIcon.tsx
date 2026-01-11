@@ -35,9 +35,23 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
         <AntDesign name="google" size={size} color={color} style={style} />
       );
     case 'spotify':
-      return <MaterialCommunityIcons name="spotify" size={size} color={color} style={style} />;
+      return (
+        <MaterialCommunityIcons
+          name="spotify"
+          size={size}
+          color={color}
+          style={style}
+        />
+      );
     case 'gitlab':
-      return <MaterialCommunityIcons name="gitlab" size={size} color={color} style={style} />;
+      return (
+        <MaterialCommunityIcons
+          name="gitlab"
+          size={size}
+          color={color}
+          style={style}
+        />
+      );
     default:
       // Fallback icon
       return (

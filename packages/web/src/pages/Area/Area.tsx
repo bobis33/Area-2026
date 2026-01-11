@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { get, post, del } from "@/services/api";
-import { getAuthToken, getUser } from "@/utils/storage";
-import "./Area.css";
+import { useState, useEffect } from 'react';
+import { get, post, del } from '@/services/api';
+import { getAuthToken, getUser } from '@/utils/storage';
+import './Area.css';
 
 interface Area {
   id: number;
@@ -50,7 +50,7 @@ export default function Area() {
   const [selectedArea, setSelectedArea] = useState<Area | null>(null);
 
   // Form state
-  const [areaName, setAreaName] = useState("");
+  const [areaName, setAreaName] = useState('');
   const [selectedAction, setSelectedAction] = useState<ActionDefinition | null>(
     null,
   );
@@ -70,31 +70,31 @@ export default function Area() {
       const token = getAuthToken();
       const user = getUser();
 
-      console.log("Token:", token ? "exists" : "null");
-      console.log("User:", user);
+      console.log('Token:', token ? 'exists' : 'null');
+      console.log('User:', user);
 
       if (!token) {
-        throw new Error("Not authenticated - please login again");
+        throw new Error('Not authenticated - please login again');
       }
 
       const [areasData, actionsData, reactionsData] = await Promise.all([
-        get<Area[]>("/areas", token),
-        get<ActionDefinition[]>("/areas/actions", token),
-        get<ReactionDefinition[]>("/areas/reactions", token),
+        get<Area[]>('/areas', token),
+        get<ActionDefinition[]>('/areas/actions', token),
+        get<ReactionDefinition[]>('/areas/reactions', token),
       ]);
 
-      console.log("Areas loaded:", areasData);
-      console.log("Actions loaded:", actionsData);
-      console.log("Reactions loaded:", reactionsData);
+      console.log('Areas loaded:', areasData);
+      console.log('Actions loaded:', actionsData);
+      console.log('Reactions loaded:', reactionsData);
 
       setAreas(areasData);
       setAvailableActions(actionsData);
       setAvailableReactions(reactionsData);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to load data";
+        err instanceof Error ? err.message : 'Failed to load data';
       setError(errorMessage);
-      console.error("Error loading data:", err);
+      console.error('Error loading data:', err);
     } finally {
       setLoading(false);
     }
@@ -102,14 +102,14 @@ export default function Area() {
 
   const handleCreateArea = async () => {
     if (!areaName || !selectedAction || !selectedReaction) {
-      alert("Please fill all fields");
+      alert('Please fill all fields');
       return;
     }
 
     try {
       const token = getAuthToken();
       if (!token) {
-        throw new Error("Not authenticated");
+        throw new Error('Not authenticated');
       }
 
       // Get user ID from storage
@@ -117,7 +117,7 @@ export default function Area() {
       const userId = user?.id;
 
       if (!userId) {
-        throw new Error("User ID not found");
+        throw new Error('User ID not found');
       }
 
       const payload = {
@@ -135,46 +135,46 @@ export default function Area() {
         },
       };
 
-      console.log("Creating area with payload:", payload);
-      console.log("Action params:", actionParams);
-      console.log("Reaction params:", reactionParams);
+      console.log('Creating area with payload:', payload);
+      console.log('Action params:', actionParams);
+      console.log('Reaction params:', reactionParams);
 
-      await post("/areas", payload, token);
+      await post('/areas', payload, token);
 
-      alert("Area created successfully!");
+      alert('Area created successfully!');
       setShowCreateModal(false);
       resetForm();
       loadData();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to create area";
+        err instanceof Error ? err.message : 'Failed to create area';
       alert(`Error: ${errorMessage}`);
     }
   };
 
   const handleDeleteArea = async (areaId: number) => {
-    if (!window.confirm("Are you sure you want to delete this area?")) {
+    if (!window.confirm('Are you sure you want to delete this area?')) {
       return;
     }
 
     try {
       const token = getAuthToken();
       if (!token) {
-        throw new Error("Not authenticated");
+        throw new Error('Not authenticated');
       }
 
       await del(`/areas/${areaId}`, token);
-      alert("Area deleted successfully!");
+      alert('Area deleted successfully!');
       loadData();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Failed to delete area";
+        err instanceof Error ? err.message : 'Failed to delete area';
       alert(`Error: ${errorMessage}`);
     }
   };
 
   const resetForm = () => {
-    setAreaName("");
+    setAreaName('');
     setSelectedAction(null);
     setSelectedReaction(null);
     setActionParams({});
@@ -193,15 +193,15 @@ export default function Area() {
     try {
       // If parametersStr is already an object, use it directly
       const params =
-        typeof parametersStr === "string"
+        typeof parametersStr === 'string'
           ? JSON.parse(parametersStr)
           : parametersStr;
 
       return Object.entries(params).map(([key, value]: [string, any]) => ({
         name: key,
-        type: value.type || "string",
-        description: value.description || "",
-        example: value.example || "",
+        type: value.type || 'string',
+        description: value.description || '',
+        example: value.example || '',
         optional: value.optional || false,
       }));
     } catch {
@@ -291,9 +291,9 @@ export default function Area() {
                     <h3 className="automation-name">{area.name}</h3>
                     <div className="automation-actions">
                       <span
-                        className={`status-badge ${area.is_active ? "status-active" : "status-inactive"}`}
+                        className={`status-badge ${area.is_active ? 'status-active' : 'status-inactive'}`}
                       >
-                        {area.is_active ? "Active" : "Inactive"}
+                        {area.is_active ? 'Active' : 'Inactive'}
                       </span>
                       <button
                         onClick={(e) => {
@@ -369,7 +369,7 @@ export default function Area() {
                   value={
                     selectedAction
                       ? `${selectedAction.service}.${selectedAction.type}`
-                      : ""
+                      : ''
                   }
                   onChange={(e) => {
                     const action = availableActions.find(
@@ -409,14 +409,14 @@ export default function Area() {
                       (field) => (
                         <div key={field.name} className="param-field">
                           <label className="param-label">
-                            {field.name}{" "}
+                            {field.name}{' '}
                             {!field.optional && (
                               <span className="required">*</span>
                             )}
                           </label>
                           <input
                             type="text"
-                            value={actionParams[field.name] || ""}
+                            value={actionParams[field.name] || ''}
                             onChange={(e) =>
                               setActionParams({
                                 ...actionParams,
@@ -442,7 +442,7 @@ export default function Area() {
                   value={
                     selectedReaction
                       ? `${selectedReaction.service}.${selectedReaction.type}`
-                      : ""
+                      : ''
                   }
                   onChange={(e) => {
                     const reaction = availableReactions.find(
@@ -482,14 +482,14 @@ export default function Area() {
                       (field) => (
                         <div key={field.name} className="param-field">
                           <label className="param-label">
-                            {field.name}{" "}
+                            {field.name}{' '}
                             {!field.optional && (
                               <span className="required">*</span>
                             )}
                           </label>
                           <input
                             type="text"
-                            value={reactionParams[field.name] || ""}
+                            value={reactionParams[field.name] || ''}
                             onChange={(e) =>
                               setReactionParams({
                                 ...reactionParams,
@@ -545,9 +545,9 @@ export default function Area() {
               <div className="modal-section">
                 <label className="modal-label">Status</label>
                 <span
-                  className={`status-badge ${selectedArea.is_active ? "status-active" : "status-inactive"}`}
+                  className={`status-badge ${selectedArea.is_active ? 'status-active' : 'status-inactive'}`}
                 >
-                  {selectedArea.is_active ? "Active" : "Inactive"}
+                  {selectedArea.is_active ? 'Active' : 'Inactive'}
                 </span>
               </div>
               <div className="modal-section">

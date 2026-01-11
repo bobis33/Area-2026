@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 import type { InputProps } from '@area/ui';
 import type { TextInputProps } from 'react-native';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
 import { MobileText as Text } from './MobileText';
 
-export interface MobileInputProps extends Omit<InputProps, 'containerStyle' | 'inputStyle'> {
+export interface MobileInputProps extends Omit<
+  InputProps,
+  'containerStyle' | 'inputStyle'
+> {
   autoCapitalize?: TextInputProps['autoCapitalize'];
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
@@ -64,8 +73,9 @@ export const MobileInput: React.FC<MobileInputProps> = ({
     borderColor: hasError
       ? currentTheme.colors.danger
       : isFocused && !hasError
-      ? currentTheme.colors.primary
-      : (currentTheme.colors as any).borderSubtle || currentTheme.colors.border,
+        ? currentTheme.colors.primary
+        : (currentTheme.colors as any).borderSubtle ||
+          currentTheme.colors.border,
     opacity: disabled ? 0.6 : 1,
     ...containerStyle,
   };
@@ -100,9 +110,7 @@ export const MobileInput: React.FC<MobileInputProps> = ({
       )}
 
       <View style={inputContainerStyle}>
-        {leftIcon && (
-          <View style={styles.iconContainer}>{leftIcon}</View>
-        )}
+        {leftIcon && <View style={styles.iconContainer}>{leftIcon}</View>}
 
         <TextInput
           style={textInputStyle}
@@ -119,17 +127,11 @@ export const MobileInput: React.FC<MobileInputProps> = ({
           onBlur={handleBlur}
         />
 
-        {rightIcon && (
-          <View style={styles.iconContainer}>{rightIcon}</View>
-        )}
+        {rightIcon && <View style={styles.iconContainer}>{rightIcon}</View>}
       </View>
 
       {showHelperText && (
-        <Text
-          variant="caption"
-          color="muted"
-          style={{ marginTop: spacing.xs }}
-        >
+        <Text variant="caption" color="muted" style={{ marginTop: spacing.xs }}>
           {helperText}
         </Text>
       )}

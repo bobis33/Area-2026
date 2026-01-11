@@ -1,6 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, Switch } from 'react-native';
-import { MobileText as Text , MobileScreen , MobileButton , MobileInput } from '@/components/ui-mobile';
+import {
+  MobileText as Text,
+  MobileScreen,
+  MobileButton,
+  MobileInput,
+} from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -88,7 +93,9 @@ export default function CreateAreaScreen() {
         selectedItem={selectedAction}
         params={actionParams}
         onSelect={() => openModal('action')}
-        onParamChange={(key, fieldType, rawValue) => setParamValue('action', key, fieldType, rawValue)}
+        onParamChange={(key, fieldType, rawValue) =>
+          setParamValue('action', key, fieldType, rawValue)
+        }
       />
 
       <View style={styles.spacer} />
@@ -101,7 +108,9 @@ export default function CreateAreaScreen() {
         selectedItem={selectedReaction}
         params={reactionParams}
         onSelect={() => openModal('reaction')}
-        onParamChange={(key, fieldType, rawValue) => setParamValue('reaction', key, fieldType, rawValue)}
+        onParamChange={(key, fieldType, rawValue) =>
+          setParamValue('reaction', key, fieldType, rawValue)
+        }
       />
 
       <View style={styles.spacer} />

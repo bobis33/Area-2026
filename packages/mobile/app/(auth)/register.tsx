@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { router } from 'expo-router';
-import { MobileText as Text ,
+import {
+  MobileText as Text,
   MobileScreen,
   MobileButton,
   MobileInput,
@@ -53,11 +54,7 @@ export default function RegisterScreen() {
   };
 
   return (
-    <MobileScreen
-      scroll={true}
-      safeArea={true}
-      keyboardAware
-    >
+    <MobileScreen scroll={true} safeArea={true} keyboardAware>
       <Text
         variant="body"
         color="muted"

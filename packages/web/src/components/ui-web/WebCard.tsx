@@ -1,5 +1,5 @@
-import React from "react";
-import "./WebCard.css";
+import React from 'react';
+import './WebCard.css';
 
 /**
  * WebCard - Pure web card component
@@ -31,7 +31,7 @@ export interface WebCardProps {
 
 export const WebCard: React.FC<WebCardProps> = ({
   children,
-  className = "",
+  className = '',
   id,
   onClick,
   style,

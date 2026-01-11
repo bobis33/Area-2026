@@ -1,6 +1,6 @@
-import { useAuth } from "@/hooks/useAuth";
-import { WebCard, WebButton } from "@/components/ui-web";
-import "./Profile.css";
+import { useAuth } from '@/hooks/useAuth';
+import { WebCard, WebButton } from '@/components/ui-web';
+import './Profile.css';
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -23,7 +23,7 @@ export default function Profile() {
             <div className="profile-info-grid">
               <div className="profile-info-item">
                 <span className="profile-label">Name</span>
-                <span className="profile-value">{user.name || "Not set"}</span>
+                <span className="profile-value">{user.name || 'Not set'}</span>
               </div>
               <div className="profile-info-item">
                 <span className="profile-label">Email</span>
@@ -36,8 +36,8 @@ export default function Profile() {
               <div className="profile-info-item">
                 <span className="profile-label">Authentication Provider</span>
                 <span className="profile-value">
-                  {user.provider === "local"
-                    ? "Email/Password"
+                  {user.provider === 'local'
+                    ? 'Email/Password'
                     : user.provider.charAt(0).toUpperCase() +
                       user.provider.slice(1)}
                 </span>
@@ -45,10 +45,10 @@ export default function Profile() {
               <div className="profile-info-item">
                 <span className="profile-label">Account Created</span>
                 <span className="profile-value">
-                  {new Date(user.created_at).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
+                  {new Date(user.created_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
                   })}
                 </span>
               </div>

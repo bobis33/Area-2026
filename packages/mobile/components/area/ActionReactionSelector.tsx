@@ -1,9 +1,18 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { MobileText as Text } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { useAppTheme } from '@/contexts/ThemeContext';
-import { AreaActionDefinition, AreaReactionDefinition, ParamField } from '@/types/api';
+import {
+  AreaActionDefinition,
+  AreaReactionDefinition,
+  ParamField,
+} from '@/types/api';
 import { ParameterForm } from './ParameterForm';
 
 interface ActionReactionSelectorProps {
@@ -14,7 +23,11 @@ interface ActionReactionSelectorProps {
   selectedItem: AreaActionDefinition | AreaReactionDefinition | undefined;
   params: Record<string, any>;
   onSelect: () => void;
-  onParamChange: (key: string, fieldType: ParamField['type'], rawValue: any) => void;
+  onParamChange: (
+    key: string,
+    fieldType: ParamField['type'],
+    rawValue: any,
+  ) => void;
 }
 
 export function ActionReactionSelector({
@@ -44,15 +57,14 @@ export function ActionReactionSelector({
               backgroundColor: selectedKey
                 ? currentTheme.colors.primarySoft
                 : currentTheme.colors.surfaceMuted,
-              borderColor: currentTheme.colors.borderSubtle || currentTheme.colors.border,
+              borderColor:
+                currentTheme.colors.borderSubtle || currentTheme.colors.border,
             },
           ]}
           onPress={onSelect}
           activeOpacity={0.8}
         >
-          <Text variant="body">
-            {selectedKey || `Choose ${kind}`}
-          </Text>
+          <Text variant="body">{selectedKey || `Choose ${kind}`}</Text>
         </TouchableOpacity>
       )}
 
@@ -90,5 +102,3 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
-
-

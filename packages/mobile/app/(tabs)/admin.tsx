@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { MobileText as Text , MobileScreen, MobileButton } from '@/components/ui-mobile';
+import {
+  MobileText as Text,
+  MobileScreen,
+  MobileButton,
+} from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -11,7 +15,7 @@ import { User } from '@/types/api';
 export default function AdminScreen() {
   const { currentTheme } = useAppTheme();
   const { token } = useAuth();
-  
+
   // Users state
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -258,8 +262,8 @@ export default function AdminScreen() {
                                 ? 'Demoting...'
                                 : 'Promoting...'
                               : user.role === 'admin'
-                              ? 'Demote'
-                              : 'Promote'
+                                ? 'Demote'
+                                : 'Promote'
                           }
                           onPress={() =>
                             user.role === 'admin'

@@ -58,13 +58,13 @@ export const AnimatedServiceCard: React.FC<AnimatedServiceCardProps> = ({
     const shadowOpacity = interpolate(glow.value, [0, 1], [0.1, 0.3]);
     return {
       opacity: opacity.value,
-      transform: [
-        { translateY: translateY.value },
-        { scale: scale.value },
-      ],
+      transform: [{ translateY: translateY.value }, { scale: scale.value }],
       shadowOpacity: shadowOpacity,
       shadowRadius: interpolate(glow.value, [0, 1], [8, 16]),
-      shadowOffset: { width: 0, height: interpolate(glow.value, [0, 1], [2, 8]) },
+      shadowOffset: {
+        width: 0,
+        height: interpolate(glow.value, [0, 1], [2, 8]),
+      },
     };
   });
 

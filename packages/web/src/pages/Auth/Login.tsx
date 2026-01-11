@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
-import type { LoginCredentials } from "@/types";
+import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import type { LoginCredentials } from '@/types';
 import {
   FaGoogle,
   FaDiscord,
@@ -9,15 +9,15 @@ import {
   FaArrowLeft,
   FaSpotify,
   FaGitlab,
-} from "react-icons/fa";
-import { WebInput, WebButton } from "@/components/ui-web";
-import "./Auth.css";
+} from 'react-icons/fa';
+import { WebInput, WebButton } from '@/components/ui-web';
+import './Auth.css';
 
 export default function Login() {
   const { login, loginWithOAuth, loading, error } = useAuth();
   const [formData, setFormData] = useState<LoginCredentials>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -35,7 +35,7 @@ export default function Login() {
   };
 
   const handleOAuthLogin = (
-    provider: "google" | "discord" | "github" | "spotify" | "gitlab",
+    provider: 'google' | 'discord' | 'github' | 'spotify' | 'gitlab',
   ) => {
     loginWithOAuth(provider);
   };
@@ -84,7 +84,7 @@ export default function Login() {
 
           <WebButton
             type="submit"
-            label={loading ? "Signing In..." : "Sign In"}
+            label={loading ? 'Signing In...' : 'Sign In'}
             variant="primary"
             disabled={loading}
             fullWidth
@@ -99,7 +99,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-google"
-            onClick={() => handleOAuthLogin("google")}
+            onClick={() => handleOAuthLogin('google')}
             disabled={loading}
           >
             <FaGoogle className="oauth-icon" />
@@ -109,7 +109,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-discord"
-            onClick={() => handleOAuthLogin("discord")}
+            onClick={() => handleOAuthLogin('discord')}
             disabled={loading}
           >
             <FaDiscord className="oauth-icon" />
@@ -119,7 +119,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-github"
-            onClick={() => handleOAuthLogin("github")}
+            onClick={() => handleOAuthLogin('github')}
             disabled={loading}
           >
             <FaGithub className="oauth-icon" />
@@ -129,7 +129,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-spotify"
-            onClick={() => handleOAuthLogin("spotify")}
+            onClick={() => handleOAuthLogin('spotify')}
             disabled={loading}
           >
             <FaSpotify className="oauth-icon" />
@@ -139,7 +139,7 @@ export default function Login() {
           <button
             type="button"
             className="btn btn-oauth btn-gitlab"
-            onClick={() => handleOAuthLogin("gitlab")}
+            onClick={() => handleOAuthLogin('gitlab')}
             disabled={loading}
           >
             <FaGitlab className="oauth-icon" />
@@ -149,7 +149,7 @@ export default function Login() {
 
         <div className="auth-footer">
           <p>
-            Don't have an account?{" "}
+            Don't have an account?{' '}
             <Link to="/register" className="link">
               Sign Up
             </Link>

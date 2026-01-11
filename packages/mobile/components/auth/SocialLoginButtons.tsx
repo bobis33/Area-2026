@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert, Platform } from 'react-native';
-import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { OAuthButton , spacing, colors } from '@area/ui';
+import {
+  AntDesign,
+  Ionicons,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
+import { OAuthButton, spacing, colors } from '@area/ui';
 import { MobileText as Text } from '@/components/ui-mobile';
 import * as Haptics from 'expo-haptics';
 import { API_BASE_URL } from '@/constants/api';
@@ -113,7 +117,13 @@ export function SocialLoginButtons({
           onPress={() => handlePress('spotify')}
           backgroundColor="#1DB954"
           textColor={colors.white}
-          icon={<MaterialCommunityIcons name="spotify" size={20} color={colors.white} />}
+          icon={
+            <MaterialCommunityIcons
+              name="spotify"
+              size={20}
+              color={colors.white}
+            />
+          }
           disabled={disabled}
           loading={isLoading && loadingProvider === 'spotify'}
         />
@@ -123,7 +133,13 @@ export function SocialLoginButtons({
           onPress={() => handlePress('gitlab')}
           backgroundColor="#FC6D26"
           textColor={colors.white}
-          icon={<MaterialCommunityIcons name="gitlab" size={20} color={colors.white} />}
+          icon={
+            <MaterialCommunityIcons
+              name="gitlab"
+              size={20}
+              color={colors.white}
+            />
+          }
           disabled={disabled}
           loading={isLoading && loadingProvider === 'gitlab'}
         />
