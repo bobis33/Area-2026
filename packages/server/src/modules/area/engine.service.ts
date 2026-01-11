@@ -14,7 +14,7 @@ export class EngineService {
     private moduleRef: ModuleRef,
   ) {}
 
-  @Cron('*/5 * * * * *')
+  @Cron('* * * * * *')
   async runAreas() {
     try {
       const areas = await this.prisma.area.findMany({
@@ -70,6 +70,7 @@ export class EngineService {
           data: { current_state: result.newState },
         });
       } catch (error: any) {
+        // Action not found
         if (error.code === 'P2025') {
           return;
         }

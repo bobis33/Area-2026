@@ -8,7 +8,6 @@ import { AuthModule } from '@modules/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as Joi from 'joi';
 import { EngineModule } from '@modules/area/engine.module';
-import { SpotifyModule } from '@modules/spotify/spotify.module';
 
 @Module({
   imports: [
@@ -47,7 +46,6 @@ import { SpotifyModule } from '@modules/spotify/spotify.module';
     AboutModule,
     AuthModule,
     EngineModule,
-    SpotifyModule,
   ],
 })
 export class AppModule {}
