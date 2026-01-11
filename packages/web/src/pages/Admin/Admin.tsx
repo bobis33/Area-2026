@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { get, put, del } from '@/services/api.ts';
+import {
+  FaUserShield,
+  FaUser,
+  FaTrash,
+  FaSync,
+  FaChevronUp,
+  FaChevronDown,
+} from 'react-icons/fa';
 import './Admin.css';
 
 interface User {
@@ -21,8 +29,8 @@ export default function Admin() {
   const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
   const [deletingUserId, setDeletingUserId] = useState<number | null>(null);
 
-  // Check if user is admin
-  if (user?.role !== 'admin') {
+  // Check if user is admin (specific email)
+  if (user?.email !== 'areaserveur825@gmail.com') {
     return <Navigate to="/" replace />;
   }
 
@@ -131,20 +139,20 @@ export default function Admin() {
     <div className="admin-container">
       <div className="admin-content">
         <header className="admin-header">
-          <h1 className="admin-title">Admin Panel</h1>
-          <p className="admin-subtitle">Manage users and system settings</p>
+          <h1 className="admin-title">Admin</h1>
+          <p className="admin-subtitle">Manage users and their roles</p>
         </header>
 
         {/* User Management Section */}
         <section className="admin-section">
           <div className="section-header">
-            <h2 className="section-title">User Management</h2>
+            <h2 className="section-title">Members & roles</h2>
             <button
               onClick={loadUsers}
               className="btn btn-refresh"
               disabled={loading}
             >
-              🔄 Refresh
+              <FaSync className={loading ? 'spin-icon' : ''} /> Refresh
             </button>
           </div>
 
@@ -157,7 +165,7 @@ export default function Admin() {
 
           {error && !loading && (
             <div className="error-container">
-              <p className="error-text">❌ {error}</p>
+              <p className="error-text">{error}</p>
               <button onClick={loadUsers} className="btn btn-retry">
                 Try Again
               </button>
@@ -192,7 +200,15 @@ export default function Admin() {
                       <td>{u.name || '-'}</td>
                       <td>
                         <span className={`role-badge role-${u.role}`}>
-                          {u.role}
+                          {u.role === 'admin' ? (
+                            <>
+                              <FaUserShield className="role-icon" /> admin
+                            </>
+                          ) : (
+                            <>
+                              <FaUser className="role-icon" /> user
+                            </>
+                          )}
                         </span>
                       </td>
                       <td className="provider-cell">{u.provider}</td>
@@ -210,7 +226,13 @@ export default function Admin() {
                               }
                               title="Promote to admin"
                             >
-                              {updatingUserId === u.id ? '⏳' : '⬆️'}
+                              {updatingUserId === u.id ? (
+                                <span className="btn-loading">...</span>
+                              ) : (
+                                <>
+                                  <FaChevronUp /> Promote
+                                </>
+                              )}
                             </button>
                           ) : (
                             <button
@@ -221,7 +243,13 @@ export default function Admin() {
                               }
                               title="Demote to user"
                             >
-                              {updatingUserId === u.id ? '⏳' : '⬇️'}
+                              {updatingUserId === u.id ? (
+                                <span className="btn-loading">...</span>
+                              ) : (
+                                <>
+                                  <FaChevronDown /> Demote
+                                </>
+                              )}
                             </button>
                           )}
                           <button
@@ -232,7 +260,13 @@ export default function Admin() {
                             }
                             title="Delete user"
                           >
-                            {deletingUserId === u.id ? '⏳' : '🗑️'}
+                            {deletingUserId === u.id ? (
+                              <span className="btn-loading">...</span>
+                            ) : (
+                              <>
+                                <FaTrash /> Revoke
+                              </>
+                            )}
                           </button>
                         </div>
                       </td>
@@ -242,43 +276,6 @@ export default function Admin() {
               </table>
             </div>
           )}
-        </section>
-
-        {/* Actions & Reactions Section */}
-        <section className="admin-section">
-          <h2 className="section-title">Actions & Reactions</h2>
-          <div className="actions-grid">
-            <div className="action-card">
-              <div className="action-icon">⚡</div>
-              <h3 className="action-title">Create Action</h3>
-              <p className="action-description">
-                Define new triggers for automations
-              </p>
-              <button className="btn btn-action-card" disabled>
-                Coming Soon
-              </button>
-            </div>
-            <div className="action-card">
-              <div className="action-icon">🎯</div>
-              <h3 className="action-title">Create Reaction</h3>
-              <p className="action-description">
-                Add new responses to triggers
-              </p>
-              <button className="btn btn-action-card" disabled>
-                Coming Soon
-              </button>
-            </div>
-            <div className="action-card">
-              <div className="action-icon">🔗</div>
-              <h3 className="action-title">Link Action → Reaction</h3>
-              <p className="action-description">
-                Connect actions with reactions
-              </p>
-              <button className="btn btn-action-card" disabled>
-                Coming Soon
-              </button>
-            </div>
-          </div>
         </section>
       </div>
     </div>

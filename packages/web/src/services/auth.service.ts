@@ -46,7 +46,8 @@ export async function register(data: RegisterData): Promise<AuthResponse> {
 export function loginWithOAuth(
   provider: 'google' | 'discord' | 'github' | 'spotify' | 'gitlab',
 ): void {
-  window.location.href = `${API_BASE_URL}/auth/${provider}`;
+  const redirect = encodeURIComponent(window.location.origin);
+  window.location.href = `${API_BASE_URL}/auth/${provider}?redirect=${redirect}`;
 }
 
 /**
@@ -79,9 +80,47 @@ export function logout(): void {
 export async function getOAuthProviders(): Promise<string[]> {
   try {
     const response = await get<{ providers: string[] }>('/auth/providers');
-    return response.providers;
+    return Array.isArray(response.providers) ? response.providers : [];
   } catch (error) {
     console.error('Failed to fetch OAuth providers:', error);
     return [];
+  }
+}
+
+/**
+ * Get list of linked OAuth providers for the current user
+ */
+export async function getLinkedProviders(token: string): Promise<string[]> {
+  try {
+    if (!token) {
+      return [];
+    }
+    const response = await get<{ providers: string[] }>(
+      '/auth/providersLinked',
+      token,
+    );
+    return Array.isArray(response.providers) ? response.providers : [];
+  } catch (error) {
+    console.error('Failed to fetch linked OAuth providers:', error);
+    return [];
+  }
+}
+
+/**
+ * Unlink an OAuth provider for the current user
+ */
+export async function unlinkProvider(
+  token: string,
+  provider: string,
+): Promise<boolean> {
+  try {
+    if (!token) {
+      return false;
+    }
+    await post(`/auth/unlink/${provider}`, undefined, token);
+    return true;
+  } catch (error) {
+    console.error('Failed to unlink OAuth provider:', error);
+    return false;
   }
 }

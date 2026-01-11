@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { handleOAuthCallback } from '@/services/auth.service';
 import { useAuth } from '@/hooks/useAuth';
+import { consumeOAuthRedirectPath } from '@/utils/storage';
 import './Auth.css';
 
 export default function OAuthCallback() {
@@ -15,6 +16,7 @@ export default function OAuthCallback() {
   useEffect(() => {
     const userParam = searchParams.get('user');
     const tokenParam = searchParams.get('token');
+    const redirectPath = consumeOAuthRedirectPath();
 
     if (!userParam) {
       navigate('/auth/error?message=No user data received');
@@ -33,7 +35,7 @@ export default function OAuthCallback() {
       refreshAuth();
       setStatus('success');
       setTimeout(() => {
-        navigate('/dashboard');
+        navigate(redirectPath || '/dashboard');
       }, 1000);
     } catch (error) {
       console.error('Failed to process OAuth callback:', error);
