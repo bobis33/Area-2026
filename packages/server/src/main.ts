@@ -1,23 +1,24 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import helmet from 'helmet';
 import { AppModule } from '@/app.module';
 import { setupSwagger } from '@common/config/swagger.config';
 
 async function app() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug'],
+  });
+  const logger = new Logger('main');
   const configService = app.get(ConfigService);
-  const port = configService.get<number>('PORT') ?? 8080;
-
-  setupSwagger(app);
-
-  const allowedOrigins =
+  const port: number = configService.get<number>('PORT') ?? 8080;
+  const allowedOrigins: string[] =
     configService
       .get<string>('FRONTEND_URLS')
       ?.split(',')
       .map((origin) => origin.trim()) || [];
 
+  setupSwagger(app);
   app.enableCors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
@@ -30,7 +31,7 @@ async function app() {
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.warn(`CORS blocked from origin: ${origin}`);
+        logger.warn(`CORS blocked from origin: ${origin}`);
         return callback(null, false);
       }
     },
@@ -56,9 +57,7 @@ async function app() {
   app.enableShutdownHooks();
   await app.listen(port);
 
-  console.log(
-    `🚀 Server running on http://localhost:${port}\n📘 Swagger docs available at http://localhost:${port}/docs`,
-  );
+  logger.log(`Running on http://localhost:${port}\n`);
 }
 
 app();

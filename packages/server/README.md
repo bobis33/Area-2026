@@ -1,5 +1,7 @@
 # Server
 
+> By default, server runs on port `8080`. Swagger UI is available at `http://localhost:8080/docs`.
+
 ## Add new Actions / Reactions
 
 This project uses a **registry-based architecture** to dynamically execute Actions and Reactions.

@@ -156,8 +156,6 @@ export function normalizeOAuthProfile(
   }
 
   if (!normalizedProfile.email) {
-    console.warn(`Email manquant ! Génération d'un email placeholder.`);
-
     normalizedProfile.email = `${provider.toLowerCase()}_${normalizedProfile.provider_id}@no-email.area.local`;
   }
 
