@@ -13,7 +13,7 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Welcome back, {user.name || user.email}! 👋</h1>
+        <h1>Welcome back, {user.name || user.email}!</h1>
         <p className="dashboard-subtitle">
           Manage your automations and account from here
         </p>

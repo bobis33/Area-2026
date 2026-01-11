@@ -15,7 +15,7 @@ export default function Home() {
       <section className="hero-section">
         <nav className="hero-nav">
           <Link to="/" className="nav-logo">
-            AREA
+            <img src="/logo.svg" alt="AREA" />
           </Link>
           <div className="nav-links">
             <Link to="/about" className="nav-link">
@@ -29,7 +29,9 @@ export default function Home() {
             </Link>
           </div>
         </nav>
-        <h1 className="hero-title">AREA</h1>
+        <h1 className="hero-title">
+          <img src="/logo.svg" alt="AREA" className="hero-logo" />
+        </h1>
         <p className="hero-subtitle">Automate Your Digital Life</p>
         <p className="hero-description">
           Connect your favorite services and create powerful automations.
@@ -48,15 +50,15 @@ export default function Home() {
         <h2>How It Works</h2>
         <div className="feature-grid">
           <div className="feature-card">
-            <h3>📧 Connect Services</h3>
+            <h3>Connect Services</h3>
             <p>Link your email, social media, and productivity tools</p>
           </div>
           <div className="feature-card">
-            <h3>⚡ Create Actions</h3>
+            <h3>Create Actions</h3>
             <p>Set triggers like "new email" or "new tweet"</p>
           </div>
           <div className="feature-card">
-            <h3>🎯 Set Reactions</h3>
+            <h3>Set Reactions</h3>
             <p>Define what happens: send notification, create task, etc.</p>
           </div>
         </div>
@@ -65,10 +67,10 @@ export default function Home() {
       <section className="info-section">
         <h2>Why Choose AREA?</h2>
         <ul className="benefits-list">
-          <li>✅ Easy to use - No coding required</li>
-          <li>✅ Powerful integrations - Connect all your tools</li>
-          <li>✅ Save time - Automate repetitive tasks</li>
-          <li>✅ Stay organized - Everything in one place</li>
+          <li>Easy to use - No coding required</li>
+          <li>Powerful integrations - Connect all your tools</li>
+          <li>Save time - Automate repetitive tasks</li>
+          <li>Stay organized - Everything in one place</li>
         </ul>
       </section>
     </div>
