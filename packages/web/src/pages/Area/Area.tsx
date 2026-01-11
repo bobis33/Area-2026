@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { get, post, del } from '@/services/api';
 import { getAuthToken, getUser } from '@/utils/storage';
 import { ServiceIcon, ActionReactionIcon } from '@/components/icons';
+import { FaTrash } from 'react-icons/fa';
 import './Area.css';
 
 interface Area {
@@ -359,7 +360,7 @@ export default function Area() {
                         className="btn-delete-area"
                         title="Delete automation"
                       >
-                        🗑️
+                        <FaTrash />
                       </button>
                     </div>
                   </div>

@@ -202,18 +202,24 @@
 }
 
 .btn-delete-area {
-  background: none;
+  background: #fee2e2;
   border: 1px solid #ef4444;
-  padding: 0.375rem 0.75rem;
+  color: #dc2626;
+  padding: 0.5rem 0.75rem;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 1rem;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-delete-area:hover {
-  background: #fee2e2;
-  transform: scale(1.1);
+  background: #ef4444;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
 }
 
 .automation-flow {
@@ -521,7 +527,17 @@
 
   .modal-value {
     color: #e2e8f0;
-    background: #0f172a;
+  }
+
+  .btn-delete-area {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+
+  .btn-delete-area:hover {
+    background: #ef4444;
+    color: white;
   }
 }
 

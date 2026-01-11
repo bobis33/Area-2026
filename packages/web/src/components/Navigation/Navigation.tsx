@@ -48,6 +48,14 @@ export default function Navigation() {
         >
           About
         </Link>
+        {user.email === 'areaserveur825@gmail.com' && (
+          <Link
+            to="/admin"
+            className={`nav-link ${isActive('/admin') ? 'active' : ''}`}
+          >
+            Admin
+          </Link>
+        )}
         <span className="nav-user">{user.email}</span>
         <button onClick={logout} className="btn-logout-nav">
           Logout
