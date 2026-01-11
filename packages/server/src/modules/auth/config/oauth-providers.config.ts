@@ -65,7 +65,7 @@ export function getProviderConfig(
       callbackURL:
         configService.get<string>('GITLAB_CALLBACK_URL') ||
         'http://localhost:8080/auth/gitlab/callback',
-      scope: ['read_user'],
+      scope: ['api'],
     },
   };
 
