@@ -91,7 +91,6 @@ export const ActionReactionIcon = ({
     if (typeLower.includes('forecast') || typeLower.includes('weather'))
       return FaCloudSun;
 
-    // Default
     return FaBolt;
   };
 

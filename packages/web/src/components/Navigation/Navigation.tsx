@@ -15,7 +15,7 @@ export default function Navigation() {
   return (
     <nav className="navigation">
       <Link to="/dashboard" className="nav-logo">
-        AREA
+        <img src="/logo.svg" alt="AREA Logo" className="nav-logo-img" />
       </Link>
       <div className="nav-links">
         <Link
