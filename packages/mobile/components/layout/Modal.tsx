@@ -14,12 +14,10 @@ import Animated, {
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import { Card, spacing, borderRadius } from '@area/ui';
+import { spacing, borderRadius } from '@area/ui';
 import { MobileText as Text } from '@/components/ui-mobile';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAppTheme } from '@/contexts/ThemeContext';
-
-const AnimatedCard = Animated.createAnimatedComponent(Card);
 
 interface ModalProps {
   visible: boolean;
