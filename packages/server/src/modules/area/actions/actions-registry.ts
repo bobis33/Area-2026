@@ -3,6 +3,7 @@ import { GithubNewNotificationAction } from '@modules/area/actions/github/new-no
 import { SpotifyNewSavedTrackAction } from '@modules/area/actions/spotify/new-saved-track';
 import { SpotifyTrackIsPlayingAction } from '@modules/area/actions/spotify/track-is-playing';
 import { ActionHandler } from '@interfaces/area.interface';
+import { GitlabNewTodoAction } from '@modules/area/actions/gitlab/new-notification';
 
 export const ActionsRegistry: Record<
   string,
@@ -10,6 +11,7 @@ export const ActionsRegistry: Record<
 > = {
   'time.cron': TimeCronAction,
   'github.new_notification': GithubNewNotificationAction,
+  'gitlab.new_notification': GitlabNewTodoAction,
   'spotify.new_saved_track': SpotifyNewSavedTrackAction,
   'spotify.track_is_playing': SpotifyTrackIsPlayingAction,
 };

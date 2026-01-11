@@ -14,8 +14,8 @@ import { SpotifySkipNextReaction } from '@modules/area/reactions/spotify/skip-ne
 export const ReactionsRegistry: Record<string, Type<ReactionHandler>> = {
   'discord.send_message_channel': DiscordSendMessageChannelReaction,
   'discord.send_message_user': DiscordSendMessageUserReaction,
-  'gmail.send_email': GmailSendEmailReaction,
-  'gmail.create_draft': GmailCreateDraftReaction,
+  'google.gmail_send_email': GmailSendEmailReaction,
+  'google.gmail_create_draft': GmailCreateDraftReaction,
   'spotify.add_to_liked': SpotifyAddToLikedReaction,
   'spotify.add_to_playlist': SpotifyAddToPlaylistReaction,
   'spotify.play_track': SpotifyPlayTrackReaction,

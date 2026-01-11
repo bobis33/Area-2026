@@ -26,7 +26,7 @@ import { Reaction } from '@decorators/area.decorator';
       example: false,
     },
   },
-  name: 'google.send_email',
+  name: 'google.gmail_send_email',
   description: 'Sends an email via Gmail',
 })
 @Injectable()

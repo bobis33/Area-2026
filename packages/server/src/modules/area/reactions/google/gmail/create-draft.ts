@@ -26,7 +26,7 @@ import { Reaction } from '@decorators/area.decorator';
       example: false,
     },
   },
-  name: 'google.create_draft',
+  name: 'google.gmail_create_draft',
   description: 'Creates a draft email in Gmail',
 })
 @Injectable()
