@@ -10,6 +10,7 @@ interface TrackPlayingState {
 @Action({
   name: 'spotify.track_is_playing',
   description: 'Triggers when a track is currently playing on Spotify',
+  oauth: true,
   parameters: {},
 })
 @Injectable()

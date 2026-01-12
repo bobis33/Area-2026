@@ -19,6 +19,7 @@ export class AreaService {
       return {
         service: key.split('.')[0],
         type: key.split('.')[1],
+        oauth: meta.oauth,
         parameters: meta.parameters ?? '',
       };
     });
@@ -30,6 +31,7 @@ export class AreaService {
       return {
         service: key.split('.')[0],
         type: key.split('.')[1],
+        oauth: meta.oauth,
         parameters: meta.parameters ?? '',
       };
     });

@@ -7,6 +7,7 @@ import { SpotifyService } from '@modules/spotify/spotify.service';
   parameters: {},
   name: 'spotify.skip_next',
   description: 'Skips to the next track on Spotify',
+  oauth: true,
 })
 @Injectable()
 export class SpotifySkipNextReaction implements ReactionHandler {

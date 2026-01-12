@@ -9,12 +9,15 @@ export class ActionDto {
   @ApiProperty({ example: 'cron' })
   @IsString()
   type!: string;
+  @ApiProperty()
+  oauth!: boolean;
   @ApiProperty({
     type: Object,
     example: { cron: '*/10 * * * * *' },
   })
   @IsObject()
   parameters!: Record<string, any>;
+
 }
 
 export class ReactionDto {
@@ -24,6 +27,8 @@ export class ReactionDto {
   @ApiProperty({ example: 'send_message_channel' })
   @IsString()
   type!: string;
+  @ApiProperty()
+  oauth!: boolean;
   @ApiProperty({
     type: Object,
     example: { channelId: '123', message: 'Hello world' },

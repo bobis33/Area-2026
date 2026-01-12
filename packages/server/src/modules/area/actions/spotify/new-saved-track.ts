@@ -10,6 +10,7 @@ interface SavedTrackState {
 @Action({
   name: 'spotify.new_saved_track',
   description: 'Triggers when a new track is saved to your Spotify library',
+  oauth: true,
   parameters: {},
 })
 @Injectable()

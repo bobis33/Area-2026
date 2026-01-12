@@ -13,6 +13,7 @@ import { SpotifyService } from '@modules/spotify/spotify.service';
   },
   name: 'spotify.add_to_liked',
   description: 'Adds a track to your Spotify liked songs',
+  oauth: true,
 })
 @Injectable()
 export class SpotifyAddToLikedReaction implements ReactionHandler {

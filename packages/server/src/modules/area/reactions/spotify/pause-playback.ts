@@ -7,6 +7,7 @@ import { SpotifyService } from '@modules/spotify/spotify.service';
   parameters: {},
   name: 'spotify.pause_playback',
   description: 'Pauses the current playback on Spotify',
+  oauth: true,
 })
 @Injectable()
 export class SpotifyPausePlaybackReaction implements ReactionHandler {
