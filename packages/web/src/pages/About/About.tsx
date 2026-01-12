@@ -11,9 +11,11 @@ export default function About() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAboutData = async () => {
+    const fetchAboutData = async (isInitialLoad = false) => {
       try {
-        setLoading(true);
+        if (isInitialLoad) {
+          setLoading(true);
+        }
         setError(null);
         const data = await get<AboutResponse>('/about.json');
         setAboutData(data);
@@ -24,11 +26,16 @@ export default function About() {
             : 'Failed to fetch server information',
         );
       } finally {
-        setLoading(false);
+        if (isInitialLoad) {
+          setLoading(false);
+        }
       }
     };
 
-    fetchAboutData();
+    fetchAboutData(true);
+
+    const interval = setInterval(() => fetchAboutData(false), 1000);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {

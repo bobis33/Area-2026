@@ -13,7 +13,7 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Welcome back, {user.name || user.email}! 👋</h1>
+        <h1>Welcome back, {user.name || user.email}!</h1>
         <p className="dashboard-subtitle">
           Manage your automations and account from here
         </p>
@@ -26,6 +26,19 @@ export default function Dashboard() {
             <p>
               Create and manage your action-reaction automations. Connect
               services and build powerful workflows.
+            </p>
+            <div className="dashboard-card-footer">
+              <span className="dashboard-card-arrow">→</span>
+            </div>
+          </Link>
+        </WebCard>
+
+        <WebCard>
+          <Link to="/services" className="dashboard-card-link">
+            <h2>Connected Services</h2>
+            <p>
+              Link multiple providers like GitHub, Spotify, and Discord to
+              unlock more automations.
             </p>
             <div className="dashboard-card-footer">
               <span className="dashboard-card-arrow">→</span>

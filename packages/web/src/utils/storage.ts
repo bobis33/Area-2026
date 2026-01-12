@@ -8,6 +8,7 @@ import type { User } from '@/types';
 const STORAGE_KEYS = {
   TOKEN: 'token',
   USER: 'user',
+  OAUTH_REDIRECT: 'oauth_redirect_path',
 } as const;
 
 /**
@@ -86,6 +87,33 @@ export function removeUser(): void {
 export function clearAuthData(): void {
   removeAuthToken();
   removeUser();
+}
+
+/**
+ * Store a post-OAuth redirect path for linking providers.
+ */
+export function setOAuthRedirectPath(path: string): void {
+  try {
+    localStorage.setItem(STORAGE_KEYS.OAUTH_REDIRECT, path);
+  } catch (error) {
+    console.error('Failed to store OAuth redirect path:', error);
+  }
+}
+
+/**
+ * Consume and clear the post-OAuth redirect path.
+ */
+export function consumeOAuthRedirectPath(): string | null {
+  try {
+    const path = localStorage.getItem(STORAGE_KEYS.OAUTH_REDIRECT);
+    if (path) {
+      localStorage.removeItem(STORAGE_KEYS.OAUTH_REDIRECT);
+    }
+    return path;
+  } catch (error) {
+    console.error('Failed to retrieve OAuth redirect path:', error);
+    return null;
+  }
 }
 
 /**

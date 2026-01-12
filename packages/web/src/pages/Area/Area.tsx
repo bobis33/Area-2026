@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { get, post, del } from '@/services/api';
 import { getAuthToken, getUser } from '@/utils/storage';
+import { ServiceIcon, ActionReactionIcon } from '@/components/icons';
+import { FaTrash } from 'react-icons/fa';
 import './Area.css';
 
 interface Area {
@@ -58,6 +60,20 @@ export default function Area() {
     useState<ReactionDefinition | null>(null);
   const [actionParams, setActionParams] = useState<Record<string, any>>({});
   const [reactionParams, setReactionParams] = useState<Record<string, any>>({});
+
+  // Two-step selection state
+  const [selectionStep, setSelectionStep] = useState<'service' | 'item'>(
+    'service',
+  );
+  const [selectionMode, setSelectionMode] = useState<
+    'action' | 'reaction' | null
+  >(null);
+  const [selectedActionService, setSelectedActionService] = useState<
+    string | null
+  >(null);
+  const [selectedReactionService, setSelectedReactionService] = useState<
+    string | null
+  >(null);
 
   useEffect(() => {
     loadData();
@@ -179,6 +195,47 @@ export default function Area() {
     setSelectedReaction(null);
     setActionParams({});
     setReactionParams({});
+    setSelectionStep('service');
+    setSelectionMode(null);
+    setSelectedActionService(null);
+    setSelectedReactionService(null);
+  };
+
+  const openServiceSelection = (mode: 'action' | 'reaction') => {
+    setSelectionMode(mode);
+    setSelectionStep('service');
+  };
+
+  const handleServiceSelect = (service: string) => {
+    if (selectionMode === 'action') {
+      setSelectedActionService(service);
+    } else if (selectionMode === 'reaction') {
+      setSelectedReactionService(service);
+    }
+    setSelectionStep('item');
+  };
+
+  const handleActionSelect = (action: ActionDefinition) => {
+    setSelectedAction(action);
+    setActionParams({});
+    setSelectionMode(null);
+    setSelectionStep('service');
+  };
+
+  const handleReactionSelect = (reaction: ReactionDefinition) => {
+    setSelectedReaction(reaction);
+    setReactionParams({});
+    setSelectionMode(null);
+    setSelectionStep('service');
+  };
+
+  const goBackToServiceSelection = () => {
+    setSelectionStep('service');
+    if (selectionMode === 'action') {
+      setSelectedActionService(null);
+    } else if (selectionMode === 'reaction') {
+      setSelectedReactionService(null);
+    }
   };
 
   const parseParameters = (paramsString: string) => {
@@ -303,7 +360,7 @@ export default function Area() {
                         className="btn-delete-area"
                         title="Delete automation"
                       >
-                        🗑️
+                        <FaTrash />
                       </button>
                     </div>
                   </div>
@@ -365,42 +422,34 @@ export default function Area() {
 
               <div className="form-section">
                 <label className="form-label">Select Action (Trigger)</label>
-                <select
-                  value={
-                    selectedAction
-                      ? `${selectedAction.service}.${selectedAction.type}`
-                      : ''
-                  }
-                  onChange={(e) => {
-                    const action = availableActions.find(
-                      (a) => `${a.service}.${a.type}` === e.target.value,
-                    );
-                    setSelectedAction(action || null);
-                    setActionParams({});
-                  }}
-                  className="form-select"
-                >
-                  <option value="">-- Select an action --</option>
-                  {Object.entries(groupActionsByService()).map(
-                    ([service, actions]) => (
-                      <optgroup
-                        key={service}
-                        label={
-                          service.charAt(0).toUpperCase() + service.slice(1)
-                        }
-                      >
-                        {actions.map((action) => (
-                          <option
-                            key={`${action.service}.${action.type}`}
-                            value={`${action.service}.${action.type}`}
-                          >
-                            {action.type}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ),
-                  )}
-                </select>
+                {selectedAction ? (
+                  <div className="selected-item-display">
+                    <div className="selected-item-icon">
+                      <ServiceIcon service={selectedAction.service} size={28} />
+                    </div>
+                    <div className="selected-item-info">
+                      <span className="selected-service">
+                        {selectedAction.service}
+                      </span>
+                      <span className="selected-type">
+                        {selectedAction.type}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => openServiceSelection('action')}
+                      className="btn-change"
+                    >
+                      Change
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => openServiceSelection('action')}
+                    className="btn-select-service"
+                  >
+                    + Select Action
+                  </button>
+                )}
 
                 {selectedAction && (
                   <div className="params-container">
@@ -438,42 +487,37 @@ export default function Area() {
 
               <div className="form-section">
                 <label className="form-label">Select Reaction (Response)</label>
-                <select
-                  value={
-                    selectedReaction
-                      ? `${selectedReaction.service}.${selectedReaction.type}`
-                      : ''
-                  }
-                  onChange={(e) => {
-                    const reaction = availableReactions.find(
-                      (r) => `${r.service}.${r.type}` === e.target.value,
-                    );
-                    setSelectedReaction(reaction || null);
-                    setReactionParams({});
-                  }}
-                  className="form-select"
-                >
-                  <option value="">-- Select a reaction --</option>
-                  {Object.entries(groupReactionsByService()).map(
-                    ([service, reactions]) => (
-                      <optgroup
-                        key={service}
-                        label={
-                          service.charAt(0).toUpperCase() + service.slice(1)
-                        }
-                      >
-                        {reactions.map((reaction) => (
-                          <option
-                            key={`${reaction.service}.${reaction.type}`}
-                            value={`${reaction.service}.${reaction.type}`}
-                          >
-                            {reaction.type}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ),
-                  )}
-                </select>
+                {selectedReaction ? (
+                  <div className="selected-item-display">
+                    <div className="selected-item-icon">
+                      <ServiceIcon
+                        service={selectedReaction.service}
+                        size={28}
+                      />
+                    </div>
+                    <div className="selected-item-info">
+                      <span className="selected-service">
+                        {selectedReaction.service}
+                      </span>
+                      <span className="selected-type">
+                        {selectedReaction.type}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => openServiceSelection('reaction')}
+                      className="btn-change"
+                    >
+                      Change
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => openServiceSelection('reaction')}
+                    className="btn-select-service"
+                  >
+                    + Select Reaction
+                  </button>
+                )}
 
                 {selectedReaction && (
                   <div className="params-container">
@@ -592,6 +636,141 @@ export default function Area() {
                   {new Date(selectedArea.created_at).toLocaleString()}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Service Selection Modal */}
+      {selectionMode && (
+        <div className="modal-overlay" onClick={() => setSelectionMode(null)}>
+          <div
+            className="modal-content selection-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2 className="modal-title">
+                {selectionStep === 'service'
+                  ? `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'} Service`
+                  : selectionStep === 'item' && selectionMode === 'action'
+                    ? `Select Action from ${selectedActionService ? selectedActionService.charAt(0).toUpperCase() + selectedActionService.slice(1) : ''}`
+                    : `Select Reaction from ${selectedReactionService ? selectedReactionService.charAt(0).toUpperCase() + selectedReactionService.slice(1) : ''}`}
+              </h2>
+              <button
+                className="modal-close"
+                onClick={() => {
+                  setSelectionMode(null);
+                  setSelectionStep('service');
+                }}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body">
+              {selectionStep === 'service' && (
+                <div className="selection-services-grid">
+                  {Object.entries(
+                    selectionMode === 'action'
+                      ? groupActionsByService()
+                      : groupReactionsByService(),
+                  ).map(([service, items]) => (
+                    <div
+                      key={service}
+                      className="selection-service-card"
+                      onClick={() => handleServiceSelect(service)}
+                    >
+                      <div className="service-icon">
+                        <ServiceIcon service={service} size={32} />
+                      </div>
+                      <h3 className="service-name">
+                        {service.charAt(0).toUpperCase() + service.slice(1)}
+                      </h3>
+                      <p className="service-count">
+                        {items.length}{' '}
+                        {selectionMode === 'action' ? 'action' : 'reaction'}
+                        {items.length !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {selectionStep === 'item' && (
+                <>
+                  <button
+                    onClick={goBackToServiceSelection}
+                    className="btn-back"
+                  >
+                    ← Back to Services
+                  </button>
+                  <div className="items-list">
+                    {selectionMode === 'action' &&
+                      selectedActionService &&
+                      groupActionsByService()[selectedActionService]?.map(
+                        (action) => (
+                          <div
+                            key={`${action.service}.${action.type}`}
+                            className="item-card"
+                            onClick={() => handleActionSelect(action)}
+                          >
+                            <div className="item-header">
+                              <div className="item-icon">
+                                <ActionReactionIcon
+                                  type={action.type}
+                                  size={24}
+                                />
+                              </div>
+                              <h4 className="item-name">{action.type}</h4>
+                            </div>
+                            <p className="item-description">
+                              {typeof action.parameters === 'string'
+                                ? `Parameters: ${action.parameters}`
+                                : Object.keys(
+                                      typeof action.parameters === 'object'
+                                        ? action.parameters
+                                        : {},
+                                    ).length > 0
+                                  ? `${Object.keys(typeof action.parameters === 'object' ? action.parameters : {}).length} parameter(s) required`
+                                  : 'No parameters required'}
+                            </p>
+                          </div>
+                        ),
+                      )}
+                    {selectionMode === 'reaction' &&
+                      selectedReactionService &&
+                      groupReactionsByService()[selectedReactionService]?.map(
+                        (reaction) => (
+                          <div
+                            key={`${reaction.service}.${reaction.type}`}
+                            className="item-card"
+                            onClick={() => handleReactionSelect(reaction)}
+                          >
+                            <div className="item-header">
+                              <div className="item-icon">
+                                <ActionReactionIcon
+                                  type={reaction.type}
+                                  size={24}
+                                />
+                              </div>
+                              <h4 className="item-name">{reaction.type}</h4>
+                            </div>
+                            <p className="item-description">
+                              {typeof reaction.parameters === 'string'
+                                ? `Parameters: ${reaction.parameters}`
+                                : Object.keys(
+                                      typeof reaction.parameters === 'object'
+                                        ? reaction.parameters
+                                        : {},
+                                    ).length > 0
+                                  ? `${Object.keys(typeof reaction.parameters === 'object' ? reaction.parameters : {}).length} parameter(s) required`
+                                  : 'No parameters required'}
+                            </p>
+                          </div>
+                        ),
+                      )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
