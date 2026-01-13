@@ -7,7 +7,8 @@ import { Reaction } from '@decorators/area.decorator';
   parameters: {
     channelId: {
       type: 'string',
-      description: 'The ID of the Discord channel to send the message to (Area Bot must be in the channel)',
+      description:
+        'The ID of the Discord channel to send the message to (Area Bot must be in the channel)',
       example: '123456789012345678',
     },
     message: {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Type } from '@nestjs/common';
 import { PrismaService } from '@common/database/prisma.service';
 import { ActionsRegistry } from '@modules/area/actions/actions-registry';
 import { ReactionsRegistry } from '@modules/area/reactions/reactions-registry';
@@ -7,10 +7,75 @@ import {
   REACTION_METADATA_KEY,
   ACTION_METADATA_KEY,
 } from '@decorators/area.decorator';
+import { AreaMetadata } from '@interfaces/area.interface';
 
 @Injectable()
 export class AreaService {
   constructor(private prisma: PrismaService) {}
+
+  private getServiceName(fullName: string) {
+    return fullName.split('.')[0];
+  }
+
+  private extractActions(registry: Record<string, Type<any>>) {
+    return Object.entries(registry).map(([key, clazz]) => {
+      const meta = Reflect.getMetadata(
+        ACTION_METADATA_KEY,
+        clazz,
+      ) as AreaMetadata;
+
+      return {
+        service: this.getServiceName(key),
+        name: meta?.name ?? key,
+        description: meta?.description ?? '',
+      };
+    });
+  }
+
+  private extractReactions(registry: Record<string, Type<any>>) {
+    return Object.entries(registry).map(([key, clazz]) => {
+      const meta = Reflect.getMetadata(
+        REACTION_METADATA_KEY,
+        clazz,
+      ) as AreaMetadata;
+
+      return {
+        service: this.getServiceName(key),
+        name: meta?.name ?? key,
+        description: meta?.description ?? '',
+      };
+    });
+  }
+
+  public groupByService() {
+    const services: Record<string, any> = {};
+
+    for (const action of this.extractActions(ActionsRegistry)) {
+      services[action.service] ??= {
+        name: action.service,
+        actions: [],
+        reactions: [],
+      };
+      services[action.service].actions.push({
+        name: action.name,
+        description: action.description,
+      });
+    }
+
+    for (const reaction of this.extractReactions(ReactionsRegistry)) {
+      services[reaction.service] ??= {
+        name: reaction.service,
+        actions: [],
+        reactions: [],
+      };
+      services[reaction.service].reactions.push({
+        name: reaction.name,
+        description: reaction.description,
+      });
+    }
+
+    return Object.values(services);
+  }
 
   getAllActions(): ActionDto[] {
     return Object.entries(ActionsRegistry).map(([key, handler]) => {

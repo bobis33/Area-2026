@@ -17,7 +17,6 @@ export class ActionDto {
   })
   @IsObject()
   parameters!: Record<string, any>;
-
 }
 
 export class ReactionDto {
