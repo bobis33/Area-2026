@@ -3,14 +3,27 @@ import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { get, put, del } from '@/services/api.ts';
 import {
-  FaUserShield,
-  FaUser,
-  FaTrash,
-  FaSync,
-  FaChevronUp,
-  FaChevronDown,
-} from 'react-icons/fa';
-import './Admin.css';
+  FiUsers,
+  FiUserCheck,
+  FiUserX,
+  FiTrash,
+  FiRefreshCw,
+  FiChevronUp,
+  FiChevronDown,
+  FiShield,
+  FiUser,
+  FiMail,
+  FiKey,
+  FiCalendar,
+} from 'react-icons/fi';
+import {
+  PageLayout,
+  PageHeader,
+  ContentGrid,
+  Card,
+  Button,
+} from '@/components/ui';
+import styles from './Admin.module.css';
 
 interface User {
   id: number;
@@ -73,11 +86,10 @@ export default function Admin() {
       }
       await put(`/users/${userId}`, { role: 'admin' }, token);
       await loadUsers();
-      alert('User promoted to admin successfully');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to promote user';
-      alert(`Error: ${errorMessage}`);
+      setError(errorMessage);
     } finally {
       setUpdatingUserId(null);
     }
@@ -98,11 +110,10 @@ export default function Admin() {
       }
       await put(`/users/${userId}`, { role: 'user' }, token);
       await loadUsers();
-      alert('Admin demoted to user successfully');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to demote user';
-      alert(`Error: ${errorMessage}`);
+      setError(errorMessage);
     } finally {
       setUpdatingUserId(null);
     }
@@ -125,159 +136,227 @@ export default function Admin() {
       }
       await del(`/users/${userId}`, token);
       await loadUsers();
-      alert('User deleted successfully');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to delete user';
-      alert(`Error: ${errorMessage}`);
+      setError(errorMessage);
     } finally {
       setDeletingUserId(null);
     }
   };
 
-  return (
-    <div className="admin-container">
-      <div className="admin-content">
-        <header className="admin-header">
-          <h1 className="admin-title">Admin</h1>
-          <p className="admin-subtitle">Manage users and their roles</p>
-        </header>
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
 
-        {/* User Management Section */}
-        <section className="admin-section">
-          <div className="section-header">
-            <h2 className="section-title">Members & roles</h2>
-            <button
-              onClick={loadUsers}
-              className="btn btn-refresh"
-              disabled={loading}
-            >
-              <FaSync className={loading ? 'spin-icon' : ''} /> Refresh
-            </button>
+  const adminUsers = users.filter((u) => u.role === 'admin');
+  const regularUsers = users.filter((u) => u.role === 'user');
+
+  if (loading) {
+    return (
+      <PageLayout maxWidth="xl">
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Loading users...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  return (
+    <PageLayout maxWidth="xl">
+      <PageHeader
+        title="Admin Panel"
+        subtitle="Manage users and their roles"
+        action={
+          <Button
+            variant="secondary"
+            leftIcon={<FiRefreshCw />}
+            onClick={loadUsers}
+            disabled={loading}
+          >
+            Refresh
+          </Button>
+        }
+      />
+
+      {error && (
+        <div className={styles.errorBanner}>
+          <p>{error}</p>
+          <Button variant="ghost" size="sm" onClick={() => setError(null)}>
+            Dismiss
+          </Button>
+        </div>
+      )}
+
+      {/* Stats Panel */}
+      <ContentGrid columns={3} gap="lg">
+        <Card padding="lg" className={styles.statCard}>
+          <div className={styles.statContent}>
+            <div className={styles.statIcon}>
+              <FiUsers />
+            </div>
+            <div className={styles.statInfo}>
+              <span className={styles.statLabel}>Total Users</span>
+              <span className={styles.statValue}>{users.length}</span>
+            </div>
+          </div>
+        </Card>
+
+        <Card padding="lg" className={styles.statCard}>
+          <div className={styles.statContent}>
+            <div className={styles.statIcon}>
+              <FiUserCheck />
+            </div>
+            <div className={styles.statInfo}>
+              <span className={styles.statLabel}>Admins</span>
+              <span className={styles.statValue}>{adminUsers.length}</span>
+            </div>
+          </div>
+        </Card>
+
+        <Card padding="lg" className={styles.statCard}>
+          <div className={styles.statContent}>
+            <div className={styles.statIcon}>
+              <FiUserX />
+            </div>
+            <div className={styles.statInfo}>
+              <span className={styles.statLabel}>Regular Users</span>
+              <span className={styles.statValue}>{regularUsers.length}</span>
+            </div>
+          </div>
+        </Card>
+      </ContentGrid>
+
+      {/* Users Section */}
+      <Card padding="lg">
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.sectionIcon}>
+              <FiUsers />
+            </div>
+            <h2 className={styles.sectionTitle}>Members & Roles</h2>
+            <span className={styles.sectionBadge}>
+              {users.length} {users.length === 1 ? 'User' : 'Users'}
+            </span>
           </div>
 
-          {loading && (
-            <div className="loading-container">
-              <div className="spinner"></div>
-              <p className="loading-text">Loading users...</p>
+          {users.length === 0 ? (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>
+                <FiUsers />
+              </div>
+              <h3 className={styles.emptyTitle}>No users yet</h3>
+              <p className={styles.emptyText}>
+                No users are registered in the system.
+              </p>
             </div>
-          )}
-
-          {error && !loading && (
-            <div className="error-container">
-              <p className="error-text">{error}</p>
-              <button onClick={loadUsers} className="btn btn-retry">
-                Try Again
-              </button>
-            </div>
-          )}
-
-          {!loading && !error && users.length === 0 && (
-            <div className="empty-container">
-              <p className="empty-text">No users found</p>
-            </div>
-          )}
-
-          {!loading && !error && users.length > 0 && (
-            <div className="users-table-container">
-              <table className="users-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Role</th>
-                    <th>Provider</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((u) => (
-                    <tr key={u.id}>
-                      <td>{u.id}</td>
-                      <td>{u.email}</td>
-                      <td>{u.name || '-'}</td>
-                      <td>
-                        <span className={`role-badge role-${u.role}`}>
+          ) : (
+            <div className={styles.usersGrid}>
+              {users.map((u) => (
+                <Card key={u.id} padding="md" hoverable>
+                  <div className={styles.userCard}>
+                    <div className={styles.userHeader}>
+                      <div className={styles.userIcon}>
+                        {u.role === 'admin' ? <FiShield /> : <FiUser />}
+                      </div>
+                      <div className={styles.userInfo}>
+                        <h3 className={styles.userName}>
+                          {u.name || 'No name'}
+                        </h3>
+                        <span
+                          className={`${styles.roleBadge} ${
+                            u.role === 'admin'
+                              ? styles.roleBadgeAdmin
+                              : styles.roleBadgeUser
+                          }`}
+                        >
                           {u.role === 'admin' ? (
                             <>
-                              <FaUserShield className="role-icon" /> admin
+                              <FiShield /> Admin
                             </>
                           ) : (
                             <>
-                              <FaUser className="role-icon" /> user
+                              <FiUser /> User
                             </>
                           )}
                         </span>
-                      </td>
-                      <td className="provider-cell">{u.provider}</td>
-                      <td className="date-cell">
-                        {new Date(u.created_at).toLocaleDateString()}
-                      </td>
-                      <td>
-                        <div className="action-buttons">
-                          {u.role === 'user' ? (
-                            <button
-                              onClick={() => handlePromoteUser(u.id)}
-                              className="btn btn-action btn-promote"
-                              disabled={
-                                updatingUserId === u.id || u.id === user?.id
-                              }
-                              title="Promote to admin"
-                            >
-                              {updatingUserId === u.id ? (
-                                <span className="btn-loading">...</span>
-                              ) : (
-                                <>
-                                  <FaChevronUp /> Promote
-                                </>
-                              )}
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => handleDemoteUser(u.id)}
-                              className="btn btn-action btn-demote"
-                              disabled={
-                                updatingUserId === u.id || u.id === user?.id
-                              }
-                              title="Demote to user"
-                            >
-                              {updatingUserId === u.id ? (
-                                <span className="btn-loading">...</span>
-                              ) : (
-                                <>
-                                  <FaChevronDown /> Demote
-                                </>
-                              )}
-                            </button>
-                          )}
-                          <button
-                            onClick={() => handleRevokeUser(u.id)}
-                            className="btn btn-action btn-delete"
-                            disabled={
-                              deletingUserId === u.id || u.id === user?.id
-                            }
-                            title="Delete user"
+                      </div>
+                    </div>
+
+                    <div className={styles.userDetails}>
+                      <div className={styles.userDetailItem}>
+                        <FiMail />
+                        <span>{u.email}</span>
+                      </div>
+                      <div className={styles.userDetailItem}>
+                        <FiKey />
+                        <span>{u.provider}</span>
+                      </div>
+                      <div className={styles.userDetailItem}>
+                        <FiCalendar />
+                        <span>{formatDate(u.created_at)}</span>
+                      </div>
+                    </div>
+
+                    {u.id !== user?.id && (
+                      <div className={styles.userActions}>
+                        {u.role === 'user' ? (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            fullWidth
+                            leftIcon={<FiChevronUp />}
+                            onClick={() => handlePromoteUser(u.id)}
+                            disabled={updatingUserId === u.id}
+                            loading={updatingUserId === u.id}
                           >
-                            {deletingUserId === u.id ? (
-                              <span className="btn-loading">...</span>
-                            ) : (
-                              <>
-                                <FaTrash /> Revoke
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                            Promote to Admin
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            fullWidth
+                            leftIcon={<FiChevronDown />}
+                            onClick={() => handleDemoteUser(u.id)}
+                            disabled={updatingUserId === u.id}
+                            loading={updatingUserId === u.id}
+                          >
+                            Demote to User
+                          </Button>
+                        )}
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          fullWidth
+                          leftIcon={<FiTrash />}
+                          onClick={() => handleRevokeUser(u.id)}
+                          disabled={deletingUserId === u.id}
+                          loading={deletingUserId === u.id}
+                        >
+                          Delete User
+                        </Button>
+                      </div>
+                    )}
+
+                    {u.id === user?.id && (
+                      <div className={styles.currentUserBadge}>
+                        <FiShield />
+                        <span>You (Current User)</span>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              ))}
             </div>
           )}
-        </section>
-      </div>
-    </div>
+        </div>
+      </Card>
+    </PageLayout>
   );
 }

@@ -10,6 +10,7 @@ import OAuthCallback from '@/pages/Auth/OAuthCallback';
 import OAuthError from '@/pages/Auth/OAuthError';
 import Area from '@/pages/Area/Area';
 import Admin from '@/pages/Admin/Admin';
+
 import ProtectedRoute from '@/components/ProtectedRoute/ProtectedRoute';
 import Navigation from '@/components/Navigation/Navigation';
 
@@ -68,6 +69,7 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

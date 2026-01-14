@@ -1,0 +1,250 @@
+/**
+ * Navigation Component Styles
+ * Uses CSS variables from @area/ui tokens (injected by ThemeProvider)
+ */
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  transition: all var(--transition-normal);
+}
+
+/* Logo */
+.navLogo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+}
+
+.navLogoImg {
+  height: 36px;
+  width: auto;
+  transition: transform var(--transition-normal);
+}
+
+.navLogoText {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.navLogo:hover .navLogoImg {
+  transform: scale(1.05);
+}
+
+.navLogo:hover .navLogoText {
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+/* Nav Links Container */
+.navLinks {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+/* Nav Link */
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-normal);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-muted);
+}
+
+.navLink.active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  font-weight: var(--font-weight-semibold);
+}
+
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+.navLink svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Divider */
+.navDivider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-border);
+  margin: 0 var(--spacing-xs);
+}
+
+/* Nav User */
+.navUser {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Logout Button */
+.btnLogout {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-danger);
+  color: var(--color-danger-on);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-family: 'Poppins', sans-serif;
+}
+
+.btnLogout:hover {
+  background-color: var(--color-danger);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btnLogout:active {
+  transform: translateY(0);
+}
+
+.btnLogout svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .navLinks {
+    gap: var(--spacing-xs);
+  }
+
+  .navLink span {
+    display: none;
+  }
+
+  .navLink {
+    padding: var(--spacing-sm);
+  }
+
+  .navUser {
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navigation {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    position: relative;
+  }
+
+  .navLogo {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .navLinks {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-xs);
+  }
+
+  .navLink {
+    flex: 0 0 auto;
+  }
+
+  .navDivider {
+    display: none;
+  }
+
+  .navUser {
+    width: 100%;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .btnLogout {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation {
+    padding: var(--spacing-sm);
+  }
+
+  .navLogoImg {
+    height: 32px;
+  }
+
+  .navLogoText {
+    font-size: var(--font-size-lg);
+  }
+
+  .navLinks {
+    gap: var(--spacing-xs);
+  }
+
+  .navLink,
+  .btnLogout {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .navLink svg,
+  .btnLogout svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .navUser {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}

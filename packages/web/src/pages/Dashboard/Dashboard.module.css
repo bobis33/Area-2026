@@ -1,0 +1,206 @@
+/**
+ * Dashboard Component Styles
+ * Uses CSS variables from @area/ui tokens (injected by ThemeProvider)
+ */
+
+/* Card Link */
+.cardLink {
+  text-decoration: none;
+  display: block;
+  transition: transform var(--transition-normal);
+}
+
+.cardLink:hover {
+  transform: translateY(-2px);
+}
+
+.cardLink:active {
+  transform: scale(0.99);
+}
+
+/* Card Content */
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  min-height: 180px;
+  position: relative;
+}
+
+/* Card Icon */
+.cardIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 24px;
+  flex-shrink: 0;
+  transition: all var(--transition-normal);
+}
+
+.cardLink:hover .cardIcon {
+  transform: scale(1.1);
+  background-color: var(--color-primary);
+  color: var(--color-primary-on);
+}
+
+/* Card Title */
+.cardTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0;
+  transition: color var(--transition-normal);
+}
+
+.cardLink:hover .cardTitle {
+  color: var(--color-primary);
+}
+
+/* Card Description */
+.cardDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+/* Card Arrow */
+.cardArrow {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 20px;
+  font-weight: var(--font-weight-bold);
+  transition: all var(--transition-normal);
+  margin-top: auto;
+}
+
+.cardLink:hover .cardArrow {
+  transform: translateX(4px);
+  background-color: var(--color-primary);
+  color: var(--color-primary-on);
+}
+
+/* Section Title */
+.sectionTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-lg) 0;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+/* Info Grid */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}
+
+/* Info Item */
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  transition: all var(--transition-normal);
+}
+
+.infoItem:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Info Label */
+.infoLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Info Value */
+.infoValue {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+/* Role Badge */
+.roleBadge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-primary);
+  color: var(--color-primary-on);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .cardContent {
+    min-height: 160px;
+    gap: var(--spacing-sm);
+  }
+
+  .cardIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .cardTitle {
+    font-size: var(--font-size-lg);
+  }
+
+  .cardDescription {
+    font-size: var(--font-size-xs);
+  }
+
+  .cardArrow {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  .sectionTitle {
+    font-size: var(--font-size-lg);
+  }
+
+  .infoItem {
+    padding: var(--spacing-sm);
+  }
+
+  .infoValue {
+    font-size: var(--font-size-sm);
+  }
+}

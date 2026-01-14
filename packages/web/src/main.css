@@ -1,4 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/**
+ * Global CSS Reset and Base Styles
+ * Uses CSS variables injected by ThemeProvider from @area/ui tokens
+ */
 
 * {
   margin: 0;
@@ -7,45 +12,20 @@
 }
 
 :root {
-  --color-primary: #1e40af;
-  --color-primary-dark: #1e3a8a;
-  --color-primary-light: #3b82f6;
-  --color-accent: #6366f1;
-
-  --color-white: #ffffff;
-  --color-gray-50: #f8fafc;
-  --color-gray-100: #f1f5f9;
-  --color-gray-200: #e2e8f0;
-  --color-gray-300: #cbd5e1;
-  --color-gray-400: #94a3b8;
-  --color-gray-500: #64748b;
-  --color-gray-600: #475569;
-  --color-gray-700: #334155;
-  --color-gray-800: #1e293b;
-  --color-gray-900: #0f172a;
-
-  --color-success: #10b981;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
-
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-
+  /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
   --transition-slow: 350ms ease;
 
+  /* Font family */
   font-family:
-    "Poppins",
+    'Poppins',
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     sans-serif;
   line-height: 1.6;
   font-weight: 400;
-  color-scheme: light dark;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -64,9 +44,9 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: var(--color-white);
-  color: var(--color-gray-900);
-  font-family: "Poppins", sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: 'Poppins', sans-serif;
 }
 
 #root {
@@ -76,6 +56,7 @@ body {
   padding: 0;
 }
 
+/* Typography */
 h1,
 h2,
 h3,
@@ -83,53 +64,56 @@ h4,
 h5,
 h6 {
   line-height: 1.2;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   margin: 0;
-  color: var(--color-gray-900);
+  color: var(--color-text);
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: var(--font-size-4xl);
 }
 h2 {
-  font-size: 2rem;
+  font-size: var(--font-size-3xl);
 }
 h3 {
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
 }
 h4 {
-  font-size: 1.25rem;
+  font-size: var(--font-size-xl);
 }
 h5 {
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg);
 }
 h6 {
-  font-size: 1rem;
+  font-size: var(--font-size-md);
 }
 
 p {
   margin: 0;
   line-height: 1.6;
+  color: var(--color-text);
 }
 
+/* Links */
 a {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--color-primary);
   text-decoration: none;
   transition: color var(--transition-normal);
 }
 
 a:hover {
-  color: var(--color-primary-dark);
+  opacity: 0.8;
 }
 
+/* Buttons */
 button {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   border: none;
   padding: 0.75em 1.5em;
-  font-size: 1em;
-  font-weight: 600;
-  font-family: "Poppins", sans-serif;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: all var(--transition-normal);
 }
@@ -144,13 +128,14 @@ button:focus:not(:focus-visible) {
   outline: none;
 }
 
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-gray-100);
+  background: var(--color-surface-muted);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -159,31 +144,10 @@ button:focus:not(:focus-visible) {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary-dark);
+  opacity: 0.8;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-white: #0f172a;
-    --color-gray-50: #1e293b;
-    --color-gray-100: #334155;
-    --color-gray-900: #f8fafc;
-  }
-
-  body {
-    background-color: var(--color-gray-900);
-    color: var(--color-white);
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #1e293b;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-primary-light);
-  }
-}
-
+/* Accessibility - Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -195,78 +159,49 @@ button:focus:not(:focus-visible) {
   }
 }
 
+/* Utility Classes */
 .container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 var(--spacing-md);
 }
 
 .text-center {
   text-align: center;
 }
 
+/* Margin utilities using tokens */
 .mt-1 {
-  margin-top: 0.5rem;
+  margin-top: var(--spacing-xs);
 }
 .mt-2 {
-  margin-top: 1rem;
+  margin-top: var(--spacing-sm);
 }
 .mt-3 {
-  margin-top: 1.5rem;
+  margin-top: var(--spacing-md);
 }
 .mt-4 {
-  margin-top: 2rem;
+  margin-top: var(--spacing-lg);
 }
 
 .mb-1 {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-xs);
 }
 .mb-2 {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-sm);
 }
 .mb-3 {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-md);
 }
 .mb-4 {
-  margin-bottom: 2rem;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+  margin-bottom: var(--spacing-lg);
 }
 
 .card {
-  padding: 2em;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
 }
-
-.read-the-docs {
-  color: #888;
-}
-

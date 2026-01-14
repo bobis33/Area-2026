@@ -6,12 +6,13 @@ import {
   FaGoogle,
   FaDiscord,
   FaGithub,
-  FaArrowLeft,
   FaSpotify,
   FaGitlab,
 } from 'react-icons/fa';
-import { WebInput, WebButton } from '@/components/ui-web';
-import './Auth.css';
+import { FiArrowLeft, FiMail, FiLock } from 'react-icons/fi';
+import { Button, Input } from '@/components/ui';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import styles from './Auth.module.css';
 
 export default function Login() {
   const { login, loginWithOAuth, loading, error } = useAuth();
@@ -30,7 +31,7 @@ export default function Login() {
     try {
       await login(formData);
     } catch (err) {
-      //Handled by useAuth hook
+      // Handled by useAuth hook
     }
   };
 
@@ -41,116 +42,139 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <Link to="/" className="back-to-home">
-        <FaArrowLeft /> Back to Home
-      </Link>
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Welcome Back</h1>
-          <p>Sign in to your AREA account</p>
+    <div className={styles.authContainer}>
+      <div className={styles.authBackground}>
+        <div className={styles.bgCircle1}></div>
+        <div className={styles.bgCircle2}></div>
+        <div className={styles.bgCircle3}></div>
+      </div>
+
+      <div className={styles.authNav}>
+        <Link to="/" className={styles.backToHome}>
+          <FiArrowLeft />
+          <span>Back to Home</span>
+        </Link>
+        <ThemeToggle />
+      </div>
+
+      <div className={styles.authCard}>
+        <div className={styles.authLogo}>
+          <img src="/logo.svg" alt="AREA" />
+        </div>
+
+        <div className={styles.authHeader}>
+          <h1 className={styles.authTitle}>Welcome Back</h1>
+          <p className={styles.authSubtitle}>Sign in to your AREA account</p>
         </div>
 
         {error && (
-          <div className="error-message" role="alert">
+          <div className={styles.errorMessage} role="alert">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
-          <WebInput
+        <form onSubmit={handleSubmit} className={styles.authForm}>
+          <Input
             label="Email"
             type="email"
             id="email"
             name="email"
             value={formData.email}
-            onChange={(value) => setFormData({ ...formData, email: value })}
-            placeholder="Enter your email"
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            placeholder="your.email@example.com"
             required
             disabled={loading}
+            leftIcon={<FiMail />}
           />
 
-          <WebInput
+          <Input
             label="Password"
             type="password"
             id="password"
             name="password"
             value={formData.password}
-            onChange={(value) => setFormData({ ...formData, password: value })}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             placeholder="Enter your password"
             required
             disabled={loading}
+            leftIcon={<FiLock />}
           />
 
-          <WebButton
+          <Button
             type="submit"
-            label={loading ? 'Signing In...' : 'Sign In'}
             variant="primary"
+            size="lg"
             disabled={loading}
             fullWidth
-          />
+          >
+            {loading ? 'Signing In...' : 'Sign In'}
+          </Button>
         </form>
 
-        <div className="divider">
-          <span>OR</span>
+        <div className={styles.divider}>
+          <span>OR CONTINUE WITH</span>
         </div>
 
-        <div className="oauth-buttons">
+        <div className={styles.oauthButtons}>
           <button
             type="button"
-            className="btn btn-oauth btn-google"
+            className={`${styles.oauthButton} ${styles.oauthGoogle}`}
             onClick={() => handleOAuthLogin('google')}
             disabled={loading}
           >
-            <FaGoogle className="oauth-icon" />
-            Continue with Google
+            <FaGoogle className={styles.oauthIcon} />
+            <span>Google</span>
           </button>
 
           <button
             type="button"
-            className="btn btn-oauth btn-discord"
+            className={`${styles.oauthButton} ${styles.oauthDiscord}`}
             onClick={() => handleOAuthLogin('discord')}
             disabled={loading}
           >
-            <FaDiscord className="oauth-icon" />
-            Continue with Discord
+            <FaDiscord className={styles.oauthIcon} />
+            <span>Discord</span>
           </button>
 
           <button
             type="button"
-            className="btn btn-oauth btn-github"
+            className={`${styles.oauthButton} ${styles.oauthGithub}`}
             onClick={() => handleOAuthLogin('github')}
             disabled={loading}
           >
-            <FaGithub className="oauth-icon" />
-            Continue with GitHub
+            <FaGithub className={styles.oauthIcon} />
+            <span>GitHub</span>
           </button>
 
           <button
             type="button"
-            className="btn btn-oauth btn-spotify"
+            className={`${styles.oauthButton} ${styles.oauthSpotify}`}
             onClick={() => handleOAuthLogin('spotify')}
             disabled={loading}
           >
-            <FaSpotify className="oauth-icon" />
-            Continue with Spotify
+            <FaSpotify className={styles.oauthIcon} />
+            <span>Spotify</span>
           </button>
 
           <button
             type="button"
-            className="btn btn-oauth btn-gitlab"
+            className={`${styles.oauthButton} ${styles.oauthGitlab}`}
             onClick={() => handleOAuthLogin('gitlab')}
             disabled={loading}
           >
-            <FaGitlab className="oauth-icon" />
-            Continue with GitLab
+            <FaGitlab className={styles.oauthIcon} />
+            <span>GitLab</span>
           </button>
         </div>
 
-        <div className="auth-footer">
+        <div className={styles.authFooter}>
           <p>
             Don't have an account?{' '}
-            <Link to="/register" className="link">
+            <Link to="/register" className={styles.authLink}>
               Sign Up
             </Link>
           </p>

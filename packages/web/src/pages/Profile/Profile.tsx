@@ -1,6 +1,20 @@
+import {
+  FiUser,
+  FiMail,
+  FiShield,
+  FiKey,
+  FiCalendar,
+  FiLogOut,
+} from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
-import { WebCard, WebButton } from '@/components/ui-web';
-import './Profile.css';
+import {
+  PageLayout,
+  PageHeader,
+  ContentGrid,
+  Card,
+  Button,
+} from '@/components/ui';
+import styles from './Profile.module.css';
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -9,66 +23,161 @@ export default function Profile() {
     return null;
   }
 
+  const formatDate = (date: string | Date) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  const getProviderDisplay = (provider: string) => {
+    if (provider === 'local') {
+      return 'Email/Password';
+    }
+    return provider.charAt(0).toUpperCase() + provider.slice(1);
+  };
+
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <h1>My Profile</h1>
-        <p>Manage your account information</p>
-      </div>
+    <PageLayout maxWidth="lg">
+      <PageHeader
+        title="My Profile"
+        subtitle="Manage your account information and preferences"
+      />
 
-      <div className="profile-content">
-        <WebCard>
-          <div className="profile-section">
-            <h2>Personal Information</h2>
-            <div className="profile-info-grid">
-              <div className="profile-info-item">
-                <span className="profile-label">Name</span>
-                <span className="profile-value">{user.name || 'Not set'}</span>
+      <div className={styles.content}>
+        {/* Personal Information Card */}
+        <Card padding="lg">
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <FiUser />
               </div>
-              <div className="profile-info-item">
-                <span className="profile-label">Email</span>
-                <span className="profile-value">{user.email}</span>
+              <h2 className={styles.sectionTitle}>Personal Information</h2>
+            </div>
+
+            <div className={styles.infoGrid}>
+              <div className={styles.infoItem}>
+                <div className={styles.infoIcon}>
+                  <FiUser />
+                </div>
+                <div className={styles.infoContent}>
+                  <span className={styles.infoLabel}>Name</span>
+                  <span className={styles.infoValue}>
+                    {user.name || 'Not set'}
+                  </span>
+                </div>
               </div>
-              <div className="profile-info-item">
-                <span className="profile-label">Role</span>
-                <span className="profile-value profile-role">{user.role}</span>
+
+              <div className={styles.infoItem}>
+                <div className={styles.infoIcon}>
+                  <FiMail />
+                </div>
+                <div className={styles.infoContent}>
+                  <span className={styles.infoLabel}>Email</span>
+                  <span className={styles.infoValue}>{user.email}</span>
+                </div>
               </div>
-              <div className="profile-info-item">
-                <span className="profile-label">Authentication Provider</span>
-                <span className="profile-value">
-                  {user.provider === 'local'
-                    ? 'Email/Password'
-                    : user.provider.charAt(0).toUpperCase() +
-                      user.provider.slice(1)}
-                </span>
+
+              <div className={styles.infoItem}>
+                <div className={styles.infoIcon}>
+                  <FiShield />
+                </div>
+                <div className={styles.infoContent}>
+                  <span className={styles.infoLabel}>Role</span>
+                  <span className={styles.roleBadge}>{user.role}</span>
+                </div>
               </div>
-              <div className="profile-info-item">
-                <span className="profile-label">Account Created</span>
-                <span className="profile-value">
-                  {new Date(user.created_at).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </span>
+
+              <div className={styles.infoItem}>
+                <div className={styles.infoIcon}>
+                  <FiKey />
+                </div>
+                <div className={styles.infoContent}>
+                  <span className={styles.infoLabel}>
+                    Authentication Provider
+                  </span>
+                  <span className={styles.infoValue}>
+                    {getProviderDisplay(user.provider)}
+                  </span>
+                </div>
+              </div>
+
+              <div className={styles.infoItem}>
+                <div className={styles.infoIcon}>
+                  <FiCalendar />
+                </div>
+                <div className={styles.infoContent}>
+                  <span className={styles.infoLabel}>Account Created</span>
+                  <span className={styles.infoValue}>
+                    {formatDate(user.created_at)}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </WebCard>
+        </Card>
 
-        <WebCard>
-          <div className="profile-section">
-            <h2>Account Actions</h2>
-            <div className="profile-actions">
-              <WebButton
-                label="Sign Out"
-                variant="secondary"
-                onClick={logout}
-              />
+        {/* Account Statistics Card */}
+        <ContentGrid columns={2} gap="lg">
+          <Card padding="lg" className={styles.statCard}>
+            <div className={styles.statContent}>
+              <div className={styles.statIcon}>
+                <FiShield />
+              </div>
+              <div className={styles.statInfo}>
+                <span className={styles.statLabel}>Account Status</span>
+                <span className={styles.statValue}>Active</span>
+              </div>
+            </div>
+          </Card>
+
+          <Card padding="lg" className={styles.statCard}>
+            <div className={styles.statContent}>
+              <div className={styles.statIcon}>
+                <FiCalendar />
+              </div>
+              <div className={styles.statInfo}>
+                <span className={styles.statLabel}>Member Since</span>
+                <span className={styles.statValue}>
+                  {new Date(user.created_at).getFullYear()}
+                </span>
+              </div>
+            </div>
+          </Card>
+        </ContentGrid>
+
+        {/* Account Actions Card */}
+        <Card padding="lg">
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <div className={styles.sectionIcon}>
+                <FiShield />
+              </div>
+              <h2 className={styles.sectionTitle}>Account Actions</h2>
+            </div>
+
+            <div className={styles.actionsGrid}>
+              <div className={styles.actionItem}>
+                <div className={styles.actionInfo}>
+                  <h3 className={styles.actionTitle}>Sign Out</h3>
+                  <p className={styles.actionDescription}>
+                    Sign out of your account on this device
+                  </p>
+                </div>
+                <Button
+                  variant="danger"
+                  leftIcon={<FiLogOut />}
+                  onClick={logout}
+                >
+                  Sign Out
+                </Button>
+              </div>
             </div>
           </div>
-        </WebCard>
+        </Card>
       </div>
-    </div>
+    </PageLayout>
   );
 }
