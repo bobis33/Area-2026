@@ -82,12 +82,14 @@ export type ParamField = {
 export type AreaActionDefinition = {
   service: string;
   type: string;
+  oauth: boolean;
   parameters: Record<string, ParamField> | string;
 };
 
 export type AreaReactionDefinition = {
   service: string;
   type: string;
+  oauth: boolean;
   parameters: Record<string, ParamField> | string;
 };
 
@@ -113,11 +115,13 @@ export type CreateAreaPayload = {
   action: {
     service: string;
     type: string;
+    oauth: boolean;
     parameters: Record<string, any>;
   };
   reaction: {
     service: string;
     type: string;
+    oauth: boolean;
     parameters: Record<string, any>;
   };
   is_active?: boolean;
