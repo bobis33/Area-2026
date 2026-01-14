@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
+import { IsBoolean, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class ActionDto {
@@ -10,6 +10,7 @@ export class ActionDto {
   @IsString()
   type!: string;
   @ApiProperty()
+  @IsBoolean()
   oauth!: boolean;
   @ApiProperty({
     type: Object,
@@ -27,6 +28,7 @@ export class ReactionDto {
   @IsString()
   type!: string;
   @ApiProperty()
+  @IsBoolean()
   oauth!: boolean;
   @ApiProperty({
     type: Object,

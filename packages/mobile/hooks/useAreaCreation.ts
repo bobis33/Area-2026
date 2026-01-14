@@ -80,18 +80,26 @@ export function useAreaCreation(): UseAreaCreationReturn {
   >(null);
   const [previousAutoName, setPreviousAutoName] = useState<string>('');
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
+  const [linkedProviders, setLinkedProviders] = useState<string[]>([]);
 
   useEffect(() => {
     const loadProviders = async () => {
       try {
         const providers = await apiService.getOAuthProviders();
         setAvailableProviders(providers.map((p) => String(p).toLowerCase()));
+        if (token) {
+          const linked = await apiService.getLinkedProviders(token);
+          setLinkedProviders(linked.map((p) => String(p).toLowerCase()));
+        } else {
+          setLinkedProviders([]);
+        }
       } catch (error) {
         setAvailableProviders([]);
+        setLinkedProviders([]);
       }
     };
     loadProviders();
-  }, []);
+  }, [token]);
 
   const actionsByService = useMemo(
     () => groupActionsByService(actions),
@@ -255,6 +263,54 @@ export function useAreaCreation(): UseAreaCreationReturn {
     if (!selectedAction || !selectedReaction) {
       return;
     }
+
+    // Vérifier si OAuth est requis pour l'action ou la réaction
+    const missingOAuthProviders: string[] = [];
+
+    if (selectedAction.oauth) {
+      const actionService = selectedAction.service.toLowerCase();
+      const isConnected = linkedProviders.includes(actionService);
+      if (!isConnected) {
+        missingOAuthProviders.push(actionService);
+      }
+    }
+
+    if (selectedReaction.oauth) {
+      const reactionService = selectedReaction.service.toLowerCase();
+      const isConnected = linkedProviders.includes(reactionService);
+      if (!isConnected) {
+        missingOAuthProviders.push(reactionService);
+      }
+    }
+
+    if (missingOAuthProviders.length > 0) {
+      const servicesText = missingOAuthProviders
+        .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+        .join(' et ');
+      const message =
+        missingOAuthProviders.length === 1
+          ? `Cette automatisation nécessite une connexion avec ${servicesText}. Veuillez vous connecter avec ce service avant de créer l'automatisation.`
+          : `Cette automatisation nécessite des connexions avec ${servicesText}. Veuillez vous connecter avec ces services avant de créer l'automatisation.`;
+
+      Alert.alert('Connexion OAuth requise', message, [
+        {
+          text: 'Annuler',
+          style: 'cancel',
+        },
+        {
+          text: 'Se connecter',
+          onPress: () => {
+            router.back();
+            // L'utilisateur sera redirigé vers la page Area où il pourra connecter les providers
+            setTimeout(() => {
+              router.push('/(tabs)/area');
+            }, 100);
+          },
+        },
+      ]);
+      return;
+    }
+
     const actionParamsValid = validateParams(
       selectedAction.parameters as any,
       actionParams,
@@ -330,11 +386,13 @@ export function useAreaCreation(): UseAreaCreationReturn {
           action: {
             service: selectedAction.service,
             type: selectedAction.type,
+            oauth: selectedAction.oauth,
             parameters: cleanActionParams,
           },
           reaction: {
             service: selectedReaction.service,
             type: selectedReaction.type,
+            oauth: selectedReaction.oauth,
             parameters: cleanReactionParams,
           },
         },
