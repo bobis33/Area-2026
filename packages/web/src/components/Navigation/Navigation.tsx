@@ -48,7 +48,7 @@ export default function Navigation() {
         >
           About
         </Link>
-        {user.email === 'areaserveur825@gmail.com' && (
+        {user.role === 'ADMIN' && (
           <Link
             to="/admin"
             className={`nav-link ${isActive('/admin') ? 'active' : ''}`}

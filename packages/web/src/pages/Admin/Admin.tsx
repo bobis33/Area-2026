@@ -30,7 +30,7 @@ export default function Admin() {
   const [deletingUserId, setDeletingUserId] = useState<number | null>(null);
 
   // Check if user is admin (specific email)
-  if (user?.email !== 'areaserveur825@gmail.com') {
+  if (user?.role !== 'ADMIN') {
     return <Navigate to="/" replace />;
   }
 
@@ -71,7 +71,7 @@ export default function Admin() {
       if (!token) {
         throw new Error('No authentication token found');
       }
-      await put(`/users/${userId}`, { role: 'admin' }, token);
+      await put(`/users/${userId}`, { role: 'ADMIN' }, token);
       await loadUsers();
       alert('User promoted to admin successfully');
     } catch (err) {
@@ -96,7 +96,7 @@ export default function Admin() {
       if (!token) {
         throw new Error('No authentication token found');
       }
-      await put(`/users/${userId}`, { role: 'user' }, token);
+      await put(`/users/${userId}`, { role: 'USER' }, token);
       await loadUsers();
       alert('Admin demoted to user successfully');
     } catch (err) {
@@ -200,7 +200,7 @@ export default function Admin() {
                       <td>{u.name || '-'}</td>
                       <td>
                         <span className={`role-badge role-${u.role}`}>
-                          {u.role === 'admin' ? (
+                          {u.role === 'ADMIN' ? (
                             <>
                               <FaUserShield className="role-icon" /> admin
                             </>
@@ -217,7 +217,7 @@ export default function Admin() {
                       </td>
                       <td>
                         <div className="action-buttons">
-                          {u.role === 'user' ? (
+                          {u.role === 'USER' ? (
                             <button
                               onClick={() => handlePromoteUser(u.id)}
                               className="btn btn-action btn-promote"

@@ -198,11 +198,15 @@ export default function Services() {
         <div className="services-hero-panel">
           <div>
             <span className="services-panel-label">Connected</span>
-            <span className="services-panel-value">{connectedProviders.length}</span>
+            <span className="services-panel-value">
+              {connectedProviders.length}
+            </span>
           </div>
           <div>
             <span className="services-panel-label">Available</span>
-            <span className="services-panel-value">{availableToConnect.length}</span>
+            <span className="services-panel-value">
+              {availableToConnect.length}
+            </span>
           </div>
         </div>
       </div>
