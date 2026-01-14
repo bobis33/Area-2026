@@ -1,17 +1,12 @@
 import { Controller, Get, Req } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { Request } from 'express';
-import { ReactionsRegistry } from '@modules/area/reactions/reactions-registry';
-import {
-  extractActions,
-  extractReactions,
-  groupByService,
-} from '@common/utils/services.service';
-import { ActionsRegistry } from '@modules/area/actions/actions-registry';
+import { AreaService } from '@modules/area/area.service';
 
 @ApiTags('meta')
 @Controller('about.json')
 export class AboutController {
+  constructor(private readonly areaService: AreaService) {}
   @Get()
   @ApiResponse({ status: 200, description: 'Returns server information' })
   get(@Req() req: Request) {
@@ -26,10 +21,7 @@ export class AboutController {
         current_time: Math.floor(Date.now() / 1000),
         uptime: process.uptime(),
         version: '0.0.1',
-        services: groupByService(
-          extractActions(ActionsRegistry),
-          extractReactions(ReactionsRegistry),
-        ),
+        services: this.areaService.groupByService(),
       },
     };
   }

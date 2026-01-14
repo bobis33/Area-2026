@@ -18,6 +18,7 @@ import { SpotifyService } from '@modules/spotify/spotify.service';
   },
   name: 'spotify.add_to_playlist',
   description: 'Adds a track to a Spotify playlist',
+  oauth: true,
 })
 @Injectable()
 export class SpotifyAddToPlaylistReaction implements ReactionHandler {

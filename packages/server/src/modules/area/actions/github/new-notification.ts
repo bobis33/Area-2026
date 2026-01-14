@@ -7,6 +7,7 @@ import { GithubService } from '@modules/github/github.service';
   name: 'github.new_notifications',
   description:
     'Triggers when there are new notifications in your GitHub account',
+  oauth: true,
   parameters: {},
 })
 @Injectable()

@@ -28,6 +28,7 @@ import { Reaction } from '@decorators/area.decorator';
   },
   name: 'google.gmail_send_email',
   description: 'Sends an email via Gmail',
+  oauth: true,
 })
 @Injectable()
 export class GmailSendEmailReaction implements ReactionHandler {

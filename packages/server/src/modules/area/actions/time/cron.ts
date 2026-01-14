@@ -19,6 +19,7 @@ import { Action } from '@decorators/area.decorator';
   },
   name: 'time.cron',
   description: 'Triggers based on a cron expression',
+  oauth: false,
 })
 @Injectable()
 export class TimeCronAction implements ActionHandler {

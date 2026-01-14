@@ -6,6 +6,7 @@ import { GitlabService } from '@modules/gitlab/gitlab.service';
 @Action({
   name: 'gitlab.new_notifications',
   description: 'Triggers when there are new todos in your GitLab account',
+  oauth: true,
   parameters: {},
 })
 @Injectable()

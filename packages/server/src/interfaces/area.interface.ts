@@ -1,6 +1,7 @@
 export interface AreaMetadata {
   name: string;
   description: string;
+  oauth: boolean;
   parameters?: Record<string, any>;
 }
 

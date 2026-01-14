@@ -28,6 +28,7 @@ import { Reaction } from '@decorators/area.decorator';
   },
   name: 'google.gmail_create_draft',
   description: 'Creates a draft email in Gmail',
+  oauth: true,
 })
 @Injectable()
 export class GmailCreateDraftReaction implements ReactionHandler {
