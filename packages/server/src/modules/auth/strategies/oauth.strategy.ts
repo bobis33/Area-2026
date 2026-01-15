@@ -1,10 +1,11 @@
 import { AuthService } from '@modules/auth/auth.service';
 import { OAuthProvider } from '@interfaces/oauth.interface';
 import { normalizeOAuthProfile } from '@modules/auth/config/oauth-providers.config';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class GenericOAuthStrategy {
+  private readonly logger = new Logger(GenericOAuthStrategy.name);
   constructor(
     private readonly authService: AuthService,
     private readonly provider: OAuthProvider,
@@ -31,7 +32,7 @@ export class GenericOAuthStrategy {
 
       return user;
     } catch (error) {
-      console.error(`[OAuth Strategy] validate error occurred.`);
+      this.logger.error(`[OAuth Strategy] validate error occurred.`);
       throw error;
     }
   }

@@ -5,7 +5,7 @@ export function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('AREA API')
     .setDescription(
-      `API documentation for the AREA (Automated REactions for Everyone and Anything) platform.
+      `API documentation for the AREA platform.
     AREA is a platform that allows users to create automated workflows by connecting various services through actions and reactions.`,
     )
     .setVersion('0.0.1')

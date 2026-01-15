@@ -62,6 +62,7 @@ updates:
       interval: "daily"
       time: "05:00"
       timezone: "Europe/Paris"
+    rebase-strategy: auto
     open-pull-requests-limit: 5
     commit-message:
       prefix: "npm"

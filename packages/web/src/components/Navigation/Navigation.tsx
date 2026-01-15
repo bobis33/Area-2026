@@ -105,7 +105,7 @@ export default function Navigation() {
             <FiInfo />
             <span>About</span>
           </Link>
-          {user.email === 'areaserveur825@gmail.com' && (
+          {user.role === 'ADMIN' && (
             <Link
               to="/admin"
               className={`${styles.navLink} ${isActive('/admin') ? styles.active : ''}`}
@@ -193,7 +193,7 @@ export default function Navigation() {
             <FiInfo />
             <span>About</span>
           </Link>
-          {user.email === 'areaserveur825@gmail.com' && (
+          {user.role === 'ADMIN' && (
             <Link
               to="/admin"
               className={`${styles.sidebarLink} ${isActive('/admin') ? styles.active : ''}`}

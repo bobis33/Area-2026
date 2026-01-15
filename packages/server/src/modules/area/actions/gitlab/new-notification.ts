@@ -1,30 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { ActionHandler } from '@interfaces/area.interface';
 import { Action } from '@decorators/area.decorator';
-import { GithubService } from '@modules/github/github.service';
+import { GitlabService } from '@modules/gitlab/gitlab.service';
 
 @Action({
-  name: 'github.new_notifications',
-  description:
-    'Triggers when there are new notifications in your GitHub account',
+  name: 'gitlab.new_notifications',
+  description: 'Triggers when there are new todos in your GitLab account',
   oauth: true,
   parameters: {},
 })
 @Injectable()
-export class GithubNewNotificationAction implements ActionHandler {
-  constructor(private readonly githubService: GithubService) {}
+export class GitlabNewTodoAction implements ActionHandler {
+  constructor(private readonly gitlabService: GitlabService) {}
 
   async check(
     _parameters: object,
     currentState: { lastSeenAt?: string } | null,
     context?: { userId: number },
   ): Promise<{ triggered: boolean; newState?: any }> {
-    const notifications = await this.githubService.getUserNotifications(
-      context!.userId,
-    );
+    const todos = await this.gitlabService.getUserTodos(context!.userId);
     const state = currentState ?? {};
 
-    if (!notifications.length) {
+    if (!todos.length) {
       return { triggered: false, newState: state };
     }
 
@@ -32,16 +29,16 @@ export class GithubNewNotificationAction implements ActionHandler {
       return {
         triggered: false,
         newState: {
-          lastSeenAt: notifications[0].updated_at ?? new Date().toISOString(),
+          lastSeenAt: todos[0].created_at ?? new Date().toISOString(),
         },
       };
     }
 
     const lastSeen = new Date(state.lastSeenAt);
 
-    const newOnes = notifications.filter((n) => {
-      if (!n.updated_at) return false;
-      return new Date(n.updated_at) > lastSeen;
+    const newOnes = todos.filter((t) => {
+      if (!t.created_at) return false;
+      return new Date(t.created_at) > lastSeen;
     });
 
     if (!newOnes.length) {
@@ -49,20 +46,22 @@ export class GithubNewNotificationAction implements ActionHandler {
     }
 
     const newest = newOnes
-      .map((n) => new Date(n.updated_at))
+      .map((t) => new Date(t.created_at))
       .sort((a, b) => b.getTime() - a.getTime())[0];
 
     return {
       triggered: true,
       newState: {
         lastSeenAt: newest.toISOString(),
-        total: notifications.length,
-        notifications: newOnes.map((n) => ({
-          id: n.id,
-          repo: n.repository.full_name,
-          title: n.subject.title,
-          type: n.subject.type,
-          url: n.subject.url,
+        total: todos.length,
+        todos: newOnes.map((t) => ({
+          id: t.id,
+          action: t.action_name,
+          body: t.body,
+          type: t.target_type,
+          url: t.target_url,
+          project: t.project?.name,
+          author: t.author.username,
         })),
       },
     };

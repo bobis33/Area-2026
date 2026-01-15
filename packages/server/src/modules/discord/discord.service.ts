@@ -4,7 +4,7 @@ import { Client, GatewayIntentBits, TextChannel } from 'discord.js';
 
 @Injectable()
 export class DiscordService implements OnModuleInit {
-  public client: Client;
+  private readonly client: Client;
 
   constructor(private configService: ConfigService) {
     this.client = new Client({

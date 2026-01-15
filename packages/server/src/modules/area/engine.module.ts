@@ -5,6 +5,7 @@ import { DiscordModule } from '@modules/discord/discord.module';
 import { GithubModule } from '@modules/github/github.module';
 import { GitlabModule } from '@modules/gitlab/gitlab.module';
 import { GithubNewNotificationAction } from '@modules/area/actions/github/new-notification';
+import { GitlabNewTodoAction } from '@modules/area/actions/gitlab/new-notification';
 import { GmailModule } from '@modules/google/gmail/gmail.module';
 import { SpotifyModule } from '@modules/spotify/spotify.module';
 import { TimeCronAction } from '@modules/area/actions/time/cron';
@@ -26,28 +27,29 @@ import { AreaController } from '@modules/area/area.controller';
 @Module({
   imports: [
     DiscordModule,
-    GmailModule,
     GithubModule,
     GitlabModule,
+    GmailModule,
     SpotifyModule,
   ],
   providers: [
-    EngineService,
-    TimeCronAction,
     AreaService,
-    GithubNewNotificationAction,
-    SpotifyNewSavedTrackAction,
-    SpotifyTrackIsPlayingAction,
     DiscordSendMessageChannelReaction,
     DiscordSendMessageUserReaction,
-    GmailSendEmailReaction,
+    EngineService,
+    GithubNewNotificationAction,
+    GitlabNewTodoAction,
     GmailCreateDraftReaction,
+    GmailSendEmailReaction,
+    SpotifyNewSavedTrackAction,
+    SpotifyTrackIsPlayingAction,
     SpotifyAddToLikedReaction,
     SpotifyAddToPlaylistReaction,
     SpotifyPlayTrackReaction,
     SpotifyPausePlaybackReaction,
     SpotifyResumePlaybackReaction,
     SpotifySkipNextReaction,
+    TimeCronAction,
   ],
   controllers: [AreaController],
 })

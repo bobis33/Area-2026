@@ -13,6 +13,7 @@ import { SpotifyService } from '@modules/spotify/spotify.service';
   },
   name: 'spotify.play_track',
   description: 'Plays a specific track on Spotify',
+  oauth: true,
 })
 @Injectable()
 export class SpotifyPlayTrackReaction implements ReactionHandler {

@@ -18,6 +18,7 @@ import { Reaction } from '@decorators/area.decorator';
   },
   name: 'discord.send_message_user',
   description: 'Sends a message to a Discord user',
+  oauth: false,
 })
 @Injectable()
 export class DiscordSendMessageUserReaction implements ReactionHandler {

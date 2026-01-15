@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@common/database/prisma.service';
 import { User } from '@pcg/client';
 import {
@@ -31,6 +31,7 @@ export type RequestWithUser = Request & {
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
@@ -79,10 +80,10 @@ export class AuthService {
         if (this.isValidRedirectUrl(decodedUrl)) {
           baseUrl = decodedUrl;
         } else {
-          console.warn(`Invalid redirect URL attempted: ${decodedUrl}`);
+          this.logger.warn(`Invalid redirect URL attempted: ${decodedUrl}`);
         }
       } catch {
-        console.warn(`Failed to decode redirect URL: ${redirectParam}`);
+        this.logger.warn(`Failed to decode redirect URL: ${redirectParam}`);
       }
     }
 
@@ -161,7 +162,7 @@ export class AuthService {
       }
       return this.mapToAuthenticatedUser(user);
     } catch (error) {
-      console.error('[AuthService] validateOAuthLogin error:', error);
+      this.logger.error('[AuthService] validateOAuthLogin error:', error);
       throw error;
     }
   }

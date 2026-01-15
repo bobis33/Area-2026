@@ -65,7 +65,7 @@ export function getProviderConfig(
       callbackURL:
         configService.get<string>('GITLAB_CALLBACK_URL') ||
         'http://localhost:8080/auth/gitlab/callback',
-      scope: ['read_user'],
+      scope: ['api'],
     },
   };
 
@@ -156,8 +156,6 @@ export function normalizeOAuthProfile(
   }
 
   if (!normalizedProfile.email) {
-    console.warn(`Email manquant ! Génération d'un email placeholder.`);
-
     normalizedProfile.email = `${provider.toLowerCase()}_${normalizedProfile.provider_id}@no-email.area.local`;
   }
 

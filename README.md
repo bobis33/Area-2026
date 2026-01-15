@@ -179,7 +179,7 @@ npm run mobile:start ## run mobile frontend
 Please review our [Security Policy](https://github.com/bobis33/Area-2026/blob/main/SECURITY.md) for more information on reporting security vulnerabilities.
 
 ## Contributing
-Want to contribute? See [contributing guidelines](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
+Want to contribute? See [Contributing guidelines](https://github.com/bobis33/Area-2026/blob/main/CONTRIBUTING.md).
 
 ## License
 This project is licensed under the MIT License - see the [License](https://github.com/bobis33/Area-2026/blob/main//LICENSE.md) file for details.

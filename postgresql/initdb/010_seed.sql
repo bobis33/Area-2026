@@ -4,7 +4,8 @@ VALUES
     ('Bob', 'bob@example.com', '$2b$10$1HR4vKXvBXlXwA5DmRIFg.lkppvyw6yOxMcay15t7.N84ePXgjUE2', 'USER'),
     ('Charlie', 'charlie@example.com', '$2b$10$1HR4vKXvBXlXwA5DmRIFg.lkppvyw6yOxMcay15t7.N84ePXgjUE2', 'USER'),
     ('David', 'david@example.com', '$2b$10$1HR4vKXvBXlXwA5DmRIFg.lkppvyw6yOxMcay15t7.N84ePXgjUE2', 'USER'),
-    ('Eve', 'eve@example.com', '$2b$10$1HR4vKXvBXlXwA5DmRIFg.lkppvyw6yOxMcay15t7.N84ePXgjUE2', 'USER');
+    ('Eve', 'eve@example.com', '$2b$10$1HR4vKXvBXlXwA5DmRIFg.lkppvyw6yOxMcay15t7.N84ePXgjUE2', 'USER'),
+    ('admin', 'admin@admin.com', '$2b$10$vXissZGi9Uuel3dHKLTDUe5X9RrFsATPHzsnEZzn5qgkRARblAeSa', 'ADMIN');
 
 INSERT INTO "ProviderAccount" (provider, provider_id, user_id, access_token, refresh_token)
 VALUES

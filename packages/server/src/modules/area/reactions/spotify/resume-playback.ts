@@ -7,6 +7,7 @@ import { SpotifyService } from '@modules/spotify/spotify.service';
   parameters: {},
   name: 'spotify.resume_playback',
   description: 'Resumes the current playback on Spotify',
+  oauth: true,
 })
 @Injectable()
 export class SpotifyResumePlaybackReaction implements ReactionHandler {
