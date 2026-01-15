@@ -37,12 +37,14 @@ interface Area {
 interface ActionDefinition {
   service: string;
   type: string;
+  oauth: boolean;
   parameters: string | Record<string, any>;
 }
 
 interface ReactionDefinition {
   service: string;
   type: string;
+  oauth: boolean;
   parameters: string | Record<string, any>;
 }
 
@@ -150,11 +152,13 @@ export default function Area() {
         action: {
           service: selectedAction.service,
           type: selectedAction.type,
+          oauth: selectedAction.oauth,
           parameters: actionParams,
         },
         reaction: {
           service: selectedReaction.service,
           type: selectedReaction.type,
+          oauth: selectedReaction.oauth,
           parameters: reactionParams,
         },
       };
