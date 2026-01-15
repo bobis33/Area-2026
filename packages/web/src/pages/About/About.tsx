@@ -99,51 +99,6 @@ export default function About() {
         subtitle="Server information, available services, and real-time status"
       />
 
-      {/* Server Stats */}
-      <ContentGrid columns={3} gap="lg">
-        <Card padding="lg" className={styles.statCard}>
-          <div className={styles.statContent}>
-            <div className={styles.statIcon}>
-              <FiServer />
-            </div>
-            <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Client Host</span>
-              <span className={styles.statValue}>{aboutData.client.host}</span>
-            </div>
-          </div>
-        </Card>
-
-        <Card padding="lg" className={styles.statCard}>
-          <div className={styles.statContent}>
-            <div className={styles.statIcon}>
-              <FiClock />
-            </div>
-            <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Server Time</span>
-              <span className={styles.statValue}>
-                {formatTimestamp(aboutData.server.current_time)}
-              </span>
-            </div>
-          </div>
-        </Card>
-
-        <Card padding="lg" className={styles.statCard}>
-          <div className={styles.statContent}>
-            <div className={styles.statIcon}>
-              <FiZap />
-            </div>
-            <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Uptime</span>
-              <span className={styles.statValue}>
-                {aboutData.server.uptime !== undefined
-                  ? formatUptime(aboutData.server.uptime)
-                  : 'N/A'}
-              </span>
-            </div>
-          </div>
-        </Card>
-      </ContentGrid>
-
       {/* Server Information */}
       <Card padding="lg">
         <div className={styles.section}>

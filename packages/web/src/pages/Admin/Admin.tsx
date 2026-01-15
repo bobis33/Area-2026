@@ -4,8 +4,6 @@ import { Navigate } from 'react-router-dom';
 import { get, put, del } from '@/services/api.ts';
 import {
   FiUsers,
-  FiUserCheck,
-  FiUserX,
   FiTrash,
   FiRefreshCw,
   FiChevronUp,
@@ -16,13 +14,7 @@ import {
   FiKey,
   FiCalendar,
 } from 'react-icons/fi';
-import {
-  PageLayout,
-  PageHeader,
-  ContentGrid,
-  Card,
-  Button,
-} from '@/components/ui';
+import { PageLayout, PageHeader, Card, Button } from '@/components/ui';
 import styles from './Admin.module.css';
 
 interface User {
@@ -153,9 +145,6 @@ export default function Admin() {
     });
   };
 
-  const adminUsers = users.filter((u) => u.role === 'admin');
-  const regularUsers = users.filter((u) => u.role === 'user');
-
   if (loading) {
     return (
       <PageLayout maxWidth="xl">
@@ -192,45 +181,6 @@ export default function Admin() {
           </Button>
         </div>
       )}
-
-      {/* Stats Panel */}
-      <ContentGrid columns={3} gap="lg">
-        <Card padding="lg" className={styles.statCard}>
-          <div className={styles.statContent}>
-            <div className={styles.statIcon}>
-              <FiUsers />
-            </div>
-            <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Total Users</span>
-              <span className={styles.statValue}>{users.length}</span>
-            </div>
-          </div>
-        </Card>
-
-        <Card padding="lg" className={styles.statCard}>
-          <div className={styles.statContent}>
-            <div className={styles.statIcon}>
-              <FiUserCheck />
-            </div>
-            <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Admins</span>
-              <span className={styles.statValue}>{adminUsers.length}</span>
-            </div>
-          </div>
-        </Card>
-
-        <Card padding="lg" className={styles.statCard}>
-          <div className={styles.statContent}>
-            <div className={styles.statIcon}>
-              <FiUserX />
-            </div>
-            <div className={styles.statInfo}>
-              <span className={styles.statLabel}>Regular Users</span>
-              <span className={styles.statValue}>{regularUsers.length}</span>
-            </div>
-          </div>
-        </Card>
-      </ContentGrid>
 
       {/* Users Section */}
       <Card padding="lg">

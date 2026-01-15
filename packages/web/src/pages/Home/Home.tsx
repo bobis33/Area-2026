@@ -43,7 +43,6 @@ export default function Home() {
 
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>
-            <FiZap className={styles.heroBadgeIcon} />
             <span>Automate Everything</span>
           </div>
 
@@ -235,9 +234,6 @@ export default function Home() {
       {/* CTA Section */}
       <section className={styles.ctaSection}>
         <div className={styles.ctaContent}>
-          <div className={styles.ctaIcon}>
-            <FiZap />
-          </div>
           <h2 className={styles.ctaTitle}>Ready to Get Started?</h2>
           <p className={styles.ctaDescription}>
             Join thousands of users automating their digital life.
