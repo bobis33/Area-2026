@@ -2,9 +2,10 @@ import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import type { RegisterData } from '@/types';
-import { FaArrowLeft } from 'react-icons/fa';
-import { WebInput, WebButton } from '@/components/ui-web';
-import './Auth.css';
+import { FiArrowLeft, FiMail, FiLock, FiUser } from 'react-icons/fi';
+import { Button, Input } from '@/components/ui';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import styles from './Auth.module.css';
 
 interface RegisterFormData {
   email: string;
@@ -48,89 +49,118 @@ export default function Register() {
       };
       await register(requestData);
     } catch (err) {
-      //Handled by useAuth hook
+      // Handled by useAuth hook
     }
   };
+
   return (
-    <div className="auth-container">
-      <Link to="/" className="back-to-home">
-        <FaArrowLeft /> Back to Home
-      </Link>
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Create Account</h1>
-          <p>Join AREA and start automating your digital life</p>
+    <div className={styles.authContainer}>
+      <div className={styles.authBackground}>
+        <div className={styles.bgCircle1}></div>
+        <div className={styles.bgCircle2}></div>
+        <div className={styles.bgCircle3}></div>
+      </div>
+
+      <div className={styles.authNav}>
+        <Link to="/" className={styles.backToHome}>
+          <FiArrowLeft />
+          <span>Back to Home</span>
+        </Link>
+        <ThemeToggle />
+      </div>
+
+      <div className={styles.authCard}>
+        <div className={styles.authLogo}>
+          <img src="/logo.svg" alt="AREA" />
+        </div>
+
+        <div className={styles.authHeader}>
+          <h1 className={styles.authTitle}>Create Account</h1>
+          <p className={styles.authSubtitle}>
+            Join AREA and start automating your digital life
+          </p>
         </div>
 
         {(error || validationError) && (
-          <div className="error-message" role="alert">
+          <div className={styles.errorMessage} role="alert">
             {error || validationError}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="auth-form">
-          <WebInput
+
+        <form onSubmit={handleSubmit} className={styles.authForm}>
+          <Input
             label="Name"
             type="text"
             id="name"
             name="name"
             value={formData.name}
-            onChange={(value) => setFormData({ ...formData, name: value })}
-            placeholder="Enter your name"
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Your full name"
             required
             disabled={loading}
+            leftIcon={<FiUser />}
           />
 
-          <WebInput
+          <Input
             label="Email"
             type="email"
             id="email"
             name="email"
             value={formData.email}
-            onChange={(value) => setFormData({ ...formData, email: value })}
-            placeholder="Enter your email"
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            placeholder="your.email@example.com"
             required
             disabled={loading}
+            leftIcon={<FiMail />}
           />
 
-          <WebInput
+          <Input
             label="Password"
             type="password"
             id="password"
             name="password"
             value={formData.password}
-            onChange={(value) => setFormData({ ...formData, password: value })}
-            placeholder="Enter your password"
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+            placeholder="At least 6 characters"
             required
             disabled={loading}
+            leftIcon={<FiLock />}
           />
 
-          <WebInput
+          <Input
             label="Confirm Password"
             type="password"
             id="confirmPassword"
             name="confirmPassword"
             value={formData.confirmPassword}
-            onChange={(value) =>
-              setFormData({ ...formData, confirmPassword: value })
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
             }
             placeholder="Confirm your password"
             required
             disabled={loading}
+            leftIcon={<FiLock />}
           />
 
-          <WebButton
+          <Button
             type="submit"
-            label={loading ? 'Creating Account...' : 'Sign Up'}
             variant="primary"
+            size="lg"
             disabled={loading}
             fullWidth
-          />
+          >
+            {loading ? 'Creating Account...' : 'Sign Up'}
+          </Button>
         </form>
 
-        <div className="auth-footer">
+        <div className={styles.authFooter}>
           <p>
             Already have an account?{' '}
-            <Link to="/login" className="link">
+            <Link to="/login" className={styles.authLink}>
               Sign In
             </Link>
           </p>

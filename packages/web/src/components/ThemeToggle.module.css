@@ -1,0 +1,52 @@
+/**
+ * ThemeToggle Component Styles
+ * Uses CSS variables from @area/ui tokens (injected by ThemeProvider)
+ */
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: var(--spacing-sm);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  color: var(--color-text);
+}
+
+.toggle:hover {
+  background-color: var(--color-surface-muted);
+  box-shadow: var(--shadow-sm);
+  transform: scale(1.05);
+}
+
+.toggle:active {
+  transform: scale(0.95);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--transition-normal);
+}
+
+.toggle:hover .icon {
+  transform: rotate(15deg);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .toggle {
+    width: 40px;
+    height: 40px;
+  }
+}

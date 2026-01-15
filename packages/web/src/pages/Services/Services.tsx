@@ -7,7 +7,14 @@ import {
   FaLink,
   FaSpotify,
 } from 'react-icons/fa';
-import { WebButton, WebCard } from '@/components/ui-web';
+import { FiRefreshCw, FiCheck, FiX } from 'react-icons/fi';
+import {
+  PageLayout,
+  PageHeader,
+  ContentGrid,
+  Card,
+  Button,
+} from '@/components/ui';
 import {
   getLinkedProviders,
   getOAuthProviders,
@@ -15,7 +22,7 @@ import {
   unlinkProvider,
 } from '@/services/auth.service';
 import { getAuthToken, setOAuthRedirectPath } from '@/utils/storage';
-import './Services.css';
+import styles from './Services.module.css';
 
 const OAUTH_PROVIDERS = [
   'discord',
@@ -96,14 +103,19 @@ export default function Services() {
       return;
     }
 
-    const [available, linked] = await Promise.all([
-      getOAuthProviders(),
-      getLinkedProviders(token),
-    ]);
+    try {
+      const [available, linked] = await Promise.all([
+        getOAuthProviders(),
+        getLinkedProviders(token),
+      ]);
 
-    setAvailableProviders(available.map(normalizeProvider));
-    setLinkedProviders(linked.map(normalizeProvider));
-    setLoading(false);
+      setAvailableProviders(available.map(normalizeProvider));
+      setLinkedProviders(linked.map(normalizeProvider));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load providers');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -166,151 +178,230 @@ export default function Services() {
 
   if (loading) {
     return (
-      <div className="services-container">
-        <div className="services-loading">Loading services...</div>
-      </div>
+      <PageLayout maxWidth="xl">
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Loading services...</p>
+        </div>
+      </PageLayout>
     );
   }
 
-  if (error) {
+  if (error && allProviders.length === 0) {
     return (
-      <div className="services-container">
-        <div className="services-error">
-          <h2>Unable to load services</h2>
-          <p>{error}</p>
-          <WebButton label="Retry" onClick={loadProviders} />
-        </div>
-      </div>
+      <PageLayout maxWidth="xl">
+        <Card padding="lg">
+          <div className={styles.errorState}>
+            <div className={styles.errorIcon}>
+              <FiX size={48} />
+            </div>
+            <h2 className={styles.errorTitle}>Unable to load services</h2>
+            <p className={styles.errorText}>{error}</p>
+            <Button
+              variant="primary"
+              leftIcon={<FiRefreshCw />}
+              onClick={loadProviders}
+            >
+              Retry
+            </Button>
+          </div>
+        </Card>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="services-container">
-      <div className="services-hero">
-        <div className="services-hero-content">
-          <span className="services-eyebrow">Providers</span>
-          <h1>Connect the services that power your workflows</h1>
-          <p>
-            Link multiple providers to unlock new triggers, reactions, and
-            automations across your stack.
-          </p>
-        </div>
-        <div className="services-hero-panel">
-          <div>
-            <span className="services-panel-label">Connected</span>
-            <span className="services-panel-value">
+    <PageLayout maxWidth="xl">
+      <PageHeader
+        title="Connected Services"
+        subtitle="Link multiple providers to unlock new triggers, reactions, and automations across your stack"
+      />
+
+      {/* Stats Panel */}
+      <div className={styles.statsPanel}>
+        <Card padding="lg" className={styles.statCard}>
+          <div className={styles.statContent}>
+            <span className={styles.statValue}>
               {connectedProviders.length}
             </span>
+            <span className={styles.statLabel}>Connected</span>
           </div>
-          <div>
-            <span className="services-panel-label">Available</span>
-            <span className="services-panel-value">
+        </Card>
+        <Card padding="lg" className={styles.statCard}>
+          <div className={styles.statContent}>
+            <span className={styles.statValue}>
               {availableToConnect.length}
             </span>
+            <span className={styles.statLabel}>Available</span>
           </div>
-        </div>
+        </Card>
       </div>
 
-      <section className="services-section">
-        <div className="services-section-header">
-          <h2>Connected</h2>
-          <p>These providers are ready for your automations.</p>
+      {error && (
+        <div className={styles.errorBanner}>
+          <p>{error}</p>
+          <Button variant="ghost" size="sm" onClick={() => setError(null)}>
+            Dismiss
+          </Button>
         </div>
+      )}
+
+      {/* Connected Services */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Connected Services</h2>
+          <p className={styles.sectionSubtitle}>
+            These providers are ready for your automations
+          </p>
+        </div>
+
         {allProviders.length === 0 ? (
-          <div className="services-empty">
-            No OAuth providers are configured on the server.
-          </div>
+          <Card padding="lg">
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>
+                No OAuth providers are configured on the server.
+              </p>
+            </div>
+          </Card>
         ) : connectedProviders.length === 0 ? (
-          <div className="services-empty">
-            No services connected yet. Connect one below to get started.
-          </div>
+          <Card padding="lg">
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>
+                No services connected yet. Connect one below to get started.
+              </p>
+            </div>
+          </Card>
         ) : (
-          <div className="services-grid">
+          <ContentGrid columns={3} gap="lg">
             {connectedProviders.map((provider) => {
               const meta = PROVIDER_META[provider as OAuthProviderKey];
               const Icon = meta?.icon ?? FaLink;
               const isUnlinking = unlinkingProviders.has(provider);
+
               return (
-                <WebCard
-                  key={provider}
-                  className="service-card service-card-connected"
-                >
-                  <div className="service-card-header">
-                    <div
-                      className="service-icon"
-                      style={{ background: meta?.color ?? '#1e40af' }}
-                    >
-                      <Icon />
+                <Card key={provider} padding="lg" hoverable>
+                  <div className={styles.serviceCard}>
+                    <div className={styles.serviceHeader}>
+                      <div
+                        className={styles.serviceIcon}
+                        style={{
+                          backgroundColor:
+                            meta?.color ?? 'var(--color-primary)',
+                        }}
+                      >
+                        <Icon />
+                      </div>
+                      <span className={styles.statusBadgeConnected}>
+                        <FiCheck size={14} />
+                        Connected
+                      </span>
                     </div>
-                    <span className="service-status service-status-connected">
-                      Connected
-                    </span>
+
+                    <h3 className={styles.serviceTitle}>
+                      {meta?.label ?? getProviderLabel(provider)}
+                    </h3>
+                    <p className={styles.serviceDescription}>
+                      {meta?.description ??
+                        'Provider connected to your account.'}
+                    </p>
+
+                    <div className={styles.serviceActions}>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        fullWidth
+                        disabled={isUnlinking}
+                        loading={isUnlinking}
+                        onClick={() => handleDisconnect(provider)}
+                      >
+                        {isUnlinking ? 'Disconnecting...' : 'Disconnect'}
+                      </Button>
+                    </div>
                   </div>
-                  <h3>{meta?.label ?? getProviderLabel(provider)}</h3>
-                  <p>
-                    {meta?.description ?? 'Provider connected to your account.'}
-                  </p>
-                  <div className="service-card-actions">
-                    <WebButton
-                      label={isUnlinking ? 'Disconnecting...' : 'Disconnect'}
-                      variant="ghost"
-                      className="service-button-danger"
-                      disabled={isUnlinking}
-                      onClick={() => handleDisconnect(provider)}
-                    />
-                  </div>
-                </WebCard>
+                </Card>
               );
             })}
-          </div>
+          </ContentGrid>
         )}
       </section>
 
-      <section className="services-section">
-        <div className="services-section-header">
-          <h2>Available to connect</h2>
-          <p>Authorize new providers to unlock more triggers and reactions.</p>
+      {/* Available Services */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Available to Connect</h2>
+          <p className={styles.sectionSubtitle}>
+            Authorize new providers to unlock more triggers and reactions
+          </p>
         </div>
+
         {allProviders.length === 0 ? (
-          <div className="services-empty">
-            No OAuth providers are configured on the server.
-          </div>
+          <Card padding="lg">
+            <div className={styles.emptyState}>
+              <p className={styles.emptyText}>
+                No OAuth providers are configured on the server.
+              </p>
+            </div>
+          </Card>
         ) : availableToConnect.length === 0 ? (
-          <div className="services-empty">
-            All available providers are already connected.
-          </div>
+          <Card padding="lg">
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>
+                <FiCheck size={48} />
+              </div>
+              <h3 className={styles.emptyTitle}>All Set!</h3>
+              <p className={styles.emptyText}>
+                All available providers are already connected.
+              </p>
+            </div>
+          </Card>
         ) : (
-          <div className="services-grid">
+          <ContentGrid columns={3} gap="lg">
             {availableToConnect.map((provider) => {
               const meta = PROVIDER_META[provider as OAuthProviderKey];
               const Icon = meta?.icon ?? FaLink;
+
               return (
-                <WebCard key={provider} className="service-card">
-                  <div className="service-card-header">
-                    <div
-                      className="service-icon"
-                      style={{ background: meta?.color ?? '#1e40af' }}
-                    >
-                      <Icon />
+                <Card key={provider} padding="lg" hoverable>
+                  <div className={styles.serviceCard}>
+                    <div className={styles.serviceHeader}>
+                      <div
+                        className={styles.serviceIcon}
+                        style={{
+                          backgroundColor:
+                            meta?.color ?? 'var(--color-primary)',
+                        }}
+                      >
+                        <Icon />
+                      </div>
+                      <span className={styles.statusBadgeAvailable}>
+                        Not connected
+                      </span>
                     </div>
-                    <span className="service-status">Not connected</span>
+
+                    <h3 className={styles.serviceTitle}>
+                      {meta?.label ?? getProviderLabel(provider)}
+                    </h3>
+                    <p className={styles.serviceDescription}>
+                      {meta?.description ?? 'Connect this provider to use it.'}
+                    </p>
+
+                    <div className={styles.serviceActions}>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        fullWidth
+                        onClick={() => handleConnect(provider)}
+                      >
+                        Connect
+                      </Button>
+                    </div>
                   </div>
-                  <h3>{meta?.label ?? getProviderLabel(provider)}</h3>
-                  <p>
-                    {meta?.description ?? 'Connect this provider to use it.'}
-                  </p>
-                  <div className="service-card-actions">
-                    <WebButton
-                      label="Connect"
-                      onClick={() => handleConnect(provider)}
-                    />
-                  </div>
-                </WebCard>
+                </Card>
               );
             })}
-          </div>
+          </ContentGrid>
         )}
       </section>
-    </div>
+    </PageLayout>
   );
 }

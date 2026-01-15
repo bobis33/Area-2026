@@ -1,0 +1,91 @@
+/**
+ * Card Component Styles
+ * Uses CSS variables from @area/ui tokens (injected by ThemeProvider)
+ */
+
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  overflow: hidden;
+}
+
+/* Padding variants */
+.padding-none {
+  padding: 0;
+}
+
+.padding-sm {
+  padding: var(--spacing-sm);
+}
+
+.padding-md {
+  padding: var(--spacing-md);
+}
+
+.padding-lg {
+  padding: var(--spacing-lg);
+}
+
+/* Hoverable state */
+.hoverable:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Clickable state */
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:active {
+  transform: scale(0.99);
+}
+
+/* Header */
+.header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  background-color: var(--color-surface-muted);
+}
+
+.padding-none .header {
+  padding: var(--spacing-md);
+}
+
+/* Content */
+.content {
+  color: var(--color-text);
+}
+
+.padding-none .content {
+  padding: var(--spacing-md);
+}
+
+/* Footer */
+.footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-border-subtle);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  background-color: var(--color-surface-muted);
+}
+
+.padding-none .footer {
+  padding: var(--spacing-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    border-radius: var(--radius-md);
+  }
+
+  .padding-lg {
+    padding: var(--spacing-md);
+  }
+}

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import './Auth.css';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { FiAlertCircle } from 'react-icons/fi';
+import { Button } from '@/components/ui';
+import styles from './Auth.module.css';
 
 export default function OAuthError() {
   const navigate = useNavigate();
@@ -23,40 +24,40 @@ export default function OAuthError() {
   }, [searchParams, navigate]);
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Authentication Failed</h1>
-          <p>We couldn't sign you in</p>
+    <div className={styles.authContainer}>
+      <div className={styles.authBackground}>
+        <div className={styles.bgCircle1}></div>
+        <div className={styles.bgCircle2}></div>
+        <div className={styles.bgCircle3}></div>
+      </div>
+
+      <div className={styles.authCard}>
+        <div className={styles.authLogo}>
+          <img src="/logo.svg" alt="AREA" />
         </div>
-        <div className="error-message" role="alert">
-          {errorMessage}
+
+        <div className={styles.authHeader}>
+          <h1 className={styles.authTitle}>Authentication Failed</h1>
+          <p className={styles.authSubtitle}>We couldn't sign you in</p>
         </div>
-        <div className="oauth-error-content">
-          <p
-            style={{
-              textAlign: 'center',
-              color: '#666',
-              marginBottom: '1.5rem',
-            }}
-          >
+
+        <div className={styles.errorMessage} role="alert">
+          <FiAlertCircle style={{ fontSize: '1.2em', flexShrink: 0 }} />
+          <span>{errorMessage}</span>
+        </div>
+
+        <div className={styles.oauthErrorContent}>
+          <p className={styles.oauthErrorText}>
             Please try again or use a different sign-in method.
           </p>
-          <Link
-            to="/"
-            className="btn btn-primary"
-            style={{ textDecoration: 'none' }}
-          >
-            Go to Login
+
+          <Link to="/login" style={{ textDecoration: 'none' }}>
+            <Button variant="primary" size="lg" fullWidth>
+              Go to Login
+            </Button>
           </Link>
-          <p
-            style={{
-              textAlign: 'center',
-              color: '#999',
-              fontSize: '0.875rem',
-              marginTop: '1rem',
-            }}
-          >
+
+          <p className={styles.oauthErrorRedirect}>
             Redirecting automatically in 5 seconds...
           </p>
         </div>

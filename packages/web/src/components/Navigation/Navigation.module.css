@@ -1,0 +1,414 @@
+/**
+ * Navigation Component Styles
+ * Uses CSS variables from @area/ui tokens (injected by ThemeProvider)
+ */
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-xl);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  transition: all var(--transition-normal);
+}
+
+/* Logo */
+.navLogo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  z-index: 1001;
+}
+
+.navLogoImg {
+  height: 36px;
+  width: auto;
+  transition: transform var(--transition-normal);
+}
+
+.navLogoText {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.navLogo:hover .navLogoImg {
+  transform: scale(1.05);
+}
+
+.navLogo:hover .navLogoText {
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+/* Nav Links Container */
+.navLinks {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+/* Nav Link */
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-normal);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-muted);
+}
+
+.navLink.active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  font-weight: var(--font-weight-semibold);
+}
+
+.navLink.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+.navLink svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Divider */
+.navDivider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-border);
+  margin: 0 var(--spacing-xs);
+}
+
+/* Nav User */
+.navUser {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* Logout Button */
+.btnLogout {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-danger);
+  color: var(--color-danger-on);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-family: 'Poppins', sans-serif;
+}
+
+.btnLogout:hover {
+  background-color: var(--color-danger);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btnLogout:active {
+  transform: translateY(0);
+}
+
+.btnLogout svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Hamburger Button (hidden on desktop) */
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  z-index: 1003;
+  position: relative;
+}
+
+.hamburger:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.hamburger svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile Sidebar Overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1001;
+  animation: fadeIn 0.3s ease-in-out;
+  display: none;
+}
+
+.overlay.show {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Mobile Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 320px;
+  max-width: 85vw;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
+  background-color: var(--color-surface);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 1002;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebarOpen {
+  right: 0;
+}
+
+.sidebarHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  flex-shrink: 0;
+}
+
+.sidebarUser {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  word-break: break-word;
+}
+
+.sidebarLinks {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md);
+  gap: var(--spacing-xs);
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebarLink {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-md);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-normal);
+  flex-shrink: 0;
+}
+
+.sidebarLink:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-muted);
+  transform: translateX(-2px);
+}
+
+.sidebarLink.active {
+  color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  font-weight: var(--font-weight-semibold);
+}
+
+.sidebarLink svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.sidebarFooter {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  flex-shrink: 0;
+}
+
+.btnLogoutSidebar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  background-color: var(--color-danger);
+  color: var(--color-danger-on);
+  border: none;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-family: 'Poppins', sans-serif;
+}
+
+.btnLogoutSidebar:hover {
+  background-color: var(--color-danger);
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btnLogoutSidebar:active {
+  transform: translateY(0);
+}
+
+.btnLogoutSidebar svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .navLinks {
+    gap: var(--spacing-xs);
+  }
+
+  .navLink span {
+    display: none;
+  }
+
+  .navLink {
+    padding: var(--spacing-sm);
+  }
+
+  .navUser {
+    max-width: 120px;
+    font-size: var(--font-size-xs);
+  }
+
+  .btnLogout span {
+    display: none;
+  }
+
+  .btnLogout {
+    padding: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .navigation {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  /* Hide desktop navigation */
+  .navLinks {
+    display: none;
+  }
+
+  /* Show hamburger */
+  .hamburger {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .navLogoImg {
+    height: 32px;
+  }
+
+  .navLogoText {
+    font-size: var(--font-size-lg);
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hamburger svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .sidebarHeader {
+    padding: var(--spacing-lg);
+  }
+
+  .sidebarLinks {
+    padding: var(--spacing-sm);
+  }
+
+  .sidebarFooter {
+    padding: var(--spacing-sm);
+  }
+}

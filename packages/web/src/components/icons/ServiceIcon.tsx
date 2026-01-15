@@ -27,7 +27,7 @@ interface ServiceIconProps {
 export const ServiceIcon = ({
   service,
   size = 24,
-  color = 'currentColor',
+  color,
   className = '',
 }: ServiceIconProps) => {
   const serviceLower = service.toLowerCase();
@@ -49,7 +49,25 @@ export const ServiceIcon = ({
     twitch: FaTwitch,
   };
 
-  const Icon = iconMap[serviceLower] || FaCog;
+  const colorMap: Record<string, string> = {
+    discord: '#5865F2',
+    github: '#181717',
+    google: '#4285F4',
+    gmail: '#EA4335',
+    spotify: '#1DB954',
+    gitlab: '#FC6D26',
+    time: '#6366F1',
+    weather: '#3B82F6',
+    calendar: '#8B5CF6',
+    notion: '#000000',
+    slack: '#4A154B',
+    twitter: '#1DA1F2',
+    youtube: '#FF0000',
+    twitch: '#9146FF',
+  };
 
-  return <Icon size={size} color={color} className={className} />;
+  const Icon = iconMap[serviceLower] || FaCog;
+  const iconColor = color || colorMap[serviceLower] || '#6B7280';
+
+  return <Icon size={size} color={iconColor} className={className} />;
 };

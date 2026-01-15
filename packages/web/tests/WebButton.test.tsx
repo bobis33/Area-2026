@@ -1,70 +1,96 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
-import { WebButton } from '@/components/ui-web';
+import { Button } from '@/components/ui';
 
-describe('WebButton', () => {
-  it('renders the label', () => {
-    render(<WebButton label="Click me" />);
-    expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument();
+describe('Button', () => {
+  it('renders the label (children)', () => {
+    render(<Button>Click me</Button>);
+    expect(
+      screen.getByRole('button', { name: 'Click me' }),
+    ).toBeInTheDocument();
   });
 
   it('calls onClick when clicked', async () => {
     const onClick = vi.fn();
-    render(<WebButton label="Click" onClick={onClick} />);
+    render(<Button onClick={onClick}>Click</Button>);
 
     await userEvent.click(screen.getByRole('button', { name: 'Click' }));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('applies primary variant by default', () => {
-    render(<WebButton label="Primary" />);
-    const btn = screen.getByRole('button', { name: 'Primary' });
-
-    expect(btn).toHaveClass('web-button');
-    expect(btn).toHaveClass('web-button-primary');
-  });
-
-  it('applies secondary variant', () => {
-    render(<WebButton label="Secondary" variant="secondary" />);
-    const btn = screen.getByRole('button', { name: 'Secondary' });
-
-    expect(btn).toHaveClass('web-button-secondary');
-  });
-
-  it('applies ghost variant', () => {
-    render(<WebButton label="Ghost" variant="ghost" />);
-    const btn = screen.getByRole('button', { name: 'Ghost' });
-
-    expect(btn).toHaveClass('web-button-ghost');
-  });
-
-  it('applies fullWidth class when enabled', () => {
-    render(<WebButton label="Full" fullWidth />);
-    const btn = screen.getByRole('button', { name: 'Full' });
-
-    expect(btn).toHaveClass('web-button-full');
-  });
-
   it('is disabled when disabled=true', () => {
-    render(<WebButton label="Disabled" disabled />);
+    render(<Button disabled>Disabled</Button>);
     const btn = screen.getByRole('button', { name: 'Disabled' });
 
     expect(btn).toBeDisabled();
-    expect(btn).toHaveClass('web-button-disabled');
+  });
+
+  it('is disabled when loading=true', () => {
+    render(<Button loading>Loading</Button>);
+    const btn = screen.getByRole('button');
+
+    expect(btn).toBeDisabled();
+  });
+
+  it('shows spinner when loading', () => {
+    render(<Button loading>Load</Button>);
+    expect(screen.getByLabelText('Loading')).toBeInTheDocument();
+  });
+
+  it('does not call onClick when loading', async () => {
+    const onClick = vi.fn();
+    render(
+      <Button loading onClick={onClick}>
+        Load
+      </Button>,
+    );
+
+    const btn = screen.getByRole('button');
+    await userEvent.click(btn);
+    expect(onClick).not.toHaveBeenCalled();
   });
 
   it('supports custom className', () => {
-    render(<WebButton label="Custom" className="my-class" />);
+    render(<Button className="my-class">Custom</Button>);
     const btn = screen.getByRole('button', { name: 'Custom' });
 
-    expect(btn).toHaveClass('my-class');
+    expect(btn.className).toContain('my-class');
   });
 
   it('uses the provided type', () => {
-    render(<WebButton label="Submit" type="submit" />);
+    render(<Button type="submit">Submit</Button>);
     const btn = screen.getByRole('button', { name: 'Submit' });
 
     expect(btn).toHaveAttribute('type', 'submit');
+  });
+
+  it('renders left and right icons', () => {
+    render(
+      <Button
+        leftIcon={<span data-testid="left-icon" />}
+        rightIcon={<span data-testid="right-icon" />}
+      >
+        Icon
+      </Button>,
+    );
+
+    expect(screen.getByTestId('left-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('right-icon')).toBeInTheDocument();
+  });
+
+  it('does not render icons when loading', () => {
+    render(
+      <Button
+        loading
+        leftIcon={<span data-testid="left-icon" />}
+        rightIcon={<span data-testid="right-icon" />}
+      >
+        Icon
+      </Button>,
+    );
+
+    expect(screen.queryByTestId('left-icon')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('right-icon')).not.toBeInTheDocument();
   });
 });

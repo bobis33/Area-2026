@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react';
+import { FiPlus, FiTrash, FiArrowRight, FiX } from 'react-icons/fi';
 import { get, post, del } from '@/services/api';
 import { getAuthToken, getUser } from '@/utils/storage';
-import { ServiceIcon, ActionReactionIcon } from '@/components/icons';
-import { FaTrash } from 'react-icons/fa';
-import './Area.css';
+import { ServiceIcon } from '@/components/icons';
+import {
+  PageLayout,
+  PageHeader,
+  ContentGrid,
+  Card,
+  Button,
+  Input,
+} from '@/components/ui';
+import styles from './Area.module.css';
 
 interface Area {
   id: number;
@@ -29,13 +37,23 @@ interface Area {
 interface ActionDefinition {
   service: string;
   type: string;
+  oauth: boolean;
   parameters: string | Record<string, any>;
 }
 
 interface ReactionDefinition {
   service: string;
   type: string;
+  oauth: boolean;
   parameters: string | Record<string, any>;
+}
+
+interface ParameterField {
+  name: string;
+  type: string;
+  description: string;
+  example?: string;
+  optional?: boolean;
 }
 
 export default function Area() {
@@ -49,7 +67,6 @@ export default function Area() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedArea, setSelectedArea] = useState<Area | null>(null);
 
   // Form state
   const [areaName, setAreaName] = useState('');
@@ -61,7 +78,7 @@ export default function Area() {
   const [actionParams, setActionParams] = useState<Record<string, any>>({});
   const [reactionParams, setReactionParams] = useState<Record<string, any>>({});
 
-  // Two-step selection state
+  // Selection state
   const [selectionStep, setSelectionStep] = useState<'service' | 'item'>(
     'service',
   );
@@ -84,10 +101,6 @@ export default function Area() {
       setLoading(true);
       setError(null);
       const token = getAuthToken();
-      const user = getUser();
-
-      console.log('Token:', token ? 'exists' : 'null');
-      console.log('User:', user);
 
       if (!token) {
         throw new Error('Not authenticated - please login again');
@@ -98,10 +111,6 @@ export default function Area() {
         get<ActionDefinition[]>('/areas/actions', token),
         get<ReactionDefinition[]>('/areas/reactions', token),
       ]);
-
-      console.log('Areas loaded:', areasData);
-      console.log('Actions loaded:', actionsData);
-      console.log('Reactions loaded:', reactionsData);
 
       setAreas(areasData);
       setAvailableActions(actionsData);
@@ -118,20 +127,21 @@ export default function Area() {
 
   const handleCreateArea = async () => {
     if (!areaName || !selectedAction || !selectedReaction) {
-      alert('Please fill all fields');
+      setError('Please fill in all required fields');
       return;
     }
 
     try {
+      setLoading(true);
+      setError(null);
       const token = getAuthToken();
-      if (!token) {
+      const user = getUser();
+
+      if (!token || !user) {
         throw new Error('Not authenticated');
       }
 
-      // Get user ID from storage
-      const user = getUser();
-      const userId = user?.id;
-
+      const userId = typeof user === 'object' && 'id' in user ? user.id : null;
       if (!userId) {
         throw new Error('User ID not found');
       }
@@ -142,50 +152,47 @@ export default function Area() {
         action: {
           service: selectedAction.service,
           type: selectedAction.type,
+          oauth: selectedAction.oauth,
           parameters: actionParams,
         },
         reaction: {
           service: selectedReaction.service,
           type: selectedReaction.type,
+          oauth: selectedReaction.oauth,
           parameters: reactionParams,
         },
       };
 
-      console.log('Creating area with payload:', payload);
-      console.log('Action params:', actionParams);
-      console.log('Reaction params:', reactionParams);
-
       await post('/areas', payload, token);
-
-      alert('Area created successfully!');
+      await loadData();
       setShowCreateModal(false);
       resetForm();
-      loadData();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to create area';
-      alert(`Error: ${errorMessage}`);
+        err instanceof Error ? err.message : 'Failed to create automation';
+      setError(errorMessage);
+      console.error('Error creating area:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDeleteArea = async (areaId: number) => {
-    if (!window.confirm('Are you sure you want to delete this area?')) {
+  const handleDeleteArea = async (id: number) => {
+    if (!window.confirm('Are you sure you want to delete this automation?')) {
       return;
     }
 
     try {
       const token = getAuthToken();
-      if (!token) {
-        throw new Error('Not authenticated');
-      }
+      if (!token) throw new Error('Not authenticated');
 
-      await del(`/areas/${areaId}`, token);
-      alert('Area deleted successfully!');
-      loadData();
+      await del(`/areas/${id}`, token);
+      await loadData();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Failed to delete area';
-      alert(`Error: ${errorMessage}`);
+        err instanceof Error ? err.message : 'Failed to delete automation';
+      setError(errorMessage);
+      console.error('Error deleting area:', err);
     }
   };
 
@@ -195,6 +202,7 @@ export default function Area() {
     setSelectedReaction(null);
     setActionParams({});
     setReactionParams({});
+
     setSelectionStep('service');
     setSelectionMode(null);
     setSelectedActionService(null);
@@ -209,7 +217,7 @@ export default function Area() {
   const handleServiceSelect = (service: string) => {
     if (selectionMode === 'action') {
       setSelectedActionService(service);
-    } else if (selectionMode === 'reaction') {
+    } else {
       setSelectedReactionService(service);
     }
     setSelectionStep('item');
@@ -219,252 +227,268 @@ export default function Area() {
     setSelectedAction(action);
     setActionParams({});
     setSelectionMode(null);
-    setSelectionStep('service');
   };
 
   const handleReactionSelect = (reaction: ReactionDefinition) => {
     setSelectedReaction(reaction);
     setReactionParams({});
     setSelectionMode(null);
-    setSelectionStep('service');
   };
 
-  const goBackToServiceSelection = () => {
-    setSelectionStep('service');
-    if (selectionMode === 'action') {
-      setSelectedActionService(null);
-    } else if (selectionMode === 'reaction') {
-      setSelectedReactionService(null);
+  const parseParameters = (
+    params: string | Record<string, any>,
+  ): Record<string, any> => {
+    if (typeof params === 'string') {
+      try {
+        return JSON.parse(params);
+      } catch {
+        return {};
+      }
     }
+    return params;
   };
 
-  const parseParameters = (paramsString: string) => {
-    try {
-      return JSON.parse(paramsString);
-    } catch {
-      return {};
-    }
+  const getParameterFields = (
+    params: string | Record<string, any>,
+  ): ParameterField[] => {
+    const parsed = parseParameters(params);
+    return Object.entries(parsed).map(([name, config]: [string, any]) => ({
+      name,
+      type: config.type || 'string',
+      description: config.description || '',
+      example: config.example,
+      optional: config.optional || false,
+    }));
   };
 
-  const getParameterFields = (parametersStr: string | object) => {
-    try {
-      // If parametersStr is already an object, use it directly
-      const params =
-        typeof parametersStr === 'string'
-          ? JSON.parse(parametersStr)
-          : parametersStr;
-
-      return Object.entries(params).map(([key, value]: [string, any]) => ({
-        name: key,
-        type: value.type || 'string',
-        description: value.description || '',
-        example: value.example || '',
-        optional: value.optional || false,
-      }));
-    } catch {
-      return [];
-    }
-  };
-
-  // Group actions by service
   const groupActionsByService = () => {
     const grouped: Record<string, ActionDefinition[]> = {};
-
     availableActions.forEach((action) => {
       if (!grouped[action.service]) {
         grouped[action.service] = [];
       }
       grouped[action.service].push(action);
     });
-
     return grouped;
   };
 
-  // Group reactions by service
   const groupReactionsByService = () => {
     const grouped: Record<string, ReactionDefinition[]> = {};
-
     availableReactions.forEach((reaction) => {
       if (!grouped[reaction.service]) {
         grouped[reaction.service] = [];
       }
       grouped[reaction.service].push(reaction);
     });
-
     return grouped;
   };
 
+  if (loading && areas.length === 0) {
+    return (
+      <PageLayout maxWidth="xl">
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Loading automations...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
-    <div className="area-container">
-      <div className="area-content">
-        <header className="area-header">
-          <h1 className="area-title">Your Automations</h1>
-          <p className="area-subtitle">
-            Create and manage your action → reaction automations
-          </p>
-          <button
+    <PageLayout maxWidth="xl">
+      <PageHeader
+        title="Your Automations"
+        subtitle="Create and manage your action → reaction automations"
+        action={
+          <Button
+            variant="primary"
+            leftIcon={<FiPlus />}
             onClick={() => setShowCreateModal(true)}
-            className="btn-create-area"
           >
-            + Create New Automation
-          </button>
-        </header>
+            Create Automation
+          </Button>
+        }
+      />
 
-        {loading && (
-          <div className="loading-container">
-            <div className="spinner"></div>
-            <p className="loading-text">Loading automations...</p>
-          </div>
-        )}
+      {error && (
+        <div className={styles.errorBanner}>
+          <p>{error}</p>
+          <Button variant="ghost" size="sm" onClick={() => setError(null)}>
+            Dismiss
+          </Button>
+        </div>
+      )}
 
-        {error && !loading && (
-          <div className="error-container">
-            <p className="error-text">❌ {error}</p>
-            <button onClick={loadData} className="btn-retry">
-              Try Again
-            </button>
-          </div>
-        )}
-
-        {!loading && !error && areas.length === 0 && (
-          <div className="empty-container">
-            <p className="empty-text">
-              No automations yet. Create your first one!
+      {areas.length === 0 ? (
+        <Card padding="lg">
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>
+              <FiPlus size={48} />
+            </div>
+            <h3 className={styles.emptyTitle}>No automations yet</h3>
+            <p className={styles.emptyText}>
+              Create your first automation to connect actions and reactions
             </p>
+            <Button
+              variant="primary"
+              leftIcon={<FiPlus />}
+              onClick={() => setShowCreateModal(true)}
+            >
+              Create Your First Automation
+            </Button>
           </div>
-        )}
-
-        {!loading && !error && areas.length > 0 && (
-          <section className="area-section">
-            <h2 className="section-title">Your Automations</h2>
-            <div className="automations-list">
-              {areas.map((area) => (
-                <div
-                  key={area.id}
-                  className="automation-card"
-                  onClick={() => setSelectedArea(area)}
-                >
-                  <div className="automation-header">
-                    <h3 className="automation-name">{area.name}</h3>
-                    <div className="automation-actions">
-                      <span
-                        className={`status-badge ${area.is_active ? 'status-active' : 'status-inactive'}`}
-                      >
-                        {area.is_active ? 'Active' : 'Inactive'}
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteArea(area.id);
-                        }}
-                        className="btn-delete-area"
-                        title="Delete automation"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
+        </Card>
+      ) : (
+        <ContentGrid columns={2} gap="lg">
+          {areas.map((area) => (
+            <Card key={area.id} padding="lg" hoverable>
+              <div className={styles.automationCard}>
+                <div className={styles.automationHeader}>
+                  <h3 className={styles.automationName}>{area.name}</h3>
+                  <div className={styles.automationActions}>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        area.is_active
+                          ? styles.statusActive
+                          : styles.statusInactive
+                      }`}
+                    >
+                      {area.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteArea(area.id);
+                      }}
+                      className={styles.deleteButton}
+                      title="Delete automation"
+                    >
+                      <FiTrash />
+                    </button>
                   </div>
-                  <div className="automation-flow">
-                    <div className="flow-item">
-                      <span className="flow-label">Action</span>
-                      <p className="flow-text">
+                </div>
+
+                <div className={styles.automationFlow}>
+                  <div className={styles.flowItem}>
+                    <div className={styles.flowIcon}>
+                      <ServiceIcon service={area.action.service} size={32} />
+                    </div>
+                    <div className={styles.flowContent}>
+                      <span className={styles.flowLabel}>Action</span>
+                      <p className={styles.flowText}>
                         {area.action.service}.{area.action.type}
                       </p>
                     </div>
-                    <div className="flow-arrow">→</div>
-                    <div className="flow-item">
-                      <span className="flow-label">Reaction</span>
-                      <p className="flow-text">
+                  </div>
+
+                  <div className={styles.flowArrow}>
+                    <FiArrowRight />
+                  </div>
+
+                  <div className={styles.flowItem}>
+                    <div className={styles.flowIcon}>
+                      <ServiceIcon service={area.reaction.service} size={32} />
+                    </div>
+                    <div className={styles.flowContent}>
+                      <span className={styles.flowLabel}>Reaction</span>
+                      <p className={styles.flowText}>
                         {area.reaction.service}.{area.reaction.type}
                       </p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
-      </div>
 
-      {/* Create Area Modal */}
+                <div className={styles.automationFooter}>
+                  <span className={styles.createdDate}>
+                    Created {new Date(area.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </ContentGrid>
+      )}
+
+      {/* Create Modal */}
       {showCreateModal && (
         <div
-          className="modal-overlay"
-          onClick={() => {
-            setShowCreateModal(false);
-            resetForm();
-          }}
+          className={styles.modalOverlay}
+          onClick={() => setShowCreateModal(false)}
         >
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 className="modal-title">Create New Automation</h2>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>Create New Automation</h2>
               <button
-                className="modal-close"
+                className={styles.modalClose}
                 onClick={() => {
                   setShowCreateModal(false);
                   resetForm();
                 }}
               >
-                ✕
+                <FiX size={24} />
               </button>
             </div>
-            <div className="modal-body">
-              <div className="form-section">
-                <label className="form-label">Automation Name</label>
-                <input
-                  type="text"
-                  value={areaName}
-                  onChange={(e) => setAreaName(e.target.value)}
-                  placeholder="e.g., Daily Discord Notification"
-                  className="form-input"
-                />
-              </div>
 
-              <div className="form-section">
-                <label className="form-label">Select Action (Trigger)</label>
+            <div className={styles.modalBody}>
+              <Input
+                label="Automation Name"
+                placeholder="e.g., Daily Discord Notification"
+                value={areaName}
+                onChange={(e) => setAreaName(e.target.value)}
+                fullWidth
+                required
+              />
+
+              <div className={styles.formSection}>
+                <label className={styles.formLabel}>
+                  Action (Trigger) <span className={styles.required}>*</span>
+                </label>
                 {selectedAction ? (
-                  <div className="selected-item-display">
-                    <div className="selected-item-icon">
-                      <ServiceIcon service={selectedAction.service} size={28} />
+                  <div className={styles.selectedItem}>
+                    <div className={styles.selectedItemIcon}>
+                      <ServiceIcon service={selectedAction.service} size={32} />
                     </div>
-                    <div className="selected-item-info">
-                      <span className="selected-service">
+                    <div className={styles.selectedItemInfo}>
+                      <span className={styles.selectedService}>
                         {selectedAction.service}
                       </span>
-                      <span className="selected-type">
+                      <span className={styles.selectedType}>
                         {selectedAction.type}
                       </span>
                     </div>
-                    <button
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       onClick={() => openServiceSelection('action')}
-                      className="btn-change"
                     >
                       Change
-                    </button>
+                    </Button>
                   </div>
                 ) : (
-                  <button
+                  <Button
+                    variant="secondary"
+                    fullWidth
+                    leftIcon={<FiPlus />}
                     onClick={() => openServiceSelection('action')}
-                    className="btn-select-service"
                   >
-                    + Select Action
-                  </button>
+                    Select Action
+                  </Button>
                 )}
 
-                {selectedAction && (
-                  <div className="params-container">
-                    <h4 className="params-title">Action Parameters</h4>
-                    {getParameterFields(selectedAction.parameters).map(
-                      (field) => (
-                        <div key={field.name} className="param-field">
-                          <label className="param-label">
-                            {field.name}{' '}
-                            {!field.optional && (
-                              <span className="required">*</span>
-                            )}
-                          </label>
-                          <input
-                            type="text"
+                {selectedAction &&
+                  getParameterFields(selectedAction.parameters).length > 0 && (
+                    <div className={styles.paramsContainer}>
+                      <h4 className={styles.paramsTitle}>Action Parameters</h4>
+                      {getParameterFields(selectedAction.parameters).map(
+                        (field) => (
+                          <Input
+                            key={field.name}
+                            label={field.name}
+                            placeholder={field.example || field.description}
+                            helperText={field.description}
                             value={actionParams[field.name] || ''}
                             onChange={(e) =>
                               setActionParams({
@@ -472,67 +496,68 @@ export default function Area() {
                                 [field.name]: e.target.value,
                               })
                             }
-                            placeholder={field.example || field.description}
-                            className="param-input"
+                            required={!field.optional}
+                            fullWidth
                           />
-                          <small className="param-description">
-                            {field.description}
-                          </small>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                )}
+                        ),
+                      )}
+                    </div>
+                  )}
               </div>
 
-              <div className="form-section">
-                <label className="form-label">Select Reaction (Response)</label>
+              <div className={styles.formSection}>
+                <label className={styles.formLabel}>
+                  Reaction (Response) <span className={styles.required}>*</span>
+                </label>
                 {selectedReaction ? (
-                  <div className="selected-item-display">
-                    <div className="selected-item-icon">
+                  <div className={styles.selectedItem}>
+                    <div className={styles.selectedItemIcon}>
                       <ServiceIcon
                         service={selectedReaction.service}
-                        size={28}
+                        size={32}
                       />
                     </div>
-                    <div className="selected-item-info">
-                      <span className="selected-service">
+                    <div className={styles.selectedItemInfo}>
+                      <span className={styles.selectedService}>
                         {selectedReaction.service}
                       </span>
-                      <span className="selected-type">
+                      <span className={styles.selectedType}>
                         {selectedReaction.type}
                       </span>
                     </div>
-                    <button
+                    <Button
+                      variant="secondary"
+                      size="sm"
                       onClick={() => openServiceSelection('reaction')}
-                      className="btn-change"
                     >
                       Change
-                    </button>
+                    </Button>
                   </div>
                 ) : (
-                  <button
+                  <Button
+                    variant="secondary"
+                    fullWidth
+                    leftIcon={<FiPlus />}
                     onClick={() => openServiceSelection('reaction')}
-                    className="btn-select-service"
                   >
-                    + Select Reaction
-                  </button>
+                    Select Reaction
+                  </Button>
                 )}
 
-                {selectedReaction && (
-                  <div className="params-container">
-                    <h4 className="params-title">Reaction Parameters</h4>
-                    {getParameterFields(selectedReaction.parameters).map(
-                      (field) => (
-                        <div key={field.name} className="param-field">
-                          <label className="param-label">
-                            {field.name}{' '}
-                            {!field.optional && (
-                              <span className="required">*</span>
-                            )}
-                          </label>
-                          <input
-                            type="text"
+                {selectedReaction &&
+                  getParameterFields(selectedReaction.parameters).length >
+                    0 && (
+                    <div className={styles.paramsContainer}>
+                      <h4 className={styles.paramsTitle}>
+                        Reaction Parameters
+                      </h4>
+                      {getParameterFields(selectedReaction.parameters).map(
+                        (field) => (
+                          <Input
+                            key={field.name}
+                            label={field.name}
+                            placeholder={field.example || field.description}
+                            helperText={field.description}
                             value={reactionParams[field.name] || ''}
                             onChange={(e) =>
                               setReactionParams({
@@ -540,241 +565,136 @@ export default function Area() {
                                 [field.name]: e.target.value,
                               })
                             }
-                            placeholder={field.example || field.description}
-                            className="param-input"
+                            required={!field.optional}
+                            fullWidth
                           />
-                          <small className="param-description">
-                            {field.description}
-                          </small>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="modal-actions">
-                <button
-                  onClick={() => {
-                    setShowCreateModal(false);
-                    resetForm();
-                  }}
-                  className="btn-cancel"
-                >
-                  Cancel
-                </button>
-                <button onClick={handleCreateArea} className="btn-submit">
-                  Create Automation
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Area Details Modal */}
-      {selectedArea && (
-        <div className="modal-overlay" onClick={() => setSelectedArea(null)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 className="modal-title">{selectedArea.name}</h2>
-              <button
-                className="modal-close"
-                onClick={() => setSelectedArea(null)}
-              >
-                ✕
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="modal-section">
-                <label className="modal-label">Status</label>
-                <span
-                  className={`status-badge ${selectedArea.is_active ? 'status-active' : 'status-inactive'}`}
-                >
-                  {selectedArea.is_active ? 'Active' : 'Inactive'}
-                </span>
-              </div>
-              <div className="modal-section">
-                <label className="modal-label">Action Service</label>
-                <p className="modal-value">{selectedArea.action.service}</p>
-              </div>
-              <div className="modal-section">
-                <label className="modal-label">Action Type</label>
-                <p className="modal-value">{selectedArea.action.type}</p>
-              </div>
-              <div className="modal-section">
-                <label className="modal-label">Action Parameters</label>
-                <pre className="modal-code">
-                  {JSON.stringify(
-                    parseParameters(selectedArea.action.parameters),
-                    null,
-                    2,
+                        ),
+                      )}
+                    </div>
                   )}
-                </pre>
-              </div>
-              <div className="modal-section">
-                <label className="modal-label">Reaction Service</label>
-                <p className="modal-value">{selectedArea.reaction.service}</p>
-              </div>
-              <div className="modal-section">
-                <label className="modal-label">Reaction Type</label>
-                <p className="modal-value">{selectedArea.reaction.type}</p>
-              </div>
-              <div className="modal-section">
-                <label className="modal-label">Reaction Parameters</label>
-                <pre className="modal-code">
-                  {JSON.stringify(
-                    parseParameters(selectedArea.reaction.parameters),
-                    null,
-                    2,
-                  )}
-                </pre>
-              </div>
-              <div className="modal-section">
-                <label className="modal-label">Created At</label>
-                <p className="modal-value">
-                  {new Date(selectedArea.created_at).toLocaleString()}
-                </p>
               </div>
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* Service Selection Modal */}
-      {selectionMode && (
-        <div className="modal-overlay" onClick={() => setSelectionMode(null)}>
-          <div
-            className="modal-content selection-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-header">
-              <h2 className="modal-title">
-                {selectionStep === 'service'
-                  ? `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'} Service`
-                  : selectionStep === 'item' && selectionMode === 'action'
-                    ? `Select Action from ${selectedActionService ? selectedActionService.charAt(0).toUpperCase() + selectedActionService.slice(1) : ''}`
-                    : `Select Reaction from ${selectedReactionService ? selectedReactionService.charAt(0).toUpperCase() + selectedReactionService.slice(1) : ''}`}
-              </h2>
-              <button
-                className="modal-close"
+            <div className={styles.modalFooter}>
+              <Button
+                variant="ghost"
                 onClick={() => {
-                  setSelectionMode(null);
-                  setSelectionStep('service');
+                  setShowCreateModal(false);
+                  resetForm();
                 }}
               >
-                ✕
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleCreateArea}
+                disabled={
+                  !areaName || !selectedAction || !selectedReaction || loading
+                }
+                loading={loading}
+              >
+                Create Automation
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Selection Modal */}
+      {selectionMode && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setSelectionMode(null)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h2 className={styles.modalTitle}>
+                {selectionStep === 'service'
+                  ? `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'} Service`
+                  : `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'}`}
+              </h2>
+              <button
+                className={styles.modalClose}
+                onClick={() => setSelectionMode(null)}
+              >
+                <FiX size={24} />
               </button>
             </div>
-            <div className="modal-body">
-              {selectionStep === 'service' && (
-                <div className="selection-services-grid">
-                  {Object.entries(
+
+            <div className={styles.modalBody}>
+              {selectionStep === 'service' ? (
+                <div className={styles.serviceGrid}>
+                  {Object.keys(
                     selectionMode === 'action'
                       ? groupActionsByService()
                       : groupReactionsByService(),
-                  ).map(([service, items]) => (
-                    <div
+                  ).map((service) => (
+                    <button
                       key={service}
-                      className="selection-service-card"
+                      className={styles.serviceCard}
                       onClick={() => handleServiceSelect(service)}
                     >
-                      <div className="service-icon">
-                        <ServiceIcon service={service} size={32} />
-                      </div>
-                      <h3 className="service-name">
-                        {service.charAt(0).toUpperCase() + service.slice(1)}
-                      </h3>
-                      <p className="service-count">
-                        {items.length}{' '}
-                        {selectionMode === 'action' ? 'action' : 'reaction'}
-                        {items.length !== 1 ? 's' : ''}
-                      </p>
-                    </div>
+                      <ServiceIcon service={service} size={48} />
+                      <span className={styles.serviceName}>{service}</span>
+                    </button>
                   ))}
                 </div>
-              )}
-
-              {selectionStep === 'item' && (
-                <>
-                  <button
-                    onClick={goBackToServiceSelection}
-                    className="btn-back"
-                  >
-                    ← Back to Services
-                  </button>
-                  <div className="items-list">
-                    {selectionMode === 'action' &&
-                      selectedActionService &&
-                      groupActionsByService()[selectedActionService]?.map(
-                        (action) => (
-                          <div
-                            key={`${action.service}.${action.type}`}
-                            className="item-card"
-                            onClick={() => handleActionSelect(action)}
-                          >
-                            <div className="item-header">
-                              <div className="item-icon">
-                                <ActionReactionIcon
-                                  type={action.type}
-                                  size={24}
-                                />
-                              </div>
-                              <h4 className="item-name">{action.type}</h4>
-                            </div>
-                            <p className="item-description">
-                              {typeof action.parameters === 'string'
-                                ? `Parameters: ${action.parameters}`
-                                : Object.keys(
-                                      typeof action.parameters === 'object'
-                                        ? action.parameters
-                                        : {},
-                                    ).length > 0
-                                  ? `${Object.keys(typeof action.parameters === 'object' ? action.parameters : {}).length} parameter(s) required`
-                                  : 'No parameters required'}
-                            </p>
-                          </div>
-                        ),
-                      )}
-                    {selectionMode === 'reaction' &&
-                      selectedReactionService &&
-                      groupReactionsByService()[selectedReactionService]?.map(
-                        (reaction) => (
-                          <div
-                            key={`${reaction.service}.${reaction.type}`}
-                            className="item-card"
-                            onClick={() => handleReactionSelect(reaction)}
-                          >
-                            <div className="item-header">
-                              <div className="item-icon">
-                                <ActionReactionIcon
-                                  type={reaction.type}
-                                  size={24}
-                                />
-                              </div>
-                              <h4 className="item-name">{reaction.type}</h4>
-                            </div>
-                            <p className="item-description">
-                              {typeof reaction.parameters === 'string'
-                                ? `Parameters: ${reaction.parameters}`
-                                : Object.keys(
-                                      typeof reaction.parameters === 'object'
-                                        ? reaction.parameters
-                                        : {},
-                                    ).length > 0
-                                  ? `${Object.keys(typeof reaction.parameters === 'object' ? reaction.parameters : {}).length} parameter(s) required`
-                                  : 'No parameters required'}
-                            </p>
-                          </div>
-                        ),
-                      )}
-                  </div>
-                </>
+              ) : (
+                <div className={styles.itemGrid}>
+                  {selectionMode === 'action' &&
+                    selectedActionService &&
+                    groupActionsByService()[selectedActionService]?.map(
+                      (action) => (
+                        <button
+                          key={`${action.service}-${action.type}`}
+                          className={styles.itemCard}
+                          onClick={() => handleActionSelect(action)}
+                        >
+                          <span className={styles.itemType}>{action.type}</span>
+                          <span className={styles.itemService}>
+                            {action.service}
+                          </span>
+                        </button>
+                      ),
+                    )}
+                  {selectionMode === 'reaction' &&
+                    selectedReactionService &&
+                    groupReactionsByService()[selectedReactionService]?.map(
+                      (reaction) => (
+                        <button
+                          key={`${reaction.service}-${reaction.type}`}
+                          className={styles.itemCard}
+                          onClick={() => handleReactionSelect(reaction)}
+                        >
+                          <span className={styles.itemType}>
+                            {reaction.type}
+                          </span>
+                          <span className={styles.itemService}>
+                            {reaction.service}
+                          </span>
+                        </button>
+                      ),
+                    )}
+                </div>
               )}
             </div>
+
+            {selectionStep === 'item' && (
+              <div className={styles.modalFooter}>
+                <Button
+                  variant="ghost"
+                  onClick={() => setSelectionStep('service')}
+                >
+                  Back to Services
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

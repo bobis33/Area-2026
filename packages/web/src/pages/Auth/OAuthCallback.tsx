@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { handleOAuthCallback } from '@/services/auth.service';
 import { useAuth } from '@/hooks/useAuth';
 import { consumeOAuthRedirectPath } from '@/utils/storage';
-import './Auth.css';
+import styles from './Auth.module.css';
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
@@ -46,22 +46,33 @@ export default function OAuthCallback() {
   }, [searchParams, navigate, refreshAuth]);
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>
+    <div className={styles.authContainer}>
+      <div className={styles.authBackground}>
+        <div className={styles.bgCircle1}></div>
+        <div className={styles.bgCircle2}></div>
+        <div className={styles.bgCircle3}></div>
+      </div>
+
+      <div className={styles.authCard}>
+        <div className={styles.authLogo}>
+          <img src="/logo.svg" alt="AREA" />
+        </div>
+
+        <div className={styles.authHeader}>
+          <h1 className={styles.authTitle}>
             {status === 'processing' && 'Processing Authentication...'}
             {status === 'success' && 'Authentication Successful'}
             {status === 'error' && 'Authentication Failed'}
           </h1>
-          <p>
+          <p className={styles.authSubtitle}>
             {status === 'processing' && 'Please wait while we sign you in'}
             {status === 'success' && 'Redirecting you to the application...'}
             {status === 'error' && 'An error occurred'}
           </p>
         </div>
-        <div className="loading-spinner">
-          <div className="spinner"></div>
+
+        <div className={styles.loadingSpinner}>
+          <div className={styles.spinner}></div>
         </div>
       </div>
     </div>

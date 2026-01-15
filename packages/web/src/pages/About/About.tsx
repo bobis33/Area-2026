@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import {
+  FiServer,
+  FiClock,
+  FiZap,
+  FiPackage,
+  FiActivity,
+  FiRefreshCw,
+} from 'react-icons/fi';
 import { get } from '@/services/api';
 import type { AboutResponse } from '@/types';
-import { FaArrowLeft } from 'react-icons/fa';
-import './About.css';
+import { PageLayout, PageHeader, ContentGrid, Card } from '@/components/ui';
+import { ServiceIcon } from '@/components/icons';
+import styles from './About.module.css';
 
 export default function About() {
   const [aboutData, setAboutData] = useState<AboutResponse | null>(null);
@@ -38,33 +46,6 @@ export default function About() {
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) {
-    return (
-      <div className="about-container">
-        <div className="loading">Loading server information...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="about-container">
-        <div className="error">
-          <h2>Error</h2>
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!aboutData) {
-    return (
-      <div className="about-container">
-        <div className="error">No data available</div>
-      </div>
-    );
-  }
-
   const formatTimestamp = (timestamp: number) => {
     return new Date(timestamp * 1000).toLocaleString();
   };
@@ -84,103 +65,209 @@ export default function About() {
     return parts.join(' ') || '0s';
   };
 
+  if (loading) {
+    return (
+      <PageLayout maxWidth="xl">
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
+          <p className={styles.loadingText}>Loading server information...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  if (error || !aboutData) {
+    return (
+      <PageLayout maxWidth="xl">
+        <Card padding="lg">
+          <div className={styles.errorState}>
+            <div className={styles.errorIcon}>
+              <FiServer />
+            </div>
+            <h2 className={styles.errorTitle}>Unable to load server info</h2>
+            <p className={styles.errorText}>{error || 'No data available'}</p>
+          </div>
+        </Card>
+      </PageLayout>
+    );
+  }
+
   return (
-    <div className="about-container">
-      <Link to="/" className="back-to-home">
-        <FaArrowLeft /> Back to Home
-      </Link>
-      <h1>About AREA Server</h1>
+    <PageLayout maxWidth="xl">
+      <PageHeader
+        title="About AREA"
+        subtitle="Server information, available services, and real-time status"
+      />
 
-      <section className="about-section">
-        <h2>Client Information</h2>
-        <div className="info-card">
-          <div className="info-row">
-            <span className="info-label">Host:</span>
-            <span className="info-value">{aboutData.client.host}</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="about-section">
-        <h2>Server Information</h2>
-        <div className="info-card">
-          <div className="info-row">
-            <span className="info-label">Current Time:</span>
-            <span className="info-value">
-              {formatTimestamp(aboutData.server.current_time)}
-            </span>
-          </div>
-          {aboutData.server.uptime !== undefined && (
-            <div className="info-row">
-              <span className="info-label">Uptime:</span>
-              <span className="info-value">
-                {formatUptime(aboutData.server.uptime)}
-              </span>
+      {/* Server Information */}
+      <Card padding="lg">
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.sectionIcon}>
+              <FiServer />
             </div>
-          )}
-          {aboutData.server.version && (
-            <div className="info-row">
-              <span className="info-label">Version:</span>
-              <span className="info-value">{aboutData.server.version}</span>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="about-section">
-        <h2>Available Services</h2>
-        {aboutData.server.services.length === 0 ||
-        !aboutData.server.services[0].name ? (
-          <div className="info-card">
-            <p className="no-services">No services configured yet</p>
+            <h2 className={styles.sectionTitle}>Server Information</h2>
           </div>
-        ) : (
-          <div className="services-grid">
-            {aboutData.server.services.map((service, index) => (
-              <div key={index} className="service-card">
-                <h3>{service.name}</h3>
 
-                <div className="service-section">
-                  <h4>Actions ({service.actions.length})</h4>
-                  {service.actions.length === 0 || !service.actions[0].name ? (
-                    <p className="empty-list">No actions available</p>
-                  ) : (
-                    <ul className="service-list">
-                      {service.actions.map((action, actionIndex) => (
-                        <li key={actionIndex}>
-                          <strong>{action.name}</strong>
-                          {action.description && (
-                            <span> - {action.description}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+          <div className={styles.infoGrid}>
+            <div className={styles.infoItem}>
+              <div className={styles.infoIcon}>
+                <FiServer />
+              </div>
+              <div className={styles.infoContent}>
+                <span className={styles.infoLabel}>Host</span>
+                <span className={styles.infoValue}>
+                  {aboutData.client.host}
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.infoItem}>
+              <div className={styles.infoIcon}>
+                <FiClock />
+              </div>
+              <div className={styles.infoContent}>
+                <span className={styles.infoLabel}>Current Time</span>
+                <span className={styles.infoValue}>
+                  {formatTimestamp(aboutData.server.current_time)}
+                </span>
+              </div>
+            </div>
+
+            {aboutData.server.uptime !== undefined && (
+              <div className={styles.infoItem}>
+                <div className={styles.infoIcon}>
+                  <FiActivity />
                 </div>
-
-                <div className="service-section">
-                  <h4>Reactions ({service.reactions.length})</h4>
-                  {service.reactions.length === 0 ||
-                  !service.reactions[0].name ? (
-                    <p className="empty-list">No reactions available</p>
-                  ) : (
-                    <ul className="service-list">
-                      {service.reactions.map((reaction, reactionIndex) => (
-                        <li key={reactionIndex}>
-                          <strong>{reaction.name}</strong>
-                          {reaction.description && (
-                            <span> - {reaction.description}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                <div className={styles.infoContent}>
+                  <span className={styles.infoLabel}>Uptime</span>
+                  <span className={styles.infoValue}>
+                    {formatUptime(aboutData.server.uptime)}
+                  </span>
                 </div>
               </div>
-            ))}
+            )}
+
+            {aboutData.server.version && (
+              <div className={styles.infoItem}>
+                <div className={styles.infoIcon}>
+                  <FiPackage />
+                </div>
+                <div className={styles.infoContent}>
+                  <span className={styles.infoLabel}>Version</span>
+                  <span className={styles.infoValue}>
+                    {aboutData.server.version}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
+        </div>
+      </Card>
+
+      {/* Available Services */}
+      <div className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div className={styles.sectionIcon}>
+            <FiPackage />
+          </div>
+          <h2 className={styles.sectionTitle}>Available Services</h2>
+          <span className={styles.sectionBadge}>
+            {aboutData.server.services.length} Services
+          </span>
+        </div>
+
+        {aboutData.server.services.length === 0 ||
+        !aboutData.server.services[0].name ? (
+          <Card padding="lg">
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>
+                <FiPackage />
+              </div>
+              <h3 className={styles.emptyTitle}>No Services Yet</h3>
+              <p className={styles.emptyText}>
+                No services are configured on the server at this time.
+              </p>
+            </div>
+          </Card>
+        ) : (
+          <ContentGrid columns={2} gap="lg">
+            {aboutData.server.services.map((service, index) => (
+              <Card key={index} padding="lg" hoverable>
+                <div className={styles.serviceCard}>
+                  <div className={styles.serviceHeader}>
+                    <div className={styles.serviceIconWrapper}>
+                      <ServiceIcon service={service.name} size={32} />
+                    </div>
+                    <h3 className={styles.serviceTitle}>{service.name}</h3>
+                  </div>
+
+                  <div className={styles.serviceSection}>
+                    <div className={styles.serviceSectionHeader}>
+                      <FiZap size={16} />
+                      <h4 className={styles.serviceSectionTitle}>Actions</h4>
+                      <span className={styles.serviceBadge}>
+                        {service.actions.length}
+                      </span>
+                    </div>
+                    {service.actions.length === 0 ||
+                    !service.actions[0].name ? (
+                      <p className={styles.emptyList}>No actions available</p>
+                    ) : (
+                      <ul className={styles.serviceList}>
+                        {service.actions.map((action, actionIndex) => (
+                          <li key={actionIndex} className={styles.serviceItem}>
+                            <span className={styles.itemName}>
+                              {action.name}
+                            </span>
+                            {action.description && (
+                              <span className={styles.itemDescription}>
+                                {action.description}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  <div className={styles.serviceSection}>
+                    <div className={styles.serviceSectionHeader}>
+                      <FiRefreshCw size={16} />
+                      <h4 className={styles.serviceSectionTitle}>Reactions</h4>
+                      <span className={styles.serviceBadge}>
+                        {service.reactions.length}
+                      </span>
+                    </div>
+                    {service.reactions.length === 0 ||
+                    !service.reactions[0].name ? (
+                      <p className={styles.emptyList}>No reactions available</p>
+                    ) : (
+                      <ul className={styles.serviceList}>
+                        {service.reactions.map((reaction, reactionIndex) => (
+                          <li
+                            key={reactionIndex}
+                            className={styles.serviceItem}
+                          >
+                            <span className={styles.itemName}>
+                              {reaction.name}
+                            </span>
+                            {reaction.description && (
+                              <span className={styles.itemDescription}>
+                                {reaction.description}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </ContentGrid>
         )}
-      </section>
-    </div>
+      </div>
+    </PageLayout>
   );
 }

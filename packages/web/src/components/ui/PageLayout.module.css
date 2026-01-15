@@ -1,0 +1,158 @@
+/**
+ * PageLayout Component Styles
+ * Uses CSS variables from @area/ui tokens (injected by ThemeProvider)
+ */
+
+/* Layout */
+.layout {
+  width: 100%;
+  padding: var(--spacing-lg);
+  margin: 0 auto;
+  min-height: calc(100vh - 70px); /* Adjust based on nav height */
+}
+
+/* Max Width Variants */
+.maxWidth-sm {
+  max-width: 640px;
+}
+
+.maxWidth-md {
+  max-width: 768px;
+}
+
+.maxWidth-lg {
+  max-width: 1024px;
+}
+
+.maxWidth-xl {
+  max-width: 1280px;
+}
+
+.maxWidth-full {
+  max-width: 100%;
+}
+
+/* Page Header */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-xs) 0;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.headerAction {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Content Grid */
+.grid {
+  display: grid;
+  width: 100%;
+}
+
+/* Grid Columns */
+.columns-1 {
+  grid-template-columns: 1fr;
+}
+
+.columns-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.columns-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.columns-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Grid Gap */
+.gap-sm {
+  gap: var(--spacing-sm);
+}
+
+.gap-md {
+  gap: var(--spacing-md);
+}
+
+.gap-lg {
+  gap: var(--spacing-lg);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .columns-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .columns-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .layout {
+    padding: var(--spacing-md);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+
+  .headerAction {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm);
+  }
+
+  .columns-2,
+  .columns-3,
+  .columns-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout {
+    padding: var(--spacing-sm);
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+  }
+}
