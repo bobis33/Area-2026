@@ -10,6 +10,7 @@ import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { useAreaCreation } from '@/hooks/useAreaCreation';
 import { ActionReactionSelector } from '@/components/area/ActionReactionSelector';
 import { SelectionModal } from '@/components/area/SelectionModal';
@@ -17,6 +18,7 @@ import { SelectionModal } from '@/components/area/SelectionModal';
 export default function CreateAreaScreen() {
   const { currentTheme } = useAppTheme();
   const { token } = useAuth();
+  const t = useTranslation();
   const {
     loading,
     submitting,
@@ -52,9 +54,9 @@ export default function CreateAreaScreen() {
     return (
       <MobileScreen safeArea>
         <View style={{ padding: 16 }}>
-          <Text variant="title">Create automation</Text>
+          <Text variant="title">{t('createArea.title')}</Text>
           <Text variant="body" color="muted" style={{ marginTop: 8 }}>
-            You must be logged in.
+            {t('createArea.mustBeLoggedIn')}
           </Text>
         </View>
       </MobileScreen>
@@ -65,19 +67,19 @@ export default function CreateAreaScreen() {
     <MobileScreen scroll safeArea keyboardAware={false}>
       <FadeInView delay={0} spring>
         <View style={styles.header}>
-          <Text variant="title">Create automation</Text>
+          <Text variant="title">{t('createArea.title')}</Text>
           <Text variant="body" color="muted">
-            Choose an action, a reaction, and fill the parameters.
+            {t('createArea.subtitle')}
           </Text>
         </View>
       </FadeInView>
 
       <SectionCard>
         <Text variant="subtitle" style={styles.nameTitle}>
-          Name
+          {t('createArea.name')}
         </Text>
         <MobileInput
-          placeholder="Auto-generated from selection"
+          placeholder={t('createArea.namePlaceholder')}
           value={name}
           onChangeText={setName}
         />
@@ -86,7 +88,7 @@ export default function CreateAreaScreen() {
       <View style={styles.spacer} />
 
       <ActionReactionSelector
-        title="Action"
+        title={t('createArea.action')}
         kind="action"
         loading={loading}
         selectedKey={selectedActionKey}
@@ -101,7 +103,7 @@ export default function CreateAreaScreen() {
       <View style={styles.spacer} />
 
       <ActionReactionSelector
-        title="Reaction"
+        title={t('createArea.reaction')}
         kind="reaction"
         loading={loading}
         selectedKey={selectedReactionKey}
@@ -119,10 +121,10 @@ export default function CreateAreaScreen() {
         <View style={styles.paramRow}>
           <View style={styles.paramLabelContainer}>
             <Text variant="subtitle" style={styles.activeTitle}>
-              Active
+              {t('createArea.active')}
             </Text>
             <Text variant="caption" color="muted">
-              Enable this automation immediately after creation
+              {t('createArea.activeDescription')}
             </Text>
           </View>
           <Switch
@@ -146,7 +148,7 @@ export default function CreateAreaScreen() {
         disabled={submitting}
         loading={submitting}
         fullWidth
-        label={submitting ? 'Creating...' : 'Create automation'}
+        label={submitting ? t('createArea.creating') : t('createArea.create')}
       />
 
       <View style={styles.footerSpacer} />

@@ -9,12 +9,14 @@ import { SectionCard } from '@/components/layout/SectionCard';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { apiService } from '@/services/api.service';
 import { User } from '@/types/api';
 
 export default function AdminScreen() {
   const { currentTheme } = useAppTheme();
   const { token } = useAuth();
+  const t = useTranslation();
 
   // Users state
   const [users, setUsers] = useState<User[]>([]);
@@ -30,7 +32,7 @@ export default function AdminScreen() {
 
   const loadUsers = async () => {
     if (!token) {
-      setError('Non authentifié');
+      setError(t('admin.notAuthenticated'));
       setLoading(false);
       return;
     }
@@ -44,7 +46,7 @@ export default function AdminScreen() {
       const errorMessage =
         err instanceof Error
           ? err.message
-          : 'Erreur lors du chargement des utilisateurs';
+          : t('admin.errorLoadingUsers');
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -53,30 +55,28 @@ export default function AdminScreen() {
 
   const handlePromoteUser = async (userId: number) => {
     if (!token) {
-      Alert.alert('Erreur', 'Non authentifié');
+      Alert.alert(t('common.error'), t('admin.notAuthenticated'));
       return;
     }
 
     Alert.alert(
-      'Promouvoir en admin',
-      'Êtes-vous sûr de vouloir promouvoir cet utilisateur en administrateur ?',
+      t('admin.promoteToAdmin'),
+      t('admin.promoteConfirm'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Promouvoir',
+          text: t('admin.promote'),
           style: 'default',
           onPress: async () => {
             try {
               setUpdatingUserId(userId);
               await apiService.updateUser(userId, { role: 'admin' }, token);
               await loadUsers(); // Refresh the list
-              Alert.alert('Succès', 'Utilisateur promu en administrateur');
+              Alert.alert(t('common.success'), t('admin.promoteSuccess'));
             } catch (err) {
               const errorMessage =
-                err instanceof Error
-                  ? err.message
-                  : 'Erreur lors de la promotion';
-              Alert.alert('Erreur', errorMessage);
+                err instanceof Error ? err.message : t('admin.promoteError');
+              Alert.alert(t('common.error'), errorMessage);
             } finally {
               setUpdatingUserId(null);
             }
@@ -88,30 +88,28 @@ export default function AdminScreen() {
 
   const handleDemoteUser = async (userId: number) => {
     if (!token) {
-      Alert.alert('Erreur', 'Non authentifié');
+      Alert.alert(t('common.error'), t('admin.notAuthenticated'));
       return;
     }
 
     Alert.alert(
-      'Rétrograder en utilisateur',
-      'Êtes-vous sûr de vouloir rétrograder cet administrateur en utilisateur ?',
+      t('admin.demoteToUser'),
+      t('admin.demoteConfirm'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Rétrograder',
+          text: t('admin.demote'),
           style: 'default',
           onPress: async () => {
             try {
               setUpdatingUserId(userId);
               await apiService.updateUser(userId, { role: 'user' }, token);
               await loadUsers(); // Refresh the list
-              Alert.alert('Succès', 'Administrateur rétrogradé en utilisateur');
+              Alert.alert(t('common.success'), t('admin.demoteSuccess'));
             } catch (err) {
               const errorMessage =
-                err instanceof Error
-                  ? err.message
-                  : 'Erreur lors de la rétrogradation';
-              Alert.alert('Erreur', errorMessage);
+                err instanceof Error ? err.message : t('admin.demoteError');
+              Alert.alert(t('common.error'), errorMessage);
             } finally {
               setUpdatingUserId(null);
             }
@@ -123,30 +121,28 @@ export default function AdminScreen() {
 
   const handleRevokeUser = async (userId: number) => {
     if (!token) {
-      Alert.alert('Erreur', 'Non authentifié');
+      Alert.alert(t('common.error'), t('admin.notAuthenticated'));
       return;
     }
 
     Alert.alert(
-      "Révoquer l'accès",
-      'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.',
+      t('admin.deleteUser'),
+      t('admin.deleteConfirm'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Supprimer',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             try {
               setDeletingUserId(userId);
               await apiService.deleteUser(userId, token);
               await loadUsers(); // Refresh the list
-              Alert.alert('Succès', 'Utilisateur supprimé');
+              Alert.alert(t('common.success'), t('admin.deleteSuccess'));
             } catch (err) {
               const errorMessage =
-                err instanceof Error
-                  ? err.message
-                  : 'Erreur lors de la suppression';
-              Alert.alert('Erreur', errorMessage);
+                err instanceof Error ? err.message : t('admin.deleteError');
+              Alert.alert(t('common.error'), errorMessage);
             } finally {
               setDeletingUserId(null);
             }
@@ -162,10 +158,10 @@ export default function AdminScreen() {
       <FadeInView delay={0} spring>
         <View style={styles.header}>
           <Text variant="title" style={styles.title}>
-            Admin
+            {t('admin.title')}
           </Text>
           <Text variant="body" color="muted" style={styles.subtitle}>
-            Manage users and their roles
+            {t('admin.users')}
           </Text>
         </View>
       </FadeInView>
@@ -175,11 +171,11 @@ export default function AdminScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text variant="subtitle" style={styles.sectionTitle}>
-              Members & roles
+              {t('admin.users')}
             </Text>
             {!loading && (
               <MobileButton
-                label="Refresh"
+                label={t('admin.refresh')}
                 onPress={loadUsers}
                 variant="ghost"
                 style={styles.refreshButton}
@@ -194,7 +190,7 @@ export default function AdminScreen() {
                   color={currentTheme.colors.primary}
                 />
                 <Text variant="body" color="muted" style={styles.loadingText}>
-                  Chargement des utilisateurs...
+                  {t('admin.loadingUsers')}
                 </Text>
               </View>
             ) : error ? (
@@ -203,7 +199,7 @@ export default function AdminScreen() {
                   {error}
                 </Text>
                 <MobileButton
-                  label="Réessayer"
+                  label={t('admin.retry')}
                   onPress={loadUsers}
                   variant="primary"
                   fullWidth
@@ -213,7 +209,7 @@ export default function AdminScreen() {
             ) : users.length === 0 ? (
               <View style={styles.emptyContainer}>
                 <Text variant="body" color="muted" style={styles.emptyText}>
-                  Aucun utilisateur trouvé
+                  {t('admin.noUsersFound')}
                 </Text>
               </View>
             ) : (
@@ -259,11 +255,11 @@ export default function AdminScreen() {
                           label={
                             updatingUserId === user.id
                               ? user.role === 'admin'
-                                ? 'Demoting...'
-                                : 'Promoting...'
+                                ? t('admin.demoting')
+                                : t('admin.promoting')
                               : user.role === 'admin'
-                                ? 'Demote'
-                                : 'Promote'
+                                ? t('admin.demote')
+                                : t('admin.promote')
                           }
                           onPress={() =>
                             user.role === 'admin'
@@ -280,8 +276,8 @@ export default function AdminScreen() {
                         <MobileButton
                           label={
                             deletingUserId === user.id
-                              ? 'Deleting...'
-                              : 'Revoke'
+                              ? t('admin.deleting')
+                              : t('admin.revoke')
                           }
                           onPress={() => handleRevokeUser(user.id)}
                           variant="ghost"

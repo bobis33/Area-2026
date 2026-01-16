@@ -17,6 +17,7 @@ import { FadeInView } from '@/components/animations';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme, type ThemeMode } from '@/contexts/ThemeContext';
+import { useI18n, type SupportedLocale } from '@/contexts/I18nContext';
 import {
   getServerUrl,
   saveServerUrl,
@@ -28,6 +29,7 @@ import Constants from 'expo-constants';
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const { currentTheme, mode, setMode } = useAppTheme();
+  const { locale, setLocale, t } = useI18n();
   const [serverUrl, setServerUrl] = useState('');
   const [editingServerUrl, setEditingServerUrl] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -45,7 +47,7 @@ export default function ProfileScreen() {
 
   const handleSaveServerUrl = async () => {
     if (!serverUrl.trim()) {
-      Alert.alert('Error', 'Please enter a valid server URL');
+      Alert.alert(t('common.error'), t('profile.serverUrl') + ' ' + t('common.error'));
       return;
     }
 
@@ -53,7 +55,7 @@ export default function ProfileScreen() {
       new URL(serverUrl.trim());
     } catch {
       Alert.alert(
-        'Error',
+        t('common.error'),
         'Please enter a valid URL (e.g., http://localhost:8080)',
       );
       return;
@@ -64,10 +66,10 @@ export default function ProfileScreen() {
       await saveServerUrl(serverUrl.trim());
       await apiService.updateBaseUrl();
       setEditingServerUrl(false);
-      Alert.alert('Success', 'Server URL updated successfully');
+      Alert.alert(t('common.success'), 'Server URL updated successfully');
     } catch (error) {
       Alert.alert(
-        'Error',
+        t('common.error'),
         error instanceof Error ? error.message : 'Failed to save server URL',
       );
     } finally {
@@ -76,19 +78,19 @@ export default function ProfileScreen() {
   };
 
   const handleResetServerUrl = async () => {
-    Alert.alert('Reset Server URL', 'Reset to default server URL?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('profile.resetToDefault'), 'Reset to default server URL?', [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Reset',
+        text: t('profile.resetToDefault'),
         style: 'destructive',
         onPress: async () => {
           try {
             await resetServerUrl();
             await loadServerUrl();
             await apiService.updateBaseUrl();
-            Alert.alert('Success', 'Server URL reset to default');
+            Alert.alert(t('common.success'), 'Server URL reset to default');
           } catch (error) {
-            Alert.alert('Error', 'Failed to reset server URL');
+            Alert.alert(t('common.error'), 'Failed to reset server URL');
           }
         },
       },
@@ -121,13 +123,18 @@ export default function ProfileScreen() {
     { value: 'dark', label: 'Dark' },
   ];
 
+  const languageOptions: { value: SupportedLocale; label: string }[] = [
+    { value: 'fr', label: 'Français' },
+    { value: 'en', label: 'English' },
+  ];
+
   return (
     <MobileScreen scroll safeArea keyboardAware={false}>
       {/* Header */}
       <FadeInView delay={0} spring>
         <View style={styles.header}>
           <Text variant="title" style={styles.title}>
-            Profile
+            {t('profile.title')}
           </Text>
         </View>
       </FadeInView>
@@ -163,7 +170,9 @@ export default function ProfileScreen() {
               </Text>
               <View style={styles.providerBadge}>
                 <Text variant="caption" color="muted">
-                  Signed in with {getProviderLabel(user?.provider || 'email')}
+                  {t('profile.signedInWith', {
+                    provider: getProviderLabel(user?.provider || 'email'),
+                  })}
                 </Text>
               </View>
             </View>
@@ -175,7 +184,7 @@ export default function ProfileScreen() {
       <FadeInView delay={200} spring>
         <View style={styles.section}>
           <Text variant="subtitle" style={styles.sectionTitle}>
-            Device & app
+            {t('profile.deviceApp')}
           </Text>
           <SectionCard>
             <View
@@ -185,7 +194,7 @@ export default function ProfileScreen() {
               ]}
             >
               <Text variant="body" color="muted">
-                Platform
+                {t('profile.platform')}
               </Text>
               <Text variant="body">
                 {Platform.OS === 'ios'
@@ -197,7 +206,7 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.infoRowLast}>
               <Text variant="body" color="muted">
-                App version
+                {t('profile.appVersion')}
               </Text>
               <Text variant="body">
                 {Constants.expoConfig?.version || '1.0.0'}
@@ -207,11 +216,53 @@ export default function ProfileScreen() {
         </View>
       </FadeInView>
 
-      {/* Appearance / Theme Section */}
+      {/* Language Section */}
       <FadeInView delay={300} spring>
         <View style={styles.section}>
           <Text variant="subtitle" style={styles.sectionTitle}>
-            Appearance
+            {t('profile.language')}
+          </Text>
+          <SectionCard>
+            <View style={styles.settingInfo}>
+              <Text variant="body">{t('profile.language')}</Text>
+              <Text variant="caption" color="muted">
+                {t('profile.languageDescription')}
+              </Text>
+            </View>
+            <View style={styles.languageOptions}>
+              {languageOptions.map((option, index) => (
+                <TouchableOpacity
+                  key={option.value}
+                  onPress={() => setLocale(option.value)}
+                  style={[
+                    styles.themeOption,
+                    index < languageOptions.length - 1 && {
+                      borderBottomColor: currentTheme.colors.border,
+                    },
+                  ]}
+                >
+                  <View style={styles.themeOptionLeft}>
+                    <Text variant="body">{option.label}</Text>
+                  </View>
+                  {locale === option.value && (
+                    <IconSymbol
+                      size={20}
+                      name="checkmark.circle.fill"
+                      color={currentTheme.colors.primary}
+                    />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </SectionCard>
+        </View>
+      </FadeInView>
+
+      {/* Appearance / Theme Section */}
+      <FadeInView delay={350} spring>
+        <View style={styles.section}>
+          <Text variant="subtitle" style={styles.sectionTitle}>
+            {t('profile.appearance')}
           </Text>
           <SectionCard>
             {themeOptions.map((option, index) => (
@@ -229,7 +280,7 @@ export default function ProfileScreen() {
                   <Text variant="body">{option.label}</Text>
                   {option.value === 'system' && (
                     <Text variant="caption" color="muted">
-                      Follow system setting
+                      {t('profile.followSystem')}
                     </Text>
                   )}
                 </View>
@@ -250,7 +301,7 @@ export default function ProfileScreen() {
       <FadeInView delay={400} spring>
         <View style={styles.section}>
           <Text variant="subtitle" style={styles.sectionTitle}>
-            Settings
+            {t('profile.settings')}
           </Text>
           <SectionCard>
             <View
@@ -260,9 +311,9 @@ export default function ProfileScreen() {
               ]}
             >
               <View style={styles.settingInfo}>
-                <Text variant="body">Push notifications</Text>
+                <Text variant="body">{t('profile.pushNotifications')}</Text>
                 <Text variant="caption" color="muted">
-                  Coming soon
+                  {t('profile.comingSoon')}
                 </Text>
               </View>
               <View
@@ -284,15 +335,15 @@ export default function ProfileScreen() {
       <FadeInView delay={450} spring>
         <View style={styles.section}>
           <Text variant="subtitle" style={styles.sectionTitle}>
-            Server configuration
+            {t('profile.serverConfig')}
           </Text>
           <SectionCard>
             <View style={styles.serverConfigContainer}>
               <View style={styles.serverConfigHeader}>
                 <View style={styles.settingInfo}>
-                  <Text variant="body">Server URL</Text>
+                  <Text variant="body">{t('profile.serverUrl')}</Text>
                   <Text variant="caption" color="muted">
-                    Configure the network location of the application server
+                    {t('profile.serverUrlDescription')}
                   </Text>
                 </View>
                 {!editingServerUrl && (
@@ -319,14 +370,14 @@ export default function ProfileScreen() {
                   />
                   <View style={styles.serverUrlActions}>
                     <MobileButton
-                      label="Save"
+                      label={t('common.save')}
                       onPress={handleSaveServerUrl}
                       variant="primary"
                       loading={saving}
                       style={styles.saveButton}
                     />
                     <MobileButton
-                      label="Cancel"
+                      label={t('common.cancel')}
                       onPress={() => {
                         setEditingServerUrl(false);
                         loadServerUrl();
@@ -346,7 +397,7 @@ export default function ProfileScreen() {
                     style={styles.resetButton}
                   >
                     <Text variant="caption" color="muted">
-                      Reset to default
+                      {t('profile.resetToDefault')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -360,11 +411,11 @@ export default function ProfileScreen() {
       <FadeInView delay={500} spring>
         <View style={styles.section}>
           <Text variant="subtitle" style={styles.sectionTitle}>
-            Account actions
+            {t('profile.accountActions')}
           </Text>
           <SectionCard>
             <MobileButton
-              label="Log out"
+              label={t('profile.logout')}
               onPress={logout}
               variant="ghost"
               fullWidth
@@ -497,5 +548,8 @@ const styles = StyleSheet.create({
   resetButton: {
     alignSelf: 'flex-start',
     paddingVertical: 4,
+  },
+  languageOptions: {
+    marginTop: 12,
   },
 });

@@ -9,6 +9,7 @@ import {
 } from '@/components/ui-mobile';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { apiService } from '@/services/api.service';
 
 export default function RegisterScreen() {
@@ -18,15 +19,16 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
+  const t = useTranslation();
 
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
-      setError('Veuillez remplir tous les champs');
+      setError(t('register.fillAllFields'));
       return;
     }
 
     if (password.length < 6) {
-      setError('Le mot de passe doit contenir au moins 6 caractères');
+      setError(t('register.passwordTooShort'));
       return;
     }
 
@@ -42,12 +44,12 @@ export default function RegisterScreen() {
       await login(email.trim(), password);
       // Navigation is handled by AuthContext
 
-      Alert.alert('Succès', 'Compte créé avec succès !');
+      Alert.alert(t('common.success'), t('register.success'));
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Erreur lors de l'inscription";
+        err instanceof Error ? err.message : t('register.error');
       setError(errorMessage);
-      Alert.alert("Erreur d'inscription", errorMessage);
+      Alert.alert(t('register.registerError'), errorMessage);
     } finally {
       setLoading(false);
     }
@@ -61,36 +63,36 @@ export default function RegisterScreen() {
         align="center"
         style={{ marginBottom: 32 }}
       >
-        Rejoignez la communauté AREA
+        {t('register.title')}
       </Text>
 
       <MobileInput
-        label="Nom complet"
+        label={t('register.fullName')}
         value={name}
         onChangeText={setName}
-        placeholder="John Doe"
+        placeholder={t('register.fullNamePlaceholder')}
         disabled={loading}
         errorMessage={error && !name.trim() ? error : undefined}
       />
 
       <MobileInput
-        label="Email"
+        label={t('register.email')}
         value={email}
         onChangeText={setEmail}
-        placeholder="email@example.com"
+        placeholder={t('register.emailPlaceholder')}
         keyboardType="email-address"
         disabled={loading}
         errorMessage={error && !email.trim() ? error : undefined}
       />
 
       <MobileInput
-        label="Mot de passe"
+        label={t('register.password')}
         value={password}
         onChangeText={setPassword}
-        placeholder="••••••••"
+        placeholder={t('register.passwordPlaceholder')}
         secureTextEntry
         disabled={loading}
-        helperText="Minimum 6 caractères"
+        helperText={t('register.passwordMinLength')}
         errorMessage={
           error && (!password.trim() || password.length < 6) ? error : undefined
         }
@@ -111,7 +113,7 @@ export default function RegisterScreen() {
         )}
 
       <MobileButton
-        label="Créer mon compte"
+        label={t('register.createAccount')}
         onPress={handleRegister}
         variant="primary"
         disabled={loading}
@@ -119,7 +121,7 @@ export default function RegisterScreen() {
       />
 
       <MobileButton
-        label="Déjà un compte ? Se connecter"
+        label={t('register.alreadyHaveAccount')}
         onPress={() => router.back()}
         variant="ghost"
         disabled={loading}

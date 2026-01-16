@@ -9,6 +9,7 @@ import {
 } from '@/components/ui-mobile';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { spacing } from '@area/ui';
 
 export default function LoginScreen() {
@@ -17,10 +18,11 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { login } = useAuth();
+  const t = useTranslation();
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      setError('Please fill in all fields');
+      setError(t('login.fillAllFields'));
       return;
     }
 
@@ -31,9 +33,9 @@ export default function LoginScreen() {
       // Navigation is handled by AuthContext
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'Connection error';
+        err instanceof Error ? err.message : t('login.connectionError');
       setError(errorMessage);
-      Alert.alert('Connection Error', errorMessage);
+      Alert.alert(t('login.connectionError'), errorMessage);
     } finally {
       setLoading(false);
     }
@@ -46,7 +48,7 @@ export default function LoginScreen() {
       <View style={styles.container}>
         <View style={styles.headerSection}>
           <Text variant="title" style={styles.title}>
-            Sign in
+            {t('login.title')}
           </Text>
           <Text
             variant="body"
@@ -54,25 +56,25 @@ export default function LoginScreen() {
             align="center"
             style={styles.subtitle}
           >
-            Access your account to manage your automations
+            {t('login.subtitle')}
           </Text>
         </View>
 
         <View style={styles.formSection}>
           <MobileInput
-            label="Email"
+            label={t('login.email')}
             value={email}
             onChangeText={setEmail}
-            placeholder="email@example.com"
+            placeholder={t('login.emailPlaceholder')}
             keyboardType="email-address"
             disabled={loading}
             errorMessage={error && !email.trim() ? error : undefined}
           />
           <MobileInput
-            label="Password"
+            label={t('login.password')}
             value={password}
             onChangeText={setPassword}
-            placeholder="Enter your password"
+            placeholder={t('login.passwordPlaceholder')}
             secureTextEntry
             disabled={loading}
             errorMessage={error && !password.trim() ? error : undefined}
@@ -86,7 +88,7 @@ export default function LoginScreen() {
 
         <View style={styles.actionsSection}>
           <MobileButton
-            label="Sign in"
+            label={t('login.signIn')}
             onPress={handleLogin}
             variant="primary"
             disabled={loading || !hasAllFields}
@@ -99,11 +101,11 @@ export default function LoginScreen() {
         <View style={styles.footerSection}>
           <View style={styles.footerContent}>
             <Text variant="caption" color="muted" align="center">
-              Don't have an account?{' '}
+              {t('login.noAccount')}{' '}
             </Text>
             <Pressable onPress={() => router.push('/(auth)/register')}>
               <Text variant="caption" color="default" style={styles.linkText}>
-                Sign up
+                {t('login.signUp')}
               </Text>
             </Pressable>
           </View>
