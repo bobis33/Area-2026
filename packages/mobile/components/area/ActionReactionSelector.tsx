@@ -8,6 +8,7 @@ import {
 import { MobileText as Text } from '@/components/ui-mobile';
 import { SectionCard } from '@/components/layout/SectionCard';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import {
   AreaActionDefinition,
   AreaReactionDefinition,
@@ -41,6 +42,7 @@ export function ActionReactionSelector({
   onParamChange,
 }: ActionReactionSelectorProps) {
   const { currentTheme } = useAppTheme();
+  const t = useTranslation();
 
   return (
     <SectionCard>
@@ -64,19 +66,23 @@ export function ActionReactionSelector({
           onPress={onSelect}
           activeOpacity={0.8}
         >
-          <Text variant="body">{selectedKey || `Choose ${kind}`}</Text>
+          <Text variant="body">
+            {selectedKey ||
+              (kind === 'action'
+                ? t('createArea.selectAction')
+                : t('createArea.selectReaction'))}
+          </Text>
         </TouchableOpacity>
       )}
 
       <View style={styles.spacer} />
 
       <Text variant="subtitle" style={styles.paramsTitle}>
-        {title} parameters
+        {title} {t('createArea.parameters')}
       </Text>
       <ParameterForm
         paramsDef={selectedItem?.parameters as any}
         values={params}
-        kind={kind}
         onParamChange={onParamChange}
       />
     </SectionCard>

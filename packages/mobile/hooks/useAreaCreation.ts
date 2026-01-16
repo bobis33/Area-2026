@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { router } from 'expo-router';
 import { apiService } from '@/services/api.service';
 import { useAuth } from '@/contexts/AuthContext';
+import { useI18n } from '@/contexts/I18nContext';
 import { AreaActionDefinition, AreaReactionDefinition } from '@/types/api';
 import {
   makeKey,
@@ -59,6 +60,7 @@ interface UseAreaCreationReturn {
 
 export function useAreaCreation(): UseAreaCreationReturn {
   const { token, user } = useAuth();
+  const { t, locale } = useI18n();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [name, setName] = useState('');
@@ -286,28 +288,34 @@ export function useAreaCreation(): UseAreaCreationReturn {
     if (missingOAuthProviders.length > 0) {
       const servicesText = missingOAuthProviders
         .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-        .join(' et ');
-      const message =
-        missingOAuthProviders.length === 1
-          ? `Cette automatisation nécessite une connexion avec ${servicesText}. Veuillez vous connecter avec ce service avant de créer l'automatisation.`
-          : `Cette automatisation nécessite des connexions avec ${servicesText}. Veuillez vous connecter avec ces services avant de créer l'automatisation.`;
+        .join(
+          locale === 'fr' ? ' et ' : ' and ',
+        );
+      const services = missingOAuthProviders.join(', ');
 
-      Alert.alert('Connexion OAuth requise', message, [
-        {
-          text: 'Annuler',
-          style: 'cancel',
-        },
-        {
-          text: 'Se connecter',
-          onPress: () => {
-            router.back();
-            // L'utilisateur sera redirigé vers la page Area où il pourra connecter les providers
-            setTimeout(() => {
-              router.push('/(tabs)/area');
-            }, 100);
+      Alert.alert(
+        t('createArea.oauthRequired'),
+        t('createArea.oauthRequiredMsg', {
+          services,
+          servicesText,
+        }),
+        [
+          {
+            text: t('common.cancel'),
+            style: 'cancel',
           },
-        },
-      ]);
+          {
+            text: t('createArea.connect'),
+            onPress: () => {
+              router.back();
+              // L'utilisateur sera redirigé vers la page Area où il pourra connecter les providers
+              setTimeout(() => {
+                router.push('/(tabs)/area');
+              }, 100);
+            },
+          },
+        ],
+      );
       return;
     }
 
@@ -333,8 +341,10 @@ export function useAreaCreation(): UseAreaCreationReturn {
         });
       }
       Alert.alert(
-        'Paramètres manquants',
-        `Veuillez remplir tous les paramètres requis pour l'action : ${missingParams.join(', ')}`,
+        t('createArea.missingParams'),
+        t('createArea.missingParamsAction', {
+          params: missingParams.join(', '),
+        }),
       );
       return;
     }
@@ -352,8 +362,10 @@ export function useAreaCreation(): UseAreaCreationReturn {
         });
       }
       Alert.alert(
-        'Paramètres manquants',
-        `Veuillez remplir tous les paramètres requis pour la réaction : ${missingParams.join(', ')}`,
+        t('createArea.missingParams'),
+        t('createArea.missingParamsReaction', {
+          params: missingParams.join(', '),
+        }),
       );
       return;
     }
@@ -401,10 +413,8 @@ export function useAreaCreation(): UseAreaCreationReturn {
       router.back();
     } catch (e: any) {
       const errorMessage =
-        e instanceof Error
-          ? e.message
-          : "Erreur lors de la création de l'automatisation";
-      Alert.alert('Erreur', errorMessage);
+        e instanceof Error ? e.message : t('createArea.error');
+      Alert.alert(t('common.error'), errorMessage);
     } finally {
       setSubmitting(false);
     }

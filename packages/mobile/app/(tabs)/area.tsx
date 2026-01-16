@@ -13,6 +13,7 @@ import { ServiceIcon } from '@/components/ui/ServiceIcon';
 import { AnimatedCard, FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { apiService } from '@/services/api.service';
 import { AreaModel } from '@/types/api';
 import { getServiceBrandColors } from '@/utils/areaHelpers';
@@ -52,6 +53,7 @@ function areaToAutomation(area: AreaModel): Automation {
 export default function AreaScreen() {
   const { currentTheme } = useAppTheme();
   const { token } = useAuth();
+  const t = useTranslation();
   const [selectedAutomation, setSelectedAutomation] =
     useState<Automation | null>(null);
   const [automations, setAutomations] = useState<Automation[]>([]);
@@ -151,9 +153,8 @@ export default function AreaScreen() {
         ),
       );
       Alert.alert(
-        'Error',
-        error.message ||
-          'Failed to update automation status. Please try again.',
+        t('common.error'),
+        error.message || t('area.updateStatusFailed'),
       );
     } finally {
       setTogglingIds((prev) => {
@@ -168,15 +169,15 @@ export default function AreaScreen() {
     if (!token) return;
 
     Alert.alert(
-      'Delete automation',
-      `Are you sure you want to delete "${automation.name}"? This action cannot be undone.`,
+      t('area.deleteAutomation'),
+      t('area.deleteConfirm', { name: automation.name }),
       [
         {
-          text: 'Cancel',
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: async () => {
             setAutomations((prev) =>
@@ -226,12 +227,12 @@ export default function AreaScreen() {
           loadProviders();
         }, 1000);
       } else if (result.type === 'locked') {
-        Alert.alert('Error', 'The browser is locked. Please try again.');
+        Alert.alert(t('common.error'), t('area.browserLocked'));
       }
     } catch (error) {
       Alert.alert(
-        'Connection Error',
-        `Unable to connect with ${provider}. Please try again.`,
+        t('area.connectionError'),
+        t('area.connectionErrorMsg', { provider }),
       );
     } finally {
       setConnectingProvider(null);
@@ -243,27 +244,30 @@ export default function AreaScreen() {
     if (!token || unlinkingProvider) return;
 
     Alert.alert(
-      'Disconnect service',
-      `Are you sure you want to disconnect ${provider}? You won't be able to use it in your automations.`,
+      t('area.disconnectService'),
+      t('area.disconnectConfirm', { provider }),
       [
         {
-          text: 'Cancel',
+          text: t('common.cancel'),
           style: 'cancel',
         },
         {
-          text: 'Disconnect',
+          text: t('area.disconnect'),
           style: 'destructive',
           onPress: async () => {
             setUnlinkingProvider(provider);
             try {
               await apiService.unlinkProvider(provider.toLowerCase(), token);
               await loadProviders();
-              Alert.alert('Success', `${provider} has been disconnected.`);
+              Alert.alert(
+                t('common.success'),
+                t('area.disconnected', { provider }),
+              );
             } catch (error: any) {
               Alert.alert(
-                'Error',
+                t('common.error'),
                 error.message ||
-                  `Failed to disconnect ${provider}. Please try again.`,
+                  t('area.disconnectFailed', { provider }),
               );
             } finally {
               setUnlinkingProvider(null);
@@ -281,10 +285,10 @@ export default function AreaScreen() {
         <FadeInView delay={0} spring>
           <View style={styles.header}>
             <Text variant="title" style={styles.title}>
-              Your automations
+              {t('area.title')}
             </Text>
             <Text variant="body" color="muted" style={styles.subtitle}>
-              Create and manage your automation scenarios.
+              {t('area.subtitle')}
             </Text>
           </View>
         </FadeInView>
@@ -294,20 +298,19 @@ export default function AreaScreen() {
           <FadeInView delay={50} spring>
             <View style={styles.section}>
               <Text variant="subtitle" style={styles.sectionTitle}>
-                Connected services
+                {t('area.connectedServices')}
               </Text>
               <View style={styles.servicesList}>
                 {loadingProviders ? (
                   <View style={styles.emptyState}>
                     <Text variant="body" color="muted">
-                      Loading services...
+                      {t('area.loadingServices')}
                     </Text>
                   </View>
                 ) : availableProviders.length === 0 ? (
                   <View style={styles.emptyState}>
                     <Text variant="body" color="muted">
-                      No services available. Please check your backend
-                      configuration.
+                      {t('area.noServicesAvailable')}
                     </Text>
                   </View>
                 ) : (
@@ -367,7 +370,9 @@ export default function AreaScreen() {
                                   variant={isConnected ? 'connected' : 'paused'}
                                   showDot
                                 >
-                                  {isConnected ? 'Connected' : 'Not connected'}
+                                  {isConnected
+                                    ? t('area.connected')
+                                    : t('area.notConnected')}
                                 </MobileBadge>
                                 {isConnected ? (
                                   <TouchableOpacity
@@ -446,7 +451,7 @@ export default function AreaScreen() {
         <FadeInView delay={100} spring>
           <View style={styles.section}>
             <Text variant="subtitle" style={styles.sectionTitle}>
-              Scenarios (Actions → Reactions)
+              {t('area.scenarios')}
             </Text>
             <View style={styles.automationsList}>
               {loading ? (
@@ -458,7 +463,7 @@ export default function AreaScreen() {
               ) : automations.length === 0 ? (
                 <View style={styles.emptyState}>
                   <Text variant="body" color="muted">
-                    No automations yet. Create one to get started!
+                    {t('area.noAutomations')}
                   </Text>
                 </View>
               ) : (
@@ -492,8 +497,8 @@ export default function AreaScreen() {
                                 showDot
                               >
                                 {automation.status === 'active'
-                                  ? 'Active'
-                                  : 'Paused'}
+                                  ? t('area.active')
+                                  : t('area.paused')}
                               </MobileBadge>
                               <TouchableOpacity
                                 onPress={() => handleToggleActive(automation)}
@@ -531,8 +536,8 @@ export default function AreaScreen() {
                                   }
                                 >
                                   {automation.status === 'active'
-                                    ? 'Pause'
-                                    : 'Resume'}
+                                    ? t('area.pause')
+                                    : t('area.resume')}
                                 </Text>
                               </TouchableOpacity>
                               <TouchableOpacity
@@ -600,7 +605,7 @@ export default function AreaScreen() {
             <View style={styles.modalContent}>
               <View style={styles.modalSection}>
                 <Text variant="caption" color="muted" style={styles.modalLabel}>
-                  Action Service
+                  {t('area.actionService')}
                 </Text>
                 <Text variant="body" style={styles.modalValue}>
                   {selectedAutomation.actionService}
@@ -608,7 +613,7 @@ export default function AreaScreen() {
               </View>
               <View style={styles.modalSection}>
                 <Text variant="caption" color="muted" style={styles.modalLabel}>
-                  Action Description
+                  {t('area.actionDescription')}
                 </Text>
                 <Text variant="body" style={styles.modalValue}>
                   {selectedAutomation.action}
@@ -616,7 +621,7 @@ export default function AreaScreen() {
               </View>
               <View style={styles.modalSection}>
                 <Text variant="caption" color="muted" style={styles.modalLabel}>
-                  Reaction Service
+                  {t('area.reactionService')}
                 </Text>
                 <Text variant="body" style={styles.modalValue}>
                   {selectedAutomation.reactionService}
@@ -624,7 +629,7 @@ export default function AreaScreen() {
               </View>
               <View style={styles.modalSection}>
                 <Text variant="caption" color="muted" style={styles.modalLabel}>
-                  Reaction Description
+                  {t('area.reactionDescription')}
                 </Text>
                 <Text variant="body" style={styles.modalValue}>
                   {selectedAutomation.reaction}
@@ -632,7 +637,7 @@ export default function AreaScreen() {
               </View>
               <View style={styles.modalSection}>
                 <Text variant="caption" color="muted" style={styles.modalLabel}>
-                  Status
+                  {t('area.status')}
                 </Text>
                 <MobileBadge
                   variant={

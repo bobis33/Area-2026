@@ -12,6 +12,7 @@ import { API_BASE_URL } from '@/constants/api';
 import * as WebBrowser from 'expo-web-browser';
 import * as AuthSession from 'expo-auth-session';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from '@/contexts/I18nContext';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -28,6 +29,7 @@ export function SocialLoginButtons({
     null,
   );
   const { handleOAuthRedirect } = useAuth();
+  const t = useTranslation();
 
   const handleOAuthLogin = async (provider: OAuthProvider) => {
     if (disabled || loadingProvider) return;
@@ -49,12 +51,12 @@ export function SocialLoginButtons({
       if (result.type === 'success' && result.url) {
         handleOAuthRedirect(result.url);
       } else if (result.type === 'locked') {
-        Alert.alert('Error', 'The browser is locked. Please try again.');
+        Alert.alert(t('common.error'), t('area.browserLocked'));
       }
     } catch (error) {
       Alert.alert(
-        'Connection Error',
-        `Unable to connect with ${provider}. Please try again.`,
+        t('area.connectionError'),
+        t('area.connectionErrorMsg', { provider }),
       );
     } finally {
       setLoadingProvider(null);
@@ -75,14 +77,14 @@ export function SocialLoginButtons({
       <View style={styles.separator}>
         <View style={styles.separatorLine} />
         <Text variant="caption" color="muted" style={styles.separatorText}>
-          Or continue with
+          {t('login.orContinueWith')}
         </Text>
         <View style={styles.separatorLine} />
       </View>
 
       <View style={styles.buttonsContainer}>
         <OAuthButton
-          label="Continue with Discord"
+          label={t('oauth.continueWithDiscord')}
           onPress={() => handlePress('discord')}
           backgroundColor="#5865F2"
           textColor={colors.white}
@@ -92,7 +94,7 @@ export function SocialLoginButtons({
         />
 
         <OAuthButton
-          label="Continue with GitHub"
+          label={t('oauth.continueWithGitHub')}
           onPress={() => handlePress('github')}
           backgroundColor="#18181B"
           textColor={colors.white}
@@ -102,7 +104,7 @@ export function SocialLoginButtons({
         />
 
         <OAuthButton
-          label="Continue with Google"
+          label={t('oauth.continueWithGoogle')}
           onPress={() => handlePress('google')}
           backgroundColor={colors.white}
           textColor={colors.gray900}
@@ -113,7 +115,7 @@ export function SocialLoginButtons({
         />
 
         <OAuthButton
-          label="Continue with Spotify"
+          label={t('oauth.continueWithSpotify')}
           onPress={() => handlePress('spotify')}
           backgroundColor="#1DB954"
           textColor={colors.white}
@@ -129,7 +131,7 @@ export function SocialLoginButtons({
         />
 
         <OAuthButton
-          label="Continue with GitLab"
+          label={t('oauth.continueWithGitLab')}
           onPress={() => handlePress('gitlab')}
           backgroundColor="#FC6D26"
           textColor={colors.white}

@@ -5,9 +5,11 @@ import { Platform } from 'react-native';
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { useTranslation } from '@/contexts/I18nContext';
 
 export default function TabLayout() {
   const { currentTheme } = useAppTheme();
+  const t = useTranslation();
 
   return (
     <Tabs
@@ -39,7 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t('tabs.home'),
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol
               size={focused ? 26 : 24}
@@ -52,7 +54,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="area"
         options={{
-          title: 'Area',
+          title: t('tabs.area'),
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol
               size={focused ? 26 : 24}
@@ -65,7 +67,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="area/create"
         options={{
-          title: 'Create',
+          title: t('tabs.create'),
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol
               size={focused ? 26 : 24}
@@ -78,7 +80,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: t('tabs.profile'),
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol
               size={focused ? 26 : 24}
@@ -91,7 +93,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="admin"
         options={{
-          title: 'Admin',
+          title: t('tabs.admin'),
           tabBarIcon: ({ color, focused }) => (
             <IconSymbol
               size={focused ? 26 : 24}

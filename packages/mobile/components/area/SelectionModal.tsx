@@ -10,6 +10,7 @@ import { borderRadius, spacing } from '@area/ui';
 import { ServiceIcon } from '@/components/ui/ServiceIcon';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { FadeInView, AnimatedServiceCard } from '@/components/animations';
+import { useTranslation } from '@/contexts/I18nContext';
 import * as Haptics from 'expo-haptics';
 
 /**
@@ -96,6 +97,7 @@ export function SelectionModal({
   onBack,
 }: SelectionModalProps) {
   const { currentTheme } = useAppTheme();
+  const t = useTranslation();
 
   const sortServices = (services: string[]): string[] => {
     const normalizedProviders = availableProviders.map((p) =>
@@ -139,8 +141,9 @@ export function SelectionModal({
           {servicesForMode.length === 0 ? (
             <View style={styles.emptyState}>
               <Text variant="body" color="muted" style={styles.emptyText}>
-                No {selectionKind === 'action' ? 'actions' : 'reactions'}{' '}
-                available.
+                {selectionKind === 'action'
+                  ? t('selectionModal.noActions')
+                  : t('selectionModal.noReactions')}
               </Text>
             </View>
           ) : (
@@ -231,11 +234,10 @@ export function SelectionModal({
                         style={styles.serviceCount}
                       >
                         {count > 0
-                          ? `${count} ${count === 1 ? (selectionKind === 'action' ? 'action' : 'reaction') : selectionKind === 'action' ? 'actions' : 'reactions'}`
-                          : 'No ' +
-                            (selectionKind === 'action'
-                              ? 'actions'
-                              : 'reactions')}
+                          ? `${count} ${count === 1 ? (selectionKind === 'action' ? t('selectionModal.action') : t('selectionModal.reaction')) : selectionKind === 'action' ? t('selectionModal.actions') : t('selectionModal.reactions')}`
+                          : selectionKind === 'action'
+                            ? t('selectionModal.noActions')
+                            : t('selectionModal.noReactions')}
                       </Text>
                     </AnimatedServiceCard>
                   </FadeInView>
@@ -286,14 +288,16 @@ export function SelectionModal({
                   size={20}
                   color={currentTheme.colors.primary}
                 />
-                <Text variant="body">Back to services</Text>
+                <Text variant="body">{t('selectionModal.backToServices')}</Text>
               </View>
             </AnimatedServiceCard>
           </FadeInView>
           <View style={styles.spacer} />
           {serviceActions.length === 0 ? (
             <Text variant="body" color="muted">
-              No actions available for {selectedActionService}.
+              {t('selectionModal.noActionsForService', {
+                service: selectedActionService,
+              })}
             </Text>
           ) : (
             <View style={styles.listContainer}>
@@ -389,14 +393,16 @@ export function SelectionModal({
                   size={20}
                   color={currentTheme.colors.primary}
                 />
-                <Text variant="body">Back to services</Text>
+                <Text variant="body">{t('selectionModal.backToServices')}</Text>
               </View>
             </AnimatedServiceCard>
           </FadeInView>
           <View style={styles.spacer} />
           {serviceReactions.length === 0 ? (
             <Text variant="body" color="muted">
-              No reactions available for {selectedReactionService}.
+              {t('selectionModal.noReactionsForService', {
+                service: selectedReactionService,
+              })}
             </Text>
           ) : (
             <View style={styles.listContainer}>
@@ -465,19 +471,25 @@ export function SelectionModal({
 
     return (
       <Text variant="body" color="muted">
-        Nothing to display (step={modalStep}).
+        {t('selectionModal.nothingToDisplay')}
       </Text>
     );
   };
 
   const getTitle = () => {
     if (modalStep === 'service') {
-      return `Choose ${selectionKind === 'action' ? 'action' : 'reaction'} service`;
+      return selectionKind === 'action'
+        ? t('selectionModal.chooseActionService')
+        : t('selectionModal.chooseReactionService');
     }
     if (modalStep === 'action') {
-      return `Choose action from ${selectedActionService}`;
+      return t('selectionModal.chooseActionFrom', {
+        service: selectedActionService || '',
+      });
     }
-    return `Choose reaction from ${selectedReactionService}`;
+    return t('selectionModal.chooseReactionFrom', {
+      service: selectedReactionService || '',
+    });
   };
 
   return (

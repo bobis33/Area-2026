@@ -16,6 +16,7 @@ import { SectionCard } from '@/components/layout/SectionCard';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { FadeInView } from '@/components/animations';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { useTranslation } from '@/contexts/I18nContext';
 
 // Component for animated glow border
 const GlowCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -72,6 +73,7 @@ const GlowCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 export default function HomeScreen() {
   const { currentTheme } = useAppTheme();
+  const t = useTranslation();
 
   return (
     <MobileScreen scroll safeArea keyboardAware={false}>
@@ -86,10 +88,10 @@ export default function HomeScreen() {
             />
           </View>
           <Text variant="caption" color="muted" style={styles.label}>
-            AREA • Automation
+            {t('home.label')}
           </Text>
           <Text variant="title" style={styles.mainTitle}>
-            Automatise ta vie{'\n'}digitale.
+            {t('home.title')}
           </Text>
         </View>
       </FadeInView>
@@ -124,11 +126,10 @@ export default function HomeScreen() {
                 </View>
                 <View style={styles.cardTextContent}>
                   <Text variant="subtitle" style={styles.cardTitle}>
-                    Connect services
+                    {t('home.connectServices')}
                   </Text>
                   <Text variant="body" color="muted" style={styles.cardText}>
-                    Lie tes comptes Discord, GitHub, Google et bien d'autres
-                    services pour créer des automatisations puissantes.
+                    {t('home.connectServicesDesc')}
                   </Text>
                 </View>
               </View>
@@ -154,11 +155,10 @@ export default function HomeScreen() {
                 </View>
                 <View style={styles.cardTextContent}>
                   <Text variant="subtitle" style={styles.cardTitle}>
-                    Create automations
+                    {t('home.createAutomations')}
                   </Text>
                   <Text variant="body" color="muted" style={styles.cardText}>
-                    Construis des flux Action → Réaction pour automatiser tes
-                    tâches quotidiennes et gagner du temps.
+                    {t('home.createAutomationsDesc')}
                   </Text>
                 </View>
               </View>
@@ -169,7 +169,7 @@ export default function HomeScreen() {
       <FadeInView delay={400} spring>
         <View style={styles.ctaSection}>
           <MobileButton
-            label="Go to AREA"
+            label={t('home.goToArea')}
             onPress={() => router.push('/(tabs)/area')}
             variant="primary"
             fullWidth
