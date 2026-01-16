@@ -93,6 +93,7 @@
     "missingParams": "Missing parameters",
     "missingParamsAction": "Please fill in all required parameters for the action: {{params}}",
     "missingParamsReaction": "Please fill in all required parameters for the reaction: {{params}}",
+    "noParameters": "No parameters",
     "error": "Error creating automation"
   },
   "home": {
@@ -187,7 +188,8 @@
     "chooseActionService": "Choose action service",
     "chooseReactionService": "Choose reaction service",
     "chooseActionFrom": "Choose action from {{service}}",
-    "chooseReactionFrom": "Choose reaction from {{service}}"
+    "chooseReactionFrom": "Choose reaction from {{service}}",
+    "nothingToDisplay": "Nothing to display"
   },
   "oauth": {
     "continueWith": "Continue with",

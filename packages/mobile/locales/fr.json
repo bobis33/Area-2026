@@ -93,6 +93,7 @@
     "missingParams": "Paramètres manquants",
     "missingParamsAction": "Veuillez remplir tous les paramètres requis pour l'action : {{params}}",
     "missingParamsReaction": "Veuillez remplir tous les paramètres requis pour la réaction : {{params}}",
+    "noParameters": "Aucun paramètre",
     "error": "Erreur lors de la création de l'automatisation"
   },
   "home": {
@@ -185,7 +186,8 @@
     "chooseActionService": "Choisir un service d'action",
     "chooseReactionService": "Choisir un service de réaction",
     "chooseActionFrom": "Choisir une action de {{service}}",
-    "chooseReactionFrom": "Choisir une réaction de {{service}}"
+    "chooseReactionFrom": "Choisir une réaction de {{service}}",
+    "nothingToDisplay": "Rien à afficher"
   },
   "oauth": {
     "continueWith": "Continuer avec",

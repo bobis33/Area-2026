@@ -471,7 +471,7 @@ export function SelectionModal({
 
     return (
       <Text variant="body" color="muted">
-        Nothing to display (step={modalStep}).
+        {t('selectionModal.nothingToDisplay')}
       </Text>
     );
   };

@@ -83,7 +83,6 @@ export function ActionReactionSelector({
       <ParameterForm
         paramsDef={selectedItem?.parameters as any}
         values={params}
-        kind={kind}
         onParamChange={onParamChange}
       />
     </SectionCard>

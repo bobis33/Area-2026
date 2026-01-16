@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Switch } from 'react-native';
 import { MobileText as Text, MobileInput } from '@/components/ui-mobile';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { useTranslation } from '@/contexts/I18nContext';
 import { ParamField } from '@/types/api';
 import { ParamMap, isParamObject } from '@/utils/areaHelpers';
 import { spacing } from '@area/ui';
@@ -9,7 +10,6 @@ import { spacing } from '@area/ui';
 interface ParameterFormProps {
   paramsDef: ParamMap | undefined;
   values: Record<string, any>;
-  kind: 'action' | 'reaction';
   onParamChange: (
     key: string,
     fieldType: ParamField['type'],
@@ -20,10 +20,10 @@ interface ParameterFormProps {
 export function ParameterForm({
   paramsDef,
   values,
-  kind,
   onParamChange,
 }: ParameterFormProps) {
   const { currentTheme } = useAppTheme();
+  const t = useTranslation();
 
   if (
     !paramsDef ||
@@ -33,7 +33,7 @@ export function ParameterForm({
   ) {
     return (
       <Text variant="body" color="muted">
-        No parameters.
+        {t('createArea.noParameters')}
       </Text>
     );
   }
