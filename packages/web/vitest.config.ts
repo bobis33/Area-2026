@@ -7,9 +7,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
-      'react-native': 'react-native-web',
-      'react-native-safe-area-context': resolve(__dirname, './src/utils/safe-area-stub.tsx'),
-      'react-native/Libraries/Utilities/codegenNativeComponent': resolve(__dirname, './src/utils/codegen-native-component-stub.ts'),
     },
   },
   test: {
@@ -17,17 +14,5 @@ export default defineConfig({
     globals: true,
     setupFiles: './vitest.setup.ts',
     include: ['tests/**/*.test.{ts,tsx}'],
-    server: {
-      deps: {
-        inline: ['@area/ui'],
-      },
-    },
-  },
-  optimizeDeps: {
-    include: ['@area/ui'],
-    exclude: ['react-native-safe-area-context'],
-  },
-  esbuild: {
-    target: 'node18',
   },
 });

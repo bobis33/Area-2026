@@ -1,4 +1,4 @@
-import { render, screen } from './test-utils';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Button } from '@/components/ui';
@@ -56,6 +56,13 @@ describe('Button', () => {
     const btn = screen.getByRole('button', { name: 'Custom' });
 
     expect(btn.className).toContain('my-class');
+  });
+
+  it('uses the provided type', () => {
+    render(<Button type="submit">Submit</Button>);
+    const btn = screen.getByRole('button', { name: 'Submit' });
+
+    expect(btn).toHaveAttribute('type', 'submit');
   });
 
   it('renders left and right icons', () => {
