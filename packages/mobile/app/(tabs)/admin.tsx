@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import {
   MobileText as Text,
   MobileScreen,
@@ -15,8 +16,20 @@ import { User } from '@/types/api';
 
 export default function AdminScreen() {
   const { currentTheme } = useAppTheme();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const t = useTranslation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && user.role !== 'admin') {
+      router.replace('/(tabs)');
+      return;
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== 'admin') {
+    return null;
+  }
 
   // Users state
   const [users, setUsers] = useState<User[]>([]);

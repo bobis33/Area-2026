@@ -1,23 +1,17 @@
-import React, { useState } from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import React from 'react';
+import { ViewStyle, TextStyle, StyleSheet } from 'react-native';
 import type { InputProps } from '@area/ui';
 import type { TextInputProps } from 'react-native';
+import { Input } from '@area/ui';
 import { useAppTheme } from '@/contexts/ThemeContext';
-import { spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
-import { MobileText as Text } from './MobileText';
 
 export interface MobileInputProps extends Omit<
   InputProps,
-  'containerStyle' | 'inputStyle'
+  'containerStyle' | 'inputContainerStyle' | 'inputStyle'
 > {
   autoCapitalize?: TextInputProps['autoCapitalize'];
   containerStyle?: ViewStyle;
+  inputContainerStyle?: ViewStyle;
   inputStyle?: TextStyle;
 }
 
@@ -35,129 +29,63 @@ export const MobileInput: React.FC<MobileInputProps> = ({
   rightIcon,
   keyboardType,
   containerStyle,
+  inputContainerStyle,
   inputStyle,
   autoCapitalize = 'none',
+  ...inputProps
 }) => {
   const { currentTheme } = useAppTheme();
-  const [isFocused, setIsFocused] = useState(false);
 
-  const hasError = Boolean(errorMessage);
-  const showHelperText = Boolean(helperText && !hasError);
-
-  const handleFocus = () => {
-    if (!disabled) {
-      setIsFocused(true);
-    }
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
-
-  const handleChangeText = (text: string) => {
-    if (!disabled) {
-      onChangeText(text);
-    }
-  };
-
-  // Theme-based styles
-  const inputContainerStyle: ViewStyle = {
-    flexDirection: 'row',
-    alignItems: multiline ? 'flex-start' : 'center',
-    borderWidth: isFocused && !hasError ? 2 : 1,
-    borderRadius: borderRadius.md,
-    backgroundColor: currentTheme.colors.surfaceMuted,
-    paddingHorizontal: spacing.md,
-    paddingVertical: multiline ? spacing.md : spacing.sm,
-    minHeight: multiline ? 100 : 44,
-    borderColor: hasError
-      ? currentTheme.colors.danger
-      : isFocused && !hasError
-        ? currentTheme.colors.primary
+  const getInputContainerStyle = (): ViewStyle => {
+    return {
+      backgroundColor: currentTheme.colors.surfaceMuted,
+      borderColor: errorMessage
+        ? currentTheme.colors.danger
         : (currentTheme.colors as any).borderSubtle ||
           currentTheme.colors.border,
-    opacity: disabled ? 0.6 : 1,
-    ...containerStyle,
+      ...inputContainerStyle,
+    };
   };
 
-  const textInputStyle: TextStyle = {
-    flex: 1,
-    fontSize: fontSizes.md,
-    fontWeight: fontWeights.normal,
-    color: currentTheme.colors.text, // Force white text in dark mode
-    padding: 0,
-    margin: 0,
-    textAlignVertical: multiline ? 'top' : 'center',
-    ...inputStyle,
+  const getInputStyle = (): TextStyle => {
+    return {
+      color: currentTheme.colors.text,
+      ...inputStyle,
+    };
   };
 
-  const placeholderColor = currentTheme.colors.textMuted;
+  const mergedInputContainerStyle = StyleSheet.flatten([
+    getInputContainerStyle(),
+    inputContainerStyle,
+  ]) as ViewStyle;
+
+  const mergedInputStyle = StyleSheet.flatten([
+    getInputStyle(),
+    inputStyle,
+  ]) as TextStyle;
+
+  // Note: autoCapitalize is not supported by Input from @area/ui
+  // We'll need to extend Input or handle it differently
+  // For now, we'll pass it through if Input supports it via inputStyle
 
   return (
-    <View style={styles.container}>
-      {label && (
-        <Text
-          variant="body"
-          style={{
-            fontSize: fontSizes.sm,
-            fontWeight: fontWeights.medium,
-            color: currentTheme.colors.text,
-            marginBottom: spacing.xs,
-          }}
-        >
-          {label}
-        </Text>
-      )}
-
-      <View style={inputContainerStyle}>
-        {leftIcon && <View style={styles.iconContainer}>{leftIcon}</View>}
-
-        <TextInput
-          style={textInputStyle}
-          value={value}
-          onChangeText={handleChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={placeholderColor}
-          secureTextEntry={secureTextEntry}
-          editable={!disabled}
-          multiline={multiline}
-          keyboardType={keyboardType}
-          autoCapitalize={autoCapitalize}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-
-        {rightIcon && <View style={styles.iconContainer}>{rightIcon}</View>}
-      </View>
-
-      {showHelperText && (
-        <Text variant="caption" color="muted" style={{ marginTop: spacing.xs }}>
-          {helperText}
-        </Text>
-      )}
-
-      {hasError && (
-        <Text
-          variant="caption"
-          style={{
-            color: currentTheme.colors.danger,
-            marginTop: spacing.xs,
-          }}
-        >
-          {errorMessage}
-        </Text>
-      )}
-    </View>
+    <Input
+      label={label}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      secureTextEntry={secureTextEntry}
+      helperText={helperText}
+      errorMessage={errorMessage}
+      disabled={disabled}
+      multiline={multiline}
+      leftIcon={leftIcon}
+      rightIcon={rightIcon}
+      keyboardType={keyboardType}
+      containerStyle={containerStyle}
+      inputContainerStyle={mergedInputContainerStyle}
+      inputStyle={mergedInputStyle}
+      {...inputProps}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: spacing.md,
-  },
-  iconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: spacing.xs,
-  },
-});

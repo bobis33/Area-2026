@@ -15,6 +15,7 @@ export interface InputProps {
   rightIcon?: ReactNode;
   keyboardType?: RNTextInputProps['keyboardType'];
   containerStyle?: ViewStyle;
+  inputContainerStyle?: ViewStyle;
   inputStyle?: TextStyle;
 }
 

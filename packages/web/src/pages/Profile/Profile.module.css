@@ -38,12 +38,6 @@
   flex-shrink: 0;
 }
 
-.sectionTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
 
 /* Info Grid */
 .infoGrid {
@@ -90,20 +84,7 @@
   min-width: 0;
 }
 
-.infoLabel {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
 
-.infoValue {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-  word-break: break-word;
-}
 
 /* Role Badge */
 .roleBadge {
@@ -164,12 +145,6 @@
   letter-spacing: 0.05em;
 }
 
-.statValue {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  line-height: 1;
-}
 
 /* Actions Grid */
 .actionsGrid {
@@ -202,19 +177,6 @@
   flex: 1;
 }
 
-.actionTitle {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.actionDescription {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  margin: 0;
-  line-height: 1.5;
-}
 
 /* Responsive */
 @media (max-width: 768px) {

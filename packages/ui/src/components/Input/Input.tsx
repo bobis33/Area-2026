@@ -22,6 +22,7 @@ export const Input: React.FC<InputProps> = ({
   rightIcon,
   keyboardType,
   containerStyle,
+  inputContainerStyle,
   inputStyle,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -36,6 +37,7 @@ export const Input: React.FC<InputProps> = ({
       hasError && styles.inputContainerError,
       isFocused && !hasError && styles.inputContainerFocused,
       disabled && styles.inputContainerDisabled,
+      inputContainerStyle,
     ];
   };
 

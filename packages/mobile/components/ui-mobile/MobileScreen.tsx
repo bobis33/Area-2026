@@ -4,19 +4,23 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  StyleSheet,
   TouchableWithoutFeedback,
   View,
+  ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { spacing, fontSizes, fontWeights } from '@area/ui';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { MobileText as Text } from './MobileText';
 
 export interface MobileScreenProps {
   children: React.ReactNode;
   scroll?: boolean; // default true
   keyboardAware?: boolean; // default false for tab screens
   safeArea?: boolean; // default true
-  contentStyle?: any;
+  contentStyle?: ViewStyle;
+  title?: string;
+  headerRight?: React.ReactNode;
 }
 
 export const MobileScreen: React.FC<MobileScreenProps> = ({
@@ -25,6 +29,8 @@ export const MobileScreen: React.FC<MobileScreenProps> = ({
   keyboardAware = false,
   safeArea = true,
   contentStyle,
+  title,
+  headerRight,
 }) => {
   const { currentTheme } = useAppTheme();
 
@@ -34,39 +40,58 @@ export const MobileScreen: React.FC<MobileScreenProps> = ({
   const tabBarHeight = Platform.OS === 'ios' ? 88 : 64;
   const bottomPadding = tabBarHeight + currentTheme.spacing.xl;
 
-  const scrollContentStyle = [
-    styles.scrollContent,
-    {
-      paddingHorizontal: currentTheme.spacing.lg,
-      paddingTop: currentTheme.spacing.lg,
-      paddingBottom: bottomPadding,
-      backgroundColor: currentTheme.colors.background,
-    },
-    contentStyle,
-  ];
-
-  const nonScrollContentStyle = [
-    styles.nonScrollContent,
-    {
-      paddingHorizontal: currentTheme.spacing.lg,
-      paddingTop: currentTheme.spacing.lg,
-      paddingBottom: currentTheme.spacing.lg,
-      backgroundColor: currentTheme.colors.background,
-    },
-    contentStyle,
-  ];
-
-  const containerStyle = {
+  const containerStyle: ViewStyle = {
     flex: 1,
     backgroundColor: currentTheme.colors.background,
+  };
+
+  const screenContentStyle: ViewStyle = {
+    paddingTop: currentTheme.spacing.lg,
+    paddingBottom: scroll ? bottomPadding : currentTheme.spacing.lg,
+    paddingHorizontal: spacing.lg,
+    backgroundColor: currentTheme.colors.background,
+    ...contentStyle,
+  };
+
+  const renderHeader = () => {
+    if (!title && !headerRight) {
+      return null;
+    }
+
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: spacing.lg,
+          paddingTop: spacing.md,
+          paddingBottom: spacing.md,
+        }}
+      >
+        {title && (
+          <Text
+            variant="title"
+            style={{
+              fontSize: fontSizes['2xl'],
+              fontWeight: fontWeights.bold,
+              flex: 1,
+            }}
+          >
+            {title}
+          </Text>
+        )}
+        {headerRight && <View>{headerRight}</View>}
+      </View>
+    );
   };
 
   const renderContent = () => {
     if (scroll) {
       return (
         <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={scrollContentStyle}
+          style={{ flex: 1 }}
+          contentContainerStyle={screenContentStyle}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -75,19 +100,26 @@ export const MobileScreen: React.FC<MobileScreenProps> = ({
       );
     }
 
-    return <View style={nonScrollContentStyle}>{children}</View>;
+    return <View style={screenContentStyle}>{children}</View>;
   };
 
-  const content = safeArea ? (
-    <SafeAreaView style={containerStyle} edges={['top']}>
+  const content = (
+    <View style={containerStyle}>
+      {renderHeader()}
       {renderContent()}
+    </View>
+  );
+
+  const finalContent = safeArea ? (
+    <SafeAreaView style={containerStyle} edges={['top']}>
+      {content}
     </SafeAreaView>
   ) : (
-    <View style={containerStyle}>{renderContent()}</View>
+    content
   );
 
   if (!keyboardAware) {
-    return content;
+    return finalContent;
   }
 
   return (
@@ -97,20 +129,8 @@ export const MobileScreen: React.FC<MobileScreenProps> = ({
         keyboardVerticalOffset={80}
         style={containerStyle}
       >
-        {content}
+        {finalContent}
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
-  nonScrollContent: {
-    flex: 1,
-  },
-});

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { FiAlertCircle } from 'react-icons/fi';
-import { Button } from '@/components/ui';
+import { Button, Text } from '@/components/ui';
 import styles from './Auth.module.css';
 
 export default function OAuthError() {
@@ -37,19 +37,21 @@ export default function OAuthError() {
         </div>
 
         <div className={styles.authHeader}>
-          <h1 className={styles.authTitle}>Authentication Failed</h1>
-          <p className={styles.authSubtitle}>We couldn't sign you in</p>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="title">Authentication Failed</Text>
+          </div>
+          <Text variant="body" color="muted">We couldn't sign you in</Text>
         </div>
 
         <div className={styles.errorMessage} role="alert">
           <FiAlertCircle style={{ fontSize: '1.2em', flexShrink: 0 }} />
-          <span>{errorMessage}</span>
+          <Text variant="body" color="danger">{errorMessage}</Text>
         </div>
 
         <div className={styles.oauthErrorContent}>
-          <p className={styles.oauthErrorText}>
+          <Text variant="body" color="muted" style={{ marginBottom: 16 }}>
             Please try again or use a different sign-in method.
-          </p>
+          </Text>
 
           <Link to="/login" style={{ textDecoration: 'none' }}>
             <Button variant="primary" size="lg" fullWidth>
@@ -57,9 +59,9 @@ export default function OAuthError() {
             </Button>
           </Link>
 
-          <p className={styles.oauthErrorRedirect}>
+          <Text variant="caption" color="muted">
             Redirecting automatically in 5 seconds...
-          </p>
+          </Text>
         </div>
       </div>
     </div>

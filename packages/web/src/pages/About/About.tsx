@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fi';
 import { get } from '@/services/api';
 import type { AboutResponse } from '@/types';
-import { PageLayout, PageHeader, ContentGrid, Card } from '@/components/ui';
+import { PageLayout, PageHeader, ContentGrid, Card, Text } from '@/components/ui';
 import { ServiceIcon } from '@/components/icons';
 import styles from './About.module.css';
 
@@ -70,7 +70,7 @@ export default function About() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading server information...</p>
+          <Text variant="body" color="muted">Loading server information...</Text>
         </div>
       </PageLayout>
     );
@@ -84,8 +84,10 @@ export default function About() {
             <div className={styles.errorIcon}>
               <FiServer />
             </div>
-            <h2 className={styles.errorTitle}>Unable to load server info</h2>
-            <p className={styles.errorText}>{error || 'No data available'}</p>
+            <div style={{ marginBottom: 8 }}>
+              <Text variant="subtitle">Unable to load server info</Text>
+            </div>
+            <Text variant="body" color="danger">{error || 'No data available'}</Text>
           </div>
         </Card>
       </PageLayout>
@@ -106,7 +108,7 @@ export default function About() {
             <div className={styles.sectionIcon}>
               <FiServer />
             </div>
-            <h2 className={styles.sectionTitle}>Server Information</h2>
+            <Text variant="subtitle" style={{ margin: 0 }}>Server Information</Text>
           </div>
 
           <div className={styles.infoGrid}>
@@ -115,10 +117,10 @@ export default function About() {
                 <FiServer />
               </div>
               <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>Host</span>
-                <span className={styles.infoValue}>
+                <Text variant="caption" color="muted">Host</Text>
+                <Text variant="body">
                   {aboutData.client.host}
-                </span>
+                </Text>
               </div>
             </div>
 
@@ -127,10 +129,10 @@ export default function About() {
                 <FiClock />
               </div>
               <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>Current Time</span>
-                <span className={styles.infoValue}>
+                <Text variant="caption" color="muted">Current Time</Text>
+                <Text variant="body">
                   {formatTimestamp(aboutData.server.current_time)}
-                </span>
+                </Text>
               </div>
             </div>
 
@@ -139,12 +141,12 @@ export default function About() {
                 <div className={styles.infoIcon}>
                   <FiActivity />
                 </div>
-                <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Uptime</span>
-                  <span className={styles.infoValue}>
-                    {formatUptime(aboutData.server.uptime)}
-                  </span>
-                </div>
+              <div className={styles.infoContent}>
+                <Text variant="caption" color="muted">Uptime</Text>
+                <Text variant="body">
+                  {formatUptime(aboutData.server.uptime)}
+                </Text>
+              </div>
               </div>
             )}
 
@@ -153,12 +155,12 @@ export default function About() {
                 <div className={styles.infoIcon}>
                   <FiPackage />
                 </div>
-                <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Version</span>
-                  <span className={styles.infoValue}>
-                    {aboutData.server.version}
-                  </span>
-                </div>
+              <div className={styles.infoContent}>
+                <Text variant="caption" color="muted">Version</Text>
+                <Text variant="body">
+                  {aboutData.server.version}
+                </Text>
+              </div>
               </div>
             )}
           </div>
@@ -171,10 +173,10 @@ export default function About() {
           <div className={styles.sectionIcon}>
             <FiPackage />
           </div>
-          <h2 className={styles.sectionTitle}>Available Services</h2>
-          <span className={styles.sectionBadge}>
+          <Text variant="subtitle" style={{ margin: 0 }}>Available Services</Text>
+          <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
             {aboutData.server.services.length} Services
-          </span>
+          </Text>
         </div>
 
         {aboutData.server.services.length === 0 ||
@@ -184,10 +186,12 @@ export default function About() {
               <div className={styles.emptyIcon}>
                 <FiPackage />
               </div>
-              <h3 className={styles.emptyTitle}>No Services Yet</h3>
-              <p className={styles.emptyText}>
+              <div style={{ marginBottom: 8 }}>
+                <Text variant="subtitle">No Services Yet</Text>
+              </div>
+              <Text variant="body" color="muted">
                 No services are configured on the server at this time.
-              </p>
+              </Text>
             </div>
           </Card>
         ) : (
@@ -199,31 +203,31 @@ export default function About() {
                     <div className={styles.serviceIconWrapper}>
                       <ServiceIcon service={service.name} size={32} />
                     </div>
-                    <h3 className={styles.serviceTitle}>{service.name}</h3>
+                    <Text variant="subtitle" style={{ margin: 0 }}>{service.name}</Text>
                   </div>
 
                   <div className={styles.serviceSection}>
                     <div className={styles.serviceSectionHeader}>
                       <FiZap size={16} />
-                      <h4 className={styles.serviceSectionTitle}>Actions</h4>
-                      <span className={styles.serviceBadge}>
+                      <Text variant="body" style={{ fontWeight: '600', margin: 0 }}>Actions</Text>
+                      <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
                         {service.actions.length}
-                      </span>
+                      </Text>
                     </div>
                     {service.actions.length === 0 ||
                     !service.actions[0].name ? (
-                      <p className={styles.emptyList}>No actions available</p>
+                      <Text variant="body" color="muted">No actions available</Text>
                     ) : (
                       <ul className={styles.serviceList}>
                         {service.actions.map((action, actionIndex) => (
                           <li key={actionIndex} className={styles.serviceItem}>
-                            <span className={styles.itemName}>
+                            <Text variant="body" style={{ fontWeight: '600' }}>
                               {action.name}
-                            </span>
+                            </Text>
                             {action.description && (
-                              <span className={styles.itemDescription}>
+                              <Text variant="caption" color="muted">
                                 {action.description}
-                              </span>
+                              </Text>
                             )}
                           </li>
                         ))}
@@ -234,14 +238,14 @@ export default function About() {
                   <div className={styles.serviceSection}>
                     <div className={styles.serviceSectionHeader}>
                       <FiRefreshCw size={16} />
-                      <h4 className={styles.serviceSectionTitle}>Reactions</h4>
-                      <span className={styles.serviceBadge}>
+                      <Text variant="body" style={{ fontWeight: '600', margin: 0 }}>Reactions</Text>
+                      <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
                         {service.reactions.length}
-                      </span>
+                      </Text>
                     </div>
                     {service.reactions.length === 0 ||
                     !service.reactions[0].name ? (
-                      <p className={styles.emptyList}>No reactions available</p>
+                      <Text variant="body" color="muted">No reactions available</Text>
                     ) : (
                       <ul className={styles.serviceList}>
                         {service.reactions.map((reaction, reactionIndex) => (
@@ -249,13 +253,13 @@ export default function About() {
                             key={reactionIndex}
                             className={styles.serviceItem}
                           >
-                            <span className={styles.itemName}>
+                            <Text variant="body" style={{ fontWeight: '600' }}>
                               {reaction.name}
-                            </span>
+                            </Text>
                             {reaction.description && (
-                              <span className={styles.itemDescription}>
+                              <Text variant="caption" color="muted">
                                 {reaction.description}
-                              </span>
+                              </Text>
                             )}
                           </li>
                         ))}

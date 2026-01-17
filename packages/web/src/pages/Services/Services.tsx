@@ -14,6 +14,7 @@ import {
   ContentGrid,
   Card,
   Button,
+  Text,
 } from '@/components/ui';
 import {
   getLinkedProviders,
@@ -181,7 +182,7 @@ export default function Services() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading services...</p>
+          <Text variant="body" color="muted">Loading services...</Text>
         </div>
       </PageLayout>
     );
@@ -195,8 +196,10 @@ export default function Services() {
             <div className={styles.errorIcon}>
               <FiX size={48} />
             </div>
-            <h2 className={styles.errorTitle}>Unable to load services</h2>
-            <p className={styles.errorText}>{error}</p>
+            <div style={{ marginBottom: 8 }}>
+              <Text variant="subtitle">Unable to load services</Text>
+            </div>
+            <Text variant="body" color="danger">{error}</Text>
             <Button
               variant="primary"
               leftIcon={<FiRefreshCw />}
@@ -221,25 +224,25 @@ export default function Services() {
       <div className={styles.statsPanel}>
         <Card padding="lg" className={styles.statCard}>
           <div className={styles.statContent}>
-            <span className={styles.statValue}>
+            <Text variant="title" style={{ marginBottom: 4 }}>
               {connectedProviders.length}
-            </span>
-            <span className={styles.statLabel}>Connected</span>
+            </Text>
+            <Text variant="caption" color="muted">Connected</Text>
           </div>
         </Card>
         <Card padding="lg" className={styles.statCard}>
           <div className={styles.statContent}>
-            <span className={styles.statValue}>
+            <Text variant="title" style={{ marginBottom: 4 }}>
               {availableToConnect.length}
-            </span>
-            <span className={styles.statLabel}>Available</span>
+            </Text>
+            <Text variant="caption" color="muted">Available</Text>
           </div>
         </Card>
       </div>
 
       {error && (
         <div className={styles.errorBanner}>
-          <p>{error}</p>
+          <Text variant="body" color="danger">{error}</Text>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
             Dismiss
           </Button>
@@ -249,26 +252,28 @@ export default function Services() {
       {/* Connected Services */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Connected Services</h2>
-          <p className={styles.sectionSubtitle}>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="subtitle">Connected Services</Text>
+          </div>
+          <Text variant="body" color="muted">
             These providers are ready for your automations
-          </p>
+          </Text>
         </div>
 
         {allProviders.length === 0 ? (
           <Card padding="lg">
             <div className={styles.emptyState}>
-              <p className={styles.emptyText}>
+              <Text variant="body" color="muted">
                 No OAuth providers are configured on the server.
-              </p>
+              </Text>
             </div>
           </Card>
         ) : connectedProviders.length === 0 ? (
           <Card padding="lg">
             <div className={styles.emptyState}>
-              <p className={styles.emptyText}>
+              <Text variant="body" color="muted">
                 No services connected yet. Connect one below to get started.
-              </p>
+              </Text>
             </div>
           </Card>
         ) : (
@@ -291,19 +296,21 @@ export default function Services() {
                       >
                         <Icon />
                       </div>
-                      <span className={styles.statusBadgeConnected}>
+                      <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-success-soft)', color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: 4 }}>
                         <FiCheck size={14} />
                         Connected
-                      </span>
+                      </Text>
                     </div>
 
-                    <h3 className={styles.serviceTitle}>
-                      {meta?.label ?? getProviderLabel(provider)}
-                    </h3>
-                    <p className={styles.serviceDescription}>
+                    <div style={{ marginBottom: 8 }}>
+                      <Text variant="subtitle">
+                        {meta?.label ?? getProviderLabel(provider)}
+                      </Text>
+                    </div>
+                    <Text variant="body" color="muted">
                       {meta?.description ??
                         'Provider connected to your account.'}
-                    </p>
+                    </Text>
 
                     <div className={styles.serviceActions}>
                       <Button
@@ -328,18 +335,20 @@ export default function Services() {
       {/* Available Services */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Available to Connect</h2>
-          <p className={styles.sectionSubtitle}>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="subtitle">Available to Connect</Text>
+          </div>
+          <Text variant="body" color="muted">
             Authorize new providers to unlock more triggers and reactions
-          </p>
+          </Text>
         </div>
 
         {allProviders.length === 0 ? (
           <Card padding="lg">
             <div className={styles.emptyState}>
-              <p className={styles.emptyText}>
+              <Text variant="body" color="muted">
                 No OAuth providers are configured on the server.
-              </p>
+              </Text>
             </div>
           </Card>
         ) : availableToConnect.length === 0 ? (
@@ -348,10 +357,12 @@ export default function Services() {
               <div className={styles.emptyIcon}>
                 <FiCheck size={48} />
               </div>
-              <h3 className={styles.emptyTitle}>All Set!</h3>
-              <p className={styles.emptyText}>
+              <div style={{ marginBottom: 8 }}>
+                <Text variant="subtitle">All Set!</Text>
+              </div>
+              <Text variant="body" color="muted">
                 All available providers are already connected.
-              </p>
+              </Text>
             </div>
           </Card>
         ) : (
@@ -373,17 +384,19 @@ export default function Services() {
                       >
                         <Icon />
                       </div>
-                      <span className={styles.statusBadgeAvailable}>
+                      <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)', color: 'var(--color-text-muted)' }}>
                         Not connected
-                      </span>
+                      </Text>
                     </div>
 
-                    <h3 className={styles.serviceTitle}>
-                      {meta?.label ?? getProviderLabel(provider)}
-                    </h3>
-                    <p className={styles.serviceDescription}>
+                    <div style={{ marginBottom: 8 }}>
+                      <Text variant="subtitle">
+                        {meta?.label ?? getProviderLabel(provider)}
+                      </Text>
+                    </div>
+                    <Text variant="body" color="muted">
                       {meta?.description ?? 'Connect this provider to use it.'}
-                    </p>
+                    </Text>
 
                     <div className={styles.serviceActions}>
                       <Button

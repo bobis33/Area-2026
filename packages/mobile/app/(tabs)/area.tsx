@@ -280,133 +280,133 @@ export default function AreaScreen() {
 
   return (
     <View style={styles.container}>
-      <MobileScreen scroll safeArea keyboardAware={false}>
-        {/* Header */}
-        <FadeInView delay={0} spring>
-          <View style={styles.header}>
-            <Text variant="title" style={styles.title}>
+    <MobileScreen scroll safeArea keyboardAware={false}>
+      {/* Header */}
+      <FadeInView delay={0} spring>
+        <View style={styles.header}>
+          <Text variant="title" style={styles.title}>
               {t('area.title')}
-            </Text>
-            <Text variant="body" color="muted" style={styles.subtitle}>
+          </Text>
+          <Text variant="body" color="muted" style={styles.subtitle}>
               {t('area.subtitle')}
-            </Text>
-          </View>
-        </FadeInView>
+          </Text>
+        </View>
+      </FadeInView>
 
-        {/* Connected Services Section */}
-        {token && (
-          <FadeInView delay={50} spring>
-            <View style={styles.section}>
-              <Text variant="subtitle" style={styles.sectionTitle}>
+      {/* Connected Services Section */}
+      {token && (
+        <FadeInView delay={50} spring>
+        <View style={styles.section}>
+          <Text variant="subtitle" style={styles.sectionTitle}>
                 {t('area.connectedServices')}
-              </Text>
-              <View style={styles.servicesList}>
-                {loadingProviders ? (
-                  <View style={styles.emptyState}>
-                    <Text variant="body" color="muted">
+          </Text>
+          <View style={styles.servicesList}>
+              {loadingProviders ? (
+                <View style={styles.emptyState}>
+                  <Text variant="body" color="muted">
                       {t('area.loadingServices')}
-                    </Text>
-                  </View>
-                ) : availableProviders.length === 0 ? (
-                  <View style={styles.emptyState}>
-                    <Text variant="body" color="muted">
+                  </Text>
+                </View>
+              ) : availableProviders.length === 0 ? (
+                <View style={styles.emptyState}>
+                  <Text variant="body" color="muted">
                       {t('area.noServicesAvailable')}
-                    </Text>
-                  </View>
-                ) : (
-                  availableProviders.map((provider, index) => {
-                    // Normalize provider names for comparison (lowercase)
-                    const normalizedProvider = String(provider).toLowerCase();
-                    const isConnected = linkedProviders.some(
+                  </Text>
+                </View>
+              ) : (
+                availableProviders.map((provider, index) => {
+                // Normalize provider names for comparison (lowercase)
+                const normalizedProvider = String(provider).toLowerCase();
+                const isConnected = linkedProviders.some(
                       (linked) =>
                         String(linked).toLowerCase() === normalizedProvider,
-                    );
-                    const brandColors = getServiceBrandColors(provider);
+                );
+                const brandColors = getServiceBrandColors(provider);
                     const hasBrandColors =
                       brandColors.backgroundColor !== 'transparent';
-                    return (
+                return (
                       <FadeInView
                         key={provider}
                         delay={100 + index * 50}
                         spring
                       >
-                        <AnimatedCard haptic>
-                          <SectionCard>
-                            <TouchableOpacity
-                              style={styles.serviceRow}
-                              activeOpacity={0.7}
-                            >
-                              <View style={styles.serviceLeft}>
-                                <View
-                                  style={[
-                                    styles.serviceIconContainer,
-                                    {
+                <AnimatedCard haptic>
+                  <SectionCard>
+                        <TouchableOpacity
+                          style={styles.serviceRow}
+                          activeOpacity={0.7}
+                        >
+                      <View style={styles.serviceLeft}>
+                            <View
+                              style={[
+                                styles.serviceIconContainer,
+                                {
                                       backgroundColor:
                                         hasBrandColors && isConnected
-                                          ? brandColors.backgroundColor
-                                          : currentTheme.colors.surfaceMuted,
-                                    },
-                                  ]}
-                                >
-                                  <ServiceIcon
-                                    service={provider}
-                                    size={24}
-                                    color={
-                                      hasBrandColors && isConnected
-                                        ? brandColors.iconColor
-                                        : isConnected
-                                          ? currentTheme.colors.primary
-                                          : currentTheme.colors.textMuted
-                                    }
-                                  />
-                                </View>
-                                <Text variant="body" style={styles.serviceName}>
+                                    ? brandColors.backgroundColor
+                                    : currentTheme.colors.surfaceMuted,
+                                },
+                              ]}
+                            >
+                          <ServiceIcon
+                                service={provider}
+                            size={24}
+                                color={
+                                  hasBrandColors && isConnected
+                                    ? brandColors.iconColor
+                                    : isConnected
+                                    ? currentTheme.colors.primary
+                                    : currentTheme.colors.textMuted
+                                }
+                          />
+                        </View>
+                        <Text variant="body" style={styles.serviceName}>
                                   {provider.charAt(0).toUpperCase() +
                                     provider.slice(1)}
-                                </Text>
-                              </View>
-                              <View style={styles.serviceRight}>
-                                <MobileBadge
-                                  variant={isConnected ? 'connected' : 'paused'}
-                                  showDot
-                                >
+                        </Text>
+                      </View>
+                      <View style={styles.serviceRight}>
+                          <MobileBadge
+                            variant={isConnected ? 'connected' : 'paused'}
+                            showDot
+                          >
                                   {isConnected
                                     ? t('area.connected')
                                     : t('area.notConnected')}
-                                </MobileBadge>
-                                {isConnected ? (
-                                  <TouchableOpacity
+                          </MobileBadge>
+                          {isConnected ? (
+                            <TouchableOpacity
                                     onPress={(e) =>
                                       handleUnlinkProvider(provider, e)
                                     }
-                                    disabled={unlinkingProvider === provider}
-                                    style={[
-                                      styles.actionButton,
-                                      {
+                              disabled={unlinkingProvider === provider}
+                              style={[
+                                styles.actionButton,
+                                {
                                         opacity:
                                           unlinkingProvider === provider
                                             ? 0.5
                                             : 1,
-                                        borderColor: currentTheme.colors.danger,
-                                      },
-                                    ]}
-                                    activeOpacity={0.7}
-                                  >
-                                    <IconSymbol
-                                      name="xmark.circle"
-                                      size={20}
-                                      color={currentTheme.colors.danger}
-                                    />
-                                  </TouchableOpacity>
-                                ) : (
-                                  <TouchableOpacity
+                                  borderColor: currentTheme.colors.danger,
+                                },
+                              ]}
+                              activeOpacity={0.7}
+                            >
+                              <IconSymbol
+                                name="xmark.circle"
+                                size={20}
+                                color={currentTheme.colors.danger}
+                              />
+                            </TouchableOpacity>
+                          ) : (
+                            <TouchableOpacity
                                     onPress={(e) =>
                                       handleConnectProvider(provider, e)
                                     }
-                                    disabled={connectingProvider === provider}
-                                    style={[
-                                      styles.actionButton,
-                                      {
+                              disabled={connectingProvider === provider}
+                              style={[
+                                styles.actionButton,
+                                {
                                         opacity:
                                           connectingProvider === provider
                                             ? 0.5
@@ -415,97 +415,97 @@ export default function AreaScreen() {
                                           currentTheme.colors.primary,
                                         backgroundColor:
                                           currentTheme.colors.primarySoft,
-                                      },
-                                    ]}
-                                    activeOpacity={0.7}
-                                  >
-                                    {connectingProvider === provider ? (
-                                      <IconSymbol
-                                        name="arrow.clockwise"
-                                        size={20}
-                                        color={currentTheme.colors.primary}
-                                      />
-                                    ) : (
-                                      <IconSymbol
-                                        name="plus.circle"
-                                        size={20}
-                                        color={currentTheme.colors.primary}
-                                      />
-                                    )}
-                                  </TouchableOpacity>
-                                )}
-                              </View>
+                                },
+                              ]}
+                              activeOpacity={0.7}
+                            >
+                              {connectingProvider === provider ? (
+                                <IconSymbol
+                                  name="arrow.clockwise"
+                                  size={20}
+                                  color={currentTheme.colors.primary}
+                                />
+                              ) : (
+                                <IconSymbol
+                                  name="plus.circle"
+                                  size={20}
+                                  color={currentTheme.colors.primary}
+                                />
+                              )}
                             </TouchableOpacity>
-                          </SectionCard>
-                        </AnimatedCard>
-                      </FadeInView>
-                    );
-                  })
-                )}
-              </View>
-            </View>
-          </FadeInView>
-        )}
+                          )}
+                      </View>
+                    </TouchableOpacity>
+                  </SectionCard>
+                </AnimatedCard>
+              </FadeInView>
+                );
+              })
+            )}
+          </View>
+        </View>
+      </FadeInView>
+      )}
 
-        {/* Scenarios Section */}
-        <FadeInView delay={100} spring>
-          <View style={styles.section}>
-            <Text variant="subtitle" style={styles.sectionTitle}>
+      {/* Scenarios Section */}
+      <FadeInView delay={100} spring>
+        <View style={styles.section}>
+          <Text variant="subtitle" style={styles.sectionTitle}>
               {t('area.scenarios')}
-            </Text>
-            <View style={styles.automationsList}>
-              {loading ? (
-                <View style={styles.emptyState}>
-                  <Text variant="body" color="muted">
-                    Loading…
-                  </Text>
-                </View>
-              ) : automations.length === 0 ? (
-                <View style={styles.emptyState}>
-                  <Text variant="body" color="muted">
+          </Text>
+          <View style={styles.automationsList}>
+            {loading ? (
+              <View style={styles.emptyState}>
+                <Text variant="body" color="muted">
+                  Loading…
+                </Text>
+              </View>
+            ) : automations.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Text variant="body" color="muted">
                     {t('area.noAutomations')}
-                  </Text>
-                </View>
-              ) : (
-                automations.map((automation, index) => (
+                </Text>
+              </View>
+            ) : (
+              automations.map((automation, index) => (
                   <FadeInView
                     key={automation.id}
                     delay={150 + index * 100}
                     spring
                   >
-                    <AnimatedCard
-                      haptic
+                <AnimatedCard
+                  haptic
                       onPress={() => setSelectedAutomation(automation)}
                     >
-                      <SectionCard>
-                        <View style={styles.automationRow}>
-                          <View style={styles.automationHeader}>
-                            <Text variant="body" style={styles.automationName}>
-                              {automation.name}
-                            </Text>
+                  <SectionCard>
+                    <View style={styles.automationRow}>
+                      <View style={styles.automationHeader}>
+                        <Text variant="body" style={styles.automationName}>
+                          {automation.name}
+                        </Text>
                             <View
                               style={styles.automationControls}
                               onStartShouldSetResponder={() => true}
                               onResponderTerminationRequest={() => false}
                             >
-                              <MobileBadge
+                            <MobileBadge
                                 variant={
                                   automation.status === 'active'
                                     ? 'active'
                                     : 'paused'
                                 }
-                                showDot
-                              >
+                              showDot
+                            >
                                 {automation.status === 'active'
                                   ? t('area.active')
                                   : t('area.paused')}
-                              </MobileBadge>
-                              <TouchableOpacity
+                            </MobileBadge>
+                            <TouchableOpacity
                                 onPress={() => handleToggleActive(automation)}
-                                disabled={togglingIds.has(automation.id)}
-                                style={[
-                                  styles.toggleButton,
-                                  {
+                              disabled={togglingIds.has(automation.id)}
+                              style={[
+                                styles.toggleButton,
+                                {
                                     opacity: togglingIds.has(automation.id)
                                       ? 0.5
                                       : 1,
@@ -515,147 +515,147 @@ export default function AreaScreen() {
                                       currentTheme.colors.border,
                                     backgroundColor:
                                       automation.status === 'active'
-                                        ? currentTheme.colors.surfaceMuted
-                                        : currentTheme.colors.primarySoft,
-                                  },
-                                ]}
+                                    ? currentTheme.colors.surfaceMuted
+                                    : currentTheme.colors.primarySoft,
+                                },
+                              ]}
                                 activeOpacity={0.7}
                               >
-                                <Text
-                                  variant="caption"
+                              <Text
+                                variant="caption"
                                   style={
                                     [
-                                      styles.toggleButtonText,
-                                      {
+                                  styles.toggleButtonText,
+                                  {
                                         color:
                                           automation.status === 'active'
-                                            ? currentTheme.colors.text
-                                            : currentTheme.colors.primary,
-                                      },
+                                      ? currentTheme.colors.text
+                                      : currentTheme.colors.primary,
+                                  },
                                     ] as any
                                   }
                                 >
                                   {automation.status === 'active'
                                     ? t('area.pause')
                                     : t('area.resume')}
-                                </Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity
+                          </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
                                 onPress={() => handleDelete(automation)}
-                                disabled={deletingIds.has(automation.id)}
-                                style={[
-                                  styles.deleteButton,
-                                  {
+                              disabled={deletingIds.has(automation.id)}
+                              style={[
+                                styles.deleteButton,
+                                {
                                     opacity: deletingIds.has(automation.id)
                                       ? 0.5
                                       : 1,
-                                    borderColor: currentTheme.colors.danger,
-                                  },
-                                ]}
+                                  borderColor: currentTheme.colors.danger,
+                                },
+                              ]}
                                 activeOpacity={0.7}
                               >
-                                <IconSymbol
-                                  name="trash"
-                                  size={16}
-                                  color={currentTheme.colors.danger}
-                                />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                          <View style={styles.automationFlow}>
-                            <View style={styles.flowItem}>
-                              <Text variant="caption" color="muted">
-                                Action
-                              </Text>
-                              <Text variant="body" style={styles.flowText}>
-                                {automation.action}
-                              </Text>
-                            </View>
-                            <IconSymbol
-                              size={20}
-                              name="arrow.right"
-                              color={currentTheme.colors.textMuted}
-                            />
-                            <View style={styles.flowItem}>
-                              <Text variant="caption" color="muted">
-                                Reaction
-                              </Text>
-                              <Text variant="body" style={styles.flowText}>
-                                {automation.reaction}
-                              </Text>
-                            </View>
-                          </View>
+                              <IconSymbol
+                                name="trash"
+                                size={16}
+                                color={currentTheme.colors.danger}
+                              />
+                            </TouchableOpacity>
                         </View>
-                      </SectionCard>
-                    </AnimatedCard>
-                  </FadeInView>
-                ))
-              )}
-            </View>
+                      </View>
+                      <View style={styles.automationFlow}>
+                        <View style={styles.flowItem}>
+                          <Text variant="caption" color="muted">
+                            Action
+                          </Text>
+                          <Text variant="body" style={styles.flowText}>
+                            {automation.action}
+                          </Text>
+                        </View>
+                        <IconSymbol
+                          size={20}
+                          name="arrow.right"
+                          color={currentTheme.colors.textMuted}
+                        />
+                        <View style={styles.flowItem}>
+                          <Text variant="caption" color="muted">
+                            Reaction
+                          </Text>
+                          <Text variant="body" style={styles.flowText}>
+                            {automation.reaction}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </SectionCard>
+                </AnimatedCard>
+              </FadeInView>
+              ))
+            )}
           </View>
-        </FadeInView>
+        </View>
+      </FadeInView>
 
-        {/* Automation Details Modal */}
-        <Modal
-          visible={!!selectedAutomation}
-          onClose={() => setSelectedAutomation(null)}
-          title={selectedAutomation?.name}
-        >
-          {selectedAutomation && (
-            <View style={styles.modalContent}>
-              <View style={styles.modalSection}>
-                <Text variant="caption" color="muted" style={styles.modalLabel}>
+      {/* Automation Details Modal */}
+      <Modal
+        visible={!!selectedAutomation}
+        onClose={() => setSelectedAutomation(null)}
+        title={selectedAutomation?.name}
+      >
+        {selectedAutomation && (
+          <View style={styles.modalContent}>
+            <View style={styles.modalSection}>
+              <Text variant="caption" color="muted" style={styles.modalLabel}>
                   {t('area.actionService')}
-                </Text>
-                <Text variant="body" style={styles.modalValue}>
-                  {selectedAutomation.actionService}
-                </Text>
-              </View>
-              <View style={styles.modalSection}>
-                <Text variant="caption" color="muted" style={styles.modalLabel}>
+              </Text>
+              <Text variant="body" style={styles.modalValue}>
+                {selectedAutomation.actionService}
+              </Text>
+            </View>
+            <View style={styles.modalSection}>
+              <Text variant="caption" color="muted" style={styles.modalLabel}>
                   {t('area.actionDescription')}
-                </Text>
-                <Text variant="body" style={styles.modalValue}>
-                  {selectedAutomation.action}
-                </Text>
-              </View>
-              <View style={styles.modalSection}>
-                <Text variant="caption" color="muted" style={styles.modalLabel}>
+              </Text>
+              <Text variant="body" style={styles.modalValue}>
+                {selectedAutomation.action}
+              </Text>
+            </View>
+            <View style={styles.modalSection}>
+              <Text variant="caption" color="muted" style={styles.modalLabel}>
                   {t('area.reactionService')}
-                </Text>
-                <Text variant="body" style={styles.modalValue}>
-                  {selectedAutomation.reactionService}
-                </Text>
-              </View>
-              <View style={styles.modalSection}>
-                <Text variant="caption" color="muted" style={styles.modalLabel}>
+              </Text>
+              <Text variant="body" style={styles.modalValue}>
+                {selectedAutomation.reactionService}
+              </Text>
+            </View>
+            <View style={styles.modalSection}>
+              <Text variant="caption" color="muted" style={styles.modalLabel}>
                   {t('area.reactionDescription')}
-                </Text>
-                <Text variant="body" style={styles.modalValue}>
-                  {selectedAutomation.reaction}
-                </Text>
-              </View>
-              <View style={styles.modalSection}>
-                <Text variant="caption" color="muted" style={styles.modalLabel}>
+              </Text>
+              <Text variant="body" style={styles.modalValue}>
+                {selectedAutomation.reaction}
+              </Text>
+            </View>
+            <View style={styles.modalSection}>
+              <Text variant="caption" color="muted" style={styles.modalLabel}>
                   {t('area.status')}
-                </Text>
-                <MobileBadge
+              </Text>
+              <MobileBadge
                   variant={
                     selectedAutomation.status === 'active'
                       ? 'active'
                       : 'inactive'
                   }
-                  showDot
-                >
+                showDot
+              >
                   {selectedAutomation.status === 'active'
                     ? 'Active'
                     : 'Inactive'}
-                </MobileBadge>
-              </View>
+              </MobileBadge>
             </View>
-          )}
-        </Modal>
-      </MobileScreen>
+          </View>
+        )}
+      </Modal>
+    </MobileScreen>
 
       {/* Floating Create Button - Fixed position */}
       {token && (

@@ -7,7 +7,7 @@ import {
   FiArrowRight,
 } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
-import { Button, Card } from '@/components/ui';
+import { Button, Card, Text } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import styles from './Home.module.css';
 
@@ -50,16 +50,18 @@ export default function Home() {
             <img src="/logo.svg" alt="AREA" />
           </div>
 
-          <h1 className={styles.heroTitle}>
-            Automate Your
-            <span className={styles.heroTitleGradient}> Digital Life</span>
-          </h1>
+          <Text variant="title" style={{ marginBottom: 16 }}>
+            Automate Your{' '}
+            <span style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-brand-primary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Digital Life
+            </span>
+          </Text>
 
-          <p className={styles.heroDescription}>
+          <Text variant="body" color="muted" style={{ marginBottom: 32 }}>
             Connect your favorite services and create powerful automations.
             <br />
             When an action happens, trigger a reaction automatically.
-          </p>
+          </Text>
 
           <div className={styles.ctaButtons}>
             <Link to="/register">
@@ -87,12 +89,12 @@ export default function Home() {
       <section className={styles.featuresSection}>
         <div className={styles.sectionHeader}>
           <div className={styles.sectionBadge}>How It Works</div>
-          <h2 className={styles.sectionTitle}>
-            Three simple steps to automate anything
-          </h2>
-          <p className={styles.sectionSubtitle}>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="subtitle">Three simple steps to automate anything</Text>
+          </div>
+          <Text variant="body" color="muted">
             No coding required. Create powerful automations in minutes.
-          </p>
+          </Text>
         </div>
 
         <div className={styles.featureGrid}>
@@ -103,11 +105,11 @@ export default function Home() {
                 <div className={styles.featureIconBg}></div>
               </div>
               <div className={styles.featureNumber}>01</div>
-              <h3 className={styles.featureTitle}>Connect Services</h3>
-              <p className={styles.featureDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>Connect Services</Text>
+              <Text variant="body" color="muted">
                 Link your email, social media, and productivity tools in just a
                 few clicks
-              </p>
+              </Text>
             </div>
           </Card>
 
@@ -118,11 +120,11 @@ export default function Home() {
                 <div className={styles.featureIconBg}></div>
               </div>
               <div className={styles.featureNumber}>02</div>
-              <h3 className={styles.featureTitle}>Create Actions</h3>
-              <p className={styles.featureDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>Create Actions</Text>
+              <Text variant="body" color="muted">
                 Set triggers like "new email" or "new tweet" to start your
                 automation
-              </p>
+              </Text>
             </div>
           </Card>
 
@@ -133,11 +135,11 @@ export default function Home() {
                 <div className={styles.featureIconBg}></div>
               </div>
               <div className={styles.featureNumber}>03</div>
-              <h3 className={styles.featureTitle}>Set Reactions</h3>
-              <p className={styles.featureDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>Set Reactions</Text>
+              <Text variant="body" color="muted">
                 Define what happens: send notification, create task, and much
                 more
-              </p>
+              </Text>
             </div>
           </Card>
         </div>
@@ -147,12 +149,12 @@ export default function Home() {
       <section className={styles.benefitsSection}>
         <div className={styles.sectionHeader}>
           <div className={styles.sectionBadge}>Why Choose AREA?</div>
-          <h2 className={styles.sectionTitle}>
-            The smart way to automate your workflow
-          </h2>
-          <p className={styles.sectionSubtitle}>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="subtitle">The smart way to automate your workflow</Text>
+          </div>
+          <Text variant="body" color="muted">
             Everything you need to boost your productivity
-          </p>
+          </Text>
         </div>
 
         <div className={styles.benefitsGrid}>
@@ -161,11 +163,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Easy to use</h3>
-              <p className={styles.benefitDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>Easy to use</Text>
+              <Text variant="body" color="muted">
                 No coding required - create automations with our intuitive
                 interface
-              </p>
+              </Text>
             </div>
           </div>
 
@@ -174,10 +176,10 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Powerful integrations</h3>
-              <p className={styles.benefitDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>Powerful integrations</Text>
+              <Text variant="body" color="muted">
                 Connect all your favorite tools and services in one place
-              </p>
+              </Text>
             </div>
           </div>
 
@@ -186,10 +188,10 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Save time</h3>
-              <p className={styles.benefitDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>Save time</Text>
+              <Text variant="body" color="muted">
                 Automate repetitive tasks and focus on what matters most
-              </p>
+              </Text>
             </div>
           </div>
 
@@ -198,10 +200,10 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Stay organized</h3>
-              <p className={styles.benefitDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>Stay organized</Text>
+              <Text variant="body" color="muted">
                 Keep everything in sync across all your apps and services
-              </p>
+              </Text>
             </div>
           </div>
 
@@ -210,10 +212,10 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Always reliable</h3>
-              <p className={styles.benefitDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>Always reliable</Text>
+              <Text variant="body" color="muted">
                 Your automations run 24/7 with 99.9% uptime guarantee
-              </p>
+              </Text>
             </div>
           </div>
 
@@ -222,10 +224,10 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Secure & private</h3>
-              <p className={styles.benefitDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>Secure & private</Text>
+              <Text variant="body" color="muted">
                 Enterprise-grade security keeps your data safe and encrypted
-              </p>
+              </Text>
             </div>
           </div>
         </div>
@@ -234,10 +236,12 @@ export default function Home() {
       {/* CTA Section */}
       <section className={styles.ctaSection}>
         <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>Ready to Get Started?</h2>
-          <p className={styles.ctaDescription}>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="subtitle">Ready to Get Started?</Text>
+          </div>
+          <Text variant="body" color="muted" style={{ marginBottom: 24 }}>
             Join thousands of users automating their digital life.
-          </p>
+          </Text>
           <Link to="/register">
             <Button variant="primary" size="lg" rightIcon={<FiArrowRight />}>
               Create Your Account
@@ -266,9 +270,9 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.footerBottom}>
-          <p className={styles.footerCopyright}>
+          <Text variant="caption" color="muted">
             © {new Date().getFullYear()} AREA. All rights reserved.
-          </p>
+          </Text>
         </div>
       </footer>
     </div>

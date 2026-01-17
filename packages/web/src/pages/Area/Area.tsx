@@ -10,6 +10,7 @@ import {
   Card,
   Button,
   Input,
+  Text,
 } from '@/components/ui';
 import styles from './Area.module.css';
 
@@ -288,7 +289,7 @@ export default function Area() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading automations...</p>
+          <Text variant="body" color="muted">Loading automations...</Text>
         </div>
       </PageLayout>
     );
@@ -312,7 +313,7 @@ export default function Area() {
 
       {error && (
         <div className={styles.errorBanner}>
-          <p>{error}</p>
+          <Text variant="body" color="danger">{error}</Text>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
             Dismiss
           </Button>
@@ -325,10 +326,14 @@ export default function Area() {
             <div className={styles.emptyIcon}>
               <FiPlus size={48} />
             </div>
-            <h3 className={styles.emptyTitle}>No automations yet</h3>
-            <p className={styles.emptyText}>
-              Create your first automation to connect actions and reactions
-            </p>
+            <div style={{ marginBottom: 16 }}>
+              <Text variant="subtitle">No automations yet</Text>
+            </div>
+            <div style={{ marginBottom: 24 }}>
+              <Text variant="body" color="muted">
+                Create your first automation to connect actions and reactions
+              </Text>
+            </div>
             <Button
               variant="primary"
               leftIcon={<FiPlus />}
@@ -344,27 +349,31 @@ export default function Area() {
             <Card key={area.id} padding="lg" hoverable>
               <div className={styles.automationCard}>
                 <div className={styles.automationHeader}>
-                  <h3 className={styles.automationName}>{area.name}</h3>
+                  <Text variant="subtitle" style={{ margin: 0 }}>{area.name}</Text>
                   <div className={styles.automationActions}>
-                    <span
-                      className={`${styles.statusBadge} ${
-                        area.is_active
-                          ? styles.statusActive
-                          : styles.statusInactive
-                      }`}
+                    <div
+                      style={{
+                        padding: '4px 8px',
+                        borderRadius: 8,
+                        backgroundColor: area.is_active ? 'var(--color-success-soft)' : 'var(--color-surface-muted)',
+                        color: area.is_active ? 'var(--color-success)' : 'var(--color-text-muted)',
+                      } as React.CSSProperties}
                     >
-                      {area.is_active ? 'Active' : 'Inactive'}
-                    </span>
-                    <button
+                      <Text variant="caption">
+                        {area.is_active ? 'Active' : 'Inactive'}
+                      </Text>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteArea(area.id);
                       }}
-                      className={styles.deleteButton}
-                      title="Delete automation"
+                      style={{ minWidth: 32, padding: 4 }}
                     >
                       <FiTrash />
-                    </button>
+                    </Button>
                   </div>
                 </div>
 
@@ -374,10 +383,10 @@ export default function Area() {
                       <ServiceIcon service={area.action.service} size={32} />
                     </div>
                     <div className={styles.flowContent}>
-                      <span className={styles.flowLabel}>Action</span>
-                      <p className={styles.flowText}>
+                      <Text variant="caption" color="muted">Action</Text>
+                      <Text variant="body">
                         {area.action.service}.{area.action.type}
-                      </p>
+                      </Text>
                     </div>
                   </div>
 
@@ -390,18 +399,18 @@ export default function Area() {
                       <ServiceIcon service={area.reaction.service} size={32} />
                     </div>
                     <div className={styles.flowContent}>
-                      <span className={styles.flowLabel}>Reaction</span>
-                      <p className={styles.flowText}>
+                      <Text variant="caption" color="muted">Reaction</Text>
+                      <Text variant="body">
                         {area.reaction.service}.{area.reaction.type}
-                      </p>
+                      </Text>
                     </div>
                   </div>
                 </div>
 
                 <div className={styles.automationFooter}>
-                  <span className={styles.createdDate}>
+                  <Text variant="caption" color="muted">
                     Created {new Date(area.created_at).toLocaleDateString()}
-                  </span>
+                  </Text>
                 </div>
               </div>
             </Card>
@@ -420,16 +429,18 @@ export default function Area() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Create New Automation</h2>
-              <button
-                className={styles.modalClose}
+              <Text variant="subtitle" style={{ margin: 0 }}>Create New Automation</Text>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   setShowCreateModal(false);
                   resetForm();
                 }}
+                style={{ minWidth: 32, padding: 4 }}
               >
                 <FiX size={24} />
-              </button>
+              </Button>
             </div>
 
             <div className={styles.modalBody}>
@@ -443,21 +454,23 @@ export default function Area() {
               />
 
               <div className={styles.formSection}>
-                <label className={styles.formLabel}>
-                  Action (Trigger) <span className={styles.required}>*</span>
-                </label>
+                <div style={{ marginBottom: 8 }}>
+                  <Text variant="body" style={{ fontWeight: '600' }}>
+                    Action (Trigger) <Text variant="caption" color="danger">*</Text>
+                  </Text>
+                </div>
                 {selectedAction ? (
                   <div className={styles.selectedItem}>
                     <div className={styles.selectedItemIcon}>
                       <ServiceIcon service={selectedAction.service} size={32} />
                     </div>
                     <div className={styles.selectedItemInfo}>
-                      <span className={styles.selectedService}>
+                      <Text variant="body" style={{ fontWeight: '600' }}>
                         {selectedAction.service}
-                      </span>
-                      <span className={styles.selectedType}>
+                      </Text>
+                      <Text variant="caption" color="muted">
                         {selectedAction.type}
-                      </span>
+                      </Text>
                     </div>
                     <Button
                       variant="secondary"
@@ -481,7 +494,9 @@ export default function Area() {
                 {selectedAction &&
                   getParameterFields(selectedAction.parameters).length > 0 && (
                     <div className={styles.paramsContainer}>
-                      <h4 className={styles.paramsTitle}>Action Parameters</h4>
+                      <div style={{ marginBottom: 16 }}>
+                        <Text variant="body" style={{ fontWeight: '600' }}>Action Parameters</Text>
+                      </div>
                       {getParameterFields(selectedAction.parameters).map(
                         (field) => (
                           <Input
@@ -506,9 +521,11 @@ export default function Area() {
               </div>
 
               <div className={styles.formSection}>
-                <label className={styles.formLabel}>
-                  Reaction (Response) <span className={styles.required}>*</span>
-                </label>
+                <div style={{ marginBottom: 8 }}>
+                  <Text variant="body" style={{ fontWeight: '600' }}>
+                    Reaction (Response) <Text variant="caption" color="danger">*</Text>
+                  </Text>
+                </div>
                 {selectedReaction ? (
                   <div className={styles.selectedItem}>
                     <div className={styles.selectedItemIcon}>
@@ -518,12 +535,12 @@ export default function Area() {
                       />
                     </div>
                     <div className={styles.selectedItemInfo}>
-                      <span className={styles.selectedService}>
+                      <Text variant="body" style={{ fontWeight: '600' }}>
                         {selectedReaction.service}
-                      </span>
-                      <span className={styles.selectedType}>
+                      </Text>
+                      <Text variant="caption" color="muted">
                         {selectedReaction.type}
-                      </span>
+                      </Text>
                     </div>
                     <Button
                       variant="secondary"
@@ -548,9 +565,11 @@ export default function Area() {
                   getParameterFields(selectedReaction.parameters).length >
                     0 && (
                     <div className={styles.paramsContainer}>
-                      <h4 className={styles.paramsTitle}>
-                        Reaction Parameters
-                      </h4>
+                      <div style={{ marginBottom: 16 }}>
+                        <Text variant="body" style={{ fontWeight: '600' }}>
+                          Reaction Parameters
+                        </Text>
+                      </div>
                       {getParameterFields(selectedReaction.parameters).map(
                         (field) => (
                           <Input
@@ -611,17 +630,19 @@ export default function Area() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>
+              <Text variant="subtitle" style={{ margin: 0 }}>
                 {selectionStep === 'service'
                   ? `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'} Service`
                   : `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'}`}
-              </h2>
-              <button
-                className={styles.modalClose}
+              </Text>
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setSelectionMode(null)}
+                style={{ minWidth: 32, padding: 4 }}
               >
                 <FiX size={24} />
-              </button>
+              </Button>
             </div>
 
             <div className={styles.modalBody}>
@@ -632,14 +653,15 @@ export default function Area() {
                       ? groupActionsByService()
                       : groupReactionsByService(),
                   ).map((service) => (
-                    <button
+                    <Button
                       key={service}
-                      className={styles.serviceCard}
+                      variant="secondary"
                       onClick={() => handleServiceSelect(service)}
+                      style={{ flexDirection: 'column', gap: 8, padding: 24 }}
                     >
                       <ServiceIcon service={service} size={48} />
-                      <span className={styles.serviceName}>{service}</span>
-                    </button>
+                      <Text variant="body" style={{ fontWeight: '600' }}>{service}</Text>
+                    </Button>
                   ))}
                 </div>
               ) : (
@@ -648,34 +670,36 @@ export default function Area() {
                     selectedActionService &&
                     groupActionsByService()[selectedActionService]?.map(
                       (action) => (
-                        <button
+                        <Button
                           key={`${action.service}-${action.type}`}
-                          className={styles.itemCard}
+                          variant="secondary"
                           onClick={() => handleActionSelect(action)}
+                          style={{ flexDirection: 'column', gap: 4, padding: 16 }}
                         >
-                          <span className={styles.itemType}>{action.type}</span>
-                          <span className={styles.itemService}>
+                          <Text variant="body" style={{ fontWeight: '600' }}>{action.type}</Text>
+                          <Text variant="caption" color="muted">
                             {action.service}
-                          </span>
-                        </button>
+                          </Text>
+                        </Button>
                       ),
                     )}
                   {selectionMode === 'reaction' &&
                     selectedReactionService &&
                     groupReactionsByService()[selectedReactionService]?.map(
                       (reaction) => (
-                        <button
+                        <Button
                           key={`${reaction.service}-${reaction.type}`}
-                          className={styles.itemCard}
+                          variant="secondary"
                           onClick={() => handleReactionSelect(reaction)}
+                          style={{ flexDirection: 'column', gap: 4, padding: 16 }}
                         >
-                          <span className={styles.itemType}>
+                          <Text variant="body" style={{ fontWeight: '600' }}>
                             {reaction.type}
-                          </span>
-                          <span className={styles.itemService}>
+                          </Text>
+                          <Text variant="caption" color="muted">
                             {reaction.service}
-                          </span>
-                        </button>
+                          </Text>
+                        </Button>
                       ),
                     )}
                 </div>

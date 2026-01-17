@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FiActivity, FiSettings, FiUser, FiInfo } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
-import { PageLayout, PageHeader, ContentGrid, Card } from '@/components/ui';
+import { PageLayout, PageHeader, ContentGrid, Card, Text } from '@/components/ui';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
@@ -25,12 +25,12 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiActivity />
               </div>
-              <h2 className={styles.cardTitle}>My Automations</h2>
-              <p className={styles.cardDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>My Automations</Text>
+              <Text variant="body" color="muted" style={{ marginBottom: 8 }}>
                 Create and manage your action-reaction automations. Connect
                 services and build powerful workflows.
-              </p>
-              <span className={styles.cardArrow}>→</span>
+              </Text>
+              <Text variant="caption">→</Text>
             </div>
           </Card>
         </Link>
@@ -41,12 +41,12 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiSettings />
               </div>
-              <h2 className={styles.cardTitle}>Connected Services</h2>
-              <p className={styles.cardDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>Connected Services</Text>
+              <Text variant="body" color="muted" style={{ marginBottom: 8 }}>
                 Link multiple providers like GitHub, Spotify, and Discord to
                 unlock more automations.
-              </p>
-              <span className={styles.cardArrow}>→</span>
+              </Text>
+              <Text variant="caption">→</Text>
             </div>
           </Card>
         </Link>
@@ -57,12 +57,12 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiUser />
               </div>
-              <h2 className={styles.cardTitle}>My Profile</h2>
-              <p className={styles.cardDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>My Profile</Text>
+              <Text variant="body" color="muted" style={{ marginBottom: 8 }}>
                 View and update your personal information, security settings,
                 and account preferences.
-              </p>
-              <span className={styles.cardArrow}>→</span>
+              </Text>
+              <Text variant="caption">→</Text>
             </div>
           </Card>
         </Link>
@@ -73,12 +73,12 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiInfo />
               </div>
-              <h2 className={styles.cardTitle}>About AREA</h2>
-              <p className={styles.cardDescription}>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>About AREA</Text>
+              <Text variant="body" color="muted" style={{ marginBottom: 8 }}>
                 Discover available services, actions, and reactions. Learn how
                 to make the most of AREA.
-              </p>
-              <span className={styles.cardArrow}>→</span>
+              </Text>
+              <Text variant="caption">→</Text>
             </div>
           </Card>
         </Link>
@@ -86,36 +86,38 @@ export default function Dashboard() {
 
       <div style={{ marginTop: 'var(--spacing-xl)' }}>
         <Card padding="lg">
-          <h3 className={styles.sectionTitle}>Account Information</h3>
+          <div style={{ marginBottom: 16 }}>
+            <Text variant="subtitle">Account Information</Text>
+          </div>
           <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Email</span>
-              <span className={styles.infoValue}>{user.email}</span>
+              <Text variant="caption" color="muted">Email</Text>
+              <Text variant="body">{user.email}</Text>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Role</span>
-              <span className={styles.infoValue}>
-                <span className={styles.roleBadge}>{user.role}</span>
-              </span>
+              <Text variant="caption" color="muted">Role</Text>
+              <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
+                {user.role}
+              </Text>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Provider</span>
-              <span className={styles.infoValue}>
+              <Text variant="caption" color="muted">Provider</Text>
+              <Text variant="body">
                 {user.provider === 'local'
                   ? 'Email/Password'
                   : user.provider.charAt(0).toUpperCase() +
                     user.provider.slice(1)}
-              </span>
+              </Text>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Member since</span>
-              <span className={styles.infoValue}>
+              <Text variant="caption" color="muted">Member since</Text>
+              <Text variant="body">
                 {new Date(user.created_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
                 })}
-              </span>
+              </Text>
             </div>
           </div>
         </Card>
