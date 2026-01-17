@@ -17,9 +17,17 @@ export default defineConfig({
     globals: true,
     setupFiles: './vitest.setup.ts',
     include: ['tests/**/*.test.{ts,tsx}'],
+    server: {
+      deps: {
+        inline: ['@area/ui'],
+      },
+    },
   },
   optimizeDeps: {
     include: ['@area/ui'],
     exclude: ['react-native-safe-area-context'],
+  },
+  esbuild: {
+    target: 'node18',
   },
 });
