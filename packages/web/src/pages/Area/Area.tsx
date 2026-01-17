@@ -229,7 +229,7 @@ export default function Area() {
       const token = getAuthToken();
       if (!token) throw new Error('Not authenticated');
 
-      await put(`/areas/${id}`, { is_active: !currentStatus }, token);
+      await put(`/areas/${id}/activate?active=${!currentStatus}`, {}, token);
       await loadData();
       setConfirmDialog({
         isOpen: false,
