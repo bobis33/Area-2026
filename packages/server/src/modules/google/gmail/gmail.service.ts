@@ -207,4 +207,56 @@ export class GmailService {
 
     return emails;
   }
+
+  async getEmailsFromSender(
+    userId: number,
+    senderEmail: string,
+    maxResults: number = 5,
+  ): Promise<
+    Array<{
+      id: string;
+      from: string;
+      subject: string;
+      snippet: string;
+      internalDate: string;
+    }>
+  > {
+    const gmail = await this.getGmailClient(userId);
+
+    const response = await gmail.users.messages.list({
+      userId: 'me',
+      q: `from:${senderEmail} is:unread`,
+      maxResults,
+    });
+
+    if (!response.data.messages || response.data.messages.length === 0) {
+      return [];
+    }
+
+    const emails = await Promise.all(
+      response.data.messages.map(async (msg) => {
+        const fullMessage = await gmail.users.messages.get({
+          userId: 'me',
+          id: msg.id!,
+          format: 'metadata',
+          metadataHeaders: ['From', 'Subject'],
+        });
+
+        const headers = fullMessage.data.payload?.headers || [];
+        const fromHeader = headers.find((h) => h.name === 'From')?.value || '';
+        const subjectHeader =
+          headers.find((h) => h.name === 'Subject')?.value || '';
+
+        return {
+          id: msg.id!,
+          from: fromHeader,
+          subject: subjectHeader,
+          snippet: fullMessage.data.snippet || '',
+          internalDate: fullMessage.data.internalDate || '',
+        };
+      }),
+    );
+
+    return emails;
+  }
 }

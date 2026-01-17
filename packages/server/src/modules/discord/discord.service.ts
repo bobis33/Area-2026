@@ -70,4 +70,31 @@ export class DiscordService implements OnModuleInit {
       timestamp: msg.createdTimestamp.toString(),
     }));
   }
+
+  async getServerMembers(
+    guildId: string,
+    limit: number = 10,
+  ): Promise<
+    Array<{
+      id: string;
+      username: string;
+      joinedAt: string;
+    }>
+  > {
+    const guild = await this.client.guilds.fetch(guildId);
+    if (!guild) {
+      throw new Error(`Invalid guild ${guildId}`);
+    }
+
+    const members = await guild.members.fetch({ limit });
+    return members
+      .sort(
+        (a, b) => (b.joinedAt?.getTime() || 0) - (a.joinedAt?.getTime() || 0),
+      )
+      .map((member) => ({
+        id: member.id,
+        username: member.user.username,
+        joinedAt: member.joinedAt?.toISOString() || new Date().toISOString(),
+      }));
+  }
 }
