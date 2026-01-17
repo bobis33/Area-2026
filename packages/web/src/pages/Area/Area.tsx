@@ -1,7 +1,15 @@
 import { useState, useEffect } from 'react';
-import { FiPlus, FiTrash, FiArrowRight, FiX } from 'react-icons/fi';
-import { get, post, del } from '@/services/api';
+import {
+  FiPlus,
+  FiTrash,
+  FiArrowRight,
+  FiX,
+  FiPause,
+  FiPlay,
+} from 'react-icons/fi';
+import { get, post, del, put } from '@/services/api';
 import { getAuthToken, getUser } from '@/utils/storage';
+import { useTranslation } from '@/contexts/I18nContext';
 import { ServiceIcon } from '@/components/icons';
 import {
   PageLayout,
@@ -10,6 +18,7 @@ import {
   Card,
   Button,
   Input,
+  ConfirmDialog,
 } from '@/components/ui';
 import styles from './Area.module.css';
 
@@ -57,6 +66,7 @@ interface ParameterField {
 }
 
 export default function Area() {
+  const t = useTranslation();
   const [areas, setAreas] = useState<Area[]>([]);
   const [availableActions, setAvailableActions] = useState<ActionDefinition[]>(
     [],
@@ -67,6 +77,18 @@ export default function Area() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState<{
+    isOpen: boolean;
+    type: 'delete' | 'pause' | 'resume' | null;
+    areaId: number | null;
+    areaName: string;
+  }>({
+    isOpen: false,
+    type: null,
+    areaId: null,
+    areaName: '',
+  });
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
 
   // Form state
   const [areaName, setAreaName] = useState('');
@@ -178,21 +200,83 @@ export default function Area() {
   };
 
   const handleDeleteArea = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this automation?')) {
-      return;
-    }
-
     try {
+      setActionLoading(id);
       const token = getAuthToken();
       if (!token) throw new Error('Not authenticated');
 
       await del(`/areas/${id}`, token);
       await loadData();
+      setConfirmDialog({
+        isOpen: false,
+        type: null,
+        areaId: null,
+        areaName: '',
+      });
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to delete automation';
       setError(errorMessage);
       console.error('Error deleting area:', err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleToggleAreaStatus = async (id: number, currentStatus: boolean) => {
+    try {
+      setActionLoading(id);
+      const token = getAuthToken();
+      if (!token) throw new Error('Not authenticated');
+
+      await put(`/areas/${id}`, { is_active: !currentStatus }, token);
+      await loadData();
+      setConfirmDialog({
+        isOpen: false,
+        type: null,
+        areaId: null,
+        areaName: '',
+      });
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Failed to update automation status';
+      setError(errorMessage);
+      console.error('Error toggling area status:', err);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const openConfirmDialog = (
+    type: 'delete' | 'pause' | 'resume',
+    areaId: number,
+    areaName: string,
+  ) => {
+    setConfirmDialog({
+      isOpen: true,
+      type,
+      areaId,
+      areaName,
+    });
+  };
+
+  const handleConfirmAction = () => {
+    if (confirmDialog.areaId === null || confirmDialog.type === null) return;
+
+    if (confirmDialog.type === 'delete') {
+      handleDeleteArea(confirmDialog.areaId);
+    } else if (confirmDialog.type === 'pause') {
+      const area = areas.find((a) => a.id === confirmDialog.areaId);
+      if (area) {
+        handleToggleAreaStatus(confirmDialog.areaId, area.is_active);
+      }
+    } else if (confirmDialog.type === 'resume') {
+      const area = areas.find((a) => a.id === confirmDialog.areaId);
+      if (area) {
+        handleToggleAreaStatus(confirmDialog.areaId, area.is_active);
+      }
     }
   };
 
@@ -288,7 +372,7 @@ export default function Area() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading automations...</p>
+          <p className={styles.loadingText}>{t('common.loading')}</p>
         </div>
       </PageLayout>
     );
@@ -297,15 +381,15 @@ export default function Area() {
   return (
     <PageLayout maxWidth="xl">
       <PageHeader
-        title="Your Automations"
-        subtitle="Create and manage your action → reaction automations"
+        title={t('area.title')}
+        subtitle={t('area.subtitle')}
         action={
           <Button
             variant="primary"
             leftIcon={<FiPlus />}
             onClick={() => setShowCreateModal(true)}
           >
-            Create Automation
+            {t('area.createNew')}
           </Button>
         }
       />
@@ -314,7 +398,7 @@ export default function Area() {
         <div className={styles.errorBanner}>
           <p>{error}</p>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
-            Dismiss
+            {t('common.close')}
           </Button>
         </div>
       )}
@@ -325,16 +409,16 @@ export default function Area() {
             <div className={styles.emptyIcon}>
               <FiPlus size={48} />
             </div>
-            <h3 className={styles.emptyTitle}>No automations yet</h3>
+            <h3 className={styles.emptyTitle}>{t('area.noAutomations')}</h3>
             <p className={styles.emptyText}>
-              Create your first automation to connect actions and reactions
+              {t('area.noAutomationsDescription')}
             </p>
             <Button
               variant="primary"
               leftIcon={<FiPlus />}
               onClick={() => setShowCreateModal(true)}
             >
-              Create Your First Automation
+              {t('area.createNew')}
             </Button>
           </div>
         </Card>
@@ -353,18 +437,40 @@ export default function Area() {
                           : styles.statusInactive
                       }`}
                     >
-                      {area.is_active ? 'Active' : 'Inactive'}
+                      {area.is_active ? t('area.active') : t('area.inactive')}
                     </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteArea(area.id);
-                      }}
-                      className={styles.deleteButton}
-                      title="Delete automation"
-                    >
-                      <FiTrash />
-                    </button>
+                    <div className={styles.cardActions}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openConfirmDialog(
+                            area.is_active ? 'pause' : 'resume',
+                            area.id,
+                            area.name,
+                          );
+                        }}
+                        className={styles.actionButton}
+                        title={
+                          area.is_active
+                            ? t('area.actions.pause')
+                            : t('area.actions.resume')
+                        }
+                        disabled={actionLoading === area.id}
+                      >
+                        {area.is_active ? <FiPause /> : <FiPlay />}
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openConfirmDialog('delete', area.id, area.name);
+                        }}
+                        className={styles.deleteButton}
+                        title={t('area.actions.delete')}
+                        disabled={actionLoading === area.id}
+                      >
+                        <FiTrash />
+                      </button>
+                    </div>
                   </div>
                 </div>
 
@@ -374,7 +480,9 @@ export default function Area() {
                       <ServiceIcon service={area.action.service} size={32} />
                     </div>
                     <div className={styles.flowContent}>
-                      <span className={styles.flowLabel}>Action</span>
+                      <span className={styles.flowLabel}>
+                        {t('area.action')}
+                      </span>
                       <p className={styles.flowText}>
                         {area.action.service}.{area.action.type}
                       </p>
@@ -390,7 +498,9 @@ export default function Area() {
                       <ServiceIcon service={area.reaction.service} size={32} />
                     </div>
                     <div className={styles.flowContent}>
-                      <span className={styles.flowLabel}>Reaction</span>
+                      <span className={styles.flowLabel}>
+                        {t('area.reaction')}
+                      </span>
                       <p className={styles.flowText}>
                         {area.reaction.service}.{area.reaction.type}
                       </p>
@@ -400,7 +510,8 @@ export default function Area() {
 
                 <div className={styles.automationFooter}>
                   <span className={styles.createdDate}>
-                    Created {new Date(area.created_at).toLocaleDateString()}
+                    {t('area.createdAt')}:{' '}
+                    {new Date(area.created_at).toLocaleDateString()}
                   </span>
                 </div>
               </div>
@@ -420,7 +531,7 @@ export default function Area() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>Create New Automation</h2>
+              <h2 className={styles.modalTitle}>{t('createArea.title')}</h2>
               <button
                 className={styles.modalClose}
                 onClick={() => {
@@ -434,8 +545,8 @@ export default function Area() {
 
             <div className={styles.modalBody}>
               <Input
-                label="Automation Name"
-                placeholder="e.g., Daily Discord Notification"
+                label={t('createArea.name')}
+                placeholder={t('createArea.namePlaceholder')}
                 value={areaName}
                 onChange={(e) => setAreaName(e.target.value)}
                 fullWidth
@@ -444,7 +555,8 @@ export default function Area() {
 
               <div className={styles.formSection}>
                 <label className={styles.formLabel}>
-                  Action (Trigger) <span className={styles.required}>*</span>
+                  {t('createArea.action')}{' '}
+                  <span className={styles.required}>*</span>
                 </label>
                 {selectedAction ? (
                   <div className={styles.selectedItem}>
@@ -464,7 +576,7 @@ export default function Area() {
                       size="sm"
                       onClick={() => openServiceSelection('action')}
                     >
-                      Change
+                      {t('common.edit')}
                     </Button>
                   </div>
                 ) : (
@@ -474,14 +586,16 @@ export default function Area() {
                     leftIcon={<FiPlus />}
                     onClick={() => openServiceSelection('action')}
                   >
-                    Select Action
+                    {t('createArea.selectAction')}
                   </Button>
                 )}
 
                 {selectedAction &&
                   getParameterFields(selectedAction.parameters).length > 0 && (
                     <div className={styles.paramsContainer}>
-                      <h4 className={styles.paramsTitle}>Action Parameters</h4>
+                      <h4 className={styles.paramsTitle}>
+                        {t('createArea.parameters')}
+                      </h4>
                       {getParameterFields(selectedAction.parameters).map(
                         (field) => (
                           <Input
@@ -507,7 +621,8 @@ export default function Area() {
 
               <div className={styles.formSection}>
                 <label className={styles.formLabel}>
-                  Reaction (Response) <span className={styles.required}>*</span>
+                  {t('createArea.reaction')}{' '}
+                  <span className={styles.required}>*</span>
                 </label>
                 {selectedReaction ? (
                   <div className={styles.selectedItem}>
@@ -530,7 +645,7 @@ export default function Area() {
                       size="sm"
                       onClick={() => openServiceSelection('reaction')}
                     >
-                      Change
+                      {t('common.edit')}
                     </Button>
                   </div>
                 ) : (
@@ -540,7 +655,7 @@ export default function Area() {
                     leftIcon={<FiPlus />}
                     onClick={() => openServiceSelection('reaction')}
                   >
-                    Select Reaction
+                    {t('createArea.selectReaction')}
                   </Button>
                 )}
 
@@ -549,7 +664,7 @@ export default function Area() {
                     0 && (
                     <div className={styles.paramsContainer}>
                       <h4 className={styles.paramsTitle}>
-                        Reaction Parameters
+                        {t('createArea.parameters')}
                       </h4>
                       {getParameterFields(selectedReaction.parameters).map(
                         (field) => (
@@ -583,7 +698,7 @@ export default function Area() {
                   resetForm();
                 }}
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button
                 variant="primary"
@@ -593,7 +708,7 @@ export default function Area() {
                 }
                 loading={loading}
               >
-                Create Automation
+                {t('createArea.create')}
               </Button>
             </div>
           </div>
@@ -613,8 +728,12 @@ export default function Area() {
             <div className={styles.modalHeader}>
               <h2 className={styles.modalTitle}>
                 {selectionStep === 'service'
-                  ? `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'} Service`
-                  : `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'}`}
+                  ? selectionMode === 'action'
+                    ? t('createArea.selectService')
+                    : t('createArea.selectService')
+                  : selectionMode === 'action'
+                    ? t('createArea.selectAction')
+                    : t('createArea.selectReaction')}
               </h2>
               <button
                 className={styles.modalClose}
@@ -688,13 +807,51 @@ export default function Area() {
                   variant="ghost"
                   onClick={() => setSelectionStep('service')}
                 >
-                  Back to Services
+                  {t('common.back')}
                 </Button>
               </div>
             )}
           </div>
         </div>
       )}
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={confirmDialog.isOpen}
+        onClose={() =>
+          setConfirmDialog({
+            isOpen: false,
+            type: null,
+            areaId: null,
+            areaName: '',
+          })
+        }
+        onConfirm={handleConfirmAction}
+        title={
+          confirmDialog.type === 'delete'
+            ? t('area.deleteAutomation')
+            : confirmDialog.type === 'pause'
+              ? t('area.pause')
+              : t('area.resume')
+        }
+        message={
+          confirmDialog.type === 'delete'
+            ? t('area.confirmations.delete', { name: confirmDialog.areaName })
+            : confirmDialog.type === 'pause'
+              ? t('area.confirmations.pause', { name: confirmDialog.areaName })
+              : t('area.confirmations.resume', { name: confirmDialog.areaName })
+        }
+        confirmText={
+          confirmDialog.type === 'delete'
+            ? t('common.delete')
+            : confirmDialog.type === 'pause'
+              ? t('area.pause')
+              : t('area.resume')
+        }
+        cancelText={t('common.cancel')}
+        variant={confirmDialog.type === 'delete' ? 'danger' : 'warning'}
+        loading={actionLoading !== null}
+      />
     </PageLayout>
   );
 }

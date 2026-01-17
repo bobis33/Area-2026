@@ -22,6 +22,7 @@ import {
   unlinkProvider,
 } from '@/services/auth.service';
 import { getAuthToken, setOAuthRedirectPath } from '@/utils/storage';
+import { useTranslation } from '@/contexts/I18nContext';
 import styles from './Services.module.css';
 
 const OAUTH_PROVIDERS = [
@@ -84,6 +85,7 @@ const getProviderLabel = (provider: string) =>
   provider.charAt(0).toUpperCase() + provider.slice(1);
 
 export default function Services() {
+  const t = useTranslation();
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
   const [linkedProviders, setLinkedProviders] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -181,7 +183,7 @@ export default function Services() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading services...</p>
+          <p className={styles.loadingText}>{t('common.loading')}</p>
         </div>
       </PageLayout>
     );
@@ -195,14 +197,14 @@ export default function Services() {
             <div className={styles.errorIcon}>
               <FiX size={48} />
             </div>
-            <h2 className={styles.errorTitle}>Unable to load services</h2>
+            <h2 className={styles.errorTitle}>{t('errors.generic')}</h2>
             <p className={styles.errorText}>{error}</p>
             <Button
               variant="primary"
               leftIcon={<FiRefreshCw />}
               onClick={loadProviders}
             >
-              Retry
+              {t('common.retry')}
             </Button>
           </div>
         </Card>
@@ -213,8 +215,8 @@ export default function Services() {
   return (
     <PageLayout maxWidth="xl">
       <PageHeader
-        title="Connected Services"
-        subtitle="Link multiple providers to unlock new triggers, reactions, and automations across your stack"
+        title={t('services.title')}
+        subtitle={t('services.subtitle')}
       />
 
       {/* Stats Panel */}
@@ -224,7 +226,7 @@ export default function Services() {
             <span className={styles.statValue}>
               {connectedProviders.length}
             </span>
-            <span className={styles.statLabel}>Connected</span>
+            <span className={styles.statLabel}>{t('services.connected')}</span>
           </div>
         </Card>
         <Card padding="lg" className={styles.statCard}>
@@ -232,7 +234,7 @@ export default function Services() {
             <span className={styles.statValue}>
               {availableToConnect.length}
             </span>
-            <span className={styles.statLabel}>Available</span>
+            <span className={styles.statLabel}>{t('services.available')}</span>
           </div>
         </Card>
       </div>
@@ -241,7 +243,7 @@ export default function Services() {
         <div className={styles.errorBanner}>
           <p>{error}</p>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
-            Dismiss
+            {t('common.close')}
           </Button>
         </div>
       )}
@@ -249,25 +251,23 @@ export default function Services() {
       {/* Connected Services */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Connected Services</h2>
+          <h2 className={styles.sectionTitle}>{t('services.connected')}</h2>
           <p className={styles.sectionSubtitle}>
-            These providers are ready for your automations
+            {t('services.noConnectedDescription')}
           </p>
         </div>
 
         {allProviders.length === 0 ? (
           <Card padding="lg">
             <div className={styles.emptyState}>
-              <p className={styles.emptyText}>
-                No OAuth providers are configured on the server.
-              </p>
+              <p className={styles.emptyText}>{t('services.noConnected')}</p>
             </div>
           </Card>
         ) : connectedProviders.length === 0 ? (
           <Card padding="lg">
             <div className={styles.emptyState}>
               <p className={styles.emptyText}>
-                No services connected yet. Connect one below to get started.
+                {t('services.noConnectedDescription')}
               </p>
             </div>
           </Card>
@@ -293,7 +293,7 @@ export default function Services() {
                       </div>
                       <span className={styles.statusBadgeConnected}>
                         <FiCheck size={14} />
-                        Connected
+                        {t('services.connected')}
                       </span>
                     </div>
 
@@ -314,7 +314,9 @@ export default function Services() {
                         loading={isUnlinking}
                         onClick={() => handleDisconnect(provider)}
                       >
-                        {isUnlinking ? 'Disconnecting...' : 'Disconnect'}
+                        {isUnlinking
+                          ? `${t('services.disconnect')}...`
+                          : t('services.disconnect')}
                       </Button>
                     </div>
                   </div>
@@ -328,18 +330,14 @@ export default function Services() {
       {/* Available Services */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Available to Connect</h2>
-          <p className={styles.sectionSubtitle}>
-            Authorize new providers to unlock more triggers and reactions
-          </p>
+          <h2 className={styles.sectionTitle}>{t('services.available')}</h2>
+          <p className={styles.sectionSubtitle}>{t('services.subtitle')}</p>
         </div>
 
         {allProviders.length === 0 ? (
           <Card padding="lg">
             <div className={styles.emptyState}>
-              <p className={styles.emptyText}>
-                No OAuth providers are configured on the server.
-              </p>
+              <p className={styles.emptyText}>{t('services.noConnected')}</p>
             </div>
           </Card>
         ) : availableToConnect.length === 0 ? (
@@ -348,10 +346,8 @@ export default function Services() {
               <div className={styles.emptyIcon}>
                 <FiCheck size={48} />
               </div>
-              <h3 className={styles.emptyTitle}>All Set!</h3>
-              <p className={styles.emptyText}>
-                All available providers are already connected.
-              </p>
+              <h3 className={styles.emptyTitle}>{t('common.success')}</h3>
+              <p className={styles.emptyText}>{t('services.noConnected')}</p>
             </div>
           </Card>
         ) : (
@@ -374,7 +370,7 @@ export default function Services() {
                         <Icon />
                       </div>
                       <span className={styles.statusBadgeAvailable}>
-                        Not connected
+                        {t('services.notConnected')}
                       </span>
                     </div>
 
@@ -392,7 +388,7 @@ export default function Services() {
                         fullWidth
                         onClick={() => handleConnect(provider)}
                       >
-                        Connect
+                        {t('services.connect')}
                       </Button>
                     </div>
                   </div>

@@ -18,3 +18,5 @@ export type {
   PageHeaderProps,
   ContentGridProps,
 } from './PageLayout';
+
+export { ConfirmDialog } from './ConfirmDialog';

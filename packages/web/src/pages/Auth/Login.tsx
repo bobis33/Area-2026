@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import type { LoginCredentials } from '@/types';
 import {
   FaGoogle,
@@ -12,10 +13,12 @@ import {
 import { FiArrowLeft, FiMail, FiLock } from 'react-icons/fi';
 import { Button, Input } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import LanguageSelector from '@/components/LanguageSelector';
 import styles from './Auth.module.css';
 
 export default function Login() {
   const { login, loginWithOAuth, loading, error } = useAuth();
+  const t = useTranslation();
   const [formData, setFormData] = useState<LoginCredentials>({
     email: '',
     password: '',
@@ -52,9 +55,12 @@ export default function Login() {
       <div className={styles.authNav}>
         <Link to="/" className={styles.backToHome}>
           <FiArrowLeft />
-          <span>Back to Home</span>
+          <span>{t('common.back')}</span>
         </Link>
-        <ThemeToggle />
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </div>
 
       <div className={styles.authCard}>
@@ -63,8 +69,7 @@ export default function Login() {
         </div>
 
         <div className={styles.authHeader}>
-          <h1 className={styles.authTitle}>Welcome Back</h1>
-          <p className={styles.authSubtitle}>Sign in to your AREA account</p>
+          <h1 className={styles.authTitle}>{t('auth.login.title')}</h1>
         </div>
 
         {error && (
@@ -75,7 +80,7 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className={styles.authForm}>
           <Input
-            label="Email"
+            label={t('auth.login.email')}
             type="email"
             id="email"
             name="email"
@@ -83,14 +88,14 @@ export default function Login() {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            placeholder="your.email@example.com"
+            placeholder={t('auth.login.emailPlaceholder')}
             required
             disabled={loading}
             leftIcon={<FiMail />}
           />
 
           <Input
-            label="Password"
+            label={t('auth.login.password')}
             type="password"
             id="password"
             name="password"
@@ -98,7 +103,7 @@ export default function Login() {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            placeholder="Enter your password"
+            placeholder={t('auth.login.passwordPlaceholder')}
             required
             disabled={loading}
             leftIcon={<FiLock />}
@@ -111,12 +116,12 @@ export default function Login() {
             disabled={loading}
             fullWidth
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? `${t('auth.login.signIn')}...` : t('auth.login.signIn')}
           </Button>
         </form>
 
         <div className={styles.divider}>
-          <span>OR CONTINUE WITH</span>
+          <span>{t('auth.login.orContinueWith').toUpperCase()}</span>
         </div>
 
         <div className={styles.oauthButtons}>
@@ -127,7 +132,7 @@ export default function Login() {
             disabled={loading}
           >
             <FaGoogle className={styles.oauthIcon} />
-            <span>Google</span>
+            <span>{t('auth.oauth.google')}</span>
           </button>
 
           <button
@@ -137,7 +142,7 @@ export default function Login() {
             disabled={loading}
           >
             <FaDiscord className={styles.oauthIcon} />
-            <span>Discord</span>
+            <span>{t('auth.oauth.discord')}</span>
           </button>
 
           <button
@@ -147,7 +152,7 @@ export default function Login() {
             disabled={loading}
           >
             <FaGithub className={styles.oauthIcon} />
-            <span>GitHub</span>
+            <span>{t('auth.oauth.github')}</span>
           </button>
 
           <button
@@ -157,7 +162,7 @@ export default function Login() {
             disabled={loading}
           >
             <FaSpotify className={styles.oauthIcon} />
-            <span>Spotify</span>
+            <span>{t('auth.oauth.spotify')}</span>
           </button>
 
           <button
@@ -167,15 +172,15 @@ export default function Login() {
             disabled={loading}
           >
             <FaGitlab className={styles.oauthIcon} />
-            <span>GitLab</span>
+            <span>{t('auth.oauth.gitlab')}</span>
           </button>
         </div>
 
         <div className={styles.authFooter}>
           <p>
-            Don't have an account?{' '}
+            {t('auth.login.noAccount')}{' '}
             <Link to="/register" className={styles.authLink}>
-              Sign Up
+              {t('auth.login.signUp')}
             </Link>
           </p>
         </div>

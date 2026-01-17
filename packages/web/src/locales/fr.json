@@ -1,0 +1,501 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "yes": "Oui",
+    "no": "Non",
+    "back": "Retour",
+    "next": "Suivant",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "actions": "Actions",
+    "retry": "Réessayer",
+    "refresh": "Actualiser"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "area": "Automatisations",
+    "services": "Services",
+    "profile": "Profil",
+    "admin": "Administration",
+    "about": "À propos",
+    "login": "Connexion",
+    "logout": "Déconnexion"
+  },
+  "home": {
+    "title": "Automatisez votre vie digitale",
+    "subtitle": "Connectez vos services préférés et créez de puissantes automations",
+    "getStarted": "Commencer",
+    "learnMore": "En savoir plus",
+    "hero": {
+      "badge": "Automatisez Tout",
+      "title": "Automatisez Votre",
+      "titleGradient": "Vie Digitale",
+      "description": "Connectez vos services préférés et créez de puissantes automations.",
+      "descriptionLine2": "Quand une action se produit, déclenchez une réaction automatiquement.",
+      "getStarted": "Commencer",
+      "learnMore": "En savoir plus"
+    },
+    "nav": {
+      "about": "À propos",
+      "login": "Connexion",
+      "signUp": "S'inscrire"
+    },
+    "howItWorks": {
+      "badge": "Comment Ça Marche",
+      "title": "Trois étapes simples pour tout automatiser",
+      "subtitle": "Aucun code requis. Créez de puissantes automations en quelques minutes.",
+      "step1": {
+        "number": "01",
+        "title": "Connecter les Services",
+        "description": "Liez vos emails, réseaux sociaux et outils de productivité en quelques clics"
+      },
+      "step2": {
+        "number": "02",
+        "title": "Créer des Actions",
+        "description": "Définissez des déclencheurs comme \"nouvel email\" ou \"nouveau tweet\" pour démarrer votre automation"
+      },
+      "step3": {
+        "number": "03",
+        "title": "Définir les Réactions",
+        "description": "Décidez de ce qui se passe : envoyer une notification, créer une tâche, et bien plus"
+      }
+    },
+    "benefits": {
+      "badge": "Pourquoi Choisir AREA ?",
+      "title": "La façon intelligente d'automatiser votre workflow",
+      "subtitle": "Tout ce dont vous avez besoin pour booster votre productivité",
+      "easyToUse": {
+        "title": "Facile à utiliser",
+        "description": "Aucun code requis - créez des automations avec notre interface intuitive"
+      },
+      "powerfulIntegrations": {
+        "title": "Intégrations puissantes",
+        "description": "Connectez tous vos outils et services préférés en un seul endroit"
+      },
+      "saveTime": {
+        "title": "Gagnez du temps",
+        "description": "Automatisez les tâches répétitives et concentrez-vous sur l'essentiel"
+      },
+      "stayOrganized": {
+        "title": "Restez organisé",
+        "description": "Gardez tout synchronisé entre toutes vos applications et services"
+      },
+      "alwaysReliable": {
+        "title": "Toujours fiable",
+        "description": "Vos automations fonctionnent 24h/24 et 7j/7 avec une disponibilité de 99,9%"
+      },
+      "securePrivate": {
+        "title": "Sécurisé et privé",
+        "description": "Une sécurité de niveau entreprise garde vos données en sécurité et chiffrées"
+      }
+    },
+    "cta": {
+      "title": "Prêt à Commencer ?",
+      "description": "Rejoignez des milliers d'utilisateurs qui automatisent leur vie digitale.",
+      "button": "Créer Votre Compte"
+    },
+    "footer": {
+      "about": "À propos",
+      "login": "Connexion",
+      "signUp": "S'inscrire",
+      "copyright": "© {{year}} AREA. Tous droits réservés."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Se connecter",
+      "subtitle": "Accédez à votre compte pour gérer vos automations",
+      "email": "Email",
+      "password": "Mot de passe",
+      "emailPlaceholder": "email@exemple.com",
+      "passwordPlaceholder": "Entrez votre mot de passe",
+      "signIn": "Se connecter",
+      "fillAllFields": "Veuillez remplir tous les champs",
+      "connectionError": "Erreur de connexion",
+      "invalidCredentials": "Email ou mot de passe invalide",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "signUp": "S'inscrire",
+      "orContinueWith": "Ou continuer avec",
+      "forgotPassword": "Mot de passe oublié ?"
+    },
+    "register": {
+      "title": "Rejoignez la communauté AREA",
+      "subtitle": "Créez votre compte et commencez à automatiser",
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Jean Dupont",
+      "email": "Email",
+      "emailPlaceholder": "email@exemple.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordMinLength": "Minimum 6 caractères",
+      "fillAllFields": "Veuillez remplir tous les champs",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+      "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+      "createAccount": "Créer mon compte",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter",
+      "success": "Compte créé avec succès !",
+      "error": "Erreur lors de l'inscription",
+      "termsAndConditions": "En créant un compte, vous acceptez nos Conditions Générales d'Utilisation"
+    },
+    "oauth": {
+      "continueWith": "Continuer avec {{provider}}",
+      "discord": "Discord",
+      "github": "GitHub",
+      "google": "Google",
+      "spotify": "Spotify",
+      "gitlab": "GitLab",
+      "error": "Erreur d'authentification",
+      "cancelled": "Authentification annulée",
+      "success": "Authentification réussie avec {{provider}}"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bon retour, {{name}} !",
+    "subtitle": "Gérez vos automatisations et votre compte depuis ici",
+    "overview": "Vue d'ensemble",
+    "cards": {
+      "myAutomations": {
+        "title": "Mes Automatisations",
+        "description": "Créez et gérez vos automatisations action-réaction. Connectez des services et construisez des workflows puissants."
+      },
+      "connectedServices": {
+        "title": "Services Connectés",
+        "description": "Liez plusieurs fournisseurs comme GitHub, Spotify et Discord pour débloquer plus d'automatisations."
+      },
+      "myProfile": {
+        "title": "Mon Profil",
+        "description": "Consultez et mettez à jour vos informations personnelles, paramètres de sécurité et préférences de compte."
+      },
+      "aboutArea": {
+        "title": "À propos d'AREA",
+        "description": "Découvrez les services, actions et réactions disponibles. Apprenez à tirer le meilleur parti d'AREA."
+      }
+    },
+    "accountInfo": {
+      "title": "Informations du Compte",
+      "email": "Email",
+      "role": "Rôle",
+      "provider": "Fournisseur",
+      "memberSince": "Membre depuis",
+      "emailPassword": "Email/Mot de passe"
+    },
+    "stats": {
+      "activeAreas": "Automatisations Actives",
+      "totalAreas": "Total Automatisations",
+      "connectedServices": "Services Connectés",
+      "executionsToday": "Exécutions Aujourd'hui"
+    },
+    "recentActivity": {
+      "title": "Activité Récente",
+      "noActivity": "Aucune activité récente",
+      "viewAll": "Voir tout"
+    },
+    "quickActions": {
+      "title": "Actions Rapides",
+      "createArea": "Créer une Automatisation",
+      "connectService": "Connecter un Service",
+      "viewServices": "Voir les Services"
+    }
+  },
+  "area": {
+    "title": "Vos Automatisations",
+    "subtitle": "Créez et gérez vos scénarios d'automatisation",
+    "createNew": "Créer une Nouvelle Automatisation",
+    "noAutomations": "Aucune automatisation pour le moment",
+    "noAutomationsDescription": "Créez votre première automatisation pour commencer !",
+    "active": "Actif",
+    "paused": "En pause",
+    "inactive": "Inactif",
+    "status": "Statut",
+    "name": "Nom",
+    "description": "Description",
+    "action": "Action",
+    "reaction": "Réaction",
+    "createdAt": "Créé le",
+    "updatedAt": "Mis à jour le",
+    "lastExecution": "Dernière Exécution",
+    "executions": "Exécutions",
+    "pause": "Mettre en pause",
+    "resume": "Reprendre",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "duplicate": "Dupliquer",
+    "details": "Détails",
+    "actions": {
+      "pause": "Mettre en pause l'automatisation",
+      "resume": "Reprendre l'automatisation",
+      "delete": "Supprimer l'automatisation",
+      "edit": "Modifier l'automatisation"
+    },
+    "confirmations": {
+      "delete": "Êtes-vous sûr de vouloir supprimer \"{{name}}\" ? Cette action est irréversible.",
+      "pause": "Êtes-vous sûr de vouloir mettre en pause \"{{name}}\" ?",
+      "resume": "Êtes-vous sûr de vouloir reprendre \"{{name}}\" ?"
+    },
+    "messages": {
+      "paused": "Automatisation mise en pause avec succès",
+      "resumed": "Automatisation reprise avec succès",
+      "deleted": "Automatisation supprimée avec succès",
+      "updated": "Automatisation mise à jour avec succès",
+      "pauseError": "Échec de la mise en pause de l'automatisation",
+      "resumeError": "Échec de la reprise de l'automatisation",
+      "deleteError": "Échec de la suppression de l'automatisation",
+      "updateError": "Échec de la mise à jour de l'automatisation"
+    },
+    "filters": {
+      "all": "Tout",
+      "active": "Actif",
+      "paused": "En pause",
+      "filterBy": "Filtrer par statut",
+      "sortBy": "Trier par",
+      "sortByName": "Nom",
+      "sortByDate": "Date",
+      "sortByStatus": "Statut"
+    }
+  },
+  "createArea": {
+    "title": "Créer une Automatisation",
+    "subtitle": "Choisissez une action, une réaction et configurez les paramètres",
+    "steps": {
+      "action": "Choisir l'Action",
+      "reaction": "Choisir la Réaction",
+      "configure": "Configurer",
+      "review": "Vérifier"
+    },
+    "name": "Nom",
+    "namePlaceholder": "Mon automation",
+    "nameHelper": "Donnez un nom descriptif à votre automation",
+    "action": "Action",
+    "reaction": "Réaction",
+    "selectAction": "Sélectionner une action",
+    "selectReaction": "Sélectionner une réaction",
+    "selectService": "Sélectionner un service",
+    "actionService": "Service d'Action",
+    "reactionService": "Service de Réaction",
+    "parameters": "Paramètres",
+    "noParameters": "Aucun paramètre requis",
+    "requiredParameters": "Paramètres requis",
+    "optionalParameters": "Paramètres optionnels",
+    "active": "Actif",
+    "activeDescription": "Activer cette automatisation immédiatement après sa création",
+    "create": "Créer l'Automatisation",
+    "creating": "Création...",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "next": "Suivant",
+    "finish": "Terminer",
+    "validation": {
+      "nameRequired": "Le nom est requis",
+      "actionRequired": "Veuillez sélectionner une action",
+      "reactionRequired": "Veuillez sélectionner une réaction",
+      "missingParams": "Veuillez remplir tous les paramètres requis",
+      "missingActionParams": "Veuillez remplir tous les paramètres requis pour l'action : {{params}}",
+      "missingReactionParams": "Veuillez remplir tous les paramètres requis pour la réaction : {{params}}"
+    },
+    "oauth": {
+      "required": "Connexion OAuth requise",
+      "message": "Cette automatisation nécessite une connexion avec {{services}}. Veuillez vous connecter avant de créer l'automatisation.",
+      "connect": "Connecter {{service}}"
+    },
+    "success": "Automatisation créée avec succès !",
+    "error": "Erreur lors de la création de l'automatisation"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Connectez et gérez vos services",
+    "available": "Services Disponibles",
+    "connected": "Services Connectés",
+    "noConnected": "Aucun service connecté",
+    "noConnectedDescription": "Connectez un service pour commencer à créer des automatisations",
+    "connect": "Connecter",
+    "disconnect": "Déconnecter",
+    "reconnect": "Reconnecter",
+    "connected": "Connecté",
+    "notConnected": "Non connecté",
+    "status": "Statut",
+    "connectedOn": "Connecté le",
+    "actions": "Actions",
+    "reactions": "Réactions",
+    "confirmDisconnect": "Êtes-vous sûr de vouloir déconnecter {{service}} ? Vos automatisations utilisant ce service cesseront de fonctionner.",
+    "disconnectSuccess": "{{service}} déconnecté avec succès",
+    "disconnectError": "Échec de la déconnexion de {{service}}",
+    "connectSuccess": "{{service}} connecté avec succès",
+    "connectError": "Échec de la connexion à {{service}}",
+    "description": {
+      "discord": "Connectez votre compte Discord pour envoyer des messages et gérer votre serveur",
+      "github": "Intégrez GitHub pour surveiller les dépôts et automatiser les workflows",
+      "google": "Accédez à Gmail, Calendar, Drive et autres services Google",
+      "spotify": "Contrôlez votre lecture Spotify et gérez vos playlists",
+      "gitlab": "Connectez-vous à GitLab pour suivre les projets et automatiser votre CI/CD",
+      "time": "Créez des automatisations basées sur le temps avec des expressions cron"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Gérez les informations et préférences de votre compte",
+    "personalInfo": "Informations Personnelles",
+    "fullName": "Nom Complet",
+    "email": "Email",
+    "role": "Rôle",
+    "provider": "Fournisseur d'Authentification",
+    "signedInWith": "Connecté avec {{provider}}",
+    "accountCreated": "Compte Créé",
+    "accountStatus": "Statut du Compte",
+    "active": "Actif",
+    "memberSince": "Membre Depuis",
+    "notSet": "Non défini",
+    "preferences": "Préférences",
+    "language": "Langue",
+    "languageDescription": "Choisissez votre langue préférée",
+    "theme": "Thème",
+    "themeDescription": "Choisissez votre thème préféré",
+    "themes": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    },
+    "languages": {
+      "en": "English",
+      "fr": "Français"
+    },
+    "security": "Sécurité",
+    "password": "Mot de passe",
+    "changePassword": "Changer le Mot de Passe",
+    "connectedServices": "Services Connectés",
+    "manageServices": "Gérer les Services",
+    "accountActions": "Actions du Compte",
+    "logout": "Déconnexion",
+    "logoutDescription": "Déconnectez-vous de votre compte sur cet appareil",
+    "deleteAccount": "Supprimer le Compte",
+    "deleteAccountWarning": "Cette action est permanente et ne peut pas être annulée",
+    "confirmLogout": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer votre compte ? Toutes vos données seront définitivement supprimées.",
+    "updated": "Profil mis à jour avec succès",
+    "updateError": "Échec de la mise à jour du profil"
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Gérer les utilisateurs et les paramètres système",
+    "users": {
+      "title": "Utilisateurs",
+      "total": "Total Utilisateurs",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "loadingUsers": "Chargement des utilisateurs...",
+      "noUsers": "Aucun utilisateur trouvé",
+      "noUsersDescription": "Aucun utilisateur n'est enregistré dans le système.",
+      "users": "Utilisateurs",
+      "search": "Rechercher des utilisateurs...",
+      "filter": "Filtrer par rôle",
+      "all": "Tous",
+      "admin": "Admin",
+      "user": "Utilisateur"
+    },
+    "table": {
+      "name": "Nom",
+      "email": "Email",
+      "role": "Rôle",
+      "provider": "Fournisseur",
+      "createdAt": "Inscrit le",
+      "actions": "Actions"
+    },
+    "actions": {
+      "promote": "Promouvoir en Admin",
+      "demote": "Rétrograder en Utilisateur",
+      "delete": "Supprimer l'Utilisateur",
+      "view": "Voir les Détails"
+    },
+    "confirmations": {
+      "promote": "Êtes-vous sûr de vouloir promouvoir cet utilisateur en administrateur ?",
+      "demote": "Êtes-vous sûr de vouloir rétrograder cet administrateur en utilisateur ?",
+      "delete": "Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible."
+    },
+    "messages": {
+      "promoteSuccess": "Utilisateur promu en administrateur",
+      "demoteSuccess": "Administrateur rétrogradé en utilisateur",
+      "deleteSuccess": "Utilisateur supprimé avec succès",
+      "promoteError": "Échec de la promotion de l'utilisateur",
+      "demoteError": "Échec de la rétrogradation de l'utilisateur",
+      "deleteError": "Échec de la suppression de l'utilisateur",
+      "loadError": "Échec du chargement des utilisateurs"
+    },
+    "stats": {
+      "totalUsers": "Total Utilisateurs",
+      "adminUsers": "Administrateurs",
+      "activeAreas": "Automatisations Actives",
+      "totalExecutions": "Total Exécutions"
+    },
+    "currentUser": "Vous (Utilisateur Actuel)"
+  },
+  "about": {
+    "title": "À propos d'AREA",
+    "description": "Informations serveur, services disponibles et statut en temps réel",
+    "version": "Version",
+    "uptime": "Disponibilité",
+    "noData": "Aucune donnée disponible",
+    "noServices": "Aucun Service Pour le Moment",
+    "noServicesDescription": "Aucun service n'est configuré sur le serveur pour le moment.",
+    "noActions": "Aucune action disponible",
+    "noReactions": "Aucune réaction disponible",
+    "server": {
+      "title": "Informations Serveur",
+      "host": "Hôte",
+      "time": "Heure Actuelle",
+      "services": "Services Disponibles"
+    },
+    "client": {
+      "title": "Informations Client",
+      "host": "Hôte Client"
+    },
+    "services": {
+      "title": "Services",
+      "actions": "Actions",
+      "reactions": "Réactions"
+    },
+    "documentation": "Documentation",
+    "support": "Support",
+    "github": "Dépôt GitHub",
+    "team": "Équipe",
+    "license": "Licence"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer.",
+    "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "unauthorized": "Non autorisé. Veuillez vous connecter.",
+    "forbidden": "Vous n'avez pas la permission d'accéder à cette ressource.",
+    "notFound": "Ressource non trouvée.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
+    "timeout": "Délai d'attente dépassé. Veuillez réessayer.",
+    "unknown": "Erreur inconnue.",
+    "validation": "Erreur de validation. Veuillez vérifier votre saisie.",
+    "pageNotFound": "Page non trouvée",
+    "goHome": "Retour à l'accueil"
+  },
+  "validation": {
+    "required": "Ce champ est requis",
+    "email": "Veuillez entrer un email valide",
+    "minLength": "Minimum {{min}} caractères requis",
+    "maxLength": "Maximum {{max}} caractères autorisés",
+    "password": "Le mot de passe doit contenir au moins {{min}} caractères",
+    "match": "Les champs doivent correspondre"
+  },
+  "notifications": {
+    "success": "Succès",
+    "error": "Erreur",
+    "warning": "Avertissement",
+    "info": "Information"
+  }
+}

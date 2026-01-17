@@ -123,6 +123,41 @@
   flex-shrink: 0;
 }
 
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.actionButton:hover {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.actionButton:active {
+  transform: scale(0.95);
+}
+
+.actionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .statusBadge {
   display: inline-block;
   padding: var(--spacing-xs) var(--spacing-sm);
@@ -165,6 +200,11 @@
 
 .deleteButton:active {
   transform: scale(0.95);
+}
+
+.deleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Automation Flow */

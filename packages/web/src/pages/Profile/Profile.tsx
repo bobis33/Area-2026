@@ -7,6 +7,7 @@ import {
   FiLogOut,
 } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import {
   PageLayout,
   PageHeader,
@@ -18,6 +19,7 @@ import styles from './Profile.module.css';
 
 export default function Profile() {
   const { user, logout } = useAuth();
+  const t = useTranslation();
 
   if (!user) {
     return null;
@@ -34,17 +36,14 @@ export default function Profile() {
 
   const getProviderDisplay = (provider: string) => {
     if (provider === 'local') {
-      return 'Email/Password';
+      return t('profile.provider');
     }
     return provider.charAt(0).toUpperCase() + provider.slice(1);
   };
 
   return (
     <PageLayout maxWidth="lg">
-      <PageHeader
-        title="My Profile"
-        subtitle="Manage your account information and preferences"
-      />
+      <PageHeader title={t('profile.title')} subtitle={t('profile.subtitle')} />
 
       <div className={styles.content}>
         {/* Personal Information Card */}
@@ -54,7 +53,9 @@ export default function Profile() {
               <div className={styles.sectionIcon}>
                 <FiUser />
               </div>
-              <h2 className={styles.sectionTitle}>Personal Information</h2>
+              <h2 className={styles.sectionTitle}>
+                {t('profile.personalInfo')}
+              </h2>
             </div>
 
             <div className={styles.infoGrid}>
@@ -63,9 +64,11 @@ export default function Profile() {
                   <FiUser />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Name</span>
+                  <span className={styles.infoLabel}>
+                    {t('profile.fullName')}
+                  </span>
                   <span className={styles.infoValue}>
-                    {user.name || 'Not set'}
+                    {user.name || t('profile.notSet')}
                   </span>
                 </div>
               </div>
@@ -75,7 +78,7 @@ export default function Profile() {
                   <FiMail />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Email</span>
+                  <span className={styles.infoLabel}>{t('profile.email')}</span>
                   <span className={styles.infoValue}>{user.email}</span>
                 </div>
               </div>
@@ -85,7 +88,7 @@ export default function Profile() {
                   <FiShield />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Role</span>
+                  <span className={styles.infoLabel}>{t('profile.role')}</span>
                   <span className={styles.roleBadge}>{user.role}</span>
                 </div>
               </div>
@@ -96,7 +99,7 @@ export default function Profile() {
                 </div>
                 <div className={styles.infoContent}>
                   <span className={styles.infoLabel}>
-                    Authentication Provider
+                    {t('profile.provider')}
                   </span>
                   <span className={styles.infoValue}>
                     {getProviderDisplay(user.provider)}
@@ -109,7 +112,9 @@ export default function Profile() {
                   <FiCalendar />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Account Created</span>
+                  <span className={styles.infoLabel}>
+                    {t('profile.accountCreated')}
+                  </span>
                   <span className={styles.infoValue}>
                     {formatDate(user.created_at)}
                   </span>
@@ -127,8 +132,10 @@ export default function Profile() {
                 <FiShield />
               </div>
               <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Account Status</span>
-                <span className={styles.statValue}>Active</span>
+                <span className={styles.statLabel}>
+                  {t('profile.accountStatus')}
+                </span>
+                <span className={styles.statValue}>{t('profile.active')}</span>
               </div>
             </div>
           </Card>
@@ -139,7 +146,9 @@ export default function Profile() {
                 <FiCalendar />
               </div>
               <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Member Since</span>
+                <span className={styles.statLabel}>
+                  {t('profile.memberSince')}
+                </span>
                 <span className={styles.statValue}>
                   {new Date(user.created_at).getFullYear()}
                 </span>
@@ -155,15 +164,17 @@ export default function Profile() {
               <div className={styles.sectionIcon}>
                 <FiShield />
               </div>
-              <h2 className={styles.sectionTitle}>Account Actions</h2>
+              <h2 className={styles.sectionTitle}>
+                {t('profile.accountActions')}
+              </h2>
             </div>
 
             <div className={styles.actionsGrid}>
               <div className={styles.actionItem}>
                 <div className={styles.actionInfo}>
-                  <h3 className={styles.actionTitle}>Sign Out</h3>
+                  <h3 className={styles.actionTitle}>{t('profile.logout')}</h3>
                   <p className={styles.actionDescription}>
-                    Sign out of your account on this device
+                    {t('profile.logoutDescription')}
                   </p>
                 </div>
                 <Button
@@ -171,7 +182,7 @@ export default function Profile() {
                   leftIcon={<FiLogOut />}
                   onClick={logout}
                 >
-                  Sign Out
+                  {t('profile.logout')}
                 </Button>
               </div>
             </div>

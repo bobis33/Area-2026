@@ -11,9 +11,11 @@ import { get } from '@/services/api';
 import type { AboutResponse } from '@/types';
 import { PageLayout, PageHeader, ContentGrid, Card } from '@/components/ui';
 import { ServiceIcon } from '@/components/icons';
+import { useTranslation } from '@/contexts/I18nContext';
 import styles from './About.module.css';
 
 export default function About() {
+  const t = useTranslation();
   const [aboutData, setAboutData] = useState<AboutResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +72,7 @@ export default function About() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading server information...</p>
+          <p className={styles.loadingText}>{t('common.loading')}</p>
         </div>
       </PageLayout>
     );
@@ -84,8 +86,8 @@ export default function About() {
             <div className={styles.errorIcon}>
               <FiServer />
             </div>
-            <h2 className={styles.errorTitle}>Unable to load server info</h2>
-            <p className={styles.errorText}>{error || 'No data available'}</p>
+            <h2 className={styles.errorTitle}>{t('errors.generic')}</h2>
+            <p className={styles.errorText}>{error || t('about.noData')}</p>
           </div>
         </Card>
       </PageLayout>
@@ -94,10 +96,7 @@ export default function About() {
 
   return (
     <PageLayout maxWidth="xl">
-      <PageHeader
-        title="About AREA"
-        subtitle="Server information, available services, and real-time status"
-      />
+      <PageHeader title={t('about.title')} subtitle={t('about.description')} />
 
       {/* Server Information */}
       <Card padding="lg">
@@ -106,7 +105,7 @@ export default function About() {
             <div className={styles.sectionIcon}>
               <FiServer />
             </div>
-            <h2 className={styles.sectionTitle}>Server Information</h2>
+            <h2 className={styles.sectionTitle}>{t('about.server.title')}</h2>
           </div>
 
           <div className={styles.infoGrid}>
@@ -115,7 +114,9 @@ export default function About() {
                 <FiServer />
               </div>
               <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>Host</span>
+                <span className={styles.infoLabel}>
+                  {t('about.server.host')}
+                </span>
                 <span className={styles.infoValue}>
                   {aboutData.client.host}
                 </span>
@@ -127,7 +128,9 @@ export default function About() {
                 <FiClock />
               </div>
               <div className={styles.infoContent}>
-                <span className={styles.infoLabel}>Current Time</span>
+                <span className={styles.infoLabel}>
+                  {t('about.server.time')}
+                </span>
                 <span className={styles.infoValue}>
                   {formatTimestamp(aboutData.server.current_time)}
                 </span>
@@ -140,7 +143,7 @@ export default function About() {
                   <FiActivity />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Uptime</span>
+                  <span className={styles.infoLabel}>{t('about.uptime')}</span>
                   <span className={styles.infoValue}>
                     {formatUptime(aboutData.server.uptime)}
                   </span>
@@ -154,7 +157,7 @@ export default function About() {
                   <FiPackage />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Version</span>
+                  <span className={styles.infoLabel}>{t('about.version')}</span>
                   <span className={styles.infoValue}>
                     {aboutData.server.version}
                   </span>
@@ -171,9 +174,9 @@ export default function About() {
           <div className={styles.sectionIcon}>
             <FiPackage />
           </div>
-          <h2 className={styles.sectionTitle}>Available Services</h2>
+          <h2 className={styles.sectionTitle}>{t('about.server.services')}</h2>
           <span className={styles.sectionBadge}>
-            {aboutData.server.services.length} Services
+            {aboutData.server.services.length} {t('about.services.title')}
           </span>
         </div>
 
@@ -184,9 +187,9 @@ export default function About() {
               <div className={styles.emptyIcon}>
                 <FiPackage />
               </div>
-              <h3 className={styles.emptyTitle}>No Services Yet</h3>
+              <h3 className={styles.emptyTitle}>{t('about.noServices')}</h3>
               <p className={styles.emptyText}>
-                No services are configured on the server at this time.
+                {t('about.noServicesDescription')}
               </p>
             </div>
           </Card>
@@ -205,14 +208,16 @@ export default function About() {
                   <div className={styles.serviceSection}>
                     <div className={styles.serviceSectionHeader}>
                       <FiZap size={16} />
-                      <h4 className={styles.serviceSectionTitle}>Actions</h4>
+                      <h4 className={styles.serviceSectionTitle}>
+                        {t('about.services.actions')}
+                      </h4>
                       <span className={styles.serviceBadge}>
                         {service.actions.length}
                       </span>
                     </div>
                     {service.actions.length === 0 ||
                     !service.actions[0].name ? (
-                      <p className={styles.emptyList}>No actions available</p>
+                      <p className={styles.emptyList}>{t('about.noActions')}</p>
                     ) : (
                       <ul className={styles.serviceList}>
                         {service.actions.map((action, actionIndex) => (
@@ -234,14 +239,18 @@ export default function About() {
                   <div className={styles.serviceSection}>
                     <div className={styles.serviceSectionHeader}>
                       <FiRefreshCw size={16} />
-                      <h4 className={styles.serviceSectionTitle}>Reactions</h4>
+                      <h4 className={styles.serviceSectionTitle}>
+                        {t('about.services.reactions')}
+                      </h4>
                       <span className={styles.serviceBadge}>
                         {service.reactions.length}
                       </span>
                     </div>
                     {service.reactions.length === 0 ||
                     !service.reactions[0].name ? (
-                      <p className={styles.emptyList}>No reactions available</p>
+                      <p className={styles.emptyList}>
+                        {t('about.noReactions')}
+                      </p>
                     ) : (
                       <ul className={styles.serviceList}>
                         {service.reactions.map((reaction, reactionIndex) => (

@@ -7,12 +7,15 @@ import {
   FiArrowRight,
 } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Button, Card } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import LanguageSelector from '@/components/LanguageSelector';
 import styles from './Home.module.css';
 
 export default function Home() {
   const { isAuthenticated } = useAuth();
+  const t = useTranslation();
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -29,21 +32,22 @@ export default function Home() {
           </Link>
           <div className={styles.navLinks}>
             <Link to="/about" className={styles.navLink}>
-              About
+              {t('home.nav.about')}
             </Link>
             <Link to="/login" className={styles.navLink}>
-              Login
+              {t('home.nav.login')}
             </Link>
             <Link to="/register" className={styles.navLinkPrimary}>
-              Sign Up
+              {t('home.nav.signUp')}
             </Link>
+            <LanguageSelector />
             <ThemeToggle />
           </div>
         </nav>
 
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>
-            <span>Automate Everything</span>
+            <span>{t('home.hero.badge')}</span>
           </div>
 
           <div className={styles.heroLogo}>
@@ -51,25 +55,28 @@ export default function Home() {
           </div>
 
           <h1 className={styles.heroTitle}>
-            Automate Your
-            <span className={styles.heroTitleGradient}> Digital Life</span>
+            {t('home.hero.title')}
+            <span className={styles.heroTitleGradient}>
+              {' '}
+              {t('home.hero.titleGradient')}
+            </span>
           </h1>
 
           <p className={styles.heroDescription}>
-            Connect your favorite services and create powerful automations.
+            {t('home.hero.description')}
             <br />
-            When an action happens, trigger a reaction automatically.
+            {t('home.hero.descriptionLine2')}
           </p>
 
           <div className={styles.ctaButtons}>
             <Link to="/register">
               <Button variant="primary" size="lg" rightIcon={<FiArrowRight />}>
-                Get Started
+                {t('home.hero.getStarted')}
               </Button>
             </Link>
             <Link to="/about">
               <Button variant="ghost" size="lg">
-                Learn More
+                {t('home.hero.learnMore')}
               </Button>
             </Link>
           </div>
@@ -86,12 +93,12 @@ export default function Home() {
       {/* Features Section */}
       <section className={styles.featuresSection}>
         <div className={styles.sectionHeader}>
-          <div className={styles.sectionBadge}>How It Works</div>
-          <h2 className={styles.sectionTitle}>
-            Three simple steps to automate anything
-          </h2>
+          <div className={styles.sectionBadge}>
+            {t('home.howItWorks.badge')}
+          </div>
+          <h2 className={styles.sectionTitle}>{t('home.howItWorks.title')}</h2>
           <p className={styles.sectionSubtitle}>
-            No coding required. Create powerful automations in minutes.
+            {t('home.howItWorks.subtitle')}
           </p>
         </div>
 
@@ -102,11 +109,14 @@ export default function Home() {
                 <FiSettings />
                 <div className={styles.featureIconBg}></div>
               </div>
-              <div className={styles.featureNumber}>01</div>
-              <h3 className={styles.featureTitle}>Connect Services</h3>
+              <div className={styles.featureNumber}>
+                {t('home.howItWorks.step1.number')}
+              </div>
+              <h3 className={styles.featureTitle}>
+                {t('home.howItWorks.step1.title')}
+              </h3>
               <p className={styles.featureDescription}>
-                Link your email, social media, and productivity tools in just a
-                few clicks
+                {t('home.howItWorks.step1.description')}
               </p>
             </div>
           </Card>
@@ -117,11 +127,14 @@ export default function Home() {
                 <FiZap />
                 <div className={styles.featureIconBg}></div>
               </div>
-              <div className={styles.featureNumber}>02</div>
-              <h3 className={styles.featureTitle}>Create Actions</h3>
+              <div className={styles.featureNumber}>
+                {t('home.howItWorks.step2.number')}
+              </div>
+              <h3 className={styles.featureTitle}>
+                {t('home.howItWorks.step2.title')}
+              </h3>
               <p className={styles.featureDescription}>
-                Set triggers like "new email" or "new tweet" to start your
-                automation
+                {t('home.howItWorks.step2.description')}
               </p>
             </div>
           </Card>
@@ -132,11 +145,14 @@ export default function Home() {
                 <FiTarget />
                 <div className={styles.featureIconBg}></div>
               </div>
-              <div className={styles.featureNumber}>03</div>
-              <h3 className={styles.featureTitle}>Set Reactions</h3>
+              <div className={styles.featureNumber}>
+                {t('home.howItWorks.step3.number')}
+              </div>
+              <h3 className={styles.featureTitle}>
+                {t('home.howItWorks.step3.title')}
+              </h3>
               <p className={styles.featureDescription}>
-                Define what happens: send notification, create task, and much
-                more
+                {t('home.howItWorks.step3.description')}
               </p>
             </div>
           </Card>
@@ -146,12 +162,10 @@ export default function Home() {
       {/* Benefits Section */}
       <section className={styles.benefitsSection}>
         <div className={styles.sectionHeader}>
-          <div className={styles.sectionBadge}>Why Choose AREA?</div>
-          <h2 className={styles.sectionTitle}>
-            The smart way to automate your workflow
-          </h2>
+          <div className={styles.sectionBadge}>{t('home.benefits.badge')}</div>
+          <h2 className={styles.sectionTitle}>{t('home.benefits.title')}</h2>
           <p className={styles.sectionSubtitle}>
-            Everything you need to boost your productivity
+            {t('home.benefits.subtitle')}
           </p>
         </div>
 
@@ -161,10 +175,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Easy to use</h3>
+              <h3 className={styles.benefitTitle}>
+                {t('home.benefits.easyToUse.title')}
+              </h3>
               <p className={styles.benefitDescription}>
-                No coding required - create automations with our intuitive
-                interface
+                {t('home.benefits.easyToUse.description')}
               </p>
             </div>
           </div>
@@ -174,9 +189,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Powerful integrations</h3>
+              <h3 className={styles.benefitTitle}>
+                {t('home.benefits.powerfulIntegrations.title')}
+              </h3>
               <p className={styles.benefitDescription}>
-                Connect all your favorite tools and services in one place
+                {t('home.benefits.powerfulIntegrations.description')}
               </p>
             </div>
           </div>
@@ -186,9 +203,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Save time</h3>
+              <h3 className={styles.benefitTitle}>
+                {t('home.benefits.saveTime.title')}
+              </h3>
               <p className={styles.benefitDescription}>
-                Automate repetitive tasks and focus on what matters most
+                {t('home.benefits.saveTime.description')}
               </p>
             </div>
           </div>
@@ -198,9 +217,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Stay organized</h3>
+              <h3 className={styles.benefitTitle}>
+                {t('home.benefits.stayOrganized.title')}
+              </h3>
               <p className={styles.benefitDescription}>
-                Keep everything in sync across all your apps and services
+                {t('home.benefits.stayOrganized.description')}
               </p>
             </div>
           </div>
@@ -210,9 +231,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Always reliable</h3>
+              <h3 className={styles.benefitTitle}>
+                {t('home.benefits.alwaysReliable.title')}
+              </h3>
               <p className={styles.benefitDescription}>
-                Your automations run 24/7 with 99.9% uptime guarantee
+                {t('home.benefits.alwaysReliable.description')}
               </p>
             </div>
           </div>
@@ -222,9 +245,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <h3 className={styles.benefitTitle}>Secure & private</h3>
+              <h3 className={styles.benefitTitle}>
+                {t('home.benefits.securePrivate.title')}
+              </h3>
               <p className={styles.benefitDescription}>
-                Enterprise-grade security keeps your data safe and encrypted
+                {t('home.benefits.securePrivate.description')}
               </p>
             </div>
           </div>
@@ -234,13 +259,11 @@ export default function Home() {
       {/* CTA Section */}
       <section className={styles.ctaSection}>
         <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>Ready to Get Started?</h2>
-          <p className={styles.ctaDescription}>
-            Join thousands of users automating their digital life.
-          </p>
+          <h2 className={styles.ctaTitle}>{t('home.cta.title')}</h2>
+          <p className={styles.ctaDescription}>{t('home.cta.description')}</p>
           <Link to="/register">
             <Button variant="primary" size="lg" rightIcon={<FiArrowRight />}>
-              Create Your Account
+              {t('home.cta.button')}
             </Button>
           </Link>
         </div>
@@ -255,19 +278,21 @@ export default function Home() {
           </div>
           <div className={styles.footerLinks}>
             <Link to="/about" className={styles.footerLink}>
-              About
+              {t('home.footer.about')}
             </Link>
             <Link to="/login" className={styles.footerLink}>
-              Login
+              {t('home.footer.login')}
             </Link>
             <Link to="/register" className={styles.footerLink}>
-              Sign Up
+              {t('home.footer.signUp')}
             </Link>
           </div>
         </div>
         <div className={styles.footerBottom}>
           <p className={styles.footerCopyright}>
-            © {new Date().getFullYear()} AREA. All rights reserved.
+            {t('home.footer.copyright', {
+              year: new Date().getFullYear().toString(),
+            })}
           </p>
         </div>
       </footer>

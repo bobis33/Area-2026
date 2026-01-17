@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { FiActivity, FiSettings, FiUser, FiInfo } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import { PageLayout, PageHeader, ContentGrid, Card } from '@/components/ui';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const t = useTranslation();
 
   if (!user) {
     return null;
@@ -14,8 +16,8 @@ export default function Dashboard() {
   return (
     <PageLayout maxWidth="xl">
       <PageHeader
-        title={`Welcome back, ${user.name || user.email}!`}
-        subtitle="Manage your automations and account from here"
+        title={t('dashboard.welcome', { name: user.name || user.email })}
+        subtitle={t('dashboard.subtitle')}
       />
 
       <ContentGrid columns={2} gap="lg">
@@ -25,10 +27,11 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiActivity />
               </div>
-              <h2 className={styles.cardTitle}>My Automations</h2>
+              <h2 className={styles.cardTitle}>
+                {t('dashboard.cards.myAutomations.title')}
+              </h2>
               <p className={styles.cardDescription}>
-                Create and manage your action-reaction automations. Connect
-                services and build powerful workflows.
+                {t('dashboard.cards.myAutomations.description')}
               </p>
               <span className={styles.cardArrow}>→</span>
             </div>
@@ -41,10 +44,11 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiSettings />
               </div>
-              <h2 className={styles.cardTitle}>Connected Services</h2>
+              <h2 className={styles.cardTitle}>
+                {t('dashboard.cards.connectedServices.title')}
+              </h2>
               <p className={styles.cardDescription}>
-                Link multiple providers like GitHub, Spotify, and Discord to
-                unlock more automations.
+                {t('dashboard.cards.connectedServices.description')}
               </p>
               <span className={styles.cardArrow}>→</span>
             </div>
@@ -57,10 +61,11 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiUser />
               </div>
-              <h2 className={styles.cardTitle}>My Profile</h2>
+              <h2 className={styles.cardTitle}>
+                {t('dashboard.cards.myProfile.title')}
+              </h2>
               <p className={styles.cardDescription}>
-                View and update your personal information, security settings,
-                and account preferences.
+                {t('dashboard.cards.myProfile.description')}
               </p>
               <span className={styles.cardArrow}>→</span>
             </div>
@@ -73,10 +78,11 @@ export default function Dashboard() {
               <div className={styles.cardIcon}>
                 <FiInfo />
               </div>
-              <h2 className={styles.cardTitle}>About AREA</h2>
+              <h2 className={styles.cardTitle}>
+                {t('dashboard.cards.aboutArea.title')}
+              </h2>
               <p className={styles.cardDescription}>
-                Discover available services, actions, and reactions. Learn how
-                to make the most of AREA.
+                {t('dashboard.cards.aboutArea.description')}
               </p>
               <span className={styles.cardArrow}>→</span>
             </div>
@@ -86,29 +92,39 @@ export default function Dashboard() {
 
       <div style={{ marginTop: 'var(--spacing-xl)' }}>
         <Card padding="lg">
-          <h3 className={styles.sectionTitle}>Account Information</h3>
+          <h3 className={styles.sectionTitle}>
+            {t('dashboard.accountInfo.title')}
+          </h3>
           <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Email</span>
+              <span className={styles.infoLabel}>
+                {t('dashboard.accountInfo.email')}
+              </span>
               <span className={styles.infoValue}>{user.email}</span>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Role</span>
+              <span className={styles.infoLabel}>
+                {t('dashboard.accountInfo.role')}
+              </span>
               <span className={styles.infoValue}>
                 <span className={styles.roleBadge}>{user.role}</span>
               </span>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Provider</span>
+              <span className={styles.infoLabel}>
+                {t('dashboard.accountInfo.provider')}
+              </span>
               <span className={styles.infoValue}>
                 {user.provider === 'local'
-                  ? 'Email/Password'
+                  ? t('dashboard.accountInfo.emailPassword')
                   : user.provider.charAt(0).toUpperCase() +
                     user.provider.slice(1)}
               </span>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Member since</span>
+              <span className={styles.infoLabel}>
+                {t('dashboard.accountInfo.memberSince')}
+              </span>
               <span className={styles.infoValue}>
                 {new Date(user.created_at).toLocaleDateString('en-US', {
                   year: 'numeric',

@@ -1,0 +1,89 @@
+.languageSelector {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.languageButton {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: #1e293b;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+}
+
+.languageButton:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+  opacity: 1;
+}
+
+.languageButton.active {
+  background: var(--primary);
+  color: white;
+  opacity: 1;
+}
+
+.languageButton:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Light mode specific */
+[data-theme='light'] .languageSelector,
+:root:not([data-theme='dark']) .languageSelector {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme='light'] .languageButton,
+:root:not([data-theme='dark']) .languageButton {
+  color: #1e293b;
+}
+
+[data-theme='light'] .languageButton:hover,
+:root:not([data-theme='dark']) .languageButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #0f172a;
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .languageSelector {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .languageButton {
+  color: #e2e8f0;
+}
+
+[data-theme='dark'] .languageButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .languageSelector {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .languageButton {
+    flex: 1;
+    max-width: 4rem;
+  }
+}

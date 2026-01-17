@@ -14,6 +14,7 @@ import {
   FiKey,
   FiCalendar,
 } from 'react-icons/fi';
+import { useTranslation } from '@/contexts/I18nContext';
 import { PageLayout, PageHeader, Card, Button } from '@/components/ui';
 import styles from './Admin.module.css';
 
@@ -28,6 +29,7 @@ interface User {
 
 export default function Admin() {
   const { user } = useAuth();
+  const t = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,9 +66,7 @@ export default function Admin() {
   };
 
   const handlePromoteUser = async (userId: number) => {
-    if (
-      !window.confirm('Are you sure you want to promote this user to admin?')
-    ) {
+    if (!window.confirm(t('admin.confirmations.promote'))) {
       return;
     }
 
@@ -88,9 +88,7 @@ export default function Admin() {
   };
 
   const handleDemoteUser = async (userId: number) => {
-    if (
-      !window.confirm('Are you sure you want to demote this admin to user?')
-    ) {
+    if (!window.confirm(t('admin.confirmations.demote'))) {
       return;
     }
 
@@ -112,11 +110,7 @@ export default function Admin() {
   };
 
   const handleRevokeUser = async (userId: number) => {
-    if (
-      !window.confirm(
-        'Are you sure you want to delete this user? This action cannot be undone.',
-      )
-    ) {
+    if (!window.confirm(t('admin.confirmations.delete'))) {
       return;
     }
 
@@ -150,7 +144,7 @@ export default function Admin() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading users...</p>
+          <p className={styles.loadingText}>{t('admin.users.loadingUsers')}</p>
         </div>
       </PageLayout>
     );
@@ -159,8 +153,8 @@ export default function Admin() {
   return (
     <PageLayout maxWidth="xl">
       <PageHeader
-        title="Admin Panel"
-        subtitle="Manage users and their roles"
+        title={t('admin.title')}
+        subtitle={t('admin.subtitle')}
         action={
           <Button
             variant="secondary"
@@ -168,7 +162,7 @@ export default function Admin() {
             onClick={loadUsers}
             disabled={loading}
           >
-            Refresh
+            {t('common.refresh')}
           </Button>
         }
       />
@@ -177,7 +171,7 @@ export default function Admin() {
         <div className={styles.errorBanner}>
           <p>{error}</p>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
-            Dismiss
+            {t('common.close')}
           </Button>
         </div>
       )}
@@ -189,9 +183,12 @@ export default function Admin() {
             <div className={styles.sectionIcon}>
               <FiUsers />
             </div>
-            <h2 className={styles.sectionTitle}>Members & Roles</h2>
+            <h2 className={styles.sectionTitle}>{t('admin.users.title')}</h2>
             <span className={styles.sectionBadge}>
-              {users.length} {users.length === 1 ? 'User' : 'Users'}
+              {users.length}{' '}
+              {users.length === 1
+                ? t('admin.users.user')
+                : t('admin.users.users')}
             </span>
           </div>
 
@@ -200,9 +197,9 @@ export default function Admin() {
               <div className={styles.emptyIcon}>
                 <FiUsers />
               </div>
-              <h3 className={styles.emptyTitle}>No users yet</h3>
+              <h3 className={styles.emptyTitle}>{t('admin.users.noUsers')}</h3>
               <p className={styles.emptyText}>
-                No users are registered in the system.
+                {t('admin.users.noUsersDescription')}
               </p>
             </div>
           ) : (
@@ -216,7 +213,7 @@ export default function Admin() {
                       </div>
                       <div className={styles.userInfo}>
                         <h3 className={styles.userName}>
-                          {u.name || 'No name'}
+                          {u.name || t('profile.notSet')}
                         </h3>
                         <span
                           className={`${styles.roleBadge} ${
@@ -227,11 +224,11 @@ export default function Admin() {
                         >
                           {u.role === 'admin' ? (
                             <>
-                              <FiShield /> Admin
+                              <FiShield /> {t('admin.users.admin')}
                             </>
                           ) : (
                             <>
-                              <FiUser /> User
+                              <FiUser /> {t('admin.users.user')}
                             </>
                           )}
                         </span>
@@ -265,7 +262,7 @@ export default function Admin() {
                             disabled={updatingUserId === u.id}
                             loading={updatingUserId === u.id}
                           >
-                            Promote to Admin
+                            {t('admin.actions.promote')}
                           </Button>
                         ) : (
                           <Button
@@ -277,7 +274,7 @@ export default function Admin() {
                             disabled={updatingUserId === u.id}
                             loading={updatingUserId === u.id}
                           >
-                            Demote to User
+                            {t('admin.actions.demote')}
                           </Button>
                         )}
                         <Button
@@ -289,7 +286,7 @@ export default function Admin() {
                           disabled={deletingUserId === u.id}
                           loading={deletingUserId === u.id}
                         >
-                          Delete User
+                          {t('admin.actions.delete')}
                         </Button>
                       </div>
                     )}
@@ -297,7 +294,7 @@ export default function Admin() {
                     {u.id === user?.id && (
                       <div className={styles.currentUserBadge}>
                         <FiShield />
-                        <span>You (Current User)</span>
+                        <span>{t('admin.currentUser')}</span>
                       </div>
                     )}
                   </div>

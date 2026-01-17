@@ -1,10 +1,12 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import type { RegisterData } from '@/types';
 import { FiArrowLeft, FiMail, FiLock, FiUser } from 'react-icons/fi';
 import { Button, Input } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import LanguageSelector from '@/components/LanguageSelector';
 import styles from './Auth.module.css';
 
 interface RegisterFormData {
@@ -16,6 +18,7 @@ interface RegisterFormData {
 
 export default function Register() {
   const { register, loading, error } = useAuth();
+  const t = useTranslation();
   const [formData, setFormData] = useState<RegisterFormData>({
     email: '',
     password: '',
@@ -29,15 +32,15 @@ export default function Register() {
     setValidationError('');
 
     if (!formData.email || !formData.password || !formData.name) {
-      setValidationError('Email, name and password are required');
+      setValidationError(t('auth.register.fillAllFields'));
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      setValidationError('Passwords do not match');
+      setValidationError(t('auth.register.passwordsDontMatch'));
       return;
     }
     if (formData.password.length < 6) {
-      setValidationError('Password must be at least 6 characters long');
+      setValidationError(t('auth.register.passwordTooShort'));
       return;
     }
 
@@ -64,9 +67,12 @@ export default function Register() {
       <div className={styles.authNav}>
         <Link to="/" className={styles.backToHome}>
           <FiArrowLeft />
-          <span>Back to Home</span>
+          <span>{t('common.back')}</span>
         </Link>
-        <ThemeToggle />
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </div>
 
       <div className={styles.authCard}>
@@ -75,10 +81,7 @@ export default function Register() {
         </div>
 
         <div className={styles.authHeader}>
-          <h1 className={styles.authTitle}>Create Account</h1>
-          <p className={styles.authSubtitle}>
-            Join AREA and start automating your digital life
-          </p>
+          <h1 className={styles.authTitle}>{t('auth.register.title')}</h1>
         </div>
 
         {(error || validationError) && (
@@ -89,20 +92,20 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className={styles.authForm}>
           <Input
-            label="Name"
+            label={t('auth.register.fullName')}
             type="text"
             id="name"
             name="name"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Your full name"
+            placeholder={t('auth.register.fullNamePlaceholder')}
             required
             disabled={loading}
             leftIcon={<FiUser />}
           />
 
           <Input
-            label="Email"
+            label={t('auth.register.email')}
             type="email"
             id="email"
             name="email"
@@ -110,14 +113,14 @@ export default function Register() {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            placeholder="your.email@example.com"
+            placeholder={t('auth.register.emailPlaceholder')}
             required
             disabled={loading}
             leftIcon={<FiMail />}
           />
 
           <Input
-            label="Password"
+            label={t('auth.register.password')}
             type="password"
             id="password"
             name="password"
@@ -125,14 +128,14 @@ export default function Register() {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            placeholder="At least 6 characters"
+            placeholder={t('auth.register.passwordMinLength')}
             required
             disabled={loading}
             leftIcon={<FiLock />}
           />
 
           <Input
-            label="Confirm Password"
+            label={t('auth.register.confirmPassword')}
             type="password"
             id="confirmPassword"
             name="confirmPassword"
@@ -140,7 +143,7 @@ export default function Register() {
             onChange={(e) =>
               setFormData({ ...formData, confirmPassword: e.target.value })
             }
-            placeholder="Confirm your password"
+            placeholder={t('auth.register.confirmPassword')}
             required
             disabled={loading}
             leftIcon={<FiLock />}
@@ -153,15 +156,17 @@ export default function Register() {
             disabled={loading}
             fullWidth
           >
-            {loading ? 'Creating Account...' : 'Sign Up'}
+            {loading
+              ? `${t('auth.register.createAccount')}...`
+              : t('auth.register.createAccount')}
           </Button>
         </form>
 
         <div className={styles.authFooter}>
           <p>
-            Already have an account?{' '}
+            {t('auth.register.alreadyHaveAccount')}{' '}
             <Link to="/login" className={styles.authLink}>
-              Sign In
+              {t('auth.register.signIn')}
             </Link>
           </p>
         </div>
