@@ -23,6 +23,8 @@ import { SpotifyResumePlaybackReaction } from '@modules/area/reactions/spotify/r
 import { SpotifySkipNextReaction } from '@modules/area/reactions/spotify/skip-next';
 import { AreaService } from '@modules/area/area.service';
 import { AreaController } from '@modules/area/area.controller';
+import { GoogleNewEmailAction } from '@modules/area/actions/google/gmail/new-email';
+import { DiscordMessagePostedAction } from '@modules/area/actions/discord/message-posted';
 
 @Module({
   imports: [
@@ -50,6 +52,8 @@ import { AreaController } from '@modules/area/area.controller';
     SpotifyResumePlaybackReaction,
     SpotifySkipNextReaction,
     TimeCronAction,
+    GoogleNewEmailAction,
+    DiscordMessagePostedAction,
   ],
   controllers: [AreaController],
 })

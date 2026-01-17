@@ -4,6 +4,8 @@ import { SpotifyNewSavedTrackAction } from '@modules/area/actions/spotify/new-sa
 import { SpotifyTrackIsPlayingAction } from '@modules/area/actions/spotify/track-is-playing';
 import { ActionHandler } from '@interfaces/area.interface';
 import { GitlabNewTodoAction } from '@modules/area/actions/gitlab/new-notification';
+import { GoogleNewEmailAction } from '@modules/area/actions/google/gmail/new-email';
+import { DiscordMessagePostedAction } from '@modules/area/actions/discord/message-posted';
 
 export const ActionsRegistry: Record<
   string,
@@ -14,4 +16,6 @@ export const ActionsRegistry: Record<
   'gitlab.new_notification': GitlabNewTodoAction,
   'spotify.new_saved_track': SpotifyNewSavedTrackAction,
   'spotify.track_is_playing': SpotifyTrackIsPlayingAction,
+  'google.new_email': GoogleNewEmailAction,
+  'discord.message_posted': DiscordMessagePostedAction,
 };
