@@ -13,7 +13,7 @@ export default function TabLayout() {
   const t = useTranslation();
   const { user, isAuthenticated } = useAuth();
   
-  const isAdmin = isAuthenticated && user?.role === 'admin';
+  const isAdmin = isAuthenticated && user?.role?.toLowerCase() === 'admin';
 
   return (
     <Tabs
