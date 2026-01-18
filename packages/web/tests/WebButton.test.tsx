@@ -23,6 +23,13 @@ describe('Button', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Click' }));
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(onClick).toHaveBeenCalledWith(
+      expect.objectContaining({
+        preventDefault: expect.any(Function),
+        currentTarget: expect.any(HTMLElement),
+        target: expect.any(HTMLElement),
+      }),
+    );
   });
 
   it('is disabled when disabled=true', () => {
@@ -59,7 +66,9 @@ describe('Button', () => {
   });
 
   it('supports custom className', () => {
-    const { container } = renderWithTheme(<Button className="my-class">Custom</Button>);
+    const { container } = renderWithTheme(
+      <Button className="my-class">Custom</Button>,
+    );
     const wrapper = container.firstChild as HTMLElement;
 
     expect(wrapper.className).toContain('my-class');

@@ -46,21 +46,23 @@ export function WebButton({
   const handlePress = () => {
     if (onPress) {
       onPress();
-    } else if (onClick && buttonRef.current) {
-      const event = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      }) as unknown as React.MouseEvent<HTMLButtonElement>;
-      Object.defineProperty(event, 'currentTarget', {
-        value: buttonRef.current,
-        enumerable: true,
-      });
-      Object.defineProperty(event, 'target', {
-        value: buttonRef.current,
-        enumerable: true,
-      });
-      onClick(event);
+      return;
+    }
+
+    if (onClick && buttonRef.current) {
+      try {
+        const syntheticEvent = {
+          preventDefault: () => {
+            // Synthetic event object that supports preventDefault
+          },
+          currentTarget: buttonRef.current,
+          target: buttonRef.current,
+        } as unknown as React.MouseEvent<HTMLButtonElement>;
+
+        onClick(syntheticEvent);
+      } catch (e) {
+        console.error('Error in onClick handler:', e);
+      }
     }
   };
 
@@ -131,12 +133,7 @@ export function WebButton({
       }}
     >
       <div style={{ display: 'none' }}>
-        <button
-          ref={buttonRef}
-          onClick={onClick}
-          disabled={disabled || loading}
-          type="button"
-        />
+        <button ref={buttonRef} type="button" />
       </div>
       <Button
         label={label}
