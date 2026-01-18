@@ -96,7 +96,14 @@ export function WebButton({
     }
   };
 
-  const label = loading ? '' : String(children);
+  // Check if children is a ReactNode (not a primitive string/number)
+  const isReactNode = React.isValidElement(children) || (typeof children !== 'string' && typeof children !== 'number' && children != null);
+  
+  // If children is a ReactNode and no leftIcon/rightIcon, use it as center content
+  // Otherwise, convert to string for label
+  const hasOnlyIcon = isReactNode && !leftIcon && !rightIcon;
+  const label = loading ? '' : (hasOnlyIcon ? ' ' : String(children || ''));
+  const centerIcon = hasOnlyIcon ? children : null;
 
   return (
     <div 
@@ -112,7 +119,7 @@ export function WebButton({
         style={StyleSheet.flatten([getButtonStyle(), style]) as ViewStyle}
         labelStyle={StyleSheet.flatten([
           {
-            color: getTextColor(),
+            color: hasOnlyIcon ? 'transparent' : getTextColor(),
           },
           labelStyle,
         ]) as TextStyle}
@@ -143,7 +150,7 @@ export function WebButton({
           />
         </div>
       )}
-      {!loading && (leftIcon || rightIcon) && (
+      {!loading && (leftIcon || rightIcon || centerIcon) && (
         <div
           style={{
             position: 'absolute',
@@ -153,12 +160,13 @@ export function WebButton({
             bottom: 0,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: centerIcon ? 'center' : 'space-between',
             pointerEvents: 'none',
             padding: '0 var(--spacing-md)',
           }}
         >
           {leftIcon && <span>{leftIcon}</span>}
+          {centerIcon && <span>{centerIcon}</span>}
           {rightIcon && <span style={{ marginLeft: 'auto' }}>{rightIcon}</span>}
         </div>
       )}

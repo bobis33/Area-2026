@@ -304,7 +304,7 @@ export default function Services() {
 
                     <div style={{ marginBottom: 8 }}>
                       <Text variant="subtitle">
-                        {meta?.label ?? getProviderLabel(provider)}
+                      {meta?.label ?? getProviderLabel(provider)}
                       </Text>
                     </div>
                     <Text variant="body" color="muted">
@@ -391,7 +391,7 @@ export default function Services() {
 
                     <div style={{ marginBottom: 8 }}>
                       <Text variant="subtitle">
-                        {meta?.label ?? getProviderLabel(provider)}
+                      {meta?.label ?? getProviderLabel(provider)}
                       </Text>
                     </div>
                     <Text variant="body" color="muted">
