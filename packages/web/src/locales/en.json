@@ -1,0 +1,616 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "actions": "Actions",
+    "retry": "Retry",
+    "refresh": "Refresh"
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "area": "Automations",
+    "services": "Services",
+    "profile": "Profile",
+    "admin": "Admin",
+    "about": "About",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Automate your digital life",
+    "subtitle": "Connect your favorite services and create powerful automations",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "hero": {
+      "badge": "Automate Everything",
+      "title": "Automate Your",
+      "titleGradient": "Digital Life",
+      "description": "Connect your favorite services and create powerful automations.",
+      "descriptionLine2": "When an action happens, trigger a reaction automatically.",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More"
+    },
+    "nav": {
+      "about": "About",
+      "login": "Login",
+      "signUp": "Sign Up"
+    },
+    "howItWorks": {
+      "badge": "How It Works",
+      "title": "Three simple steps to automate anything",
+      "subtitle": "No coding required. Create powerful automations in minutes.",
+      "step1": {
+        "number": "01",
+        "title": "Connect Services",
+        "description": "Link your email, social media, and productivity tools in just a few clicks"
+      },
+      "step2": {
+        "number": "02",
+        "title": "Create Actions",
+        "description": "Set triggers like \"new email\" or \"new tweet\" to start your automation"
+      },
+      "step3": {
+        "number": "03",
+        "title": "Set Reactions",
+        "description": "Define what happens: send notification, create task, and much more"
+      }
+    },
+    "benefits": {
+      "badge": "Why Choose AREA?",
+      "title": "The smart way to automate your workflow",
+      "subtitle": "Everything you need to boost your productivity",
+      "easyToUse": {
+        "title": "Easy to use",
+        "description": "No coding required - create automations with our intuitive interface"
+      },
+      "powerfulIntegrations": {
+        "title": "Powerful integrations",
+        "description": "Connect all your favorite tools and services in one place"
+      },
+      "saveTime": {
+        "title": "Save time",
+        "description": "Automate repetitive tasks and focus on what matters most"
+      },
+      "stayOrganized": {
+        "title": "Stay organized",
+        "description": "Keep everything in sync across all your apps and services"
+      },
+      "alwaysReliable": {
+        "title": "Always reliable",
+        "description": "Your automations run 24/7 with 99.9% uptime guarantee"
+      },
+      "securePrivate": {
+        "title": "Secure & private",
+        "description": "Enterprise-grade security keeps your data safe and encrypted"
+      }
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "description": "Join thousands of users automating their digital life.",
+      "button": "Create Your Account"
+    },
+    "footer": {
+      "about": "About",
+      "login": "Login",
+      "signUp": "Sign Up",
+      "copyright": "© {{year}} AREA. All rights reserved."
+    }
+  },
+  "auth": {
+    "backToHome": "Back to Home",
+    "orContinueWith": "OR CONTINUE WITH",
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your AREA account",
+      "email": "Email",
+      "password": "Password",
+      "emailPlaceholder": "your.email@example.com",
+      "passwordPlaceholder": "Enter your password",
+      "signIn": "Sign In",
+      "signingIn": "Signing In...",
+      "fillAllFields": "Please fill in all fields",
+      "connectionError": "Connection error",
+      "invalidCredentials": "Invalid email or password",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "forgotPassword": "Forgot password?"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join AREA and start automating your digital life",
+      "fullName": "Name",
+      "fullNamePlaceholder": "Your full name",
+      "email": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "At least 6 characters",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "passwordMinLength": "Minimum 6 characters",
+      "fillAllFields": "Please fill in all fields",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "passwordsDontMatch": "Passwords don't match",
+      "createAccount": "Create my account",
+      "creatingAccount": "Creating Account...",
+      "signUp": "Sign Up",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "success": "Account created successfully!",
+      "error": "Registration error",
+      "termsAndConditions": "By creating an account, you agree to our Terms and Conditions",
+      "validation": {
+        "required": "Email, name and password are required",
+        "passwordMismatch": "Passwords do not match",
+        "passwordLength": "Password must be at least 6 characters long"
+      }
+    },
+    "oauth": {
+      "continueWith": "Continue with {{provider}}",
+      "discord": "Discord",
+      "github": "GitHub",
+      "google": "Google",
+      "spotify": "Spotify",
+      "gitlab": "GitLab",
+      "error": "Authentication Failed",
+      "cancelled": "Authentication cancelled",
+      "success": "Successfully authenticated with {{provider}}",
+      "processing": "Processing Authentication...",
+      "processingDescription": "Please wait while we sign you in",
+      "successDescription": "Redirecting you to the application...",
+      "errorDescription": "An error occurred",
+      "failed": "Authentication Failed",
+      "failedDescription": "We couldn't sign you in",
+      "tryAgain": "Please try again or use a different sign-in method.",
+      "goToLogin": "Go to Login",
+      "redirecting": "Redirecting automatically in 5 seconds..."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, {{name}}!",
+    "subtitle": "Manage your automations and account from here",
+    "overview": "Overview",
+    "cards": {
+      "automations": {
+        "title": "My Automations",
+        "description": "Create and manage your action-reaction automations. Connect services and build powerful workflows."
+      },
+      "services": {
+        "title": "Connected Services",
+        "description": "Link multiple providers like GitHub, Spotify, and Discord to unlock more automations."
+      },
+      "profile": {
+        "title": "My Profile",
+        "description": "View and update your personal information, security settings, and account preferences."
+      },
+      "about": {
+        "title": "About AREA",
+        "description": "Discover available services, actions, and reactions. Learn how to make the most of AREA."
+      }
+    },
+    "accountInfo": {
+      "title": "Account Information",
+      "email": "Email",
+      "role": "Role",
+      "provider": "Provider",
+      "memberSince": "Member since",
+      "emailPassword": "Email/Password"
+    },
+    "stats": {
+      "activeAreas": "Active Automations",
+      "totalAreas": "Total Automations",
+      "connectedServices": "Connected Services",
+      "executionsToday": "Executions Today"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity",
+      "viewAll": "View all"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "createArea": "Create Automation",
+      "connectService": "Connect Service",
+      "viewServices": "View Services"
+    }
+  },
+  "area": {
+    "title": "Your Automations",
+    "subtitle": "Create and manage your action → reaction automations",
+    "createAutomation": "Create Automation",
+    "loading": "Loading automations...",
+    "createNew": "Create New Automation",
+    "noAutomations": "No automations yet",
+    "noAutomationsDescription": "Create your first automation to get started!",
+    "active": "Active",
+    "paused": "Paused",
+    "inactive": "Inactive",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "empty": {
+      "title": "No automations yet",
+      "description": "Create your first automation to connect actions and reactions",
+      "createFirst": "Create Your First Automation"
+    },
+    "name": "Name",
+    "description": "Description",
+    "action": "Action",
+    "reaction": "Reaction",
+    "modal": {
+      "title": "Create New Automation",
+      "actionTrigger": "Action (Trigger)",
+      "actionParameters": "Action Parameters",
+      "reactionResponse": "Reaction (Response)",
+      "reactionParameters": "Reaction Parameters",
+      "create": "Create Automation"
+    },
+    "selection": {
+      "selectActionService": "Select Action Service",
+      "selectReactionService": "Select Reaction Service",
+      "selectAction": "Select Action",
+      "selectReaction": "Select Reaction"
+    },
+    "createdAt": "Created",
+    "updatedAt": "Updated",
+    "lastExecution": "Last Execution",
+    "executions": "Executions",
+    "pause": "Pause",
+    "resume": "Resume",
+    "delete": "Delete",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "details": "Details",
+    "actions": {
+      "pause": "Pause automation",
+      "resume": "Resume automation",
+      "delete": "Delete automation",
+      "edit": "Edit automation"
+    },
+    "confirmations": {
+      "delete": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
+      "pause": "Are you sure you want to pause \"{{name}}\"?",
+      "resume": "Are you sure you want to resume \"{{name}}\"?"
+    },
+    "messages": {
+      "paused": "Automation paused successfully",
+      "resumed": "Automation resumed successfully",
+      "deleted": "Automation deleted successfully",
+      "updated": "Automation updated successfully",
+      "pauseError": "Failed to pause automation",
+      "resumeError": "Failed to resume automation",
+      "deleteError": "Failed to delete automation",
+      "updateError": "Failed to update automation"
+    },
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "paused": "Paused",
+      "filterBy": "Filter by status",
+      "sortBy": "Sort by",
+      "sortByName": "Name",
+      "sortByDate": "Date",
+      "sortByStatus": "Status"
+    }
+  },
+  "createArea": {
+    "title": "Create Automation",
+    "subtitle": "Choose an action, a reaction, and configure the parameters",
+    "steps": {
+      "action": "Choose Action",
+      "reaction": "Choose Reaction",
+      "configure": "Configure",
+      "review": "Review"
+    },
+    "name": "Name",
+    "namePlaceholder": "My automation",
+    "nameHelper": "Give your automation a descriptive name",
+    "action": "Action",
+    "reaction": "Reaction",
+    "selectAction": "Select an action",
+    "selectReaction": "Select a reaction",
+    "selectService": "Select a service",
+    "actionService": "Action Service",
+    "reactionService": "Reaction Service",
+    "parameters": "Parameters",
+    "noParameters": "No parameters required",
+    "requiredParameters": "Required parameters",
+    "optionalParameters": "Optional parameters",
+    "active": "Active",
+    "activeDescription": "Enable this automation immediately after creation",
+    "create": "Create Automation",
+    "creating": "Creating...",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "validation": {
+      "nameRequired": "Name is required",
+      "actionRequired": "Please select an action",
+      "reactionRequired": "Please select a reaction",
+      "missingParams": "Please fill in all required parameters",
+      "missingActionParams": "Please fill in all required parameters for the action: {{params}}",
+      "missingReactionParams": "Please fill in all required parameters for the reaction: {{params}}"
+    },
+    "oauth": {
+      "required": "OAuth connection required",
+      "message": "This automation requires a connection with {{services}}. Please connect before creating the automation.",
+      "connect": "Connect {{service}}"
+    },
+    "success": "Automation created successfully!",
+    "error": "Error creating automation"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Connect and manage your services",
+    "loading": "Loading services...",
+    "available": "Available Services",
+    "connected": "Connected Services",
+    "noConnected": "No connected services",
+    "noConnectedDescription": "Connect a service to start creating automations",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "reconnect": "Reconnect",
+    "connected": "Connected",
+    "notConnected": "Not connected",
+    "status": {
+      "connected": "Connected",
+      "notConnected": "Not Connected"
+    },
+    "connectedOn": "Connected on",
+    "actions": {
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "disconnecting": "Disconnecting..."
+    },
+    "reactions": "Reactions",
+    "stats": {
+      "connected": "Connected Services",
+      "available": "Available Services"
+    },
+    "connectedServices": {
+      "title": "Connected Services",
+      "description": "Services you have connected to your account",
+      "noProviders": "No services available",
+      "noConnected": "No services connected yet"
+    },
+    "availableServices": {
+      "title": "Available Services",
+      "description": "Connect new services to expand your automation possibilities",
+      "noProviders": "No services available",
+      "allConnected": "All Connected!",
+      "allConnectedDescription": "You've connected all available services"
+    },
+    "errors": {
+      "missingToken": "Authentication token missing. Please log in again.",
+      "loadFailed": "Failed to load services",
+      "unsupportedProvider": "Provider {{provider}} is not supported",
+      "disconnectFailed": "Failed to disconnect service",
+      "unableToLoad": "Unable to Load Services"
+    },
+    "confirmDisconnect": "Are you sure you want to disconnect {{service}}? Your automations using this service will stop working.",
+    "disconnectSuccess": "{{service}} disconnected successfully",
+    "disconnectError": "Failed to disconnect {{service}}",
+    "connectSuccess": "{{service}} connected successfully",
+    "connectError": "Failed to connect {{service}}",
+    "description": {
+      "discord": "Connect your Discord account to send messages and manage your server",
+      "github": "Integrate with GitHub to monitor repositories and automate workflows",
+      "google": "Access Gmail, Calendar, Drive and other Google services",
+      "spotify": "Control your Spotify playback and manage your playlists",
+      "gitlab": "Connect to GitLab to track projects and automate your CI/CD",
+      "time": "Create time-based automations with cron expressions"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account information and preferences",
+    "personalInfo": {
+      "title": "Personal Information",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "provider": "Authentication Provider",
+      "accountCreated": "Account Created"
+    },
+    "fullName": "Full Name",
+    "email": "Email",
+    "role": "Role",
+    "provider": "Authentication Provider",
+    "signedInWith": "Signed in with {{provider}}",
+    "accountCreated": "Account Created",
+    "accountStatus": "Account Status",
+    "active": "Active",
+    "memberSince": "Member Since",
+    "notSet": "Not set",
+    "preferences": "Preferences",
+    "language": "Language",
+    "languageDescription": "Choose your preferred language",
+    "theme": "Theme",
+    "themeDescription": "Choose your preferred theme",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "languages": {
+      "en": "English",
+      "fr": "Français"
+    },
+    "stats": {
+      "accountStatus": "Account Status",
+      "active": "Active",
+      "memberSince": "Member Since"
+    },
+    "actions": {
+      "title": "Account Actions",
+      "signOut": "Sign Out",
+      "signOutDescription": "Sign out of your account on this device"
+    },
+    "security": "Security",
+    "password": "Password",
+    "changePassword": "Change Password",
+    "connectedServices": "Connected Services",
+    "manageServices": "Manage Services",
+    "accountActions": "Account Actions",
+    "logout": "Log out",
+    "logoutDescription": "Sign out of your account on this device",
+    "deleteAccount": "Delete Account",
+    "deleteAccountWarning": "This action is permanent and cannot be undone",
+    "confirmLogout": "Are you sure you want to log out?",
+    "confirmDelete": "Are you sure you want to delete your account? All your data will be permanently deleted.",
+    "updated": "Profile updated successfully",
+    "updateError": "Failed to update profile"
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Manage users and system settings",
+    "users": {
+      "title": "Users",
+      "total": "Total Users",
+      "active": "Active",
+      "inactive": "Inactive",
+      "loadingUsers": "Loading users...",
+      "noUsers": "No users found",
+      "noUsersDescription": "No users are registered in the system.",
+      "users": "Users",
+      "search": "Search users...",
+      "filter": "Filter by role",
+      "all": "All",
+      "admin": "Admin",
+      "user": "User"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "provider": "Provider",
+      "createdAt": "Joined",
+      "actions": "Actions"
+    },
+    "actions": {
+      "promote": "Promote to Admin",
+      "demote": "Demote to User",
+      "delete": "Delete User",
+      "view": "View Details"
+    },
+    "confirmations": {
+      "promote": "Are you sure you want to promote this user to administrator?",
+      "demote": "Are you sure you want to demote this administrator to user?",
+      "delete": "Are you sure you want to delete this user? This action cannot be undone."
+    },
+    "messages": {
+      "promoteSuccess": "User promoted to administrator",
+      "demoteSuccess": "Administrator demoted to user",
+      "deleteSuccess": "User deleted successfully",
+      "promoteError": "Failed to promote user",
+      "demoteError": "Failed to demote user",
+      "deleteError": "Failed to delete user",
+      "loadError": "Failed to load users"
+    },
+    "stats": {
+      "totalUsers": "Total Users",
+      "adminUsers": "Administrators",
+      "activeAreas": "Active Automations",
+      "totalExecutions": "Total Executions"
+    },
+    "currentUser": "You (Current User)"
+  },
+  "about": {
+    "title": "About AREA",
+    "subtitle": "Server information, available services, and real-time status",
+    "loading": "Loading server information...",
+    "description": "Server information, available services, and real-time status",
+    "version": "Version",
+    "uptime": "Uptime",
+    "noData": "No data available",
+    "noServices": "No Services Yet",
+    "noServicesDescription": "No services are configured on the server at this time.",
+    "noActions": "No actions available",
+    "noReactions": "No reactions available",
+    "serverInfo": {
+      "title": "Server Information",
+      "host": "Host",
+      "currentTime": "Current Time",
+      "uptime": "Uptime",
+      "version": "Version"
+    },
+    "server": {
+      "title": "Server Information",
+      "host": "Host",
+      "time": "Current Time",
+      "services": "Available Services"
+    },
+    "services": {
+      "title": "Available Services",
+      "noServices": "No Services Yet",
+      "noServicesDescription": "No services are configured on the server at this time.",
+      "actions": "Actions",
+      "reactions": "Reactions",
+      "noActions": "No actions available",
+      "noReactions": "No reactions available"
+    },
+    "errors": {
+      "fetchFailed": "Failed to fetch server information",
+      "unableToLoad": "Unable to load server info",
+      "noData": "No data available"
+    },
+    "client": {
+      "title": "Client Information",
+      "host": "Client Host"
+    },
+    "services": {
+      "title": "Services",
+      "actions": "Actions",
+      "reactions": "Reactions"
+    },
+    "documentation": "Documentation",
+    "support": "Support",
+    "github": "GitHub Repository",
+    "team": "Team",
+    "license": "License"
+  },
+  "errors": {
+    "generic": "An error occurred. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "unauthorized": "Unauthorized. Please log in.",
+    "forbidden": "You don't have permission to access this resource.",
+    "notFound": "Resource not found.",
+    "serverError": "Server error. Please try again later.",
+    "timeout": "Request timeout. Please try again.",
+    "unknown": "Unknown error occurred.",
+    "validation": "Validation error. Please check your input.",
+    "pageNotFound": "Page not found",
+    "goHome": "Go to home page"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Minimum {{min}} characters required",
+    "maxLength": "Maximum {{max}} characters allowed",
+    "password": "Password must be at least {{min}} characters",
+    "match": "Fields must match"
+  },
+  "notifications": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information"
+  }
+}

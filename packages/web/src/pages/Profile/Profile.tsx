@@ -7,6 +7,7 @@ import {
   FiLogOut,
 } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import {
   PageLayout,
   PageHeader,
@@ -19,6 +20,7 @@ import styles from './Profile.module.css';
 
 export default function Profile() {
   const { user, logout } = useAuth();
+  const t = useTranslation();
 
   if (!user) {
     return null;
@@ -42,10 +44,7 @@ export default function Profile() {
 
   return (
     <PageLayout maxWidth="lg">
-      <PageHeader
-        title="My Profile"
-        subtitle="Manage your account information and preferences"
-      />
+      <PageHeader title={t('profile.title')} subtitle={t('profile.subtitle')} />
 
       <div className={styles.content}>
         {/* Personal Information Card */}
@@ -55,7 +54,9 @@ export default function Profile() {
               <div className={styles.sectionIcon}>
                 <FiUser />
               </div>
-              <Text variant="subtitle" style={{ margin: 0 }}>Personal Information</Text>
+              <Text variant="subtitle" style={{ margin: 0 }}>
+                {t('profile.personalInfo.title')}
+              </Text>
             </div>
 
             <div className={styles.infoGrid}>
@@ -64,10 +65,10 @@ export default function Profile() {
                   <FiUser />
                 </div>
                 <div className={styles.infoContent}>
-                  <Text variant="caption" color="muted">Name</Text>
-                  <Text variant="body">
-                    {user.name || 'Not set'}
+                  <Text variant="caption" color="muted">
+                    {t('profile.personalInfo.name')}
                   </Text>
+                  <Text variant="body">{user.name || t('profile.notSet')}</Text>
                 </div>
               </div>
 
@@ -76,7 +77,9 @@ export default function Profile() {
                   <FiMail />
                 </div>
                 <div className={styles.infoContent}>
-                  <Text variant="caption" color="muted">Email</Text>
+                  <Text variant="caption" color="muted">
+                    {t('profile.personalInfo.email')}
+                  </Text>
                   <Text variant="body">{user.email}</Text>
                 </div>
               </div>
@@ -86,8 +89,18 @@ export default function Profile() {
                   <FiShield />
                 </div>
                 <div className={styles.infoContent}>
-                  <Text variant="caption" color="muted">Role</Text>
-                  <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
+                  <Text variant="caption" color="muted">
+                    {t('profile.personalInfo.role')}
+                  </Text>
+                  <Text
+                    variant="caption"
+                    style={{
+                      paddingVertical: 4,
+                      paddingHorizontal: 8,
+                      borderRadius: 8,
+                      backgroundColor: 'var(--color-surface-muted)',
+                    }}
+                  >
                     {user.role}
                   </Text>
                 </div>
@@ -99,7 +112,7 @@ export default function Profile() {
                 </div>
                 <div className={styles.infoContent}>
                   <Text variant="caption" color="muted">
-                    Authentication Provider
+                    {t('profile.personalInfo.provider')}
                   </Text>
                   <Text variant="body">
                     {getProviderDisplay(user.provider)}
@@ -112,10 +125,10 @@ export default function Profile() {
                   <FiCalendar />
                 </div>
                 <div className={styles.infoContent}>
-                  <Text variant="caption" color="muted">Account Created</Text>
-                  <Text variant="body">
-                    {formatDate(user.created_at)}
+                  <Text variant="caption" color="muted">
+                    {t('profile.personalInfo.accountCreated')}
                   </Text>
+                  <Text variant="body">{formatDate(user.created_at)}</Text>
                 </div>
               </div>
             </div>
@@ -130,8 +143,12 @@ export default function Profile() {
                 <FiShield />
               </div>
               <div className={styles.statInfo}>
-                <Text variant="caption" color="muted">Account Status</Text>
-                <Text variant="body" style={{ fontWeight: '600' }}>Active</Text>
+                <Text variant="caption" color="muted">
+                  {t('profile.stats.accountStatus')}
+                </Text>
+                <Text variant="body" style={{ fontWeight: '600' }}>
+                  {t('profile.stats.active')}
+                </Text>
               </div>
             </div>
           </Card>
@@ -142,7 +159,9 @@ export default function Profile() {
                 <FiCalendar />
               </div>
               <div className={styles.statInfo}>
-                <Text variant="caption" color="muted">Member Since</Text>
+                <Text variant="caption" color="muted">
+                  {t('profile.stats.memberSince')}
+                </Text>
                 <Text variant="body" style={{ fontWeight: '600' }}>
                   {new Date(user.created_at).getFullYear()}
                 </Text>
@@ -158,15 +177,19 @@ export default function Profile() {
               <div className={styles.sectionIcon}>
                 <FiShield />
               </div>
-              <Text variant="subtitle" style={{ margin: 0 }}>Account Actions</Text>
+              <Text variant="subtitle" style={{ margin: 0 }}>
+                {t('profile.actions.title')}
+              </Text>
             </div>
 
             <div className={styles.actionsGrid}>
               <div className={styles.actionItem}>
                 <div className={styles.actionInfo}>
-                  <Text variant="subtitle" style={{ marginBottom: 4 }}>Sign Out</Text>
+                  <Text variant="subtitle" style={{ marginBottom: 4 }}>
+                    {t('profile.actions.signOut')}
+                  </Text>
                   <Text variant="body" color="muted">
-                    Sign out of your account on this device
+                    {t('profile.actions.signOutDescription')}
                   </Text>
                 </div>
                 <Button
@@ -174,7 +197,7 @@ export default function Profile() {
                   leftIcon={<FiLogOut />}
                   onClick={logout}
                 >
-                  Sign Out
+                  {t('profile.actions.signOut')}
                 </Button>
               </div>
             </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { get, put, del } from '@/services/api.ts';
+import { useTranslation } from '@/contexts/I18nContext';
 import {
   FiUsers,
   FiTrash,
@@ -28,6 +29,7 @@ interface User {
 
 export default function Admin() {
   const { user } = useAuth();
+  const t = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,9 +66,7 @@ export default function Admin() {
   };
 
   const handlePromoteUser = async (userId: number) => {
-    if (
-      !window.confirm('Are you sure you want to promote this user to admin?')
-    ) {
+    if (!window.confirm(t('admin.confirmations.promote'))) {
       return;
     }
 
@@ -88,9 +88,7 @@ export default function Admin() {
   };
 
   const handleDemoteUser = async (userId: number) => {
-    if (
-      !window.confirm('Are you sure you want to demote this admin to user?')
-    ) {
+    if (!window.confirm(t('admin.confirmations.demote'))) {
       return;
     }
 
@@ -150,7 +148,9 @@ export default function Admin() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <Text variant="body" color="muted">Loading users...</Text>
+          <Text variant="body" color="muted">
+            Loading users...
+          </Text>
         </div>
       </PageLayout>
     );
@@ -175,7 +175,9 @@ export default function Admin() {
 
       {error && (
         <div className={styles.errorBanner}>
-          <Text variant="body" color="danger">{error}</Text>
+          <Text variant="body" color="danger">
+            {error}
+          </Text>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
             Dismiss
           </Button>
@@ -189,8 +191,18 @@ export default function Admin() {
             <div className={styles.sectionIcon}>
               <FiUsers />
             </div>
-            <Text variant="subtitle" style={{ margin: 0 }}>Members & Roles</Text>
-            <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
+            <Text variant="subtitle" style={{ margin: 0 }}>
+              Members & Roles
+            </Text>
+            <Text
+              variant="caption"
+              style={{
+                paddingVertical: 4,
+                paddingHorizontal: 8,
+                borderRadius: 8,
+                backgroundColor: 'var(--color-surface-muted)',
+              }}
+            >
               {users.length} {users.length === 1 ? 'User' : 'Users'}
             </Text>
           </div>

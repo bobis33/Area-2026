@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FiPlus, FiTrash, FiArrowRight, FiPause, FiPlay } from 'react-icons/fi';
 import { get, post, del, put } from '@/services/api';
 import { getAuthToken, getUser } from '@/utils/storage';
+import { useTranslation } from '@/contexts/I18nContext';
 import { ServiceIcon } from '@/components/icons';
 import {
   PageLayout,
@@ -58,6 +59,7 @@ interface ParameterField {
 }
 
 export default function Area() {
+  const t = useTranslation();
   const [areas, setAreas] = useState<Area[]>([]);
   const [availableActions, setAvailableActions] = useState<ActionDefinition[]>(
     [],
@@ -320,7 +322,7 @@ export default function Area() {
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
           <Text variant="body" color="muted">
-            Loading automations...
+            {t('area.loading')}
           </Text>
         </div>
       </PageLayout>
@@ -330,15 +332,15 @@ export default function Area() {
   return (
     <PageLayout maxWidth="xl">
       <PageHeader
-        title="Your Automations"
-        subtitle="Create and manage your action → reaction automations"
+        title={t('area.title')}
+        subtitle={t('area.subtitle')}
         action={
           <Button
             variant="primary"
             leftIcon={<FiPlus />}
             onClick={() => setShowCreateModal(true)}
           >
-            Create Automation
+            {t('area.createAutomation')}
           </Button>
         }
       />
@@ -349,7 +351,7 @@ export default function Area() {
             {error}
           </Text>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
-            Dismiss
+            {t('common.close')}
           </Button>
         </div>
       )}
@@ -361,11 +363,11 @@ export default function Area() {
               <FiPlus size={48} />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <Text variant="subtitle">No automations yet</Text>
+              <Text variant="subtitle">{t('area.empty.title')}</Text>
             </div>
             <div style={{ marginBottom: 24 }}>
               <Text variant="body" color="muted">
-                Create your first automation to connect actions and reactions
+                {t('area.empty.description')}
               </Text>
             </div>
             <Button
@@ -373,7 +375,7 @@ export default function Area() {
               leftIcon={<FiPlus />}
               onClick={() => setShowCreateModal(true)}
             >
-              Create Your First Automation
+              {t('area.empty.createFirst')}
             </Button>
           </div>
         </Card>
@@ -402,7 +404,9 @@ export default function Area() {
                       }
                     >
                       <Text variant="caption">
-                        {area.is_active ? 'Active' : 'Inactive'}
+                        {area.is_active
+                          ? t('area.status.active')
+                          : t('area.status.inactive')}
                       </Text>
                     </div>
                     <button
@@ -460,7 +464,7 @@ export default function Area() {
                     </div>
                     <div className={styles.flowContent}>
                       <Text variant="caption" color="muted">
-                        Action
+                        {t('area.action')}
                       </Text>
                       <Text variant="body">
                         {String(area.action?.service || '')}.
@@ -482,7 +486,7 @@ export default function Area() {
                     </div>
                     <div className={styles.flowContent}>
                       <Text variant="caption" color="muted">
-                        Reaction
+                        {t('area.reaction')}
                       </Text>
                       <Text variant="body">
                         {String(area.reaction?.service || '')}.
@@ -515,7 +519,7 @@ export default function Area() {
           >
             <div className={styles.modalHeader}>
               <Text variant="subtitle" style={{ margin: 0 }}>
-                Create New Automation
+                {t('area.modal.title')}
               </Text>
             </div>
 
@@ -532,7 +536,7 @@ export default function Area() {
               <div className={styles.formSection}>
                 <div style={{ marginBottom: 8 }}>
                   <Text variant="body" style={{ fontWeight: '600' }}>
-                    Action (Trigger){' '}
+                    {t('area.modal.actionTrigger')}{' '}
                     <Text variant="caption" color="danger">
                       *
                     </Text>
@@ -578,7 +582,7 @@ export default function Area() {
                     <div className={styles.paramsContainer}>
                       <div style={{ marginBottom: 16 }}>
                         <Text variant="body" style={{ fontWeight: '600' }}>
-                          Action Parameters
+                          {t('area.modal.actionParameters')}
                         </Text>
                       </div>
                       {getParameterFields(selectedAction.parameters).map(
@@ -607,7 +611,7 @@ export default function Area() {
               <div className={styles.formSection}>
                 <div style={{ marginBottom: 8 }}>
                   <Text variant="body" style={{ fontWeight: '600' }}>
-                    Reaction (Response){' '}
+                    {t('area.modal.reactionResponse')}{' '}
                     <Text variant="caption" color="danger">
                       *
                     </Text>
@@ -654,7 +658,7 @@ export default function Area() {
                     <div className={styles.paramsContainer}>
                       <div style={{ marginBottom: 16 }}>
                         <Text variant="body" style={{ fontWeight: '600' }}>
-                          Reaction Parameters
+                          {t('area.modal.reactionParameters')}
                         </Text>
                       </div>
                       {getParameterFields(selectedReaction.parameters).map(
@@ -689,7 +693,7 @@ export default function Area() {
                   resetForm();
                 }}
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button
                 variant="primary"
@@ -699,7 +703,7 @@ export default function Area() {
                 }
                 loading={loading}
               >
-                Create Automation
+                {t('area.modal.create')}
               </Button>
             </div>
           </div>
@@ -719,8 +723,12 @@ export default function Area() {
             <div className={styles.modalHeader}>
               <Text variant="subtitle" style={{ margin: 0 }}>
                 {selectionStep === 'service'
-                  ? `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'} Service`
-                  : `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'}`}
+                  ? selectionMode === 'action'
+                    ? t('area.selection.selectActionService')
+                    : t('area.selection.selectReactionService')
+                  : selectionMode === 'action'
+                    ? t('area.selection.selectAction')
+                    : t('area.selection.selectReaction')}
               </Text>
             </div>
 

@@ -8,6 +8,7 @@ import {
   FaSpotify,
 } from 'react-icons/fa';
 import { FiRefreshCw, FiCheck, FiX } from 'react-icons/fi';
+import { useTranslation } from '@/contexts/I18nContext';
 import {
   PageLayout,
   PageHeader,
@@ -85,6 +86,7 @@ const getProviderLabel = (provider: string) =>
   provider.charAt(0).toUpperCase() + provider.slice(1);
 
 export default function Services() {
+  const t = useTranslation();
   const [availableProviders, setAvailableProviders] = useState<string[]>([]);
   const [linkedProviders, setLinkedProviders] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,7 +101,7 @@ export default function Services() {
     const token = getAuthToken();
 
     if (!token) {
-      setError('Missing authentication token. Please log in again.');
+      setError(t('services.errors.missingToken'));
       setLoading(false);
       return;
     }
@@ -113,7 +115,9 @@ export default function Services() {
       setAvailableProviders(available.map(normalizeProvider));
       setLinkedProviders(linked.map(normalizeProvider));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load providers');
+      setError(
+        err instanceof Error ? err.message : t('services.errors.loadFailed'),
+      );
     } finally {
       setLoading(false);
     }
@@ -148,7 +152,7 @@ export default function Services() {
 
   const handleConnect = (provider: string) => {
     if (!OAUTH_PROVIDERS.includes(provider as OAuthProviderKey)) {
-      setError(`Unsupported provider: ${provider}`);
+      setError(t('services.errors.unsupportedProvider', { provider }));
       return;
     }
     setError(null);
@@ -159,7 +163,7 @@ export default function Services() {
   const handleDisconnect = async (provider: string) => {
     const token = getAuthToken();
     if (!token) {
-      setError('Missing authentication token. Please log in again.');
+      setError(t('services.errors.missingToken'));
       return;
     }
     setError(null);
@@ -168,7 +172,7 @@ export default function Services() {
     if (ok) {
       setLinkedProviders((prev) => prev.filter((item) => item !== provider));
     } else {
-      setError('Failed to disconnect provider. Please try again.');
+      setError(t('services.errors.disconnectFailed'));
     }
     setUnlinkingProviders((prev) => {
       const next = new Set(prev);
@@ -182,7 +186,9 @@ export default function Services() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <Text variant="body" color="muted">Loading services...</Text>
+          <Text variant="body" color="muted">
+            {t('services.loading')}
+          </Text>
         </div>
       </PageLayout>
     );
@@ -197,15 +203,19 @@ export default function Services() {
               <FiX size={48} />
             </div>
             <div style={{ marginBottom: 8 }}>
-              <Text variant="subtitle">Unable to load services</Text>
+              <Text variant="subtitle">
+                {t('services.errors.unableToLoad')}
+              </Text>
             </div>
-            <Text variant="body" color="danger">{error}</Text>
+            <Text variant="body" color="danger">
+              {error}
+            </Text>
             <Button
               variant="primary"
               leftIcon={<FiRefreshCw />}
               onClick={loadProviders}
             >
-              Retry
+              {t('common.retry')}
             </Button>
           </div>
         </Card>
@@ -216,8 +226,8 @@ export default function Services() {
   return (
     <PageLayout maxWidth="xl">
       <PageHeader
-        title="Connected Services"
-        subtitle="Link multiple providers to unlock new triggers, reactions, and automations across your stack"
+        title={t('services.title')}
+        subtitle={t('services.subtitle')}
       />
 
       {/* Stats Panel */}
@@ -227,7 +237,9 @@ export default function Services() {
             <Text variant="title" style={{ marginBottom: 4 }}>
               {connectedProviders.length}
             </Text>
-            <Text variant="caption" color="muted">Connected</Text>
+            <Text variant="caption" color="muted">
+              {t('services.stats.connected')}
+            </Text>
           </div>
         </Card>
         <Card padding="lg" className={styles.statCard}>
@@ -235,14 +247,18 @@ export default function Services() {
             <Text variant="title" style={{ marginBottom: 4 }}>
               {availableToConnect.length}
             </Text>
-            <Text variant="caption" color="muted">Available</Text>
+            <Text variant="caption" color="muted">
+              {t('services.stats.available')}
+            </Text>
           </div>
         </Card>
       </div>
 
       {error && (
         <div className={styles.errorBanner}>
-          <Text variant="body" color="danger">{error}</Text>
+          <Text variant="body" color="danger">
+            {error}
+          </Text>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
             Dismiss
           </Button>
@@ -253,10 +269,12 @@ export default function Services() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div style={{ marginBottom: 8 }}>
-            <Text variant="subtitle">Connected Services</Text>
+            <Text variant="subtitle">
+              {t('services.connectedServices.title')}
+            </Text>
           </div>
           <Text variant="body" color="muted">
-            These providers are ready for your automations
+            {t('services.connectedServices.description')}
           </Text>
         </div>
 
@@ -264,7 +282,7 @@ export default function Services() {
           <Card padding="lg">
             <div className={styles.emptyState}>
               <Text variant="body" color="muted">
-                No OAuth providers are configured on the server.
+                {t('services.connectedServices.noProviders')}
               </Text>
             </div>
           </Card>
@@ -272,7 +290,7 @@ export default function Services() {
           <Card padding="lg">
             <div className={styles.emptyState}>
               <Text variant="body" color="muted">
-                No services connected yet. Connect one below to get started.
+                {t('services.connectedServices.noConnected')}
               </Text>
             </div>
           </Card>
@@ -296,15 +314,27 @@ export default function Services() {
                       >
                         <Icon />
                       </div>
-                      <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-success-soft)', color: 'var(--color-success)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Text
+                        variant="caption"
+                        style={{
+                          paddingVertical: 4,
+                          paddingHorizontal: 8,
+                          borderRadius: 8,
+                          backgroundColor: 'var(--color-success-soft)',
+                          color: 'var(--color-success)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 4,
+                        }}
+                      >
                         <FiCheck size={14} />
-                        Connected
+                        {t('services.status.connected')}
                       </Text>
                     </div>
 
                     <div style={{ marginBottom: 8 }}>
                       <Text variant="subtitle">
-                      {meta?.label ?? getProviderLabel(provider)}
+                        {meta?.label ?? getProviderLabel(provider)}
                       </Text>
                     </div>
                     <Text variant="body" color="muted">
@@ -321,7 +351,9 @@ export default function Services() {
                         loading={isUnlinking}
                         onClick={() => handleDisconnect(provider)}
                       >
-                        {isUnlinking ? 'Disconnecting...' : 'Disconnect'}
+                        {isUnlinking
+                          ? t('services.actions.disconnecting')
+                          : t('services.actions.disconnect')}
                       </Button>
                     </div>
                   </div>
@@ -336,10 +368,12 @@ export default function Services() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div style={{ marginBottom: 8 }}>
-            <Text variant="subtitle">Available to Connect</Text>
+            <Text variant="subtitle">
+              {t('services.availableServices.title')}
+            </Text>
           </div>
           <Text variant="body" color="muted">
-            Authorize new providers to unlock more triggers and reactions
+            {t('services.availableServices.description')}
           </Text>
         </div>
 
@@ -347,7 +381,7 @@ export default function Services() {
           <Card padding="lg">
             <div className={styles.emptyState}>
               <Text variant="body" color="muted">
-                No OAuth providers are configured on the server.
+                {t('services.availableServices.noProviders')}
               </Text>
             </div>
           </Card>
@@ -358,10 +392,12 @@ export default function Services() {
                 <FiCheck size={48} />
               </div>
               <div style={{ marginBottom: 8 }}>
-                <Text variant="subtitle">All Set!</Text>
+                <Text variant="subtitle">
+                  {t('services.availableServices.allConnected')}
+                </Text>
               </div>
               <Text variant="body" color="muted">
-                All available providers are already connected.
+                {t('services.availableServices.allConnectedDescription')}
               </Text>
             </div>
           </Card>
@@ -384,14 +420,23 @@ export default function Services() {
                       >
                         <Icon />
                       </div>
-                      <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)', color: 'var(--color-text-muted)' }}>
-                        Not connected
+                      <Text
+                        variant="caption"
+                        style={{
+                          paddingVertical: 4,
+                          paddingHorizontal: 8,
+                          borderRadius: 8,
+                          backgroundColor: 'var(--color-surface-muted)',
+                          color: 'var(--color-text-muted)',
+                        }}
+                      >
+                        {t('services.status.notConnected')}
                       </Text>
                     </div>
 
                     <div style={{ marginBottom: 8 }}>
                       <Text variant="subtitle">
-                      {meta?.label ?? getProviderLabel(provider)}
+                        {meta?.label ?? getProviderLabel(provider)}
                       </Text>
                     </div>
                     <Text variant="body" color="muted">
@@ -405,7 +450,7 @@ export default function Services() {
                         fullWidth
                         onClick={() => handleConnect(provider)}
                       >
-                        Connect
+                        {t('services.actions.connect')}
                       </Button>
                     </div>
                   </div>

@@ -7,12 +7,15 @@ import {
   FiArrowRight,
 } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Button, Card, Text } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import LanguageSelector from '@/components/LanguageSelector';
 import styles from './Home.module.css';
 
 export default function Home() {
   const { isAuthenticated } = useAuth();
+  const t = useTranslation();
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -29,21 +32,22 @@ export default function Home() {
           </Link>
           <div className={styles.navLinks}>
             <Link to="/about" className={styles.navLink}>
-              About
+              {t('home.nav.about')}
             </Link>
             <Link to="/login" className={styles.navLink}>
-              Login
+              {t('home.nav.login')}
             </Link>
             <Link to="/register" className={styles.navLinkPrimary}>
-              Sign Up
+              {t('home.nav.signUp')}
             </Link>
+            <LanguageSelector />
             <ThemeToggle />
           </div>
         </nav>
 
         <div className={styles.heroContent}>
           <div className={styles.heroBadge}>
-            <span>Automate Everything</span>
+            <span>{t('home.hero.badge')}</span>
           </div>
 
           <div className={styles.heroLogo}>
@@ -51,27 +55,34 @@ export default function Home() {
           </div>
 
           <Text variant="title" style={{ marginBottom: 16 }}>
-            Automate Your{' '}
-            <span style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-brand-primary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Digital Life
+            {t('home.hero.title')}{' '}
+            <span
+              style={{
+                background:
+                  'linear-gradient(135deg, var(--color-primary) 0%, var(--color-brand-primary) 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              {t('home.hero.titleGradient')}
             </span>
           </Text>
 
           <Text variant="body" color="muted" style={{ marginBottom: 32 }}>
-            Connect your favorite services and create powerful automations.
+            {t('home.hero.description')}
             <br />
-            When an action happens, trigger a reaction automatically.
+            {t('home.hero.descriptionLine2')}
           </Text>
 
           <div className={styles.ctaButtons}>
             <Link to="/register">
               <Button variant="primary" size="lg" rightIcon={<FiArrowRight />}>
-                Get Started
+                {t('home.hero.getStarted')}
               </Button>
             </Link>
             <Link to="/about">
               <Button variant="ghost" size="lg">
-                Learn More
+                {t('home.hero.learnMore')}
               </Button>
             </Link>
           </div>
@@ -88,12 +99,14 @@ export default function Home() {
       {/* Features Section */}
       <section className={styles.featuresSection}>
         <div className={styles.sectionHeader}>
-          <div className={styles.sectionBadge}>How It Works</div>
+          <div className={styles.sectionBadge}>
+            {t('home.howItWorks.badge')}
+          </div>
           <div style={{ marginBottom: 8 }}>
-            <Text variant="subtitle">Three simple steps to automate anything</Text>
+            <Text variant="subtitle">{t('home.howItWorks.title')}</Text>
           </div>
           <Text variant="body" color="muted">
-            No coding required. Create powerful automations in minutes.
+            {t('home.howItWorks.subtitle')}
           </Text>
         </div>
 
@@ -104,11 +117,14 @@ export default function Home() {
                 <FiSettings />
                 <div className={styles.featureIconBg}></div>
               </div>
-              <div className={styles.featureNumber}>01</div>
-              <Text variant="subtitle" style={{ marginBottom: 8 }}>Connect Services</Text>
+              <div className={styles.featureNumber}>
+                {t('home.howItWorks.step1.number')}
+              </div>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>
+                {t('home.howItWorks.step1.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Link your email, social media, and productivity tools in just a
-                few clicks
+                {t('home.howItWorks.step1.description')}
               </Text>
             </div>
           </Card>
@@ -119,11 +135,14 @@ export default function Home() {
                 <FiZap />
                 <div className={styles.featureIconBg}></div>
               </div>
-              <div className={styles.featureNumber}>02</div>
-              <Text variant="subtitle" style={{ marginBottom: 8 }}>Create Actions</Text>
+              <div className={styles.featureNumber}>
+                {t('home.howItWorks.step2.number')}
+              </div>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>
+                {t('home.howItWorks.step2.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Set triggers like "new email" or "new tweet" to start your
-                automation
+                {t('home.howItWorks.step2.description')}
               </Text>
             </div>
           </Card>
@@ -134,11 +153,14 @@ export default function Home() {
                 <FiTarget />
                 <div className={styles.featureIconBg}></div>
               </div>
-              <div className={styles.featureNumber}>03</div>
-              <Text variant="subtitle" style={{ marginBottom: 8 }}>Set Reactions</Text>
+              <div className={styles.featureNumber}>
+                {t('home.howItWorks.step3.number')}
+              </div>
+              <Text variant="subtitle" style={{ marginBottom: 8 }}>
+                {t('home.howItWorks.step3.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Define what happens: send notification, create task, and much
-                more
+                {t('home.howItWorks.step3.description')}
               </Text>
             </div>
           </Card>
@@ -148,12 +170,12 @@ export default function Home() {
       {/* Benefits Section */}
       <section className={styles.benefitsSection}>
         <div className={styles.sectionHeader}>
-          <div className={styles.sectionBadge}>Why Choose AREA?</div>
+          <div className={styles.sectionBadge}>{t('home.benefits.badge')}</div>
           <div style={{ marginBottom: 8 }}>
-            <Text variant="subtitle">The smart way to automate your workflow</Text>
+            <Text variant="subtitle">{t('home.benefits.title')}</Text>
           </div>
           <Text variant="body" color="muted">
-            Everything you need to boost your productivity
+            {t('home.benefits.subtitle')}
           </Text>
         </div>
 
@@ -163,10 +185,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <Text variant="subtitle" style={{ marginBottom: 4 }}>Easy to use</Text>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>
+                {t('home.benefits.easyToUse.title')}
+              </Text>
               <Text variant="body" color="muted">
-                No coding required - create automations with our intuitive
-                interface
+                {t('home.benefits.easyToUse.description')}
               </Text>
             </div>
           </div>
@@ -176,9 +199,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <Text variant="subtitle" style={{ marginBottom: 4 }}>Powerful integrations</Text>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>
+                {t('home.benefits.powerfulIntegrations.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Connect all your favorite tools and services in one place
+                {t('home.benefits.powerfulIntegrations.description')}
               </Text>
             </div>
           </div>
@@ -188,9 +213,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <Text variant="subtitle" style={{ marginBottom: 4 }}>Save time</Text>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>
+                {t('home.benefits.saveTime.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Automate repetitive tasks and focus on what matters most
+                {t('home.benefits.saveTime.description')}
               </Text>
             </div>
           </div>
@@ -200,9 +227,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <Text variant="subtitle" style={{ marginBottom: 4 }}>Stay organized</Text>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>
+                {t('home.benefits.stayOrganized.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Keep everything in sync across all your apps and services
+                {t('home.benefits.stayOrganized.description')}
               </Text>
             </div>
           </div>
@@ -212,9 +241,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <Text variant="subtitle" style={{ marginBottom: 4 }}>Always reliable</Text>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>
+                {t('home.benefits.alwaysReliable.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Your automations run 24/7 with 99.9% uptime guarantee
+                {t('home.benefits.alwaysReliable.description')}
               </Text>
             </div>
           </div>
@@ -224,9 +255,11 @@ export default function Home() {
               <FiCheck />
             </div>
             <div className={styles.benefitContent}>
-              <Text variant="subtitle" style={{ marginBottom: 4 }}>Secure & private</Text>
+              <Text variant="subtitle" style={{ marginBottom: 4 }}>
+                {t('home.benefits.securePrivate.title')}
+              </Text>
               <Text variant="body" color="muted">
-                Enterprise-grade security keeps your data safe and encrypted
+                {t('home.benefits.securePrivate.description')}
               </Text>
             </div>
           </div>
@@ -237,14 +270,14 @@ export default function Home() {
       <section className={styles.ctaSection}>
         <div className={styles.ctaContent}>
           <div style={{ marginBottom: 8 }}>
-            <Text variant="subtitle">Ready to Get Started?</Text>
+            <Text variant="subtitle">{t('home.cta.title')}</Text>
           </div>
           <Text variant="body" color="muted" style={{ marginBottom: 24 }}>
-            Join thousands of users automating their digital life.
+            {t('home.cta.description')}
           </Text>
           <Link to="/register">
             <Button variant="primary" size="lg" rightIcon={<FiArrowRight />}>
-              Create Your Account
+              {t('home.cta.button')}
             </Button>
           </Link>
         </div>
@@ -259,13 +292,13 @@ export default function Home() {
           </div>
           <div className={styles.footerLinks}>
             <Link to="/about" className={styles.footerLink}>
-              About
+              {t('home.nav.about')}
             </Link>
             <Link to="/login" className={styles.footerLink}>
-              Login
+              {t('home.nav.login')}
             </Link>
             <Link to="/register" className={styles.footerLink}>
-              Sign Up
+              {t('home.nav.signUp')}
             </Link>
           </div>
         </div>
