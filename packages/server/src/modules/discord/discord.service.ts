@@ -41,4 +41,60 @@ export class DiscordService implements OnModuleInit {
 
     await user.send(message);
   }
+
+  async getChannelMessages(
+    channelId: string,
+    limit: number = 5,
+  ): Promise<
+    Array<{
+      id: string;
+      author: string;
+      content: string;
+      timestamp: string;
+    }>
+  > {
+    const channel = await this.client.channels.fetch(channelId);
+    if (
+      !channel ||
+      !channel.isTextBased() ||
+      !(channel instanceof TextChannel)
+    ) {
+      throw new Error(`Invalid channel ${channelId}`);
+    }
+
+    const messages = await channel.messages.fetch({ limit });
+    return messages.reverse().map((msg) => ({
+      id: msg.id,
+      author: msg.author.username,
+      content: msg.content,
+      timestamp: msg.createdTimestamp.toString(),
+    }));
+  }
+
+  async getServerMembers(
+    guildId: string,
+    limit: number = 10,
+  ): Promise<
+    Array<{
+      id: string;
+      username: string;
+      joinedAt: string;
+    }>
+  > {
+    const guild = await this.client.guilds.fetch(guildId);
+    if (!guild) {
+      throw new Error(`Invalid guild ${guildId}`);
+    }
+
+    const members = await guild.members.fetch({ limit });
+    return members
+      .sort(
+        (a, b) => (b.joinedAt?.getTime() || 0) - (a.joinedAt?.getTime() || 0),
+      )
+      .map((member) => ({
+        id: member.id,
+        username: member.user.username,
+        joinedAt: member.joinedAt?.toISOString() || new Date().toISOString(),
+      }));
+  }
 }

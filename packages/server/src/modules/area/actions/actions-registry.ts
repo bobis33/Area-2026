@@ -4,6 +4,10 @@ import { SpotifyNewSavedTrackAction } from '@modules/area/actions/spotify/new-sa
 import { SpotifyTrackIsPlayingAction } from '@modules/area/actions/spotify/track-is-playing';
 import { ActionHandler } from '@interfaces/area.interface';
 import { GitlabNewTodoAction } from '@modules/area/actions/gitlab/new-notification';
+import { GoogleNewEmailAction } from '@modules/area/actions/google/gmail/new-email';
+import { DiscordMessagePostedAction } from '@modules/area/actions/discord/message-posted';
+import { DiscordUserJoinedServerAction } from '@modules/area/actions/discord/user-joined-server';
+import { GoogleEmailFromSenderAction } from '@modules/area/actions/google/gmail/email-from-sender';
 
 export const ActionsRegistry: Record<
   string,
@@ -14,4 +18,8 @@ export const ActionsRegistry: Record<
   'gitlab.new_notification': GitlabNewTodoAction,
   'spotify.new_saved_track': SpotifyNewSavedTrackAction,
   'spotify.track_is_playing': SpotifyTrackIsPlayingAction,
+  'google.new_email': GoogleNewEmailAction,
+  'google.email_from_sender': GoogleEmailFromSenderAction,
+  'discord.message_posted': DiscordMessagePostedAction,
+  'discord.user_joined_server': DiscordUserJoinedServerAction,
 };
