@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { handleOAuthCallback } from '@/services/auth.service';
 import { useAuth } from '@/hooks/useAuth';
 import { consumeOAuthRedirectPath } from '@/utils/storage';
+import { Text } from '@/components/ui';
 import styles from './Auth.module.css';
 
 export default function OAuthCallback() {
@@ -59,16 +60,18 @@ export default function OAuthCallback() {
         </div>
 
         <div className={styles.authHeader}>
-          <h1 className={styles.authTitle}>
-            {status === 'processing' && 'Processing Authentication...'}
-            {status === 'success' && 'Authentication Successful'}
-            {status === 'error' && 'Authentication Failed'}
-          </h1>
-          <p className={styles.authSubtitle}>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="title">
+              {status === 'processing' && 'Processing Authentication...'}
+              {status === 'success' && 'Authentication Successful'}
+              {status === 'error' && 'Authentication Failed'}
+            </Text>
+          </div>
+          <Text variant="body" color="muted">
             {status === 'processing' && 'Please wait while we sign you in'}
             {status === 'success' && 'Redirecting you to the application...'}
             {status === 'error' && 'An error occurred'}
-          </p>
+          </Text>
         </div>
 
         <div className={styles.loadingSpinner}>

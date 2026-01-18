@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import {
   MobileText as Text,
   MobileScreen,
@@ -15,8 +16,20 @@ import { User } from '@/types/api';
 
 export default function AdminScreen() {
   const { currentTheme } = useAppTheme();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const t = useTranslation();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && user.role?.toLowerCase() !== 'admin') {
+      router.replace('/(tabs)');
+      return;
+    }
+  }, [user, router]);
+
+  if (!user || user.role?.toLowerCase() !== 'admin') {
+    return null;
+  }
 
   // Users state
   const [users, setUsers] = useState<User[]>([]);
@@ -235,7 +248,7 @@ export default function AdminScreen() {
                       <View
                         style={[
                           styles.roleBadge,
-                          user.role === 'admin'
+                          user.role?.toLowerCase() === 'admin'
                             ? {
                                 backgroundColor:
                                   currentTheme.colors.primarySoft,
@@ -254,15 +267,15 @@ export default function AdminScreen() {
                         <MobileButton
                           label={
                             updatingUserId === user.id
-                              ? user.role === 'admin'
+                              ? user.role?.toLowerCase() === 'admin'
                                 ? t('admin.demoting')
                                 : t('admin.promoting')
-                              : user.role === 'admin'
+                              : user.role?.toLowerCase() === 'admin'
                                 ? t('admin.demote')
                                 : t('admin.promote')
                           }
                           onPress={() =>
-                            user.role === 'admin'
+                            user.role?.toLowerCase() === 'admin'
                               ? handleDemoteUser(user.id)
                               : handlePromoteUser(user.id)
                           }

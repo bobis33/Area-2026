@@ -6,10 +6,14 @@ import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { useTranslation } from '@/contexts/I18nContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function TabLayout() {
   const { currentTheme } = useAppTheme();
   const t = useTranslation();
+  const { user, isAuthenticated } = useAuth();
+  
+  const isAdmin = isAuthenticated && user?.role?.toLowerCase() === 'admin';
 
   return (
     <Tabs
@@ -101,6 +105,7 @@ export default function TabLayout() {
               color={color}
             />
           ),
+          href: isAdmin ? undefined : null,
         }}
       />
     </Tabs>

@@ -31,11 +31,6 @@
   }
 }
 
-.loadingText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-}
 
 /* Error Banner */
 .errorBanner {
@@ -79,19 +74,6 @@
   border-radius: var(--radius-full);
 }
 
-.emptyTitle {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.emptyText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0 0 var(--spacing-lg) 0;
-  max-width: 500px;
-}
 
 /* Automation Card */
 .automationCard {
@@ -107,14 +89,6 @@
   gap: var(--spacing-md);
 }
 
-.automationName {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-  flex: 1;
-  word-break: break-word;
-}
 
 .automationActions {
   display: flex;
@@ -123,49 +97,6 @@
   flex-shrink: 0;
 }
 
-.statusBadge {
-  display: inline-block;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.statusActive {
-  background-color: var(--color-success-soft);
-  color: var(--color-success);
-}
-
-.statusInactive {
-  background-color: var(--color-surface-muted);
-  color: var(--color-text-muted);
-}
-
-.deleteButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background-color: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: all var(--transition-normal);
-}
-
-.deleteButton:hover {
-  background-color: var(--color-danger-soft);
-  color: var(--color-danger);
-}
-
-.deleteButton:active {
-  transform: scale(0.95);
-}
 
 /* Automation Flow */
 .automationFlow {
@@ -205,21 +136,6 @@
   min-width: 0;
 }
 
-.flowLabel {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.flowText {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-  margin: 0;
-  word-break: break-word;
-}
 
 .flowArrow {
   display: flex;
@@ -239,10 +155,6 @@
   border-top: 1px solid var(--color-border-subtle);
 }
 
-.createdDate {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
 
 /* Modal */
 .modalOverlay {
@@ -301,33 +213,6 @@
   flex-shrink: 0;
 }
 
-.modalTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.modalClose {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  background-color: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: all var(--transition-normal);
-  flex-shrink: 0;
-}
-
-.modalClose:hover {
-  background-color: var(--color-surface-muted);
-  color: var(--color-text);
-}
 
 .modalBody {
   padding: var(--spacing-lg);
@@ -353,12 +238,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-}
-
-.formLabel {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
 }
 
 .required {
@@ -396,18 +275,6 @@
   min-width: 0;
 }
 
-.selectedService {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
-  text-transform: capitalize;
-}
-
-.selectedType {
-  font-size: var(--font-size-sm);
-  color: var(--color-text);
-  word-break: break-word;
-}
 
 /* Parameters */
 .paramsContainer {
@@ -420,12 +287,6 @@
   gap: var(--spacing-md);
 }
 
-.paramsTitle {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  margin: 0 0 var(--spacing-sm) 0;
-}
 
 /* Service Grid */
 .serviceGrid {
@@ -460,13 +321,6 @@
   transform: scale(0.98);
 }
 
-.serviceName {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  text-transform: capitalize;
-  text-align: center;
-}
 
 /* Item Grid */
 .itemGrid {
@@ -500,20 +354,6 @@
   transform: scale(0.98);
 }
 
-.itemType {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  word-break: break-word;
-}
-
-.itemService {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -562,9 +402,6 @@
     height: 64px;
   }
 
-  .emptyTitle {
-    font-size: var(--font-size-xl);
-  }
 
   .serviceGrid {
     grid-template-columns: repeat(2, 1fr);

@@ -14,7 +14,7 @@ import {
   FiKey,
   FiCalendar,
 } from 'react-icons/fi';
-import { PageLayout, PageHeader, Card, Button } from '@/components/ui';
+import { PageLayout, PageHeader, Card, Button, Text } from '@/components/ui';
 import styles from './Admin.module.css';
 
 interface User {
@@ -150,7 +150,7 @@ export default function Admin() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <p className={styles.loadingText}>Loading users...</p>
+          <Text variant="body" color="muted">Loading users...</Text>
         </div>
       </PageLayout>
     );
@@ -175,7 +175,7 @@ export default function Admin() {
 
       {error && (
         <div className={styles.errorBanner}>
-          <p>{error}</p>
+          <Text variant="body" color="danger">{error}</Text>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
             Dismiss
           </Button>
@@ -189,10 +189,10 @@ export default function Admin() {
             <div className={styles.sectionIcon}>
               <FiUsers />
             </div>
-            <h2 className={styles.sectionTitle}>Members & Roles</h2>
-            <span className={styles.sectionBadge}>
+            <Text variant="subtitle" style={{ margin: 0 }}>Members & Roles</Text>
+            <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
               {users.length} {users.length === 1 ? 'User' : 'Users'}
-            </span>
+            </Text>
           </div>
 
           {users.length === 0 ? (
@@ -200,10 +200,12 @@ export default function Admin() {
               <div className={styles.emptyIcon}>
                 <FiUsers />
               </div>
-              <h3 className={styles.emptyTitle}>No users yet</h3>
-              <p className={styles.emptyText}>
+              <div style={{ marginBottom: 8 }}>
+                <Text variant="subtitle">No users yet</Text>
+              </div>
+              <Text variant="body" color="muted">
                 No users are registered in the system.
-              </p>
+              </Text>
             </div>
           ) : (
             <div className={styles.usersGrid}>
@@ -215,9 +217,9 @@ export default function Admin() {
                         {u.role === 'admin' ? <FiShield /> : <FiUser />}
                       </div>
                       <div className={styles.userInfo}>
-                        <h3 className={styles.userName}>
+                        <Text variant="subtitle" style={{ margin: 0 }}>
                           {u.name || 'No name'}
-                        </h3>
+                        </Text>
                         <span
                           className={`${styles.roleBadge} ${
                             u.role === 'admin'

@@ -31,11 +31,6 @@
   }
 }
 
-.loadingText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-}
 
 /* Error Banner */
 .errorBanner {
@@ -95,20 +90,6 @@
   min-width: 0;
 }
 
-.statLabel {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.statValue {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  line-height: 1;
-}
 
 /* Section */
 .section {
@@ -139,24 +120,6 @@
   flex-shrink: 0;
 }
 
-.sectionTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-  flex: 1;
-}
-
-.sectionBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--color-primary-soft);
-  color: var(--color-primary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-}
 
 /* Empty State */
 .emptyState {
@@ -181,20 +144,6 @@
   font-size: 32px;
 }
 
-.emptyTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.emptyText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-  max-width: 500px;
-  line-height: 1.6;
-}
 
 /* Users Grid */
 .usersGrid {
@@ -237,13 +186,6 @@
   min-width: 0;
 }
 
-.userName {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-  word-break: break-word;
-}
 
 /* Role Badge */
 .roleBadge {

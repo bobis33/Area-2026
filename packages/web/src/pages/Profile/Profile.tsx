@@ -13,6 +13,7 @@ import {
   ContentGrid,
   Card,
   Button,
+  Text,
 } from '@/components/ui';
 import styles from './Profile.module.css';
 
@@ -54,7 +55,7 @@ export default function Profile() {
               <div className={styles.sectionIcon}>
                 <FiUser />
               </div>
-              <h2 className={styles.sectionTitle}>Personal Information</h2>
+              <Text variant="subtitle" style={{ margin: 0 }}>Personal Information</Text>
             </div>
 
             <div className={styles.infoGrid}>
@@ -63,10 +64,10 @@ export default function Profile() {
                   <FiUser />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Name</span>
-                  <span className={styles.infoValue}>
+                  <Text variant="caption" color="muted">Name</Text>
+                  <Text variant="body">
                     {user.name || 'Not set'}
-                  </span>
+                  </Text>
                 </div>
               </div>
 
@@ -75,8 +76,8 @@ export default function Profile() {
                   <FiMail />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Email</span>
-                  <span className={styles.infoValue}>{user.email}</span>
+                  <Text variant="caption" color="muted">Email</Text>
+                  <Text variant="body">{user.email}</Text>
                 </div>
               </div>
 
@@ -85,8 +86,10 @@ export default function Profile() {
                   <FiShield />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Role</span>
-                  <span className={styles.roleBadge}>{user.role}</span>
+                  <Text variant="caption" color="muted">Role</Text>
+                  <Text variant="caption" style={{ paddingVertical: 4, paddingHorizontal: 8, borderRadius: 8, backgroundColor: 'var(--color-surface-muted)' }}>
+                    {user.role}
+                  </Text>
                 </div>
               </div>
 
@@ -95,12 +98,12 @@ export default function Profile() {
                   <FiKey />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>
+                  <Text variant="caption" color="muted">
                     Authentication Provider
-                  </span>
-                  <span className={styles.infoValue}>
+                  </Text>
+                  <Text variant="body">
                     {getProviderDisplay(user.provider)}
-                  </span>
+                  </Text>
                 </div>
               </div>
 
@@ -109,10 +112,10 @@ export default function Profile() {
                   <FiCalendar />
                 </div>
                 <div className={styles.infoContent}>
-                  <span className={styles.infoLabel}>Account Created</span>
-                  <span className={styles.infoValue}>
+                  <Text variant="caption" color="muted">Account Created</Text>
+                  <Text variant="body">
                     {formatDate(user.created_at)}
-                  </span>
+                  </Text>
                 </div>
               </div>
             </div>
@@ -127,8 +130,8 @@ export default function Profile() {
                 <FiShield />
               </div>
               <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Account Status</span>
-                <span className={styles.statValue}>Active</span>
+                <Text variant="caption" color="muted">Account Status</Text>
+                <Text variant="body" style={{ fontWeight: '600' }}>Active</Text>
               </div>
             </div>
           </Card>
@@ -139,10 +142,10 @@ export default function Profile() {
                 <FiCalendar />
               </div>
               <div className={styles.statInfo}>
-                <span className={styles.statLabel}>Member Since</span>
-                <span className={styles.statValue}>
+                <Text variant="caption" color="muted">Member Since</Text>
+                <Text variant="body" style={{ fontWeight: '600' }}>
                   {new Date(user.created_at).getFullYear()}
-                </span>
+                </Text>
               </div>
             </div>
           </Card>
@@ -155,16 +158,16 @@ export default function Profile() {
               <div className={styles.sectionIcon}>
                 <FiShield />
               </div>
-              <h2 className={styles.sectionTitle}>Account Actions</h2>
+              <Text variant="subtitle" style={{ margin: 0 }}>Account Actions</Text>
             </div>
 
             <div className={styles.actionsGrid}>
               <div className={styles.actionItem}>
                 <div className={styles.actionInfo}>
-                  <h3 className={styles.actionTitle}>Sign Out</h3>
-                  <p className={styles.actionDescription}>
+                  <Text variant="subtitle" style={{ marginBottom: 4 }}>Sign Out</Text>
+                  <Text variant="body" color="muted">
                     Sign out of your account on this device
-                  </p>
+                  </Text>
                 </div>
                 <Button
                   variant="danger"

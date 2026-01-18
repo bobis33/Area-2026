@@ -31,11 +31,6 @@
   }
 }
 
-.loadingText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-}
 
 /* Error State */
 .errorState {
@@ -60,19 +55,6 @@
   font-size: 32px;
 }
 
-.errorTitle {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.errorText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-  max-width: 500px;
-}
 
 /* Stat Card */
 .statCard {
@@ -112,21 +94,6 @@
   min-width: 0;
 }
 
-.statLabel {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.statValue {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  line-height: 1.2;
-  word-break: break-word;
-}
 
 /* Section */
 .section {
@@ -156,24 +123,6 @@
   flex-shrink: 0;
 }
 
-.sectionTitle {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-  flex: 1;
-}
-
-.sectionBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--color-primary-soft);
-  color: var(--color-primary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-}
 
 /* Info Grid */
 .infoGrid {
@@ -220,20 +169,6 @@
   min-width: 0;
 }
 
-.infoLabel {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.infoValue {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-  word-break: break-word;
-}
 
 /* Empty State */
 .emptyState {
@@ -258,20 +193,7 @@
   font-size: 32px;
 }
 
-.emptyTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
 
-.emptyText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-  max-width: 500px;
-  line-height: 1.6;
-}
 
 /* Service Card */
 .serviceCard {
@@ -299,13 +221,6 @@
   flex-shrink: 0;
 }
 
-.serviceTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-  text-transform: capitalize;
-}
 
 /* Service Section */
 .serviceSection {
@@ -321,26 +236,6 @@
   margin-bottom: var(--spacing-xs);
 }
 
-.serviceSectionTitle {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  margin: 0;
-  flex: 1;
-}
-
-.serviceBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px var(--spacing-xs);
-  background-color: var(--color-primary-soft);
-  color: var(--color-primary);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  min-width: 24px;
-  justify-content: center;
-}
 
 .serviceList {
   list-style: none;
@@ -367,25 +262,6 @@
   transform: translateX(2px);
 }
 
-.itemName {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-}
-
-.itemDescription {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  line-height: 1.4;
-}
-
-.emptyList {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  font-style: italic;
-  margin: 0;
-  padding: var(--spacing-sm);
-}
 
 /* Responsive */
 @media (max-width: 768px) {

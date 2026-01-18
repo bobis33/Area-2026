@@ -1,11 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { lightColors, darkColors } from '@area/ui/src/theme/colors';
-import {
-  spacing,
-  borderRadius,
-  fontSizes,
-  fontWeights,
-} from '@area/ui/src/tokens';
+import { lightColors, darkColors, spacing, borderRadius, fontSizes, fontWeights } from '@area/ui';
 
 type ThemeMode = 'light' | 'dark';
 

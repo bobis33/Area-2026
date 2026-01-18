@@ -1,21 +1,19 @@
 import React from 'react';
 import {
   Platform,
-  TouchableOpacity,
+  View,
   ActivityIndicator,
   ViewStyle,
-  TextStyle,
+  StyleSheet,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import {
+  Button,
   type ButtonProps,
   spacing,
   borderRadius,
-  fontSizes,
-  fontWeights,
 } from '@area/ui';
-import { MobileText as Text } from './MobileText';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -49,45 +47,32 @@ export const MobileButton: React.FC<MobileButtonProps> = ({
     onPress();
   };
 
-  // Custom implementation for all variants to use theme colors
-  const getButtonStyles = (): ViewStyle => {
-    const base: ViewStyle = {
-      paddingHorizontal: spacing.lg,
-      paddingVertical: spacing.md,
+  // Map variant to Button variant (danger is not in base Button)
+  const buttonVariant: 'primary' | 'secondary' | 'ghost' =
+    variant === 'danger' ? 'primary' : variant;
+
+  // Get theme-based styles for the button
+  const getButtonStyle = (): ViewStyle => {
+    const baseStyle: ViewStyle = {
       borderRadius: borderRadius.lg,
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: 44,
-      flexDirection: 'row',
-      gap: spacing.sm,
     };
 
-    if (fullWidth) {
-      base.width = '100%';
+    if (variant === 'danger') {
+      baseStyle.backgroundColor = currentTheme.colors.danger;
+    } else if (variant === 'secondary') {
+      baseStyle.backgroundColor = currentTheme.colors.surfaceMuted;
+      baseStyle.borderWidth = 1;
+      baseStyle.borderColor =
+        (currentTheme.colors as any).borderSubtle ||
+        currentTheme.colors.border;
+    } else if (variant === 'ghost') {
+      baseStyle.backgroundColor = 'transparent';
     }
 
-    switch (variant) {
-      case 'primary':
-        base.backgroundColor = currentTheme.colors.primary;
-        break;
-      case 'secondary':
-        base.backgroundColor = currentTheme.colors.surfaceMuted;
-        base.borderWidth = 1;
-        base.borderColor =
-          (currentTheme.colors as any).borderSubtle ||
-          currentTheme.colors.border;
-        break;
-      case 'ghost':
-        base.backgroundColor = 'transparent';
-        break;
-      case 'danger':
-        base.backgroundColor = currentTheme.colors.danger;
-        break;
-    }
-
-    return base;
+    return baseStyle;
   };
 
+  // Get text color based on variant and theme
   const getTextColor = (): string => {
     switch (variant) {
       case 'primary':
@@ -102,36 +87,48 @@ export const MobileButton: React.FC<MobileButtonProps> = ({
     }
   };
 
-  const opacity = disabled || loading ? 0.5 : 1;
+  const mergedButtonStyle = StyleSheet.flatten([
+    getButtonStyle(),
+    style,
+  ]) as ViewStyle;
+
+  const mergedLabelStyle = StyleSheet.flatten([
+    {
+      color: getTextColor(),
+    },
+    labelStyle,
+  ]);
 
   const button = (
-    <TouchableOpacity
-      style={[getButtonStyles(), { opacity }, style]}
-      onPress={handlePress}
-      disabled={disabled || loading}
-      activeOpacity={0.8}
-    >
+    <View style={[{ position: 'relative' }, fullWidth && { width: '100%' }]}>
+      <Button
+        label={label}
+        onPress={handlePress}
+        variant={buttonVariant}
+        disabled={disabled || loading}
+        fullWidth={fullWidth}
+        style={mergedButtonStyle}
+        labelStyle={mergedLabelStyle}
+        {...buttonProps}
+      />
       {loading && (
-        <ActivityIndicator
-          size="small"
-          color={getTextColor()}
-          style={{ marginRight: spacing.xs }}
-        />
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: spacing.xs,
+          }}
+        >
+          <ActivityIndicator size="small" color={getTextColor()} />
+        </View>
       )}
-      <Text
-        variant="body"
-        style={
-          {
-            fontSize: fontSizes.md,
-            fontWeight: fontWeights.semibold,
-            color: getTextColor(),
-            ...labelStyle,
-          } as TextStyle
-        }
-      >
-        {label}
-      </Text>
-    </TouchableOpacity>
+    </View>
   );
 
   if (animateIn) {

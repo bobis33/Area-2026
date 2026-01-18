@@ -1,16 +1,20 @@
-/**
- * Web UI Components
- * Token-driven components using @area/ui theme and tokens via CSS variables
- */
+export { WebButton as Button } from './WebButton';
+export type { WebButtonProps as ButtonProps, ButtonVariant, ButtonSize } from './WebButton';
 
-export { Button } from './Button';
-export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
+export { WebCard as Card } from './WebCard';
+export type { WebCardProps as CardProps } from './WebCard';
 
-export { Card } from './Card';
-export type { CardProps } from './Card';
+export { WebInput as Input } from './WebInput';
+export type { WebInputProps as InputProps } from './WebInput';
 
-export { Input } from './Input';
-export type { InputProps } from './Input';
+export { WebText as Text } from './WebText';
+export type { WebTextProps as TextProps } from './WebText';
+
+export { WebScreenLayout as ScreenLayout } from './WebScreenLayout';
+export type { WebScreenLayoutProps as ScreenLayoutProps } from './WebScreenLayout';
+
+export { WebOAuthButton as OAuthButton } from './WebOAuthButton';
+export type { WebOAuthButtonProps as OAuthButtonProps } from './WebOAuthButton';
 
 export { PageLayout, PageHeader, ContentGrid } from './PageLayout';
 export type {

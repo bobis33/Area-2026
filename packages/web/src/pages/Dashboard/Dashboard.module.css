@@ -135,22 +135,6 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Info Label */
-.infoLabel {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Info Value */
-.infoValue {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text);
-  word-break: break-word;
-}
 
 /* Role Badge */
 .roleBadge {

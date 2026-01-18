@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import type { RegisterData } from '@/types';
 import { FiArrowLeft, FiMail, FiLock, FiUser } from 'react-icons/fi';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, Text } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import styles from './Auth.module.css';
 
@@ -75,10 +75,12 @@ export default function Register() {
         </div>
 
         <div className={styles.authHeader}>
-          <h1 className={styles.authTitle}>Create Account</h1>
-          <p className={styles.authSubtitle}>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="title">Create Account</Text>
+          </div>
+          <Text variant="body" color="muted">
             Join AREA and start automating your digital life
-          </p>
+          </Text>
         </div>
 
         {(error || validationError) && (
@@ -147,7 +149,6 @@ export default function Register() {
           />
 
           <Button
-            type="submit"
             variant="primary"
             size="lg"
             disabled={loading}

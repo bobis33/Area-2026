@@ -10,7 +10,7 @@ import {
   FaGitlab,
 } from 'react-icons/fa';
 import { FiArrowLeft, FiMail, FiLock } from 'react-icons/fi';
-import { Button, Input } from '@/components/ui';
+import { Button, Input, OAuthButton, Text } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import styles from './Auth.module.css';
 
@@ -63,8 +63,10 @@ export default function Login() {
         </div>
 
         <div className={styles.authHeader}>
-          <h1 className={styles.authTitle}>Welcome Back</h1>
-          <p className={styles.authSubtitle}>Sign in to your AREA account</p>
+          <div style={{ marginBottom: 8 }}>
+            <Text variant="title">Welcome Back</Text>
+          </div>
+          <Text variant="body" color="muted">Sign in to your AREA account</Text>
         </div>
 
         {error && (
@@ -105,11 +107,14 @@ export default function Login() {
           />
 
           <Button
-            type="submit"
             variant="primary"
             size="lg"
             disabled={loading}
             fullWidth
+            onClick={(e) => {
+              e.preventDefault();
+              handleSubmit(e as any);
+            }}
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </Button>
@@ -120,55 +125,56 @@ export default function Login() {
         </div>
 
         <div className={styles.oauthButtons}>
-          <button
-            type="button"
-            className={`${styles.oauthButton} ${styles.oauthGoogle}`}
+          <OAuthButton
+            label="Google"
             onClick={() => handleOAuthLogin('google')}
+            backgroundColor="#ffffff"
+            textColor="#1f2937"
+            borderColor="#e5e7eb"
+            icon={<FaGoogle />}
             disabled={loading}
-          >
-            <FaGoogle className={styles.oauthIcon} />
-            <span>Google</span>
-          </button>
+            loading={loading}
+          />
 
-          <button
-            type="button"
-            className={`${styles.oauthButton} ${styles.oauthDiscord}`}
+          <OAuthButton
+            label="Discord"
             onClick={() => handleOAuthLogin('discord')}
+            backgroundColor="#5865F2"
+            textColor="#ffffff"
+            icon={<FaDiscord />}
             disabled={loading}
-          >
-            <FaDiscord className={styles.oauthIcon} />
-            <span>Discord</span>
-          </button>
+            loading={loading}
+          />
 
-          <button
-            type="button"
-            className={`${styles.oauthButton} ${styles.oauthGithub}`}
+          <OAuthButton
+            label="GitHub"
             onClick={() => handleOAuthLogin('github')}
+            backgroundColor="#18181B"
+            textColor="#ffffff"
+            icon={<FaGithub />}
             disabled={loading}
-          >
-            <FaGithub className={styles.oauthIcon} />
-            <span>GitHub</span>
-          </button>
+            loading={loading}
+          />
 
-          <button
-            type="button"
-            className={`${styles.oauthButton} ${styles.oauthSpotify}`}
+          <OAuthButton
+            label="Spotify"
             onClick={() => handleOAuthLogin('spotify')}
+            backgroundColor="#1DB954"
+            textColor="#ffffff"
+            icon={<FaSpotify />}
             disabled={loading}
-          >
-            <FaSpotify className={styles.oauthIcon} />
-            <span>Spotify</span>
-          </button>
+            loading={loading}
+          />
 
-          <button
-            type="button"
-            className={`${styles.oauthButton} ${styles.oauthGitlab}`}
+          <OAuthButton
+            label="GitLab"
             onClick={() => handleOAuthLogin('gitlab')}
+            backgroundColor="#FC6D26"
+            textColor="#ffffff"
+            icon={<FaGitlab />}
             disabled={loading}
-          >
-            <FaGitlab className={styles.oauthIcon} />
-            <span>GitLab</span>
-          </button>
+            loading={loading}
+          />
         </div>
 
         <div className={styles.authFooter}>

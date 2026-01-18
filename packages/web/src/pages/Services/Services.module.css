@@ -31,11 +31,6 @@
   }
 }
 
-.loadingText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-}
 
 /* Error State */
 .errorState {
@@ -59,19 +54,6 @@
   border-radius: var(--radius-full);
 }
 
-.errorTitle {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.errorText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0 0 var(--spacing-lg) 0;
-  max-width: 500px;
-}
 
 /* Error Banner */
 .errorBanner {
@@ -114,20 +96,6 @@
   text-align: center;
 }
 
-.statValue {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  line-height: 1;
-}
-
-.statLabel {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
 
 /* Section */
 .section {
@@ -138,19 +106,6 @@
   margin-bottom: var(--spacing-lg);
 }
 
-.sectionTitle {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0 0 var(--spacing-xs) 0;
-}
-
-.sectionSubtitle {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-  line-height: 1.6;
-}
 
 /* Empty State */
 .emptyState {
@@ -174,20 +129,6 @@
   border-radius: var(--radius-full);
 }
 
-.emptyTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.emptyText {
-  font-size: var(--font-size-md);
-  color: var(--color-text-muted);
-  margin: 0;
-  max-width: 500px;
-  line-height: 1.6;
-}
 
 /* Service Card */
 .serviceCard {
@@ -222,44 +163,6 @@
   transform: scale(1.1);
 }
 
-.statusBadgeConnected,
-.statusBadgeAvailable {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-}
-
-.statusBadgeConnected {
-  background-color: var(--color-success-soft);
-  color: var(--color-success);
-}
-
-.statusBadgeAvailable {
-  background-color: var(--color-surface-muted);
-  color: var(--color-text-muted);
-}
-
-.serviceTitle {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0 0 var(--spacing-xs) 0;
-}
-
-.serviceDescription {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  line-height: 1.6;
-  margin: 0;
-  flex: 1;
-}
 
 .serviceActions {
   display: flex;
