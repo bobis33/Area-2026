@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button } from '@area/ui';
 import { useWebTheme } from '@/context/ThemeContext';
 import { lightColors, darkColors } from '@area/ui';
@@ -41,17 +41,32 @@ export function WebButton({
 }: WebButtonProps) {
   const { mode } = useWebTheme();
   const colors = mode === 'light' ? lightColors : darkColors;
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handlePress = () => {
     if (onPress) {
       onPress();
-    } else if (onClick) {
-      onClick({} as React.MouseEvent<HTMLButtonElement>);
+    } else if (onClick && buttonRef.current) {
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      }) as unknown as React.MouseEvent<HTMLButtonElement>;
+      Object.defineProperty(event, 'currentTarget', {
+        value: buttonRef.current,
+        enumerable: true,
+      });
+      Object.defineProperty(event, 'target', {
+        value: buttonRef.current,
+        enumerable: true,
+      });
+      onClick(event);
     }
   };
 
   const buttonVariant: 'primary' | 'secondary' | 'ghost' =
     variant === 'danger' ? 'primary' : variant;
+
   const getButtonStyle = (): ViewStyle => {
     const baseStyle: ViewStyle = {};
 
@@ -96,20 +111,33 @@ export function WebButton({
     }
   };
 
-  // Check if children is a ReactNode (not a primitive string/number)
-  const isReactNode = React.isValidElement(children) || (typeof children !== 'string' && typeof children !== 'number' && children != null);
-  
-  // If children is a ReactNode and no leftIcon/rightIcon, use it as center content
-  // Otherwise, convert to string for label
+  const isReactNode =
+    React.isValidElement(children) ||
+    (typeof children !== 'string' &&
+      typeof children !== 'number' &&
+      children != null);
+
   const hasOnlyIcon = isReactNode && !leftIcon && !rightIcon;
-  const label = loading ? '' : (hasOnlyIcon ? ' ' : String(children || ''));
+  const label = loading ? '' : hasOnlyIcon ? ' ' : String(children || '');
   const centerIcon = hasOnlyIcon ? children : null;
 
   return (
-    <div 
+    <div
       className={className}
-      style={{ position: 'relative', display: fullWidth ? 'block' : 'inline-block', width: fullWidth ? '100%' : 'auto' }}
+      style={{
+        position: 'relative',
+        display: fullWidth ? 'block' : 'inline-block',
+        width: fullWidth ? '100%' : 'auto',
+      }}
     >
+      <div style={{ display: 'none' }}>
+        <button
+          ref={buttonRef}
+          onClick={onClick}
+          disabled={disabled || loading}
+          type="button"
+        />
+      </div>
       <Button
         label={label}
         onPress={handlePress}
@@ -117,12 +145,14 @@ export function WebButton({
         disabled={disabled || loading}
         fullWidth={fullWidth}
         style={StyleSheet.flatten([getButtonStyle(), style]) as ViewStyle}
-        labelStyle={StyleSheet.flatten([
-          {
-            color: hasOnlyIcon ? 'transparent' : getTextColor(),
-          },
-          labelStyle,
-        ]) as TextStyle}
+        labelStyle={
+          StyleSheet.flatten([
+            {
+              color: hasOnlyIcon ? 'transparent' : getTextColor(),
+            },
+            labelStyle,
+          ]) as TextStyle
+        }
       />
       {loading && (
         <div

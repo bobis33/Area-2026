@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Navigate } from 'react-router-dom';
 import { get, put, del } from '@/services/api.ts';
 import { useTranslation } from '@/contexts/I18nContext';
 import {
@@ -35,11 +34,6 @@ export default function Admin() {
   const [error, setError] = useState<string | null>(null);
   const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
   const [deletingUserId, setDeletingUserId] = useState<number | null>(null);
-
-  // Check if user is admin (specific email)
-  if (user?.email !== 'areaserveur825@gmail.com') {
-    return <Navigate to="/" replace />;
-  }
 
   useEffect(() => {
     loadUsers();
@@ -76,7 +70,7 @@ export default function Admin() {
       if (!token) {
         throw new Error('No authentication token found');
       }
-      await put(`/users/${userId}`, { role: 'admin' }, token);
+      await put(`/users/${userId}`, { role: 'ADMIN' }, token);
       await loadUsers();
     } catch (err) {
       const errorMessage =
@@ -98,7 +92,7 @@ export default function Admin() {
       if (!token) {
         throw new Error('No authentication token found');
       }
-      await put(`/users/${userId}`, { role: 'user' }, token);
+      await put(`/users/${userId}`, { role: 'USER' }, token);
       await loadUsers();
     } catch (err) {
       const errorMessage =
@@ -226,7 +220,7 @@ export default function Admin() {
                   <div className={styles.userCard}>
                     <div className={styles.userHeader}>
                       <div className={styles.userIcon}>
-                        {u.role === 'admin' ? <FiShield /> : <FiUser />}
+                        {u.role === 'ADMIN' ? <FiShield /> : <FiUser />}
                       </div>
                       <div className={styles.userInfo}>
                         <Text variant="subtitle" style={{ margin: 0 }}>
@@ -234,12 +228,12 @@ export default function Admin() {
                         </Text>
                         <span
                           className={`${styles.roleBadge} ${
-                            u.role === 'admin'
+                            u.role === 'ADMIN'
                               ? styles.roleBadgeAdmin
                               : styles.roleBadgeUser
                           }`}
                         >
-                          {u.role === 'admin' ? (
+                          {u.role === 'ADMIN' ? (
                             <>
                               <FiShield /> Admin
                             </>
@@ -269,7 +263,7 @@ export default function Admin() {
 
                     {u.id !== user?.id && (
                       <div className={styles.userActions}>
-                        {u.role === 'user' ? (
+                        {u.role === 'USER' ? (
                           <Button
                             variant="secondary"
                             size="sm"
