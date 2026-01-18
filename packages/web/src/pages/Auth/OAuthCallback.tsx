@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { handleOAuthCallback } from '@/services/auth.service';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import { consumeOAuthRedirectPath } from '@/utils/storage';
 import { Text } from '@/components/ui';
 import styles from './Auth.module.css';
@@ -10,6 +11,7 @@ export default function OAuthCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { refreshAuth } = useAuth();
+  const t = useTranslation();
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>(
     'processing',
   );
@@ -62,15 +64,15 @@ export default function OAuthCallback() {
         <div className={styles.authHeader}>
           <div style={{ marginBottom: 8 }}>
             <Text variant="title">
-              {status === 'processing' && 'Processing Authentication...'}
-              {status === 'success' && 'Authentication Successful'}
-              {status === 'error' && 'Authentication Failed'}
+              {status === 'processing' && t('auth.oauth.processing')}
+              {status === 'success' && t('auth.oauth.success')}
+              {status === 'error' && t('auth.oauth.error')}
             </Text>
           </div>
           <Text variant="body" color="muted">
-            {status === 'processing' && 'Please wait while we sign you in'}
-            {status === 'success' && 'Redirecting you to the application...'}
-            {status === 'error' && 'An error occurred'}
+            {status === 'processing' && t('auth.oauth.processingDescription')}
+            {status === 'success' && t('auth.oauth.successDescription')}
+            {status === 'error' && t('auth.oauth.errorDescription')}
           </Text>
         </div>
 

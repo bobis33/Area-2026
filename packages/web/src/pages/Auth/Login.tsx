@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import type { LoginCredentials } from '@/types';
 import {
   FaGoogle,
@@ -12,10 +13,12 @@ import {
 import { FiArrowLeft, FiMail, FiLock } from 'react-icons/fi';
 import { Button, Input, OAuthButton, Text } from '@/components/ui';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import LanguageSelector from '@/components/LanguageSelector';
 import styles from './Auth.module.css';
 
 export default function Login() {
   const { login, loginWithOAuth, loading, error } = useAuth();
+  const t = useTranslation();
   const [formData, setFormData] = useState<LoginCredentials>({
     email: '',
     password: '',
@@ -52,9 +55,12 @@ export default function Login() {
       <div className={styles.authNav}>
         <Link to="/" className={styles.backToHome}>
           <FiArrowLeft />
-          <span>Back to Home</span>
+          <span>{t('auth.backToHome')}</span>
         </Link>
-        <ThemeToggle />
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <LanguageSelector />
+          <ThemeToggle />
+        </div>
       </div>
 
       <div className={styles.authCard}>
@@ -64,9 +70,11 @@ export default function Login() {
 
         <div className={styles.authHeader}>
           <div style={{ marginBottom: 8 }}>
-            <Text variant="title">Welcome Back</Text>
+            <Text variant="title">{t('auth.login.title')}</Text>
           </div>
-          <Text variant="body" color="muted">Sign in to your AREA account</Text>
+          <Text variant="body" color="muted">
+            {t('auth.login.subtitle')}
+          </Text>
         </div>
 
         {error && (
@@ -77,7 +85,7 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className={styles.authForm}>
           <Input
-            label="Email"
+            label={t('auth.login.email')}
             type="email"
             id="email"
             name="email"
@@ -85,14 +93,14 @@ export default function Login() {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            placeholder="your.email@example.com"
+            placeholder={t('auth.login.emailPlaceholder')}
             required
             disabled={loading}
             leftIcon={<FiMail />}
           />
 
           <Input
-            label="Password"
+            label={t('auth.login.password')}
             type="password"
             id="password"
             name="password"
@@ -100,7 +108,7 @@ export default function Login() {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            placeholder="Enter your password"
+            placeholder={t('auth.login.passwordPlaceholder')}
             required
             disabled={loading}
             leftIcon={<FiLock />}
@@ -116,12 +124,12 @@ export default function Login() {
               handleSubmit(e as any);
             }}
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? t('auth.login.signingIn') : t('auth.login.signIn')}
           </Button>
         </form>
 
         <div className={styles.divider}>
-          <span>OR CONTINUE WITH</span>
+          <span>{t('auth.orContinueWith')}</span>
         </div>
 
         <div className={styles.oauthButtons}>
@@ -179,9 +187,9 @@ export default function Login() {
 
         <div className={styles.authFooter}>
           <p>
-            Don't have an account?{' '}
+            {t('auth.login.noAccount')}{' '}
             <Link to="/register" className={styles.authLink}>
-              Sign Up
+              {t('auth.login.signUp')}
             </Link>
           </p>
         </div>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { FiPlus, FiTrash, FiArrowRight } from 'react-icons/fi';
-import { get, post, del } from '@/services/api';
+import { FiPlus, FiTrash, FiArrowRight, FiPause, FiPlay } from 'react-icons/fi';
+import { get, post, del, put } from '@/services/api';
 import { getAuthToken, getUser } from '@/utils/storage';
+import { useTranslation } from '@/contexts/I18nContext';
 import { ServiceIcon } from '@/components/icons';
 import {
   PageLayout,
@@ -58,6 +59,7 @@ interface ParameterField {
 }
 
 export default function Area() {
+  const t = useTranslation();
   const [areas, setAreas] = useState<Area[]>([]);
   const [availableActions, setAvailableActions] = useState<ActionDefinition[]>(
     [],
@@ -119,7 +121,7 @@ export default function Area() {
         service: String(action.service || ''),
         type: String(action.type || ''),
       }));
-      
+
       const normalizedReactions = reactionsData.map((reaction) => ({
         ...reaction,
         service: String(reaction.service || ''),
@@ -188,6 +190,21 @@ export default function Area() {
       console.error('Error creating area:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleToggleActive = async (id: number, currentState: boolean) => {
+    try {
+      const token = getAuthToken();
+      if (!token) throw new Error('Not authenticated');
+
+      await put(`/areas/${id}/activate?active=${!currentState}`, {}, token);
+      await loadData();
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to update automation';
+      setError(errorMessage);
+      console.error('Error toggling area:', err);
     }
   };
 
@@ -304,7 +321,9 @@ export default function Area() {
       <PageLayout maxWidth="xl">
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
-          <Text variant="body" color="muted">Loading automations...</Text>
+          <Text variant="body" color="muted">
+            {t('area.loading')}
+          </Text>
         </div>
       </PageLayout>
     );
@@ -313,24 +332,26 @@ export default function Area() {
   return (
     <PageLayout maxWidth="xl">
       <PageHeader
-        title="Your Automations"
-        subtitle="Create and manage your action → reaction automations"
+        title={t('area.title')}
+        subtitle={t('area.subtitle')}
         action={
           <Button
             variant="primary"
             leftIcon={<FiPlus />}
             onClick={() => setShowCreateModal(true)}
           >
-            Create Automation
+            {t('area.createAutomation')}
           </Button>
         }
       />
 
       {error && (
         <div className={styles.errorBanner}>
-          <Text variant="body" color="danger">{error}</Text>
+          <Text variant="body" color="danger">
+            {error}
+          </Text>
           <Button variant="ghost" size="sm" onClick={() => setError(null)}>
-            Dismiss
+            {t('common.close')}
           </Button>
         </div>
       )}
@@ -342,11 +363,11 @@ export default function Area() {
               <FiPlus size={48} />
             </div>
             <div style={{ marginBottom: 16 }}>
-              <Text variant="subtitle">No automations yet</Text>
+              <Text variant="subtitle">{t('area.empty.title')}</Text>
             </div>
             <div style={{ marginBottom: 24 }}>
               <Text variant="body" color="muted">
-                Create your first automation to connect actions and reactions
+                {t('area.empty.description')}
               </Text>
             </div>
             <Button
@@ -354,7 +375,7 @@ export default function Area() {
               leftIcon={<FiPlus />}
               onClick={() => setShowCreateModal(true)}
             >
-              Create Your First Automation
+              {t('area.empty.createFirst')}
             </Button>
           </div>
         </Card>
@@ -364,43 +385,90 @@ export default function Area() {
             <Card key={area.id} padding="lg" hoverable>
               <div className={styles.automationCard}>
                 <div className={styles.automationHeader}>
-                  <Text variant="subtitle" style={{ margin: 0 }}>{area.name}</Text>
+                  <Text variant="subtitle" style={{ margin: 0 }}>
+                    {area.name}
+                  </Text>
                   <div className={styles.automationActions}>
                     <div
-                      style={{
-                        padding: '4px 8px',
-                        borderRadius: 8,
-                        backgroundColor: area.is_active ? 'var(--color-success-soft)' : 'var(--color-surface-muted)',
-                        color: area.is_active ? 'var(--color-success)' : 'var(--color-text-muted)',
-                      } as React.CSSProperties}
+                      style={
+                        {
+                          padding: '4px 8px',
+                          borderRadius: 8,
+                          backgroundColor: area.is_active
+                            ? 'var(--color-success-soft)'
+                            : 'var(--color-surface-muted)',
+                          color: area.is_active
+                            ? 'var(--color-success)'
+                            : 'var(--color-text-muted)',
+                        } as React.CSSProperties
+                      }
                     >
                       <Text variant="caption">
-                        {area.is_active ? 'Active' : 'Inactive'}
+                        {area.is_active
+                          ? t('area.status.active')
+                          : t('area.status.inactive')}
                       </Text>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleActive(area.id, area.is_active);
+                      }}
+                      style={{
+                        minWidth: 32,
+                        padding: 4,
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'var(--color-text)',
+                      }}
+                    >
+                      {area.is_active ? (
+                        <FiPause size={16} />
+                      ) : (
+                        <FiPlay size={16} />
+                      )}
+                    </button>
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteArea(area.id);
                       }}
-                      style={{ minWidth: 32, padding: 4 }}
+                      style={{
+                        minWidth: 32,
+                        padding: 4,
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'var(--color-danger)',
+                      }}
                     >
-                      <FiTrash />
-                    </Button>
+                      <FiTrash size={16} />
+                    </button>
                   </div>
                 </div>
 
                 <div className={styles.automationFlow}>
                   <div className={styles.flowItem}>
                     <div className={styles.flowIcon}>
-                      <ServiceIcon service={String(area.action?.service || '')} size={32} />
+                      <ServiceIcon
+                        service={String(area.action?.service || '')}
+                        size={32}
+                      />
                     </div>
                     <div className={styles.flowContent}>
-                      <Text variant="caption" color="muted">Action</Text>
+                      <Text variant="caption" color="muted">
+                        {t('area.action')}
+                      </Text>
                       <Text variant="body">
-                        {String(area.action?.service || '')}.{String(area.action?.type || '')}
+                        {String(area.action?.service || '')}.
+                        {String(area.action?.type || '')}
                       </Text>
                     </div>
                   </div>
@@ -411,12 +479,18 @@ export default function Area() {
 
                   <div className={styles.flowItem}>
                     <div className={styles.flowIcon}>
-                      <ServiceIcon service={area.reaction?.service || ''} size={32} />
+                      <ServiceIcon
+                        service={area.reaction?.service || ''}
+                        size={32}
+                      />
                     </div>
                     <div className={styles.flowContent}>
-                      <Text variant="caption" color="muted">Reaction</Text>
+                      <Text variant="caption" color="muted">
+                        {t('area.reaction')}
+                      </Text>
                       <Text variant="body">
-                        {String(area.reaction?.service || '')}.{String(area.reaction?.type || '')}
+                        {String(area.reaction?.service || '')}.
+                        {String(area.reaction?.type || '')}
                       </Text>
                     </div>
                   </div>
@@ -444,7 +518,9 @@ export default function Area() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.modalHeader}>
-              <Text variant="subtitle" style={{ margin: 0 }}>Create New Automation</Text>
+              <Text variant="subtitle" style={{ margin: 0 }}>
+                {t('area.modal.title')}
+              </Text>
             </div>
 
             <div className={styles.modalBody}>
@@ -460,13 +536,19 @@ export default function Area() {
               <div className={styles.formSection}>
                 <div style={{ marginBottom: 8 }}>
                   <Text variant="body" style={{ fontWeight: '600' }}>
-                    Action (Trigger) <Text variant="caption" color="danger">*</Text>
+                    {t('area.modal.actionTrigger')}{' '}
+                    <Text variant="caption" color="danger">
+                      *
+                    </Text>
                   </Text>
                 </div>
                 {selectedAction ? (
                   <div className={styles.selectedItem}>
                     <div className={styles.selectedItemIcon}>
-                      <ServiceIcon service={String(selectedAction.service || '')} size={32} />
+                      <ServiceIcon
+                        service={String(selectedAction.service || '')}
+                        size={32}
+                      />
                     </div>
                     <div className={styles.selectedItemInfo}>
                       <Text variant="body" style={{ fontWeight: '600' }}>
@@ -499,7 +581,9 @@ export default function Area() {
                   getParameterFields(selectedAction.parameters).length > 0 && (
                     <div className={styles.paramsContainer}>
                       <div style={{ marginBottom: 16 }}>
-                        <Text variant="body" style={{ fontWeight: '600' }}>Action Parameters</Text>
+                        <Text variant="body" style={{ fontWeight: '600' }}>
+                          {t('area.modal.actionParameters')}
+                        </Text>
                       </div>
                       {getParameterFields(selectedAction.parameters).map(
                         (field) => (
@@ -527,7 +611,10 @@ export default function Area() {
               <div className={styles.formSection}>
                 <div style={{ marginBottom: 8 }}>
                   <Text variant="body" style={{ fontWeight: '600' }}>
-                    Reaction (Response) <Text variant="caption" color="danger">*</Text>
+                    {t('area.modal.reactionResponse')}{' '}
+                    <Text variant="caption" color="danger">
+                      *
+                    </Text>
                   </Text>
                 </div>
                 {selectedReaction ? (
@@ -571,7 +658,7 @@ export default function Area() {
                     <div className={styles.paramsContainer}>
                       <div style={{ marginBottom: 16 }}>
                         <Text variant="body" style={{ fontWeight: '600' }}>
-                          Reaction Parameters
+                          {t('area.modal.reactionParameters')}
                         </Text>
                       </div>
                       {getParameterFields(selectedReaction.parameters).map(
@@ -606,7 +693,7 @@ export default function Area() {
                   resetForm();
                 }}
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button
                 variant="primary"
@@ -616,7 +703,7 @@ export default function Area() {
                 }
                 loading={loading}
               >
-                Create Automation
+                {t('area.modal.create')}
               </Button>
             </div>
           </div>
@@ -636,8 +723,12 @@ export default function Area() {
             <div className={styles.modalHeader}>
               <Text variant="subtitle" style={{ margin: 0 }}>
                 {selectionStep === 'service'
-                  ? `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'} Service`
-                  : `Select ${selectionMode === 'action' ? 'Action' : 'Reaction'}`}
+                  ? selectionMode === 'action'
+                    ? t('area.selection.selectActionService')
+                    : t('area.selection.selectReactionService')
+                  : selectionMode === 'action'
+                    ? t('area.selection.selectAction')
+                    : t('area.selection.selectReaction')}
               </Text>
             </div>
 
@@ -655,7 +746,9 @@ export default function Area() {
                       onClick={() => handleServiceSelect(service)}
                     >
                       <ServiceIcon service={String(service || '')} size={48} />
-                      <Text variant="body" style={{ fontWeight: '600' }}>{String(service || '')}</Text>
+                      <Text variant="body" style={{ fontWeight: '600' }}>
+                        {String(service || '')}
+                      </Text>
                     </div>
                   ))}
                 </div>
@@ -670,8 +763,13 @@ export default function Area() {
                           className={styles.itemCard}
                           onClick={() => handleActionSelect(action)}
                         >
-                          <ServiceIcon service={String(action.service || '')} size={32} />
-                          <Text variant="body" style={{ fontWeight: '600' }}>{String(action.type || '')}</Text>
+                          <ServiceIcon
+                            service={String(action.service || '')}
+                            size={32}
+                          />
+                          <Text variant="body" style={{ fontWeight: '600' }}>
+                            {String(action.type || '')}
+                          </Text>
                           <Text variant="caption" color="muted">
                             {String(action.service || '')}
                           </Text>
@@ -687,7 +785,10 @@ export default function Area() {
                           className={styles.itemCard}
                           onClick={() => handleReactionSelect(reaction)}
                         >
-                          <ServiceIcon service={String(reaction.service || '')} size={32} />
+                          <ServiceIcon
+                            service={String(reaction.service || '')}
+                            size={32}
+                          />
                           <Text variant="body" style={{ fontWeight: '600' }}>
                             {String(reaction.type || '')}
                           </Text>

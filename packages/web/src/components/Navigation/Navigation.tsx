@@ -12,11 +12,14 @@ import {
   FiX,
 } from 'react-icons/fi';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from '@/contexts/I18nContext';
 import { ThemeToggle } from '../ThemeToggle';
+import LanguageSelector from '../LanguageSelector';
 import styles from './Navigation.module.css';
 
 export default function Navigation() {
   const { user, logout, isAuthenticated } = useAuth();
+  const t = useTranslation();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -75,35 +78,35 @@ export default function Navigation() {
             className={`${styles.navLink} ${isActive('/dashboard') ? styles.active : ''}`}
           >
             <FiHome />
-            <span>Dashboard</span>
+            <span>{t('navigation.dashboard')}</span>
           </Link>
           <Link
             to="/area"
             className={`${styles.navLink} ${isActive('/area') ? styles.active : ''}`}
           >
             <FiActivity />
-            <span>Automations</span>
+            <span>{t('navigation.area')}</span>
           </Link>
           <Link
             to="/services"
             className={`${styles.navLink} ${isActive('/services') ? styles.active : ''}`}
           >
             <FiSettings />
-            <span>Services</span>
+            <span>{t('navigation.services')}</span>
           </Link>
           <Link
             to="/profile"
             className={`${styles.navLink} ${isActive('/profile') ? styles.active : ''}`}
           >
             <FiUser />
-            <span>Profile</span>
+            <span>{t('navigation.profile')}</span>
           </Link>
           <Link
             to="/about"
             className={`${styles.navLink} ${isActive('/about') ? styles.active : ''}`}
           >
             <FiInfo />
-            <span>About</span>
+            <span>{t('navigation.about')}</span>
           </Link>
           {user.role === 'ADMIN' && (
             <Link
@@ -111,15 +114,16 @@ export default function Navigation() {
               className={`${styles.navLink} ${isActive('/admin') ? styles.active : ''}`}
             >
               <FiShield />
-              <span>Admin</span>
+              <span>{t('navigation.admin')}</span>
             </Link>
           )}
           <div className={styles.navDivider}></div>
           <span className={styles.navUser}>{user.email}</span>
+          <LanguageSelector />
           <ThemeToggle />
           <button onClick={logout} className={styles.btnLogout}>
             <FiLogOut />
-            <span>Logout</span>
+            <span>{t('navigation.logout')}</span>
           </button>
         </div>
 
@@ -149,7 +153,10 @@ export default function Navigation() {
       >
         <div className={styles.sidebarHeader}>
           <span className={styles.sidebarUser}>{user.email}</span>
-          <ThemeToggle />
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <LanguageSelector />
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className={styles.sidebarLinks}>
@@ -159,7 +166,7 @@ export default function Navigation() {
             onClick={closeMobileMenu}
           >
             <FiHome />
-            <span>Dashboard</span>
+            <span>{t('navigation.dashboard')}</span>
           </Link>
           <Link
             to="/area"
@@ -167,7 +174,7 @@ export default function Navigation() {
             onClick={closeMobileMenu}
           >
             <FiActivity />
-            <span>Automations</span>
+            <span>{t('navigation.area')}</span>
           </Link>
           <Link
             to="/services"
@@ -175,7 +182,7 @@ export default function Navigation() {
             onClick={closeMobileMenu}
           >
             <FiSettings />
-            <span>Services</span>
+            <span>{t('navigation.services')}</span>
           </Link>
           <Link
             to="/profile"
@@ -183,7 +190,7 @@ export default function Navigation() {
             onClick={closeMobileMenu}
           >
             <FiUser />
-            <span>Profile</span>
+            <span>{t('navigation.profile')}</span>
           </Link>
           <Link
             to="/about"
@@ -191,7 +198,7 @@ export default function Navigation() {
             onClick={closeMobileMenu}
           >
             <FiInfo />
-            <span>About</span>
+            <span>{t('navigation.about')}</span>
           </Link>
           {user.role === 'ADMIN' && (
             <Link
@@ -200,7 +207,7 @@ export default function Navigation() {
               onClick={closeMobileMenu}
             >
               <FiShield />
-              <span>Admin</span>
+              <span>{t('navigation.admin')}</span>
             </Link>
           )}
         </div>
@@ -208,7 +215,7 @@ export default function Navigation() {
         <div className={styles.sidebarFooter}>
           <button onClick={handleLogout} className={styles.btnLogoutSidebar}>
             <FiLogOut />
-            <span>Logout</span>
+            <span>{t('navigation.logout')}</span>
           </button>
         </div>
       </div>

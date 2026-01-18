@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { FiAlertCircle } from 'react-icons/fi';
+import { useTranslation } from '@/contexts/I18nContext';
 import { Button, Text } from '@/components/ui';
 import styles from './Auth.module.css';
 
 export default function OAuthError() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const t = useTranslation();
   const [errorMessage, setErrorMessage] = useState<string>(
     'Authentication failed',
   );
@@ -38,29 +40,33 @@ export default function OAuthError() {
 
         <div className={styles.authHeader}>
           <div style={{ marginBottom: 8 }}>
-            <Text variant="title">Authentication Failed</Text>
+            <Text variant="title">{t('auth.oauth.failed')}</Text>
           </div>
-          <Text variant="body" color="muted">We couldn't sign you in</Text>
+          <Text variant="body" color="muted">
+            {t('auth.oauth.failedDescription')}
+          </Text>
         </div>
 
         <div className={styles.errorMessage} role="alert">
           <FiAlertCircle style={{ fontSize: '1.2em', flexShrink: 0 }} />
-          <Text variant="body" color="danger">{errorMessage}</Text>
+          <Text variant="body" color="danger">
+            {errorMessage}
+          </Text>
         </div>
 
         <div className={styles.oauthErrorContent}>
           <Text variant="body" color="muted" style={{ marginBottom: 16 }}>
-            Please try again or use a different sign-in method.
+            {t('auth.oauth.tryAgain')}
           </Text>
 
           <Link to="/login" style={{ textDecoration: 'none' }}>
             <Button variant="primary" size="lg" fullWidth>
-              Go to Login
+              {t('auth.oauth.goToLogin')}
             </Button>
           </Link>
 
           <Text variant="caption" color="muted">
-            Redirecting automatically in 5 seconds...
+            {t('auth.oauth.redirecting')}
           </Text>
         </div>
       </div>
