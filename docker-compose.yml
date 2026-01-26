@@ -118,7 +118,7 @@ networks:
   area_network_postgresql:
     name: ${PROJECT_NAME}_network_postgresql
     driver: bridge
-    internal: false
+    internal: true
 
   area_network_server:
     name: ${PROJECT_NAME}_network_server
